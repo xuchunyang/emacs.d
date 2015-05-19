@@ -6,6 +6,8 @@
 
 ;;; Code:
 
+(require 'subr-x)
+
 (defgroup trans nil
   "A Emacs frontend for <https://github.com/soimort/translate-shell>."
   :group 'tools
@@ -21,7 +23,7 @@
 
 (defun trans--chinese-string-p (string)
   "Return Non-nil if STRING is a Chinese string."
-  (string-match (format "\\cC\\{%s\\}" (length string)) string))
+  (string-match "[[:multibyte:]]" string))
 
 (defun trans--1 (text &optional extra-options)
   (shell-command-to-string
@@ -43,7 +45,7 @@
   (unless text (error "No useable text at point"))
   (unless (require 'popup nil t) (error "`popup' no avaiable"))
   (popup-tip
-   (trans--1 text "-b")
+   (string-trim (trans--1 text "-b"))
    :margin t))
 
 ;;;###autoload
@@ -55,7 +57,7 @@
                        (region-beginning) (region-end)))
                     (thing-at-point 'word t))))
   (unless text (error "No useable text at point"))
-  (message (trans--1 text "-b")))
+  (message (string-trim (trans--1 text "-b"))))
 
 ;;;###autoload
 (defun trans (text)
