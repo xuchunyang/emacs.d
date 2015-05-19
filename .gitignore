@@ -1,0 +1,63 @@
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+recentf
+history
+places
+bookmarks
+tramp
+custom.el
+.\#*
+
+override
+site-lisp
+lib
+lisp
+
+# Org-mode
+.org-id-locations
+*_archive
+org-clock-save.el
+
+# elpa
+elpa
+
+# saved-places
+*saved-places*
+
+# recentf
+.recentf
+
+# projectile
+projectile*
+
+# url
+url
+
+# var
+var
+
+# EWW
+eww-bookmarks
+
+# eshell
+eshell
+
+# rcirc
+rcirc-log
+
+# SX (Stackexchange)
+.sx
+
+# Cask
+.cask
+
+# Helm
+helm-adaptive-history
+
+# Flycheck
+flycheck*
+
