@@ -1,4 +1,4 @@
-;;; Take a break
+;;; Let's Go!
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
@@ -9,39 +9,27 @@
 (eval-after-load 'advice
   `(setq ad-redefinition-action 'accept)) ; No more warning
 
-(eval-and-compile
-  (mapc
-   (lambda (path)
-     (push (expand-file-name path user-emacs-directory) load-path))
-   '("site-lisp" "site-lisp/use-package" "site-lisp/diminish" "personal")))
-
-(eval-and-compile
-  (defvar use-package-verbose t)
-  ;; (defvar use-package-expand-minimally t)
-  ;; (defvar use-package-debug t)
-  (require 'cl)
-  (require 'use-package))
-
-(require 'bind-key)
-(require 'diminish)
+(push (expand-file-name "personal" user-emacs-directory) load-path)
 
 
 ;;; Package management
-
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
 (package-initialize)
 
+(defvar use-package-verbose t)
+(unless (require 'use-package nil 'no-error)
+  (unless (assoc 'use-package package-archive-contents)
+    (package-refresh-contents))
+  (package-install 'use-package))
+
 
 ;;; Initialization
-
-;; And disable the site default settings
-(setq inhibit-default-init t)
+(setq inhibit-default-init t)           ; And disable the site default settings
 
 ;;; Customization interface
-
 (use-package cus-edit
   :defer t :init
   (setq custom-file (locate-user-emacs-file "custom.el"))
@@ -61,7 +49,7 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  :defer 5
+  :defer 3
   :if *is-a-mac*
   :config
   (exec-path-from-shell-copy-env "INFOPATH")
@@ -124,32 +112,15 @@
 
 
 ;;; The minibuffer
-(use-package async :defer t :load-path "site-lisp/async"
-  ;; :pin manual
-  )
-(use-package helm  :defer t :load-path "site-lisp/helm"
-  ;; :pin manual
-  )
-
-(use-package helm-grep
-  :commands helm-do-grep-1
-  :bind (("M-s f" . my-helm-do-grep-r)
-         ("M-s g" . my-helm-do-grep))
-  :preface
-  (defun my-helm-do-grep ()
-    (interactive)
-    (helm-do-grep-1 (list default-directory)))
-
-  (defun my-helm-do-grep-r ()
-    (interactive)
-    (helm-do-grep-1 (list default-directory) t)))
+(use-package async    :ensure t :defer t)
+(use-package helm     :ensure t :defer t)
 
 (use-package helm-config
-  :load-path "site-lisp/helm"
-  :bind (([remap execute-extended-command] . helm-M-x)                ; M-x
+  :defer 3
+  :bind (("M-x"                            . helm-M-x)
          ;; File
-         ("C-x C-f"                        . helm-find-files)         ; C-x C-f
-         ([remap set-fill-column]          . helm-recentf)            ; C-x f
+         ("C-x C-f"                        . helm-find-files)
+         ("C-x f"                          . helm-recentf)
          ;; Buffer
          ([remap switch-to-buffer]         . helm-buffers-list)       ; C-x b
          ([remap downcase-word]            . helm-mini)               ; M-l
@@ -174,39 +145,6 @@
   (defvar helm-command-prefix-key "C-c h")
 
   :config
-  (use-package helm-command
-    :defer t
-    :config (setq helm-M-x-always-save-history t))
-
-  (use-package helm-regexp
-    :defer t
-    :config
-    (dolist (source '(helm-source-occur helm-source-moccur))
-      (push source helm-sources-using-default-as-input)))
-
-  (use-package helm-buffers
-    :defer t
-    :config
-    (add-to-list 'helm-boring-buffer-regexp-list "TAGS")
-    (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff")
-    (defmethod helm-setup-user-source :after ((source helm-source-buffers))
-      (helm-source-add-action-to-source-if
-       "Imenu buffer" (lambda (candidate)
-                        (switch-to-buffer candidate)
-                        (helm-imenu))
-       source (lambda (_candidate) t))))
-
-  (use-package helm-files
-    :defer t
-    :config
-    (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
-    (defmethod helm-setup-user-source :after ((source helm-source-ffiles))
-      (helm-source-add-action-to-source-if
-       "Imenu file" (lambda (candidate)
-                      (find-file candidate)
-                      (helm-imenu))
-       source (lambda (_candidate) t))))
-
   (use-package helm-mode
     :defer t
     :diminish helm-mode
@@ -241,8 +179,41 @@
     (put 'toggle-small-helm-window
          'once (not (get 'toggle-small-helm-window 'once)))))
 
+(use-package helm-command
+  :defer t
+  :config (setq helm-M-x-always-save-history t))
+
+(use-package helm-regexp
+  :defer t
+  :config
+  (dolist (source '(helm-source-occur helm-source-moccur))
+    (push source helm-sources-using-default-as-input)))
+
+(use-package helm-buffers
+  :defer t
+  :config
+  (defmethod helm-setup-user-source :after ((source helm-source-buffers))
+    (helm-source-add-action-to-source-if
+     "Imenu buffer" (lambda (candidate)
+                      (switch-to-buffer candidate)
+                      (helm-imenu))
+     source (lambda (_candidate) t)))
+  (add-to-list 'helm-boring-buffer-regexp-list "TAGS")
+  (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff"))
+
+(use-package helm-files
+  :defer t
+  :config
+  (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
+  (defmethod helm-setup-user-source :after ((source helm-source-ffiles))
+    (helm-source-add-action-to-source-if
+     "Imenu file" (lambda (candidate)
+                    (find-file candidate)
+                    (helm-imenu))
+     source (lambda (_candidate) t))))
+
 (use-package helm-descbinds
-  :load-path "site-lisp/helm-descbinds"
+  :ensure t
   :bind ("C-h b" . helm-descbinds)
   :init
   (fset 'describe-bindings 'helm-descbinds)
@@ -251,7 +222,7 @@
   (helm-descbinds-mode))
 
 (use-package springboard
-  :load-path "site-lisp/springboard"
+  :ensure t
   :bind ("C-." . springboard))
 
 ;; Save Minibuffer histroy
@@ -295,7 +266,7 @@
   :bind (([remap list-buffers] . ibuffer)))
 
 (use-package windmove
-  :defer 20
+  :defer 7
   :config
   (windmove-default-keybindings))
 
@@ -304,7 +275,7 @@
   (desktop-save-mode 1))
 
 (use-package winner
-  :defer 5
+  :defer 7
   :bind (("M-N" . winner-redo)
          ("M-P" . winner-undo))
   :config
@@ -407,10 +378,7 @@
          ("M-o"                      . chunyang-other-window)))
 
 (use-package easy-repeat
-  :load-path "site-lisp/easy-repeat"
-  :commands (easy-repeat-mode easy-repeat-add-last-command)
-  :init
-  (easy-repeat-mode))
+  :ensure t :defer t)
 
 (use-package ws-butler
   :ensure t
@@ -515,8 +483,7 @@
   :bind (("C-c i" . helm-imenu-anywhere)))
 
 (use-package imenu-list
-  :disabled t
-  :load-path "site-lisp/imenu-list"
+  :ensure t
   :commands (imenu-list imenu-list-minor-mode))
 
 (use-package origami			; Code folding
@@ -527,9 +494,7 @@
 ;;; Search
 (setq isearch-allow-scroll t)
 
-(use-package pinyin-search
-  :load-path "site-lisp/pinyin-search"
-  :commands (isearch-forward-pinyin isearch-backward-pinyin isearch-toggle-pinyin))
+(use-package pinyin-search :ensure t :defer t)
 
 (use-package grep
   :defer t
@@ -949,14 +914,13 @@ See also `describe-function-or-variable'."
 
 ;;; Tools and utilities
 (use-package server
-  :defer 10
+  :defer 7
   :config
   (unless (server-running-p) (server-start)))
 
 (use-package projectile                 ; Project management
-  :load-path "site-lisp/projectile"
-  :commands projectile-global-mode
-  :defer 8
+  :ensure t
+  :defer 5
   :bind-keymap ("C-c p" . projectile-command-map)
   :config
   (setq projectile-mode-line '(:eval (if (condition-case nil
@@ -967,10 +931,11 @@ See also `describe-function-or-variable'."
                                                  (projectile-project-name))
                                        "")))
   (use-package helm-projectile
-    :config
+    :ensure t :defer t :init
     (setq projectile-completion-system 'helm)
     (helm-projectile-on)
-    (use-package helm-ag :load-path "site-lisp/helm-ag"))
+    (use-package helm-ag :ensure t :defer t))
+
   (projectile-global-mode))
 
 (use-package helm-open-github
@@ -982,10 +947,10 @@ See also `describe-function-or-variable'."
              helm-open-github-from-pull-requests))
 
 (use-package helm-github-stars
-  :load-path "site-lisp/helm-github-stars"
-  :commands (helm-github-stars helm-github-stars-fetch)
+  :ensure t
+  :defer t
   :config
-  (add-hook 'helm-github-stars-clone-done-hook #'magit-status)
+  (add-hook 'helm-github-stars-clone-done-hook #'dired)
   (setq helm-github-stars-cache-file "~/.emacs.d/var/hgs-cache"
         helm-github-stars-refetch-time (/ 6.0 24))
   (bind-key "G" #'helm-github-stars helm-command-map))
@@ -1007,7 +972,7 @@ See also `describe-function-or-variable'."
   :ensure t
   :diminish guide-key-mode
   :commands guide-key-mode
-  :defer 1
+  :defer 7
   :config
   (setq guide-key/guide-key-sequence
         '("C-h"                         ; Help
@@ -1035,10 +1000,7 @@ See also `describe-function-or-variable'."
 
 (use-package hydra            :ensure t :defer t :disabled t)
 (use-package dash-at-point    :ensure t :defer t)
-
-(use-package helm-dash
-  :disabled t
-  :load-path "site-lisp/helm-dash")
+(use-package helm-dash        :ensure t :defer t)
 
 
 ;;; Net & Web & Email
@@ -1125,12 +1087,10 @@ See also `describe-function-or-variable'."
 
 (use-package weibo
   :disabled t
-  :load-path "site-lisp/weibo.el"
+  :ensure t
   :config (load-file "~/.private.el"))
 
-(use-package helm-zhihu-daily
-  :load-path "site-lisp/helm-zhihu-daily"
-  :commands helm-zhihu-daily)
+(use-package helm-zhihu-daily :ensure t :defer t)
 
 (use-package google-this
   :disabled t
@@ -1146,7 +1106,7 @@ See also `describe-function-or-variable'."
 
 ;;; Dictionary
 (use-package youdao-dictionary
-  :load-path "site-lisp/youdao-dictionary"
+  :ensure t
   :bind (("C-c y" . youdao-dictionary-search-at-point)
          ("C-c Y" . youdao-dictionary-search-at-point+))
   :config
