@@ -29,8 +29,9 @@
   (shell-command-to-string
    (format "%s %s %s %s"
            trans-command
-           (if (trans--chinese-string-p text) "-s zh -t en"
-             "-s en -t zh")
+           (cond ((trans--chinese-string-p text) "-s zh -t en")
+                 ((or (string-match " " text) extra-options) "-s en -t zh")
+                 (t "-t en"))
            (or extra-options "")
            (shell-quote-argument text))))
 
