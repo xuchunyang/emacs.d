@@ -1,4 +1,3 @@
-
 ;;; Take a break
 (unless noninteractive
   (message "Loading %s..." load-file-name))
@@ -14,7 +13,7 @@
   (mapc
    (lambda (path)
      (push (expand-file-name path user-emacs-directory) load-path))
-   '("override" "site-lisp" "site-lisp/use-package" "site-lisp/diminish" "personal")))
+   '("site-lisp" "site-lisp/use-package" "site-lisp/diminish" "personal")))
 
 (eval-and-compile
   (defvar use-package-verbose t)
@@ -34,104 +33,6 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
 (package-initialize)
-
-
-;;; org-mode
-
-(add-to-list 'load-path (expand-file-name "override/org-mode/lisp/"))
-;; (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-
-(add-to-list 'load-path (expand-file-name "override/org-mode/contrib/lisp") t)
-
-(use-package org
-  :load-path "override/org-mode/lisp"
-  :bind (("C-c a"   . org-agenda)
-         ("C-c c"   . org-capture)
-         ("C-c l"   . org-store-link)
-         ("C-c b"   . org-iswitchb)
-         ("C-c C-o" . org-open-at-point-global))
-
-  :config
-  (setq org-directory "~/Dropbox/Notes")
-  (setq org-default-notes-file (concat org-directory "/notes.org"))
-
-  (setq org-agenda-files `(,org-default-notes-file))
-
-  (setq org-capture-templates
-        `(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
-           "* TODO %?\n  %i\n  %a")
-          ("n" "Note" entry (file+headline org-default-notes-file "Notes")
-           "* %?\n  %i\n  %a")))
-
-  (setq org-agenda-custom-commands
-        '(("E" "Agenda and Emacs-related tasks"
-           ((agenda "")
-            (tags-todo "emacs")))
-          ("g" "Agenda and GSoC-related tasks"
-           ((agenda "")
-            (tags "gsoc")))))
-
-  ;; Clock work time
-  (setq org-clock-persist 'history)
-  (org-clock-persistence-insinuate)
-  (setq org-clock-persist t)
-  (setq org-clock-persist-query-resume nil)
-
-  (use-package org-mac-link
-    :if *is-a-mac*
-    :ensure t
-    :commands (org-mac-chrome-insert-frontmost-url))
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (sh . t)))
-  (setq org-confirm-babel-evaluate nil)
-
-  (setq org-edit-src-auto-save-idle-delay 5)
-
-  (setq org-src-fontify-natively t)
-  (setq org-edit-src-content-indentation 0)
-  (setq org-src-tab-acts-natively t)
-
-  (defun chunyang-org-make-orgcapture-frame ()
-    "Create a new frame and run org-capture."
-    (interactive)
-    (make-frame '((name . "remember") (width . 80) (height . 16)
-                  (top . 400) (left . 300)))
-    (select-frame-by-name "remember")
-    (org-capture))
-
-  (add-hook 'org-clock-out-hook
-            (lambda ()
-              (call-process
-               "/usr/bin/osascript" nil 0 nil
-               "-e" "tell application \"org-clock-statusbar\" to clock out")))
-
-  (add-hook 'org-clock-in-hook
-            (lambda ()
-              (call-process
-               "/usr/bin/osascript" nil 0 nil
-               "-e"
-               (concat
-                "tell application \"org-clock-statusbar\" to clock in \""
-                org-clock-current-task
-                "\"")))))
-
-;;,------------------------------------------------------------------------------------
-;;| Show org-mode clock in Mac OS X menubar
-;;| [[https://github.com/koddo/org-clock-statusbar-app][koddo/org-clock-statusbar-app]]
-;;`------------------------------------------------------------------------------------
-
-(use-package orglink
-  :ensure t
-  :diminish orglink-mode
-  :defer t :init (global-orglink-mode))
-
-(use-package org-bullets
-  :disabled t
-  :ensure t
-  :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 
 ;;; Initialization
@@ -160,7 +61,7 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  :defer 15
+  :defer 5
   :if *is-a-mac*
   :config
   (exec-path-from-shell-copy-env "INFOPATH")
@@ -169,19 +70,8 @@
 
 (use-package info
   :defer t
-  :bind ("C-h C-i" . info-lookup-symbol)
-  :init
-  (remove-hook 'menu-bar-update-hook 'mac-setup-help-topics)
   :config
-  (add-to-list 'Info-directory-list "/opt/local/share/info")
-
-  Info-default-directory-list
-
-  ;; (defadvice Info-exit (after remove-info-window activate)
-  ;;   "When info mode is quit, remove the window."
-  ;;   (if (> (length (window-list)) 1)
-  ;;       (delete-window)))
-  )
+  (add-to-list 'Info-directory-list "/opt/local/share/info"))
 
 
 ;;; User interface
@@ -366,11 +256,10 @@
 
 ;; Save Minibuffer histroy
 (use-package savehist
-  ;; :defer 30
+  :defer 5
   :config
-  (setq savehist-file "~/.emacs.d/history"
-        history-delete-duplicates t
-        history-length 100)
+  (setq history-length 1000
+        history-delete-duplicates t)
   (savehist-mode 1))
 
 
@@ -596,6 +485,7 @@
 
 (put 'view-hello-file
      'disabled "I mistype C-h h a lot and it is too slow to block Emacs")
+
 
 ;;; Navigation and scrolling
 (setq scroll-margin 0                   ; Drag the point along while scrolling
@@ -634,7 +524,6 @@
   :commands (origami-mode global-origami-mode))
 
 
-
 ;;; Search
 (setq isearch-allow-scroll t)
 
@@ -656,6 +545,7 @@
   (setq anzu-replace-to-string-separator " => ")
   (bind-key "M-%" 'anzu-query-replace)
   (bind-key "C-M-%" 'anzu-query-replace-regexp))
+
 
 ;;; Highlights
 (use-package hl-line
@@ -685,7 +575,6 @@
 
 
 ;;; Skeletons, completion and expansion
-
 (use-package hippie-exp                 ; Powerful expansion and completion
   :bind (([remap dabbrev-expand] . hippie-expand))
   :config
@@ -794,6 +683,7 @@
     :config
     (eval-after-load "flycheck"
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))))
+
 
 ;;; Text editing
 (use-package iedit
@@ -888,12 +778,6 @@
 
 
 ;;; Emacs Lisp
-
-;; `ielm' is a REPL for Emacs Lisp
-
-(use-package eshell
-  :bind  ("C-!" . eshell-command))
-
 (use-package lisp-mode
   :defer t
   :preface
@@ -968,28 +852,30 @@ See also `describe-function-or-variable'."
   (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup)
   (add-hook 'emacs-lisp-mode-hook #'imenu-use-package))
 
-(use-package ipretty
-  :ensure t
-  :commands (ipretty-mode))
-
-(use-package elisp-slime-nav
-  :ensure t
-  :diminish elisp-slime-nav-mode
-  :bind ([remap display-local-help] .
-         elisp-slime-nav-describe-elisp-thing-at-point))
+(use-package eshell
+  :bind  ("C-!" . eshell-command))
 
 (use-package aggressive-indent
   :ensure t
-  :diminish aggressive-indent-mode
-  :commands (aggressive-indent-mode))
+  :defer t
+  :diminish aggressive-indent-mode)
 
 (use-package macrostep
   :ensure t
   :bind ("C-c e" . macrostep-expand))
 
-(use-package command-log-mode
+(use-package elisp-slime-nav
   :ensure t
-  :commands (command-log-mode))
+  :diminish elisp-slime-nav-mode
+  :bind ("C-h ." . elisp-slime-nav-describe-elisp-thing-at-point))
+
+(use-package ipretty             :ensure t :defer t)
+(use-package pcache              :ensure t :defer t)
+(use-package persistent-soft     :ensure t :defer t)
+(use-package command-log-mode    :ensure t :defer t)
+(use-package log4e               :ensure t :defer t)
+(use-package alert               :ensure t :defer t)
+(use-package bug-hunter          :ensure t :defer t)
 
 
 ;;; Common Lisp
@@ -1062,6 +948,11 @@ See also `describe-function-or-variable'."
 
 
 ;;; Tools and utilities
+(use-package server
+  :defer 10
+  :config
+  (unless (server-running-p) (server-start)))
+
 (use-package projectile                 ; Project management
   :load-path "site-lisp/projectile"
   :commands projectile-global-mode
@@ -1101,16 +992,16 @@ See also `describe-function-or-variable'."
 
 (use-package jist                       ; Gist
   :ensure t
-  :commands (jist-list)
+  :commands jist-list
   :config (load-file "~/.private.el"))
 
-;; (use-package paradox                    ; Better package menu
-;;   :ensure t
-;;   :bind (("C-c L p" . paradox-list-packages)
-;;          ("C-c L P" . package-list-packages-no-fetch))
-;;   :config
-;;   (setq paradox-github-token t
-;;         paradox-execute-asynchronously nil))
+(use-package paradox                    ; Better package menu
+  :ensure t
+  :bind (("C-c L p" . paradox-list-packages)
+         ("C-c L P" . package-list-packages-no-fetch))
+  :config
+  (setq paradox-github-token t
+        paradox-execute-asynchronously nil))
 
 (use-package guide-key
   :ensure t
@@ -1288,22 +1179,90 @@ See also `describe-function-or-variable'."
 (use-package restclient :ensure t :defer t)
 
 
-;; https://github.com/Malabarba/elisp-bug-hunter
-(use-package bug-hunter :ensure t :defer t)
+;;; org-mode
+(use-package org
+  :bind (("C-c a"   . org-agenda)
+         ("C-c c"   . org-capture)
+         ("C-c l"   . org-store-link)
+         ("C-c b"   . org-iswitchb)
+         ("C-c C-o" . org-open-at-point-global))
 
-
-(use-package pcache                     ; Persistent caching for Emacs
-  :ensure t :defer t)
-(use-package persistent-soft            ; Persistent storage for Emacs (Disk)
-  :ensure t :defer t)
+  :config
+  (setq org-directory "~/Dropbox/Notes")
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
 
-(use-package log4e
-  :ensure t :defer t)
+  (setq org-agenda-files `(,org-default-notes-file))
 
-(use-package alert
-  :ensure t :defer t)
+  (setq org-capture-templates
+        `(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
+           "* TODO %?\n  %i\n  %a")
+          ("n" "Note" entry (file+headline org-default-notes-file "Notes")
+           "* %?\n  %i\n  %a")))
 
-(use-package server
-  :defer 30
-  :config (unless (server-running-p)
-            (server-start)))
+  (setq org-agenda-custom-commands
+        '(("E" "Agenda and Emacs-related tasks"
+           ((agenda "")
+            (tags-todo "emacs")))
+          ("g" "Agenda and GSoC-related tasks"
+           ((agenda "")
+            (tags "gsoc")))))
+
+  ;; Clock work time
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
+  (setq org-clock-persist t)
+  (setq org-clock-persist-query-resume nil)
+
+  (use-package org-mac-link
+    :if *is-a-mac*
+    :ensure t
+    :commands (org-mac-chrome-insert-frontmost-url))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (sh . t)))
+  (setq org-confirm-babel-evaluate nil)
+
+  (setq org-edit-src-auto-save-idle-delay 5)
+
+  (setq org-src-fontify-natively t)
+  (setq org-edit-src-content-indentation 0)
+  (setq org-src-tab-acts-natively t)
+
+  (defun chunyang-org-make-orgcapture-frame ()
+    "Create a new frame and run org-capture."
+    (interactive)
+    (make-frame '((name . "remember") (width . 80) (height . 16)
+                  (top . 400) (left . 300)))
+    (select-frame-by-name "remember")
+    (org-capture))
+
+  ;;,------------------------------------------------------------------------------------
+  ;;| Show org-mode clock in Mac OS X menubar
+  ;;| [[https://github.com/koddo/org-clock-statusbar-app][koddo/org-clock-statusbar-app]]
+  ;;`------------------------------------------------------------------------------------
+  (add-hook 'org-clock-out-hook
+            (lambda ()
+              (call-process
+               "/usr/bin/osascript" nil 0 nil
+               "-e" "tell application \"org-clock-statusbar\" to clock out")))
+  (add-hook 'org-clock-in-hook
+            (lambda ()
+              (call-process
+               "/usr/bin/osascript" nil 0 nil
+               "-e"
+               (concat
+                "tell application \"org-clock-statusbar\" to clock in \""
+                org-clock-current-task
+                "\"")))))
+
+(use-package orglink
+  :ensure t
+  :diminish orglink-mode
+  :defer t :init (global-orglink-mode))
+
+(use-package org-bullets
+  :disabled t
+  :ensure t
+  :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))

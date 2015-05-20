@@ -12,7 +12,6 @@ tramp
 custom.el
 .\#*
 
-override
 site-lisp
 lib
 lisp
