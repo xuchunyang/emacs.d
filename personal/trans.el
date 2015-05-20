@@ -77,6 +77,8 @@
   (with-current-buffer (get-buffer-create trans--buffer)
     (erase-buffer)
     (insert (trans--1 text))
+    (require 'ansi-color)
+    (ansi-color-apply-on-region (point-min) (point-max))
     (pop-to-buffer trans--buffer)))
 
 (provide 'trans)
