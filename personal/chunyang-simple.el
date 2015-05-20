@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+(require 'subr-x)
+
+
 ;;;###autoload
 (defun chunyang-split-window-right ()
   "Split window with another buffer."
@@ -480,6 +483,25 @@ end tell
     (if (> new 0)
         (shell-command "echo -n \"red\" | nc -4u -w0 localhost 1738")
       (shell-command "echo -n \"black\" | nc -4u -w0 localhost 1738"))))
+
+
+;;; Scratch buffer
+(defvar chunyang-scratch-log-file (expand-file-name
+                                   ".scratch.bak~" user-emacs-directory))
+
+(defun chunyang-save-scratch ()
+  (when-let ((buf (get-buffer "*scratch*")))
+    (with-current-buffer buf
+      (widen)
+      (ignore-errors
+        (write-region (point-min) (point-max) chunyang-scratch-log-file)))))
+
+(defun chunyang-restore-scratch ()
+  (interactive)
+  (when-let ((buf (get-buffer "*scratch*")))
+    (with-current-buffer buf
+      (erase-buffer)
+      (insert-file-contents chunyang-scratch-log-file))))
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here

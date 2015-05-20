@@ -372,10 +372,17 @@
 ;; (add-hook 'prog-mode-hook #'auto-fill-mode)
 
 (use-package chunyang-simple
-  :commands (demo chunyang-git-clone chunyang-run-command-in-iterm chunyang-reply-smth)
+  :commands (demo
+             chunyang-git-clone
+             chunyang-run-command-in-iterm
+             chunyang-reply-smth
+             chunyang-save-scratch
+             chunyang-restore-scratch)
   :bind (([remap split-window-right] . chunyang-split-window-right)
          ([remap split-window-below] . chunyang-split-window-below)
-         ("M-o"                      . chunyang-other-window)))
+         ("M-o"                      . chunyang-other-window))
+  :init
+  (add-hook 'kill-emacs-hook #'chunyang-save-scratch))
 
 (use-package easy-repeat
   :ensure t :defer t)
