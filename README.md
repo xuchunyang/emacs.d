@@ -15,10 +15,17 @@ $ git https://github.com/xuchunyang/emacs.d.git ~/.emacs.d
 ```console
 $ sudo port install coreutils
 ```
+
 ### Spell checking
 
 ```console
 $ sudo port install aspellaspell-dict-en
+```
+
+### Mail
+
+```console
+$ sudo port install mu offlineimap msmtp
 ```
 
 ## Notable packages
