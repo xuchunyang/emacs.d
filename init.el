@@ -227,7 +227,7 @@
 
 ;; Save Minibuffer histroy
 (use-package savehist
-  :defer 5
+  :defer 3
   :config
   (setq history-length 1000
         history-delete-duplicates t)
@@ -1226,3 +1226,7 @@ See also `describe-function-or-variable'."
   :disabled t
   :ensure t
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(use-package calfw
+  :ensure t :defer t
+  :init (use-package calfw-org :defer 5))
