@@ -19,13 +19,14 @@ $ sudo port install coreutils
 ### Spell checking
 
 ```console
-$ sudo port install aspellaspell-dict-en
+$ sudo port install aspell aspell-dict-en
 ```
 
 ### Mail
 
 ```console
-$ sudo port install mu offlineimap msmtp
+$ sudo port install mu +emacs
+$ sudo port install offlineimap msmtp
 ```
 
 ## Notable packages
