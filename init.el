@@ -734,17 +734,27 @@
 ;;; Spelling and syntax checking
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
-         ("C-c i f" . flyspell-mode))
+         ("C-c i f" . flyspell-mode)
+         ("C-c T i" . chunyang-flyspell))
   :init
   (use-package ispell
-    :bind (("C-c i c" . ispell-comments-and-strings)
-           ("C-c i d" . ispell-change-dictionary)
-           ("C-c i k" . ispell-kill-ispell)
-           ("C-c i m" . ispell-message)
-           ("C-c i r" . ispell-region))
+    :defer t
     :config
-    (setq ispell-program-name "aspell"
+    (setq ispell-program-name "aspell"  ; use aspell instead of ispell
           ispell-extra-args '("--sug-mode=ultra")))
+
+  (defun chunyang-flyspell (arg)
+    "Enable flyspell as much as possible."
+    (interactive "P")
+    (if arg
+        (progn
+          (remove-hook 'text-mode-hook #'flyspell-mode)
+          (remove-hook 'prog-mode-hook #'flyspell-prog-mode)
+          (message "Disable flyspell"))
+      (add-hook 'text-mode-hook #'flyspell-mode)
+      (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+      (message "Enable flyspell")))
+
   :config
   (unbind-key "C-." flyspell-mode-map)
   (unbind-key "C-M-i" flyspell-mode-map))
