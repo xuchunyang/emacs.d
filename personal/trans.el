@@ -1,12 +1,19 @@
 ;;; trans.el --- Emacs frontend for <https://github.com/soimort/translate-shell>  -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2015  Chunyang Xu
+
+;; Author: Chunyang Xu <xuchunyang56@gmail.com>
+;; Package-Requires: ((emacs "24.4") (persistent-soft "0.8.10"))
 
 ;;; Commentary:
 ;;
 
 ;;; Code:
 
-(require 'subr-x)
+(require 'ansi-color)
+(require 'subr-x)                       ; 24.4+
+(require 'persistent-soft)
+(require 'popup nil t)
 
 (defgroup trans nil
   "A Emacs frontend for <https://github.com/soimort/translate-shell>."
@@ -44,7 +51,7 @@
                        (region-beginning) (region-end)))
                     (thing-at-point 'word t))))
   (unless text (error "No useable text at point"))
-  (unless (require 'popup nil t) (error "`popup' no avaiable"))
+  (unless (featurep 'popup) (error "`popup' no avaiable"))
   (popup-tip
    (string-trim (trans--1 text "-b"))
    :margin t))
@@ -77,9 +84,16 @@
                  (list text)))
   (with-current-buffer (get-buffer-create trans--buffer)
     (erase-buffer)
-    (insert (trans--1 text))
-    (require 'ansi-color)
+    (let* ((sym (intern (concat "trans-" text)))
+           (location "trans-cache")
+           (fetch (persistent-soft-fetch sym location)))
+      (if fetch
+          (insert fetch)
+        (let ((res (trans--1 text)))
+          (insert res)
+          (persistent-soft-store sym res location))))
     (ansi-color-apply-on-region (point-min) (point-max))
+    (goto-char (point-min))
     (pop-to-buffer trans--buffer)))
 
 (provide 'trans)
