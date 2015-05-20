@@ -490,18 +490,20 @@ end tell
                                    ".scratch.bak~" user-emacs-directory))
 
 (defun chunyang-save-scratch ()
-  (when-let ((buf (get-buffer "*scratch*")))
-    (with-current-buffer buf
-      (widen)
-      (ignore-errors
-        (write-region (point-min) (point-max) chunyang-scratch-log-file)))))
+  (let ((buf (get-buffer "*scratch*")))
+    (when buf
+      (with-current-buffer buf
+        (widen)
+        (ignore-errors
+          (write-region (point-min) (point-max) chunyang-scratch-log-file))))))
 
 (defun chunyang-restore-scratch ()
   (interactive)
-  (when-let ((buf (get-buffer "*scratch*")))
-    (with-current-buffer buf
-      (erase-buffer)
-      (insert-file-contents chunyang-scratch-log-file))))
+  (let ((buf (get-buffer "*scratch*")))
+    (when buf
+      (with-current-buffer buf
+        (erase-buffer)
+        (insert-file-contents chunyang-scratch-log-file)))))
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
