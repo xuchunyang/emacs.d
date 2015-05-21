@@ -888,7 +888,8 @@ See also `describe-function-or-variable'."
 
 (use-package git-messenger
   :ensure t
-  :bind ("C-x v P" . git-messenger:popup-messagew))
+  :init (defvar git-messenger-map nil)
+  :bind ("C-x v P" . git-messenger:popup-message))
 
 (use-package magit                      ; The one and only Git frontend
   :ensure t
