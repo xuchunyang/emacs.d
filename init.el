@@ -213,6 +213,26 @@
                     (helm-imenu))
      source (lambda (_candidate) t))))
 
+(use-package helm-elisp-package
+  :defer t
+  :config
+  (defmethod helm-setup-user-source ((source helm-list-el-package-source))
+    (helm-source-add-action-to-source-if
+     "Visit Homepage"
+     (defun helm-el-package-visit-homepage-action (candidate)
+       (let* ((id (get-text-property 0 'tabulated-list-id candidate))
+              (pkg (if (fboundp 'package-desc-name) (package-desc-name id)
+                     (car id)))
+              (desc (cadr (assoc pkg package-archive-contents)))
+              (extras   (package-desc-extras desc))
+              (url (and (listp extras) (cdr-safe (assoc :url extras)))))
+         (if (stringp url)
+             (browse-url url)
+           (message "Package %s has no homepage."
+                    (propertize (symbol-name pkg)
+                                'face 'font-lock-keyword-face)))))
+     source (lambda (_candidate) t))))
+
 (use-package helm-descbinds
   :ensure t
   :bind ("C-h b" . helm-descbinds)
