@@ -159,16 +159,6 @@ prefix argument, the process's buffer is displayed."
          (buffer-list))))
 
 
-(defun chunyang-buffer-name-kill-ring-save (arg)
-  "Push name of current buffer to kill-ring.
-With prefix ARG, use filename."
-  (interactive "P")
-  (if arg
-      (and buffer-file-name
-           (kill-new buffer-file-name))
-    (kill-new (buffer-name))))
-
-
 ;;; Download stuffs
 (defun chunyang-download-file-old (url file)
   "Download URL as file."
@@ -468,7 +458,8 @@ end tell
     (auto-fill-mode)))
 
 
-(defun chunyang-buffer-name-kill-ring-save ()
+;;;###autoload
+(defun chunyang-copy-buffer-name-as-kill ()
   "Put name of the current buffer to kill-ring."
   (interactive)
   (let ((buf (buffer-name)))

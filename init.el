@@ -1,14 +1,34 @@
-;;; Let's Go!
+;;; init.el --- Emacs configuration of Chunyang Xu  -*- lexical-binding: t; -*-
+;;
+;; Copyright (c) 2015 Chunyang Xu <xuchunyang56@gmail.com>
+;;
+;; Author: Chunyang Xu <xuchunyang56@gmail.com>
+;; URL: https://github.com/xuchunyang/emacs.d
+;;
+;;; License: GPLv3
+
+;;; Commentary:
+
+;; User key prefixes:
+;;
+;; - C-c A: Align
+;; - C-c h: Helm
+;; - C-c L: List things
+;; - C-c t: Toggle things
+;; - C-x v: VCS
+
+;;; Code:
+
 (unless noninteractive
   (message "Loading %s..." load-file-name))
-
 (setq message-log-max 16384)
-(setq load-prefer-newer t)                ; Please don't load outdated byte code
-(eval-after-load 'advice
-  `(setq ad-redefinition-action 'accept)) ; No more warning
 
 
 ;;; Package management
+
+;; Please don't load outdated byte code
+(setq load-prefer-newer t)
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
@@ -20,8 +40,15 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(defvar use-package-verbose t)
-(require 'use-package)
+(eval-and-compile
+  (defvar use-package-verbose t)
+  ;; (defvar use-package-expand-minimally t)
+  (eval-after-load 'advice
+    `(setq ad-redefinition-action 'accept))
+  (require 'use-package))
+
+(require 'bind-key)
+(require 'diminish)
 
 ;; My personal packages
 (push (expand-file-name "personal" user-emacs-directory) load-path)
@@ -30,6 +57,7 @@
 ;;; Initialization
 (setq inhibit-default-init t)           ; And disable the site default settings
 
+
 ;;; Customization interface
 (use-package cus-edit
   :defer t :init
@@ -51,7 +79,7 @@
 (use-package exec-path-from-shell
   :ensure t
   :defer 3
-  :if (eq system-type 'darwin)
+  :if (and (eq system-type 'darwin) (display-graphic-p))
   :config
   (exec-path-from-shell-copy-env "INFOPATH")
   (exec-path-from-shell-copy-env "MANPATH")
@@ -61,6 +89,12 @@
   :defer t
   :config
   (add-to-list 'Info-directory-list "/opt/local/share/info"))
+
+(use-package osx-trash                  ; Trash support for OS X
+  :if (eq system-type 'darwin)
+  :ensure t
+  :defer t :init
+  (osx-trash-setup))
 
 
 ;;; User interface
@@ -113,7 +147,6 @@
 
 
 ;;; The minibuffer
-(use-package async    :ensure t :defer t)
 (use-package helm     :ensure t :defer t)
 
 (use-package helm-config
@@ -293,18 +326,32 @@
 (setq backup-directory-alist `((".*" . ,(locate-user-emacs-file ".backup")))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
+;; Delete files to trash
+(setq delete-by-moving-to-trash t)
+
+(use-package files
+  :bind (("C-c f u" . revert-buffer)
+         ("C-c f n" . normal-mode))
+  :config
+  ;; FIXME: shoud not hard code
+  (setq insert-directory-program "/opt/local/bin/gls"))
+
+;;; Additional bindings for built-ins
+(bind-key "C-c f v l" #'add-file-local-variable)
+(bind-key "C-c f v p" #'add-file-local-variable-prop-line)
+
 (use-package dired                      ; Edit directories
   :defer t
   :config
-  ;; VCS integration with `diff-hl'
-  ;; (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
-
-  (setq insert-directory-program "/opt/local/bin/gls")
-
   (use-package dired-x
     :commands dired-omit-mode
     :defer t :init
-    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))))
+    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1))))
+  ;; VCS integration with `diff-hl'
+  (use-package diff-hl
+    :ensure t
+    :defer t :init
+    (add-hook 'dired-mode-hook 'diff-hl-dired-mode)))
 
 (use-package direx
   :disabled t
@@ -381,7 +428,8 @@
              chunyang-restore-scratch)
   :bind (([remap split-window-right] . chunyang-split-window-right)
          ([remap split-window-below] . chunyang-split-window-below)
-         ("M-o"                      . chunyang-other-window))
+         ("M-o"                      . chunyang-other-window)
+         ("C-c f w"                  . chunyang-copy-buffer-name-as-kill))
   :init
   (add-hook 'kill-emacs-hook #'chunyang-save-scratch))
 
@@ -1125,7 +1173,6 @@ See also `describe-function-or-variable'."
   :bind (("C-c a"   . org-agenda)
          ("C-c c"   . org-capture)
          ("C-c l"   . org-store-link)
-         ("C-c b"   . org-iswitchb)
          ("C-c C-o" . org-open-at-point-global))
 
   :config
@@ -1213,3 +1260,5 @@ See also `describe-function-or-variable'."
   :init (use-package calfw-org :defer 5))
 
 (bind-key "C-h h" #'describe-personal-keybindings)
+
+;;; init.el ends here
