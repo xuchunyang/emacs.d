@@ -2,14 +2,10 @@
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
-(defconst *is-a-mac* (eq system-type 'darwin))
-
 (setq message-log-max 16384)
 (setq load-prefer-newer t)                ; Please don't load outdated byte code
 (eval-after-load 'advice
   `(setq ad-redefinition-action 'accept)) ; No more warning
-
-(push (expand-file-name "personal" user-emacs-directory) load-path)
 
 
 ;;; Package management
@@ -19,11 +15,16 @@
 
 (package-initialize)
 
-(defvar use-package-verbose t)
-(unless (require 'use-package nil 'no-error)
-  (unless (assoc 'use-package package-archive-contents)
-    (package-refresh-contents))
+;; Bootstrap `use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
+
+(defvar use-package-verbose t)
+(require 'use-package)
+
+;; My personal packages
+(push (expand-file-name "personal" user-emacs-directory) load-path)
 
 
 ;;; Initialization
@@ -38,7 +39,7 @@
 
 ;;; OS X support
 (use-package ns-win
-  :if (and (window-system) *is-a-mac*)
+  :if (and (window-system) (eq system-type 'darwin))
   :defer t
   :config (setq ns-pop-up-frames nil     ; Don't pop up new frames from the workspace
                 mac-command-modifier 'meta
@@ -50,7 +51,7 @@
 (use-package exec-path-from-shell
   :ensure t
   :defer 3
-  :if *is-a-mac*
+  :if (eq system-type 'darwin)
   :config
   (exec-path-from-shell-copy-env "INFOPATH")
   (exec-path-from-shell-copy-env "MANPATH")
@@ -69,7 +70,7 @@
 ;; which is rather pointless.
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
-(when (and (not *is-a-mac*) (fboundp 'menu-bar-mode))
+(when (and (not (eq system-type 'darwin)) (fboundp 'menu-bar-mode))
   (menu-bar-mode -1))
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
@@ -250,8 +251,8 @@
   :init (popwin-mode 1))
 
 (use-package frame
-  :bind (("C-c T F" . toggle-frame-fullscreen)
-         ("C-c T m" . toggle-frame-maximized))
+  :bind (("C-c t F" . toggle-frame-fullscreen)
+         ("C-c t m" . toggle-frame-maximized))
   :config
   (add-to-list 'initial-frame-alist '(maximized . fullscreen))
   (unbind-key "C-x C-z"))
@@ -283,7 +284,7 @@
 
 (use-package writeroom-mode             ; Distraction-free editing
   :ensure t
-  :bind (("C-c T R" . writeroom-mode)))
+  :bind (("C-c t R" . writeroom-mode)))
 
 
 ;;; File handling
@@ -425,24 +426,6 @@
          ("C-c A c" . align-current)
          ("C-c A r" . align-regexp)))
 
-(use-package multiple-cursors           ; Edit text with multiple cursors
-  :disabled t
-  :ensure t
-  :bind (("C-c m e"   . mc/mark-more-like-this-extended)
-         ("C-c m h"   . mc/mark-all-like-this-dwim)
-         ("C-c m l"   . mc/edit-lines)
-         ("C-c m n"   . mc/mark-next-like-this)
-         ("C-c m p"   . mc/mark-previous-like-this)
-         ("C-c m r"   . vr/mc-mark)
-         ("C-c m C-a" . mc/edit-beginnings-of-lines)
-         ("C-c m C-e" . mc/edit-ends-of-lines)
-         ("C-c m C-s" . mc/mark-all-in-region))
-  :config
-  (setq mc/mode-line
-        ;; Simplify the MC mode line indicator
-        '(:propertize (:eval (concat " " (number-to-string (mc/num-cursors))))
-                      face font-lock-warning-face)))
-
 (use-package undo-tree                  ; Branching undo
   :disabled t
   :ensure t
@@ -451,7 +434,7 @@
 
 (use-package nlinum                     ; Line numbers in display margin
   :ensure t
-  :bind (("C-c T l" . nlinum-mode)))
+  :bind (("C-c t l" . nlinum-mode)))
 
 ;; Give us narrowing back!
 (put 'narrow-to-region 'disabled nil)
@@ -521,7 +504,7 @@
 
 ;;; Highlights
 (use-package hl-line
-  :bind ("C-c T L" . hl-line-mode)
+  :bind ("C-c t L" . hl-line-mode)
   :init
   (use-package hl-line+ :ensure t :defer t))
 
@@ -543,7 +526,7 @@
 (use-package color-identifiers-mode
   :ensure t
   :diminish color-identifiers-mode
-  :bind ("C-c T c" . global-color-identifiers-mode))
+  :bind ("C-c t c" . global-color-identifiers-mode))
 
 
 ;;; Skeletons, completion and expansion
@@ -596,7 +579,7 @@
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
          ("C-c i f" . flyspell-mode)
-         ("C-c T i" . chunyang-flyspell))
+         ("C-c t i" . chunyang-flyspell))
   :init
   (use-package ispell
     :defer t
@@ -622,7 +605,7 @@
 
 (use-package flycheck
   :ensure t
-  :bind (("C-c T f" . global-flycheck-mode)
+  :bind (("C-c t f" . global-flycheck-mode)
          ("C-c L e" . list-flycheck-errors))
   :config
   (setq flycheck-emacs-lisp-load-path 'inherit)
@@ -726,7 +709,7 @@
 
 (use-package rainbow-mode               ; Fontify color values in code
   :ensure t
-  :bind (("C-c T r" . rainbow-mode))
+  :bind (("C-c t r" . rainbow-mode))
   :config (add-hook 'css-mode-hook #'rainbow-mode))
 
 (use-package quickrun
@@ -804,7 +787,7 @@ See also `describe-function-or-variable'."
   :config
   (bind-key "C-h C-." #'chunyang-elisp-function-or-variable-quickhelp)
   (bind-key "M-:"     #'pp-eval-expression)
-  (bind-key "C-c T d" #'toggle-debug-on-error)
+  (bind-key "C-c t d" #'toggle-debug-on-error)
 
   (use-package rebox2
     :ensure t
@@ -988,7 +971,7 @@ See also `describe-function-or-variable'."
           "C-c h"                       ; Helm
           "C-x n"                       ; Narrowing
           "C-c p"                       ; Projectile
-          "C-c T"                       ; Personal Toggle commands
+          "C-c t"                       ; Personal Toggle commands
           "C-c L"                       ; Personal List something commands
           "C-c f"                       ; File
           "C-x v"                       ; VCS
@@ -1011,18 +994,6 @@ See also `describe-function-or-variable'."
 
 
 ;;; Net & Web & Email
-(use-package circe
-  :disabled t
-  :ensure t
-  :commands circe
-  :config
-  (load-file  "~/.private.el")
-  (setq circe-network-options
-        `(("Freenode"
-           :nick "chunyang"
-           :channels ("#emacs", "#MacPorts")
-           :nickserv-password ,freenode-password))))
-
 (use-package rcirc
   :defer t
   :config
@@ -1032,12 +1003,16 @@ See also `describe-function-or-variable'."
                '("irc.freenode.net"
                  :channels ("#macports-gsoc")))
   (load-file  "~/.private.el")
-  (rcirc-track-minor-mode 1))
+  (add-hook 'rcirc-mode-hook #'flyspell-mode)
+  (rcirc-track-minor-mode))
 
 (use-package mu4e
   :load-path "/opt/local/share/emacs/site-lisp/mu4e"
   :commands mu4e
   :config
+  ;; Creating org-mode links
+  (use-package org-mu4e)
+
   (setq mu4e-drafts-folder "/[Gmail].Drafts"
         mu4e-sent-folder   "/[Gmail].Sent Mail"
         mu4e-trash-folder  "/[Gmail].Trash")
@@ -1092,12 +1067,13 @@ See also `describe-function-or-variable'."
   ;; don't keep message buffers around
   (setq message-kill-buffer-on-exit t))
 
+(use-package sx                  :ensure t :defer t)
+(use-package helm-zhihu-daily    :ensure t :defer t)
+
 (use-package weibo
   :disabled t
   :ensure t
   :config (load-file "~/.private.el"))
-
-(use-package helm-zhihu-daily :ensure t :defer t)
 
 (use-package google-this
   :disabled t
@@ -1107,8 +1083,6 @@ See also `describe-function-or-variable'."
   :bind-keymap ("C-c g" . google-this-mode-submap)
   :config
   (google-this-mode))
-
-(use-package sx :ensure t :defer t)
 
 
 ;;; Dictionary
@@ -1139,7 +1113,6 @@ See also `describe-function-or-variable'."
   :mode "Portfile")
 
 (bind-key "C-h C-k" #'find-function-on-key)
-;; (bind-key "C-h h" #'describe-personal-keybindings)
 
 
 ;;; Web Development
@@ -1181,7 +1154,7 @@ See also `describe-function-or-variable'."
   (setq org-clock-persist-query-resume nil)
 
   (use-package org-mac-link
-    :if *is-a-mac*
+    :if (eq system-type 'darwin)
     :ensure t
     :commands (org-mac-chrome-insert-frontmost-url))
 
@@ -1237,3 +1210,5 @@ See also `describe-function-or-variable'."
 (use-package calfw
   :ensure t :defer t
   :init (use-package calfw-org :defer 5))
+
+(bind-key "C-h h" #'describe-personal-keybindings)
