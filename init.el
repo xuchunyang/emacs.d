@@ -78,7 +78,7 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  :defer 3
+  :defer 1
   :if (and (eq system-type 'darwin) (display-graphic-p))
   :config
   (exec-path-from-shell-copy-env "INFOPATH")
@@ -173,7 +173,7 @@
          ;; ([remap xref-find-definitions] . helm-etags-select)
          ("C-c <SPC>"                      . helm-all-mark-rings)
          ("M-i"                            . helm-occur)
-         ("C-c h i"                        . helm-semantic-or-imenu))
+         ("C-c i"                          . helm-semantic-or-imenu))
 
   :init
   (defvar helm-command-prefix-key "C-c h")
@@ -368,7 +368,7 @@
 (use-package recentf                    ; Save recently visited files
   :defer t
   :config
-  (setq recentf-max-saved-items 50
+  (setq recentf-max-saved-items 200
         ;; Cleanup recent files only when Emacs is idle, but not when the mode
         ;; is enabled, because that unnecessarily slows down Emacs. My Emacs
         ;; idles often enough to have the recent files list clean up regularly
@@ -443,21 +443,22 @@
   :init (add-hook 'prog-mode-hook 'ws-butler-mode))
 
 (use-package adaptive-wrap              ; Choose wrap prefix automatically
-  :disabled t
   :ensure t
-  :config (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
+  :defer t
+  :init
+  (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
 
 (use-package visual-fill-column
   :disabled t
   :ensure t
-  :config
-  (setq visual-fill-column-disable-fringe nil)
+  :defer t
+  :init
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 
 (use-package zop-to-char
   :ensure t
   :bind (([remap zap-to-char] . zop-to-char)
-         ("M-z"              . zop-up-to-char)))
+         ("M-z"               . zop-up-to-char)))
 
 (use-package easy-kill                  ; Easy killing and marking on C-w
   :ensure t
@@ -515,10 +516,18 @@
   :config (dolist (hook '(text-mode-hook prog-mode-hook))
             (add-hook hook #'outline-minor-mode)))
 
+(use-package imenu
+  :defer t
+  :config
+  (defun imenu-use-package ()
+    (add-to-list 'imenu-generic-expression
+                 '("Packages"
+                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
+  (add-hook 'emacs-lisp-mode-hook #'imenu-use-package))
+
 (use-package imenu-anywhere             ; Helm-based imenu across open buffers
-  :disabled t
   :ensure t
-  :bind (("C-c i" . helm-imenu-anywhere)))
+  :bind ("C-c I" . helm-imenu-anywhere))
 
 (use-package imenu-list
   :ensure t
@@ -625,9 +634,7 @@
 
 ;;; Spelling and syntax checking
 (use-package flyspell
-  :bind (("C-c i b" . flyspell-buffer)
-         ("C-c i f" . flyspell-mode)
-         ("C-c t i" . chunyang-flyspell))
+  :bind ("C-c t i" . chunyang-flyspell)
   :init
   (use-package ispell
     :defer t
@@ -826,12 +833,6 @@ See also `describe-function-or-variable'."
                vdoc-short)
               :margin t)))))
 
-  (defun imenu-use-package ()
-    (add-to-list
-     'imenu-generic-expression
-     '("Package" "^\\s-*(use-package\\s-+\\(\\(\\sw\\|\\s_\\)+\\)[[:space:]
-]+[^)]" 1) t))
-
   :config
   (bind-key "C-h C-." #'chunyang-elisp-function-or-variable-quickhelp)
   (bind-key "M-:"     #'pp-eval-expression)
@@ -852,8 +853,7 @@ See also `describe-function-or-variable'."
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
     (add-hook hook 'turn-on-elisp-slime-nav-mode))
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-  (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup)
-  (add-hook 'emacs-lisp-mode-hook #'imenu-use-package))
+  (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup))
 
 (use-package eshell
   :bind  ("C-!" . eshell-command))
@@ -1114,7 +1114,17 @@ See also `describe-function-or-variable'."
   (setq sendmail-program "msmtp")
   (setq message-sendmail-extra-arguments (list '"-a" "default"))
   ;; don't keep message buffers around
-  (setq message-kill-buffer-on-exit t))
+  (setq message-kill-buffer-on-exit t)
+
+  (use-package mu4e-maildirs-extension  ; Show maildirs summary in mu4e-main-view
+    :ensure t
+    :defer t
+    :init (mu4e-maildirs-extension)))
+
+(use-package helm-mu
+  :load-path "~/wip/helm-mu"
+  :commands (helm-mu helm-mu-contacts)
+  :config (setq helm-mu-gnu-sed-program "gsed"))
 
 (use-package sx                  :ensure t :defer t)
 (use-package helm-zhihu-daily    :ensure t :defer t)
