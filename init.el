@@ -781,6 +781,7 @@
   (unbind-key "M-r" paredit-mode-map) (bind-key "M-R" #'paredit-raise-sexp  paredit-mode-map)
   (unbind-key "M-s" paredit-mode-map) (bind-key "M-S" #'paredit-splice-sexp paredit-mode-map)
   (unbind-key "C-j" paredit-mode-map)
+  (unbind-key "M-q" paredit-mode-map)
 
   (use-package paredit-menu
     :ensure t
@@ -841,7 +842,7 @@ See also `describe-function-or-variable'."
   (use-package rebox2
     :ensure t
     :diminish rebox-mode
-    :bind ([(meta q)] . rebox-dwim)
+    :bind ("M-q" . rebox-dwim)
     :preface
     (defun chunyang--elisp-comment-setup ()
       (setq-local rebox-style-loop '(21 23 25 27))
