@@ -368,28 +368,32 @@ The original idea is from `tramp-debug-message'."
                (lambda () (interactive) (chunyang-page-adjust (abs inc))))))
          map)))))
 
-;;; Applescript
-(defun chunyang-run-command-in-iterm (command)
+;;; MAc OS X
+
+(defun chunyang-run-command-in-iterm (command &optional arg)
+  "Run command in Iterm.  With ARG, change to `default-directory' firstly."
   (interactive (list
                 (read-shell-command
                  "Run command in ITerm: "
                  (when (use-region-p)
                    (buffer-substring
-                    (region-beginning) (region-end))))))
+                    (region-beginning) (region-end))))
+                current-prefix-arg))
   (do-applescript
    (format
     "
-tell application \"iTerm\"
-     activate
-     set _session to current session of current terminal
-     tell _session
-          set command to get the clipboard
-          write text \"%s\"
-     end tell
-end tell
-"
-    command)))
-
+  tell application \"iTerm\"
+       activate
+       set _session to current session of current terminal
+       tell _session
+            set command to get the clipboard
+            write text \"%s\"
+       end tell
+  end tell
+  "
+    (if (and arg default-directory)
+        (format "cd %s && %s" default-directory command)
+      command))))
 
 
 ;;; key Binding --- Repeat for a while
