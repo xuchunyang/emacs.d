@@ -52,10 +52,15 @@ With prefix argument, insert current date at point."
   (interactive "P")
   (funcall (if arg 'insert 'message) (format-time-string "%Y/%m/%d")))
 
-(defun chunyang-region-length (start end)
+(defun chunyang-region-length (beg end)
   "Return the length of current region."
-  (interactive (list (region-beginning) (region-end)))
-  (message "[%d]" (- end start)))
+  (interactive "r")
+  (message "[%d]" (- end beg)))
+
+(defun chunyang-count-lines-region (beg end)
+  "Count the number of lines in the region."
+  (interactive "r")
+  (message "%d" (count-lines beg end)))
 
 (defun imenu-elisp-sections ()
   (setq imenu-prev-index-position-function nil)
@@ -499,6 +504,30 @@ The original idea is from `tramp-debug-message'."
       (with-current-buffer buf
         (erase-buffer)
         (insert-file-contents chunyang-scratch-log-file)))))
+
+
+;;; Package
+(defun helm-show-selected-packages ()
+  (interactive)
+  (helm :sources (helm-build-sync-source "Selected Packages"
+                   :candidates package-selected-packages
+                   :action
+                   (helm-make-actions
+                    "Describe package"
+                    (lambda (candidate)
+                      (describe-package (intern candidate)))
+                    "Visit homepage"
+                    (lambda (candidate)
+                      (let* ((pkg (intern candidate))
+                             (desc (cadr (assoc pkg package-archive-contents)))
+                             (extras (package-desc-extras desc))
+                             (url (and (listp extras) (cdr-safe (assoc :url extras)))))
+                        (if (stringp url)
+                            (browse-url url)
+                          (message "Package %s has no homepage"
+                                   (propertize (symbol-name pkg)
+                                               'face 'font-lock-keyword-face)))))))
+        :candidate-number-limit 9999))
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here

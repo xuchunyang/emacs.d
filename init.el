@@ -16,6 +16,7 @@
 ;; - C-c L: List things
 ;; - C-c t: Toggle things
 ;; - C-x v: VCS
+;; - C-c /: Google Search
 
 ;;; Code:
 
@@ -143,7 +144,7 @@
 (use-package nyan-mode
   :disabled t
   :ensure t
-  :config (nyan-mode 1))
+  :config (nyan-mode))
 
 
 ;;; The minibuffer
@@ -183,11 +184,11 @@
     :defer t
     :diminish helm-mode
     :init
-    (helm-mode 1))
+    (helm-mode))
 
   (use-package helm-adaptive
-    :disabled t
-    :init (helm-adaptive-mode))
+    :defer t :init
+    (helm-adaptive-mode))
 
   (bind-key "C-c C-l"    #'helm-minibuffer-history    minibuffer-local-map)
   (bind-key "M-i"        #'helm-occur-from-isearch    isearch-mode-map)
@@ -216,6 +217,10 @@
 (use-package helm-command
   :defer t
   :config (setq helm-M-x-always-save-history t))
+
+(use-package helm-grep
+  :defer t
+  :config (use-package wgrep-helm :ensure t))
 
 (use-package helm-regexp
   :defer t
@@ -265,7 +270,7 @@
   :config
   (setq history-length 1000
         history-delete-duplicates t)
-  (savehist-mode 1))
+  (savehist-mode))
 
 
 ;;; Buffer, Windows and Frames
@@ -281,7 +286,7 @@
   :ensure t
   :defer t
   :commands popwin-mode
-  :init (popwin-mode 1))
+  :init (popwin-mode))
 
 (use-package frame
   :bind (("C-c t F" . toggle-frame-fullscreen)
@@ -306,14 +311,14 @@
 
 (use-package desktop                    ; Save buffers, windows and frames
   :defer t :init
-  (desktop-save-mode 1))
+  (desktop-save-mode))
 
 (use-package winner
   :defer 7
   :bind (("M-N" . winner-redo)
          ("M-P" . winner-undo))
   :config
-  (winner-mode 1))
+  (winner-mode))
 
 (use-package writeroom-mode             ; Distraction-free editing
   :ensure t
@@ -346,7 +351,7 @@
   (use-package dired-x
     :commands dired-omit-mode
     :defer t :init
-    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1))))
+    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
   ;; VCS integration with `diff-hl'
   (use-package diff-hl
     :ensure t
@@ -476,10 +481,11 @@
          ("C-c A r" . align-regexp)))
 
 (use-package undo-tree                  ; Branching undo
-  :disabled t
   :ensure t
   :diminish undo-tree-mode
-  :config (global-undo-tree-mode))
+  :init (global-undo-tree-mode)
+  :config
+  (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config))
 
 (use-package nlinum                     ; Line numbers in display margin
   :ensure t
@@ -529,13 +535,9 @@
   :ensure t
   :bind ("C-c I" . helm-imenu-anywhere))
 
-(use-package imenu-list
-  :ensure t
-  :commands (imenu-list imenu-list-minor-mode))
+(use-package imenu-list :ensure t :defer t)
 
-(use-package origami			; Code folding
-  :ensure t
-  :commands (origami-mode global-origami-mode))
+(use-package origami :ensure t :defer t)
 
 
 ;;; Search
@@ -547,7 +549,8 @@
   :defer t
   :config
   (dolist (file '("TAGS" "GPATH" "GRTAGS" "GTAGS"))
-    (add-to-list 'grep-find-ignored-files file)))
+    (add-to-list 'grep-find-ignored-files file))
+  (use-package wgrep :ensure t))
 
 (use-package anzu                       ; Position/matches count for isearch
   :ensure t
@@ -567,7 +570,7 @@
 
 (use-package paren                      ; Highlight paired delimiters
   :defer t :init
-  (show-paren-mode 1))
+  (show-paren-mode))
 
 (use-package rainbow-delimiters         ; Highlight delimiters by depth
   :ensure t
@@ -796,7 +799,7 @@
     "Enable `view-mode' in the output buffer - if any - so it can be closed with `\"q\"."
     (when (get-buffer out-buffer-name)
       (with-current-buffer out-buffer-name
-        (view-mode 1))))
+        (view-mode))))
 
   (defun string-first-line (string)
     (and (stringp string)
@@ -917,7 +920,7 @@ See also `describe-function-or-variable'."
   :config
   (defun chunyang--c-setup ()
     (when (derived-mode-p 'c-mode 'c++-mode)
-      (ggtags-mode 1))
+      (ggtags-mode))
     (setq-local imenu-create-index-function #'ggtags-build-imenu-index))
   (add-hook 'c-mode-common-hook #'chunyang--c-setup))
 
@@ -974,17 +977,39 @@ See also `describe-function-or-variable'."
     :ensure t :defer t :init
     (setq projectile-completion-system 'helm)
     (helm-projectile-on)
-    (use-package helm-ag :ensure t :defer t))
+    (use-package helm-ag :ensure t :defer t)
+    :config
+    (helm-add-action-to-source
+     "Ag in project" #'helm-do-ag
+     helm-source-projectile-projects)
+    (helm-add-action-to-source
+     "Visit project homepage (by using git-open)"
+     (lambda (candidate)
+       (let ((default-directory candidate))
+         (start-process-shell-command "git-open" nil "git open")))
+     helm-source-projectile-projects)
+    (helm-add-action-to-source
+     "Update project(s) (by using git-pull or svn-update)"
+     (lambda (_candidate)
+       (dolist (project-root (helm-marked-candidates))
+         (let* ((default-directory project-root)
+                (command
+                 (pcase (projectile-project-vcs project-root)
+                   (`git "git pull")
+                   (`svn "svn update")
+                   (_ (error "Unsupported VCS"))))
+                (proc (start-process-shell-command "update-repo" nil command)))
+           (set-process-sentinel
+            proc
+            (lambda (process event)
+              (if (string-equal event "finished\n")
+                  (message "Update repository (\"%s\") done" project-root)
+                (message (format "Process: %s had the event `%s'" process event))))))))
+     helm-source-projectile-projects))
 
   (projectile-global-mode))
 
-(use-package helm-open-github
-  :disabled t
-  :ensure t
-  :commands (helm-open-github-from-file
-             helm-open-github-from-issues
-             helm-open-github-from-commit
-             helm-open-github-from-pull-requests))
+(use-package helm-open-github :ensure t :defer t)
 
 (use-package helm-github-stars
   :ensure t
@@ -994,6 +1019,8 @@ See also `describe-function-or-variable'."
   (setq helm-github-stars-cache-file "~/.emacs.d/var/hgs-cache"
         helm-github-stars-refetch-time (/ 6.0 24))
   (bind-key "G" #'helm-github-stars helm-command-map))
+
+(use-package helm-chrome :ensure t :defer t)
 
 (use-package jist                       ; Gist
   :ensure t
@@ -1026,17 +1053,18 @@ See also `describe-function-or-variable'."
           "C-c f"                       ; File
           "C-x v"                       ; VCS
           "C-c A"                       ; Align
+          "C-c /"                       ; Google Search
           ))
   (add-hook 'dired-mode-hook
             (lambda () (guide-key/add-local-guide-key-sequence "%")))
-  (guide-key-mode 1))
+  (guide-key-mode))
 
 (use-package keyfreq
   :disabled t
   :ensure t
   :config
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1))
+  (keyfreq-mode)
+  (keyfreq-autosave-mode))
 
 (use-package hydra            :ensure t :defer t :disabled t)
 (use-package dash-at-point    :ensure t :defer t)
@@ -1074,6 +1102,8 @@ See also `describe-function-or-variable'."
   (setq mu4e-maildir-shortcuts
         '(("/INBOX"               . ?i)
           ("/[Gmail].Sent Mail"   . ?s)))
+  ;; Don't use ido to choose other Mail folder
+  (setq mu4e-completing-read-function #'completing-read)
   ;; allow for updating mail using 'U' in the main view:
   (setq mu4e-get-mail-command "proxychains4 offlineimap"
         mu4e-update-interval (* 15 60)  ; update every 15 minutes
@@ -1131,18 +1161,17 @@ See also `describe-function-or-variable'."
 (use-package helm-zhihu-daily    :ensure t :defer t)
 
 (use-package weibo
-  :disabled t
   :ensure t
+  :defer t
   :config (load-file "~/.private.el"))
 
 (use-package google-this
-  :disabled t
-  :defer t
   :ensure t
+  :defer t
   :diminish google-this-mode
-  :bind-keymap ("C-c g" . google-this-mode-submap)
-  :config
-  (google-this-mode))
+  :init (google-this-mode))
+
+(use-package elfeed :ensure t :defer t)
 
 
 ;;; Dictionary
@@ -1166,6 +1195,8 @@ See also `describe-function-or-variable'."
   :bind (("C-c d" . osx-dictionary-search-pointer))
   :config
   (push "*osx-dictionary*" popwin:special-display-config))
+
+(use-package bing-dict :ensure t :defer t)
 
 
 ;;; MacPorts related tools
@@ -1264,7 +1295,7 @@ See also `describe-function-or-variable'."
 (use-package org-bullets
   :disabled t
   :ensure t
-  :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 
 (use-package calfw
   :ensure t :defer t
