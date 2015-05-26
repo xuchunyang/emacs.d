@@ -254,7 +254,22 @@
     :ensure t
     :defer t
     :config
-    (setq helm-ls-git-status-command 'magit-status)))
+    (setq helm-ls-git-status-command 'magit-status)
+
+    (defun chunyang-kill-project-buffers ()
+      (interactive)
+      (when (yes-or-no-p
+             (format
+              "Do you really want to Kill all buffers of \"%s\"? "
+              (helm-ls-git-root-dir)))
+        (mapc #'kill-buffer (helm-browse-project-get-buffers
+                             (helm-ls-git-root-dir)))))
+    (bind-key "C-c p k" #'chunyang-kill-project-buffers)
+    (bind-key "C-c p h" #'helm-browse-project)
+    (bind-key "C-c p h" #'helm-browse-project)
+    (bind-key "C-c p s" #'helm-do-ag-project-root)))
+
+(use-package helm-ag :ensure t :defer t)
 
 (use-package helm-descbinds
   :ensure t
@@ -966,8 +981,6 @@ See also `describe-function-or-variable'."
   :defer 7
   :config
   (unless (server-running-p) (server-start)))
-
-(use-package helm-ag :ensure t :defer t)
 
 (use-package helm-open-github :ensure t :defer t)
 
