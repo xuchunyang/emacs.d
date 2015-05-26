@@ -251,19 +251,77 @@
                     (find-file candidate)
                     (helm-imenu))
      source (lambda (_candidate) t)))
+
   (use-package helm-ls-git
     :ensure t
     :defer t
-    :init (defun chunyang-kill-project-buffers ()
-            (interactive)
-            (when (require 'helm-ls-git)
-              (when (yes-or-no-p
-                     (format
-                      "Do you really want to Kill all buffers of \"%s\"? "
-                      (helm-ls-git-root-dir)))
-                (mapc #'kill-buffer (helm-browse-project-get-buffers
-                                     (helm-ls-git-root-dir))))))
-    :config (setq helm-ls-git-status-command 'magit-status)
+    :init
+    (defun chunyang-kill-project-buffers ()
+      (interactive)
+      (when (require 'helm-ls-git)
+        (when (yes-or-no-p
+               (format
+                "Do you really want to Kill all buffers of \"%s\"? "
+                (helm-ls-git-root-dir)))
+          (mapc #'kill-buffer (helm-browse-project-get-buffers
+                               (helm-ls-git-root-dir))))))
+
+    (defun helm-ls-git-ls--bookmark-around (orig-func &rest args)
+      (apply orig-func args)
+
+      (unless (require 'persistent-soft nil t)
+        (error "\"persistent-soft\" not found"))
+
+      (unless (helm-ls-git-not-inside-git-repo)
+        (let* ((sym '-helm-ls-git-ls--bookmark)
+               (location "projects-bookmark-cache")
+               (root (helm-ls-git-root-dir)))
+          (persistent-soft-store
+           sym
+           (delete-dups (cons root (persistent-soft-fetch sym location)))
+           location))))
+    (advice-add 'helm-ls-git-ls :around #'helm-ls-git-ls--bookmark-around)
+
+    (defun helm-ls-git-switch-project ()
+      (interactive)
+      (require 'helm-ls-git)
+      (helm :sources helm-ls-git-ls-project-source
+            :buffer "*helm project*"))
+    (bind-key "C-c p p" #'helm-ls-git-switch-project)
+
+    :config
+    (setq helm-ls-git-status-command 'magit-status)
+    (defvar helm-ls-git-ls-project-source
+      (helm-build-sync-source "Switch Project"
+        :candidates
+        (lambda ()
+          (persistent-soft-fetch '-helm-ls-git-ls--bookmark "projects-bookmark-cache"))
+        :action (helm-make-actions
+                 "Files & Buffers"
+                 (lambda (candidate)
+                   (let ((default-directory candidate))
+                     (call-interactively #'helm-ls-git-ls)))
+                 "Magit" #'magit-status
+                 "Dired" #'dired
+                 "Visit homepage (with git-open)"
+                 (lambda (candidate)
+                   (let ((default-directory candidate))
+                     (start-process-shell-command "git-open" nil "git open")))
+                 "Update project(s) (with git-pull"
+                 (lambda (_candidate)
+                   (dolist (project-root (helm-marked-candidates))
+                     (let* ((default-directory project-root)
+                            (command "git pull")
+                            (proc (start-process-shell-command "update-repo" nil command)))
+                       (set-process-sentinel
+                        proc
+                        (lambda (process event)
+                          (if (string-equal event "finished\n")
+                              (message "Update repository (\"%s\") done" project-root)
+                            (message (format "Process: %s had the event `%s'" process event))))))))
+                 ;; TODO: Remove project from bookmark
+                 )))
+    ;; TODO: Clean non-exist projects
     :bind ("C-c p k" . chunyang-kill-project-buffers)))
 
 (use-package helm-ag
