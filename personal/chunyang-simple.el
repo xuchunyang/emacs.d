@@ -511,14 +511,15 @@ The original idea is from `tramp-debug-message'."
   (interactive)
   (helm :sources (helm-build-sync-source "Selected Packages"
                    :candidates package-selected-packages
+                   :coerce #'intern
                    :action
                    (helm-make-actions
                     "Describe package"
                     (lambda (candidate)
-                      (describe-package (intern candidate)))
+                      (describe-package candidate))
                     "Visit homepage"
                     (lambda (candidate)
-                      (let* ((pkg (intern candidate))
+                      (let* ((pkg candidate)
                              (desc (cadr (assoc pkg package-archive-contents)))
                              (extras (package-desc-extras desc))
                              (url (and (listp extras) (cdr-safe (assoc :url extras)))))
