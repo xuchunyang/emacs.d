@@ -94,8 +94,7 @@
 (use-package osx-trash                  ; Trash support for OS X
   :if (eq system-type 'darwin)
   :ensure t
-  :defer t :init
-  (osx-trash-setup))
+  :init (osx-trash-setup))
 
 
 ;;; User interface
@@ -218,9 +217,7 @@
   :defer t
   :config (setq helm-M-x-always-save-history t))
 
-(use-package helm-grep
-  :defer t
-  :config (use-package wgrep-helm :ensure t))
+(use-package wgrep-helm :ensure t :defer t)
 
 (use-package helm-regexp
   :defer t
@@ -241,7 +238,6 @@
   (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff"))
 
 (use-package helm-files
-  :defer t
   :bind ("C-c p h" . helm-browse-project)
   :config
   (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
@@ -326,7 +322,6 @@
 
 (use-package helm-ag
   :ensure t
-  :defer t
   :bind ("C-c p s" . helm-do-ag-project-root))
 
 (use-package helm-descbinds
@@ -344,8 +339,7 @@
 
 ;; Save Minibuffer histroy
 (use-package savehist
-  :defer 3
-  :config
+  :init
   (setq history-length 1000
         history-delete-duplicates t)
   (savehist-mode))
@@ -362,7 +356,6 @@
 
 (use-package popwin
   :ensure t
-  :defer t
   :commands popwin-mode
   :init (popwin-mode))
 
@@ -376,8 +369,7 @@
 ;;; Note: already enabled by default from Emacs 24.4 (?)
 (use-package uniquify                   ; Make buffer names unique
   :defer t
-  :config
-  (setq uniquify-buffer-name-style 'forward))
+  :config (setq uniquify-buffer-name-style 'forward))
 
 (use-package ibuffer                    ; Better buffer list
   :bind (([remap list-buffers] . ibuffer)))
@@ -388,8 +380,7 @@
   (windmove-default-keybindings))
 
 (use-package desktop                    ; Save buffers, windows and frames
-  :defer t :init
-  (desktop-save-mode))
+  :init (desktop-save-mode))
 
 (use-package winner
   :defer 7
@@ -428,14 +419,13 @@
   :config
   (use-package dired-x
     :commands dired-omit-mode
-    :defer t :init
-    (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
+    :init (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
   (use-package dired-subtree :ensure t :defer t)
   ;; VCS integration with `diff-hl'
   (use-package diff-hl
     :ensure t
-    :defer t :init
-    (add-hook 'dired-mode-hook 'diff-hl-dired-mode)))
+    :defer t
+    :init (add-hook 'dired-mode-hook #'diff-hl-dired-mode)))
 
 (use-package direx
   :disabled t
@@ -466,12 +456,10 @@
   (recentf-mode))
 
 (use-package saveplace                  ; Save point position in files
-  :defer t :init
-  (save-place-mode))
+  :init (save-place-mode))
 
 (use-package autorevert                 ; Auto-revert buffers of changed files
-  :defer t :init
-  (global-auto-revert-mode))
+  :init (global-auto-revert-mode))
 
 
 ;;; Basic editing
@@ -481,12 +469,10 @@
               tab-width 8)
 
 (use-package electric                   ; Electric code layout
-  :defer t :init
-  (electric-layout-mode))
+  :init (electric-layout-mode))
 
 (use-package elec-pair                  ; Electric pairs
-  :defer t :init
-  (electric-pair-mode))
+  :init (electric-pair-mode))
 
 ;; Indicate empty lines at the end of a buffer in the fringe, but require a
 ;; final new line
@@ -514,11 +500,9 @@
          ([remap split-window-below] . chunyang-split-window-below)
          ("M-o"                      . chunyang-other-window)
          ("C-c f w"                  . chunyang-copy-buffer-name-as-kill))
-  :init
-  (add-hook 'kill-emacs-hook #'chunyang-save-scratch))
+  :init (add-hook 'kill-emacs-hook #'chunyang-save-scratch))
 
-(use-package easy-repeat
-  :ensure t :defer t)
+(use-package easy-repeat :ensure t :defer t)
 
 (use-package ws-butler
   :ensure t
@@ -529,15 +513,13 @@
 (use-package adaptive-wrap              ; Choose wrap prefix automatically
   :ensure t
   :defer t
-  :init
-  (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
+  :init (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
 
 (use-package visual-fill-column
   :disabled t
   :ensure t
   :defer t
-  :init
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
+  :init (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 
 (use-package zop-to-char
   :ensure t
@@ -560,10 +542,11 @@
          ("C-c A r" . align-regexp)))
 
 (use-package undo-tree                  ; Branching undo
+  :disabled t
   :ensure t
   :diminish undo-tree-mode
-  :init (global-undo-tree-mode)
-  :config
+  :init
+  (global-undo-tree-mode)
   (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config))
 
 (use-package nlinum                     ; Line numbers in display margin
@@ -592,8 +575,8 @@
 (use-package page-break-lines           ; Turn page breaks into lines
   :ensure t
   :diminish page-break-lines-mode
-  :defer t :init
-  (global-page-break-lines-mode))
+  :defer t
+  :init (add-hook 'prog-mode-hook #'page-break-lines-mode))
 
 (use-package outline                    ; Navigate outlines in buffers
   :disabled t
@@ -602,8 +585,7 @@
             (add-hook hook #'outline-minor-mode)))
 
 (use-package imenu
-  :defer t
-  :config
+  :init
   (defun imenu-use-package ()
     (add-to-list 'imenu-generic-expression
                  '("Packages"
@@ -629,16 +611,17 @@
   :config
   (dolist (file '("TAGS" "GPATH" "GRTAGS" "GTAGS"))
     (add-to-list 'grep-find-ignored-files file))
-  (use-package wgrep :ensure t))
+  (use-package wgrep :ensure t :defer t) ; conf done by package.el (autload)
+  )
 
 (use-package anzu                       ; Position/matches count for isearch
-  :ensure t
-  :diminish anzu-mode
-  :defer t :init
-  (global-anzu-mode +1)
-  (setq anzu-replace-to-string-separator " => ")
-  (bind-key "M-%" 'anzu-query-replace)
-  (bind-key "C-M-%" 'anzu-query-replace-regexp))
+   :ensure t
+   :diminish anzu-mode
+   :init
+   (global-anzu-mode +1)
+   (setq anzu-replace-to-string-separator " => ")
+   (bind-key "M-%" 'anzu-query-replace)
+   (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
 
 ;;; Highlights
@@ -648,19 +631,18 @@
   (use-package hl-line+ :ensure t :defer t))
 
 (use-package paren                      ; Highlight paired delimiters
-  :defer t :init
-  (show-paren-mode))
+  :init (show-paren-mode))
 
 (use-package rainbow-delimiters         ; Highlight delimiters by depth
   :ensure t
-  :defer t :init
-  (dolist (hook '(text-mode-hook prog-mode-hook))
-    (add-hook hook #'rainbow-delimiters-mode)))
+  :defer t
+  :init (dolist (hook '(text-mode-hook prog-mode-hook))
+          (add-hook hook #'rainbow-delimiters-mode)))
 
 (use-package hl-todo
   :ensure t
-  :defer t :init
-  (global-hl-todo-mode))
+  :defer t
+  :init (add-hook 'prog-mode-hook #'hl-todo-mode))
 
 (use-package color-identifiers-mode
   :ensure t
@@ -699,7 +681,7 @@
 (use-package company                    ; Graphical (auto-)completion
   :ensure t
   :diminish company-mode
-  :defer t
+  :commands company-complete
   :config
   ;; Use Company for completion
   (bind-key [remap completion-at-point] #'company-complete company-mode-map)
@@ -709,9 +691,7 @@
         company-show-numbers t)
   :init (global-company-mode))
 
-(use-package yasnippet
-  :ensure t
-  :defer t)
+(use-package yasnippet :ensure t :defer t)
 
 
 ;;; Spelling and syntax checking
@@ -781,8 +761,7 @@
 (use-package iedit
   :disabled t                           ; TODO: read manual
   :ensure t
-  :config
-  (bind-key [C-return] #'iedit-rectangle-mode))
+  :config (bind-key [C-return] #'iedit-rectangle-mode))
 
 
 ;;; Other markup languages
@@ -794,9 +773,7 @@
          ("\\.markdown\\'"    . markdown-mode))
   :config (setq markdown-command "kramdown"))
 
-(use-package yaml-mode
-  :ensure t
-  :defer t)
+(use-package yaml-mode :ensure t :defer t)
 
 
 ;;; Programming utilities
@@ -836,7 +813,8 @@
 (use-package highlight-symbol           ; Highlighting and commands for symbols
   :ensure t
   :diminish highlight-symbol-mode
-  :defer t :init
+  :defer t
+  :init
   ;; Navigate occurrences of the symbol under point with M-n and M-p
   (add-hook 'prog-mode-hook #'highlight-symbol-nav-mode)
   ;; Highlight symbol occurrences
