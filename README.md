@@ -45,7 +45,7 @@ $ sudo port install offlineimap msmtp
 - **Syntax checking**: [Flycheck](http://flycheck.readthedocs.org)
 - **Auto-completion**: [Company Mode](http://company-mode.github.io)
 - **Symbols**: [Highlight Symbol](https://github.com/nschum/highlight-symbol.el)
-- **Project navigation**: [Projectile](https://github.com/bbatsov/projectile)
+- **Project navigation**: [helm-ls-git](https://github.com/emacs-helm/helm-ls-git)
 - **Lisp**: [Paredit](http://mumble.net/~campbell/emacs/paredit.html)
 - **Emacs Lisp**: [Macrostep](https://github.com/joddie/macrostep)
 - **Social Network**: [SX](https://github.com/vermiculus/sx.el)

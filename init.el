@@ -249,7 +249,12 @@
      "Imenu file" (lambda (candidate)
                     (find-file candidate)
                     (helm-imenu))
-     source (lambda (_candidate) t))))
+     source (lambda (_candidate) t)))
+  (use-package helm-ls-git
+    :ensure t
+    :defer t
+    :config
+    (setq helm-ls-git-status-command 'magit-status)))
 
 (use-package helm-descbinds
   :ensure t
@@ -352,6 +357,7 @@
     :commands dired-omit-mode
     :defer t :init
     (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
+  (use-package dired-subtree :ensure t :defer t)
   ;; VCS integration with `diff-hl'
   (use-package diff-hl
     :ensure t
@@ -961,53 +967,7 @@ See also `describe-function-or-variable'."
   :config
   (unless (server-running-p) (server-start)))
 
-(use-package projectile                 ; Project management
-  :ensure t
-  :defer 5
-  :bind-keymap ("C-c p" . projectile-command-map)
-  :config
-  (setq projectile-mode-line '(:eval (if (condition-case nil
-                                             (and projectile-require-project-root
-                                                  (projectile-project-root))
-                                           (error nil))
-                                         (format " Project[%s]"
-                                                 (projectile-project-name))
-                                       "")))
-  (use-package helm-projectile
-    :ensure t :defer t :init
-    (setq projectile-completion-system 'helm)
-    (helm-projectile-on)
-    (use-package helm-ag :ensure t :defer t)
-    :config
-    (helm-add-action-to-source
-     "Ag in project" #'helm-do-ag
-     helm-source-projectile-projects)
-    (helm-add-action-to-source
-     "Visit project homepage (by using git-open)"
-     (lambda (candidate)
-       (let ((default-directory candidate))
-         (start-process-shell-command "git-open" nil "git open")))
-     helm-source-projectile-projects)
-    (helm-add-action-to-source
-     "Update project(s) (by using git-pull or svn-update)"
-     (lambda (_candidate)
-       (dolist (project-root (helm-marked-candidates))
-         (let* ((default-directory project-root)
-                (command
-                 (pcase (projectile-project-vcs project-root)
-                   (`git "git pull")
-                   (`svn "svn update")
-                   (_ (error "Unsupported VCS"))))
-                (proc (start-process-shell-command "update-repo" nil command)))
-           (set-process-sentinel
-            proc
-            (lambda (process event)
-              (if (string-equal event "finished\n")
-                  (message "Update repository (\"%s\") done" project-root)
-                (message (format "Process: %s had the event `%s'" process event))))))))
-     helm-source-projectile-projects))
-
-  (projectile-global-mode))
+(use-package helm-ag :ensure t :defer t)
 
 (use-package helm-open-github :ensure t :defer t)
 
