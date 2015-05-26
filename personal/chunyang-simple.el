@@ -468,13 +468,11 @@ The original idea is from `tramp-debug-message'."
 
 
 ;;;###autoload
-(defun chunyang-copy-buffer-name-as-kill ()
+(defun chunyang-copy-buffer-name-as-kill (buf)
   "Put name of the current buffer to kill-ring."
-  (interactive)
-  (let ((buf (buffer-name)))
-    (with-temp-buffer
-      (and buf (insert buf))
-      (kill-ring-save (point-min) (point-max)))))
+  (interactive "b")
+  (kill-new buf))
+
 
 (defun chunyang--new-mail-notify ()
   (let (new (string-to-number
