@@ -242,6 +242,7 @@
 
 (use-package helm-files
   :defer t
+  :bind ("C-c p h" . helm-browse-project)
   :config
   (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
   (defmethod helm-setup-user-source :after ((source helm-source-ffiles))
@@ -253,23 +254,22 @@
   (use-package helm-ls-git
     :ensure t
     :defer t
-    :config
-    (setq helm-ls-git-status-command 'magit-status)
+    :init (defun chunyang-kill-project-buffers ()
+            (interactive)
+            (when (require 'helm-ls-git)
+              (when (yes-or-no-p
+                     (format
+                      "Do you really want to Kill all buffers of \"%s\"? "
+                      (helm-ls-git-root-dir)))
+                (mapc #'kill-buffer (helm-browse-project-get-buffers
+                                     (helm-ls-git-root-dir))))))
+    :config (setq helm-ls-git-status-command 'magit-status)
+    :bind ("C-c p k" . chunyang-kill-project-buffers)))
 
-    (defun chunyang-kill-project-buffers ()
-      (interactive)
-      (when (yes-or-no-p
-             (format
-              "Do you really want to Kill all buffers of \"%s\"? "
-              (helm-ls-git-root-dir)))
-        (mapc #'kill-buffer (helm-browse-project-get-buffers
-                             (helm-ls-git-root-dir)))))
-    (bind-key "C-c p k" #'chunyang-kill-project-buffers)
-    (bind-key "C-c p h" #'helm-browse-project)
-    (bind-key "C-c p h" #'helm-browse-project)
-    (bind-key "C-c p s" #'helm-do-ag-project-root)))
-
-(use-package helm-ag :ensure t :defer t)
+(use-package helm-ag
+  :ensure t
+  :defer t
+  :bind ("C-c p s" . helm-do-ag-project-root))
 
 (use-package helm-descbinds
   :ensure t
@@ -409,7 +409,7 @@
 
 (use-package saveplace                  ; Save point position in files
   :defer t :init
-  (setq-default save-place t))
+  (save-place-mode))
 
 (use-package autorevert                 ; Auto-revert buffers of changed files
   :defer t :init
