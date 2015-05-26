@@ -530,5 +530,18 @@ The original idea is from `tramp-debug-message'."
                                                'face 'font-lock-keyword-face)))))))
         :candidate-number-limit 9999))
 
+
+(defun chunyang-weibo-post (text)
+  (interactive
+   (let* ((default (when (use-region-p)
+                     (buffer-substring
+                      (region-beginning) (region-end))))
+          (prompt (if default (format "发微博 (\"%s\"): " default)
+                    "发微博: "))
+          (string (read-string prompt nil nil default)))
+     (list string)))
+  (require 'weibo)
+  (weibo-send-status text))
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
