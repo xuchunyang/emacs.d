@@ -349,6 +349,10 @@
     ;; TODO: Clean non-exist projects
     :bind ("C-c p k" . chunyang-kill-project-buffers)))
 
+(use-package helm-man
+  :defer t
+  :config (setq helm-man-format-switches "%s"))
+
 (use-package helm-ag
   :ensure t
   :bind ("C-c p s" . helm-do-ag-project-root))
