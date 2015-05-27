@@ -282,8 +282,36 @@
       (interactive)
       (require 'helm-ls-git)
       (helm :sources helm-ls-git-ls-project-source
-            :buffer "*helm project*"))
+            :buffer "*helm project*"
+            :keymap (let ((map (make-sparse-keymap)))
+                      (set-keymap-parent map helm-map)
+                      (define-key map (kbd "C-s") #'foo-run-do-ag)
+                      (define-key map (kbd "M-g") #'foo-run-magit-status)
+                      (define-key map (kbd "C-d") #'foo-run-dired)
+                      map)))
+
     (bind-key "C-c p p" #'helm-ls-git-switch-project)
+
+    (defun foo-dired-as-action (candidate) (dired candidate))
+    (defun foo-run-dired ()
+      "Run `foo-dired-as-action' by key."
+      (interactive)
+      (with-helm-alive-p
+        (helm-quit-and-execute-action 'foo-dired-as-action)))
+
+    (defun foo-magit-status-as-action (candidate) (magit-status candidate))
+    (defun foo-run-magit-status ()
+      "Run `foo-magit-status-as-action' by key."
+      (interactive)
+      (with-helm-alive-p
+        (helm-quit-and-execute-action 'foo-magit-status-as-action)))
+
+    (defun foo-do-ag-as-action (candidate) (helm-do-ag candidate))
+    (defun foo-run-do-ag ()
+      "Run `foo-do-ag-as-action' by key."
+      (interactive)
+      (with-helm-alive-p
+        (helm-quit-and-execute-action 'foo-do-ag-as-action)))
 
     :config
     (setq helm-ls-git-status-command 'magit-status)
@@ -297,8 +325,6 @@
                  (lambda (candidate)
                    (let ((default-directory candidate))
                      (call-interactively #'helm-ls-git-ls)))
-                 "Magit" #'magit-status
-                 "Dired" #'dired
                  "Visit homepage (with git-open)"
                  (lambda (candidate)
                    (let ((default-directory candidate))
@@ -315,6 +341,9 @@
                           (if (string-equal event "finished\n")
                               (message "Update repository (\"%s\") done" project-root)
                             (message (format "Process: %s had the event `%s'" process event))))))))
+                 "Ag `C-s'" #'foo-do-ag-as-action
+                 "Magit `M-g'" #'foo-magit-status-as-action
+                 "Dired `C-d'" #'foo-dired-as-action
                  ;; TODO: Remove project from bookmark
                  )))
     ;; TODO: Clean non-exist projects
@@ -352,7 +381,8 @@
       '(:eval (if (buffer-file-name)
                   (abbreviate-file-name (buffer-file-name)) "%b")))
 
-(setq scroll-preserve-screen-position 'always) ; Ensure that M-v always undoes C-v, so you can go back exactly
+;; Ensure that M-v always undoes C-v, so you can go back exactly
+;; (setq scroll-preserve-screen-position 'always)
 
 (use-package popwin
   :ensure t
