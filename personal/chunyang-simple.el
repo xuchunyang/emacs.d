@@ -223,7 +223,10 @@ prefix argument, the process's buffer is displayed."
   ;; TODO: for the most use cases, just choose a folder to clone and don't
   ;;       change the repo name.
   (interactive
-   (let* ((repo (read-string "Repo URL:"))
+   (let* ((default (or (gui-selection-value) (car kill-ring)))
+          (prompt (if default (format "Repo URL (\"%s\"): " default)
+                    "Repo URL: "))
+          (repo (read-string prompt nil nil default))
           (guess (file-name-base repo))
           (dir (read-directory-name
                 (format "Clone %s to: " repo)
