@@ -1036,14 +1036,6 @@ See also `describe-function-or-variable'."
   :commands jist-list
   :config (load-file "~/.private.el"))
 
-(use-package paradox                    ; Better package menu
-  :ensure t
-  :bind (("C-c L p" . paradox-list-packages)
-         ("C-c L P" . package-list-packages-no-fetch))
-  :config
-  (setq paradox-github-token t
-        paradox-execute-asynchronously nil))
-
 (use-package guide-key
   :ensure t
   :diminish guide-key-mode
