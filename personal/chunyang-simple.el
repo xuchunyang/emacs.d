@@ -321,6 +321,14 @@ The original idea is from `tramp-debug-message'."
            if (and (string-match "^chunyang" fn)
                    (not (string-match exclude-func-re fn)))
            return fn))
+
+(defun chunyang-set-variable ()
+  (interactive)
+  (eval-minibuffer
+   "Eval: " (let ((var (variable-at-point)))
+              (when (boundp var)
+                (format "(setq %s nil)" var)))))
+
 
 ;;; Key binding
 ;;
