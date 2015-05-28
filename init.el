@@ -347,6 +347,10 @@
                  ;; TODO: Remove project from bookmark
                  )))
     ;; TODO: Clean non-exist projects
+
+    (setq helm-ls-git-grep-command
+          "git grep -n%cH --color=always --full-name -e %p %f")
+
     :bind ("C-c p k" . chunyang-kill-project-buffers)))
 
 (use-package helm-man
