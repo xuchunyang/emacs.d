@@ -89,6 +89,7 @@
                  (browse-url (plist-get candidate :url)))))
     :multiline t))
 
+;;;###autoload
 (defun helm-commandlinefu-browse (&optional sort-by-date)
   "Browse the Commandlinefu.com archive, sort by votes.
 If SORT-BY-DATE is non-nil, sort by date."
