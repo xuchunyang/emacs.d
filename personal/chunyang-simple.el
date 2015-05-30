@@ -543,8 +543,10 @@ The original idea is from `tramp-debug-message'."
 (defun chunyang-weibo-post (text)
   (interactive
    (let* ((default (when (use-region-p)
-                     (buffer-substring
-                      (region-beginning) (region-end))))
+                     (concat
+                      (buffer-substring
+                       (region-beginning) (region-end))
+                      "(Sent from #Emacs#)")))
           (prompt (if default (format "发微博 (\"%s\"): " default)
                     "发微博: "))
           (string (read-string prompt nil nil default)))
