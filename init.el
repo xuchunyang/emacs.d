@@ -1192,8 +1192,8 @@ See also `describe-function-or-variable'."
     :init (mu4e-maildirs-extension)))
 
 (use-package helm-mu
-  :load-path "~/wip/helm-mu"
-  :commands (helm-mu helm-mu-contacts)
+  :ensure t
+  :defer t
   :config (setq helm-mu-gnu-sed-program "gsed"))
 
 (use-package sx                  :ensure t :defer t)
