@@ -147,7 +147,9 @@
 
 
 ;;; The minibuffer
-(use-package helm     :ensure t :defer t)
+(use-package helm
+  :ensure t :defer t
+  :config (setq helm-split-window-default-side 'other))
 
 (use-package helm-config
   :defer 3
@@ -394,8 +396,9 @@
 
 (use-package popwin
   :ensure t
-  :commands popwin-mode
-  :init (popwin-mode))
+  ;; :commands popwin-mode
+  ;; :init (popwin-mode)
+  )
 
 (use-package frame
   :bind (("C-c t F" . toggle-frame-fullscreen)
@@ -1049,6 +1052,15 @@ See also `describe-function-or-variable'."
   :ensure t
   :bind ("C-x v t" . git-timemachine))
 
+;;; emacs vc-mode & svn
+;;  - [[http://lifegoo.pluskid.org/wiki/EmacsSubversion.html][Emacs 配合 Subversion 使用]]
+;;  - [[http://lifegoo.pluskid.org/wiki/EmacsVC.html][EmacsVC]]
+
+(use-package psvn :ensure t :defer t)
+
+;; svn issues a warning ("cannot set LC_CTYPE locale") if LANG is not set.
+(setenv "LANG" "C")
+
 
 ;;; Tools and utilities
 (use-package server
@@ -1062,12 +1074,15 @@ See also `describe-function-or-variable'."
   :ensure t
   :defer t
   :config
+  (load-file "~/.private.el")
   (add-hook 'helm-github-stars-clone-done-hook #'dired)
   (setq helm-github-stars-cache-file "~/.emacs.d/var/hgs-cache"
         helm-github-stars-refetch-time (/ 6.0 24))
   (bind-key "G" #'helm-github-stars helm-command-map))
 
-(use-package helm-chrome :ensure t :defer t)
+(use-package helm-chrome ;; :ensure t :defer t
+  :load-path "~/wip/helm-chrome/"
+  :commands helm-chrome-bookmarks)
 
 (use-package jist                       ; Gist
   :ensure t
