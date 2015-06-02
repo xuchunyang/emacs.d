@@ -961,13 +961,26 @@ See also `describe-function-or-variable'."
   (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup))
 
 (use-package eshell
-  :bind  ("C-!" . eshell-command)
+  :preface (defun eshell* ()
+             "Start a new eshell even if one is active."
+             (interactive)
+             (eshell t))
+  :bind  (("C-!"   . eshell-command)
+          ("C-x m" . eshell)
+          ("C-x M" . eshell*))
   :config
+  (setq eshell-history-size 5000)       ; Same as $HISTSIZE
+  (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
+                                        ; (I don't know what this means)
   (add-hook 'eshell-mode-hook
             (lambda ()
               (bind-keys :map eshell-mode-map
                          ([remap eshell-pcomplete] . helm-esh-pcomplete)
-                         ("M-p"                    . helm-eshell-history)))))
+                         ("M-p"                    . helm-eshell-history)
+                         ("C-c C-k"                . compile)
+                         ("C-c C-q"                . eshell-kill-process))
+              (eshell/export "EDITOR=emacsclient -n")
+              (eshell/export "VISUAL=emacsclient -n"))))
 
 (use-package aggressive-indent
   :ensure t
@@ -1263,10 +1276,6 @@ See also `describe-function-or-variable'."
 
 
 ;;; MacPorts related tools
-(use-package tcl-mode
-  :mode "Portfile")
-
-(bind-key "C-h C-k" #'find-function-on-key)
 
 
 ;;; Web Development
@@ -1365,5 +1374,6 @@ See also `describe-function-or-variable'."
   :init (use-package calfw-org :defer 5))
 
 (bind-key "C-h h" #'describe-personal-keybindings)
+(bind-key "C-h C-k" #'find-function-on-key)
 
 ;;; init.el ends here
