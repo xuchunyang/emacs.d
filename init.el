@@ -872,6 +872,9 @@
   :ensure t :defer t
   :config (push "*quickrun*" popwin:special-display-config))
 
+(use-package prog-mode                  ; Prog Mode
+  :bind (("C-c t p" . prettify-symbols-mode)))
+
 
 ;;; Generic Lisp
 (use-package paredit                    ; Balanced sexp editing
@@ -958,7 +961,13 @@ See also `describe-function-or-variable'."
   (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup))
 
 (use-package eshell
-  :bind  ("C-!" . eshell-command))
+  :bind  ("C-!" . eshell-command)
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+              (bind-keys :map eshell-mode-map
+                         ([remap eshell-pcomplete] . helm-esh-pcomplete)
+                         ("M-p"                    . helm-eshell-history)))))
 
 (use-package aggressive-indent
   :ensure t

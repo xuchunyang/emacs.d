@@ -149,6 +149,7 @@ prefix argument, the process's buffer is displayed."
 (defun chunyang-launch-sentinel (proc event)
   "Reports on changes in `chunyang-launch'ed applications."
   (message (format "%s: %s" proc event)))
+
 
 ;;; TODO: finish this.
 (defun chunyang-kill-all-buffer ()
@@ -165,52 +166,32 @@ prefix argument, the process's buffer is displayed."
 
 
 ;;; Download stuffs
-(defun chunyang-download-file-old (url file)
-  "Download URL as file."
-  (interactive
-   (let* ((url (read-string "URL: "))
-          (guess (file-name-nondirectory url))
-          (file (read-file-name "Save to: " nil nil nil guess)))
-     (list url file)))
-  ;; Let's Check our conditions.
-  (unless (executable-find "curl") (error "curl not found."))
-  (if (string= url "") (error "Empty URL."))
-  (if (file-exists-p file) (error "Existing file (%s)." file))
-  (unless (require 'spinner nil t) (error "Package `spinner' not found."))
-  ;;,-----------------------------------
-  ;;| Looks cool. Let's do it.
-  ;;`-----------------------------------
-  ;; FIXME: update this useage, `spinner-create' supports better way
-  (unless (alist-get 'download spinner-types)
-    (push '(download . ["下" "载" "中"]) spinner-types))
-  ;; TODO: this process reporter is not working.
-  (spinner-start 'download 3)
-  (unwind-protect
-      (if (zerop (call-process "curl" nil nil nil
-                               url
-                               "-o" file))
-          (message "Download (%s) done." file)
-        (error "curl error."))
-    (spinner-stop)))
-
 (defun chunyang-download-file (url file)
-  "Same as `chunyang-download-file-old' but use `url-copy-file' instead of curl(1)."
+  "Download URL as FILE."
   (interactive
    (let* ((url (read-string "URL: "))
           (guess (file-name-nondirectory url))
           (default-file (concat default-directory guess))
           (file (read-file-name
-                 (if guess
-                     (format "Save to (default %s): " default-file)
-                   "Save to: ")
-                 nil default-file)))
+                 "Save to: " nil nil nil default-file)))
      (list url file)))
+  (unless (require 'spinner nil t)
+    (error "Package `spinner' not found."))
   (unless (alist-get 'download spinner-types)
     (push '(download . ["下" "载" "中"]) spinner-types))
-  ;; TODO: this process reporter is not working.
-  (spinner-start 'download 3)
-  (url-copy-file url file)              ; TODO: try `url-retrieve'
-  (spinner-stop))
+  (let* ((spinner-stop-func (spinner-start 'download 3))
+         (output-buffer "*curl-output*")
+         (proc (start-process "curl" output-buffer
+                              "curl" url "-o" file)))
+    (set-process-sentinel
+     proc (lambda (proced event)
+            (unwind-protect
+                (if (string-equal event "finished\n")
+                    (progn
+                      (message "Download as \"%s\" done." file)
+                      (kill-buffer output-buffer))
+                  (error "Download failed, see %s buffer for details" output-buffer))
+              (funcall spinner-stop-func))))))
 
 (defvar chunyang-git-clone-done-action #'dired
   "Funcall called by `chunyang-git-clone'.")
@@ -220,8 +201,6 @@ prefix argument, the process's buffer is displayed."
 
 (defun chunyang-git-clone (repo dir)
   "Git clone asynchronously."
-  ;; TODO: for the most use cases, just choose a folder to clone and don't
-  ;;       change the repo name.
   (interactive
    (let* ((default (or (gui-selection-value) (car kill-ring)))
           (prompt (if default (format "Repo URL (\"%s\"): " default)
@@ -232,7 +211,6 @@ prefix argument, the process's buffer is displayed."
                 (format "Clone %s to: " repo)
                 nil nil nil guess)))
      (list repo dir)))
-  ;; Run out spinner
   (setq chunyang-git--spinner-stop (spinner-start))
   (let* ((command (format "git clone %s %s" repo dir))
          (output-buffer "*git-clone-output*")
@@ -383,6 +361,7 @@ The original idea is from `tramp-debug-message'."
              (define-key map (vector (append mods (list key)))
                (lambda () (interactive) (chunyang-page-adjust (abs inc))))))
          map)))))
+
 
 ;;; MAc OS X
 
@@ -410,59 +389,6 @@ The original idea is from `tramp-debug-message'."
     (if (and arg default-directory)
         (format "cd %s && %s" default-directory command)
       command))))
-
-
-;;; key Binding --- Repeat for a while
-
-;; TODO: single key sequence is not supported for now
-;; recenter-top-bottom
-;; move-to-window-line-top-bottom
-
-
-;;; TODO:
-;; (helm-define-key-with-subkeys global-map
-;;   (kbd "C-x v n") ?n #'git-gutter:next-hunk
-;;   '((?p . git-gutter:previous-hunk)))
-
-;;; Use functions from `helm' package
-;;
-;; * `helm-define-key-with-subkeys'
-
-;;; `other-window'
-;; (helm-define-key-with-subkeys global-map [?\C-x ?o] ?o #'other-window)
-
-;;; `forward-page' / `backward-page'
-;; (helm-define-key-with-subkeys global-map
-;;   (kbd "C-x ]") ?\] #'forward-page
-;;   '((?\[ . backward-page)))
-
-;; (helm-define-key-with-subkeys global-map
-;;   (kbd "C-x [") ?\[ #'backward-page
-;;   '((?\] . forward-page)))
-
-;; (require 'helm)
-;; (defvar chunyang-theme-helm-source
-;;   (helm-build-sync-source "My favourite color themes"
-;;     :candidates (lambda () chunyang-theme-favourites) ; Dynamically
-;;     :action (helm-make-actions
-;;              "Enable theme"
-;;              (lambda (candicate)
-;;                (let ((current-theme (car custom-enabled-themes))
-;;                      (new-theme     (intern candicate)))
-;;                  (disable-theme current-theme)
-;;                  (load-theme new-theme t))))))
-
-;; (defun chunyang-switch-theme ()
-;;   "Load one of my favourite themes."
-;;   (interactive)
-;;   (helm :sources '(chunyang-theme-helm-source)
-;;         :buffer "*helm chunyang theme*"))
-
-;; (setq chunyang-theme-favourites
-;;       '(zenburn
-;;         solarized-dark
-;;         sanityinc-tomorrow-eighties
-;;         sanityinc-tomorrow-night))
 
 
 ;;; 用于回复水木上的帖子哦
@@ -553,6 +479,41 @@ The original idea is from `tramp-debug-message'."
      (list string)))
   (require 'weibo)
   (weibo-send-status text))
+
+
+;;; Eshell (from [[https://www.masteringemacs.org/article/pcomplete-context-sensitive-completion-emacs][PComplete: Context-Sensitive Completion in Emacs - Mastering Emacs]])
+;; also see [[https://github.com/emacs-helm/helm/wiki#22-completion-in-emacs-shell][Home · emacs-helm/helm Wiki]]
+(defconst pcmpl-git-commands
+  '("add" "bisect" "branch" "checkout" "clone"
+    "commit" "diff" "fetch" "grep"
+    "init" "log" "merge" "mv" "pull" "push" "rebase"
+    "reset" "rm" "show" "status" "tag" )
+  "List of `git' commands")
+
+(defvar pcmpl-git-ref-list-cmd "git for-each-ref refs/ --format='%(refname)'"
+  "The `git' command to run to get a list of refs")
+
+(defun pcmpl-git-get-refs (type)
+  "Return a list of `git' refs filtered by TYPE"
+  (with-temp-buffer
+    (insert (shell-command-to-string pcmpl-git-ref-list-cmd))
+    (goto-char (point-min))
+    (let ((ref-list))
+      (while (re-search-forward (concat "^refs/" type "/\\(.+\\)$") nil t)
+        (add-to-list 'ref-list (match-string 1)))
+      ref-list)))
+
+(defun pcomplete/git ()
+  "Completion for `git'"
+  ;; Completion for the command argument.
+  (pcomplete-here* pcmpl-git-commands)
+  ;; complete files/dirs forever if the command is `add' or `rm'
+  (cond
+   ((pcomplete-match (regexp-opt '("add" "rm")) 1)
+    (while (pcomplete-here (pcomplete-entries))))
+   ;; provide branch completion for the command `checkout'.
+   ((pcomplete-match "checkout" 1)
+    (pcomplete-here* (pcmpl-git-get-refs "heads")))))
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
