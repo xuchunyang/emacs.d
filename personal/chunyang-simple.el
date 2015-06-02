@@ -166,10 +166,22 @@ prefix argument, the process's buffer is displayed."
 
 
 ;;; Download stuffs
+
+(defun chunyang-string-url-p (string)
+  "Test STRING is url. "
+  (with-temp-buffer
+    (insert string)
+    (thing-at-point 'url)))
+
 (defun chunyang-download-file (url file)
   "Download URL as FILE."
   (interactive
-   (let* ((url (read-string "URL: "))
+   (let* ((default-url (or (gui-selection-value) (car kill-ring)))
+          (prompt (if (and default-url
+                           (chunyang-string-url-p default-url))
+                      (format "URL (\"%s\"): " default-url)
+                    "Repo URL: "))
+          (url (read-string prompt nil nil default-url))
           (guess (file-name-nondirectory url))
           (default-file (concat default-directory guess))
           (file (read-file-name
