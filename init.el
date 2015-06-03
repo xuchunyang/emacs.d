@@ -656,16 +656,19 @@
   )
 
 (use-package anzu                       ; Position/matches count for isearch
-   :ensure t
-   :diminish anzu-mode
-   :init
-   (global-anzu-mode +1)
-   (setq anzu-replace-to-string-separator " => ")
-   (bind-key "M-%" 'anzu-query-replace)
-   (bind-key "C-M-%" 'anzu-query-replace-regexp))
+  :ensure t
+  :diminish anzu-mode
+  :init
+  (global-anzu-mode +1)
+  (setq anzu-replace-to-string-separator " => ")
+  (bind-key "M-%" 'anzu-query-replace)
+  (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
 
 ;;; Highlights
+(use-package whitespace                 ; Highlight bad whitespace (tab)
+  :bind ("C-c t w" . whitespace-mode))
+
 (use-package hl-line
   :bind ("C-c t L" . hl-line-mode)
   :init
