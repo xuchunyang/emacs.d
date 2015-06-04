@@ -1263,8 +1263,21 @@ See also `describe-function-or-variable'."
   (push "*Youdao Dictionary*" popwin:special-display-config))
 
 (use-package trans
+  :preface
+  (defun google-trans (text)
+    "Open https://www.google.com/translate_t?text=text"
+    (interactive
+     (let* ((default
+              (or (when (use-region-p)
+                    (buffer-substring (region-beginning) (region-end)))
+                  (thing-at-point 'word)))
+            (prompt (if default (format "Google Translate (default \"%s\"): " default)
+                      "Google Translate: "))
+            (string (read-string prompt nil nil default)))
+       (list string)))
+    (browse-url (concat "https://www.google.com/translate_t?text=" text)))
   :bind (("C-c g"   . trans)
-         ("C-c G"   . trans-popup)
+         ("C-c G"   . google-trans)
          ("C-c C-g" . trans-message))
   :config
   (setq trans-command "proxychains4 -q ~/repos/translate-shell/translate"))
