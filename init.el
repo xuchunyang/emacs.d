@@ -117,6 +117,14 @@
 ;; ridiculously bizarre thing entirely.
 (fset 'display-startup-echo-area-message #'ignore)
 
+(use-package unicode-fonts              ; Map Unicode blocks to fonts
+  :ensure t
+  ;; Enable emoticon mappings
+  :config (progn (setq unicode-fonts-skip-font-groups '(low-quality-glyphs)
+                       unicode-fonts-use-prepend t)
+
+                 (unicode-fonts-setup)))
+
 (and (window-system) (member "Source Code Pro for Powerline" (font-family-list))
      (set-face-attribute 'default nil :font "Source Code Pro for Powerline 13"))
 
@@ -460,6 +468,7 @@
   :config
   (use-package dired-x
     :commands dired-omit-mode
+    :diminish (dired-omit-mode . " 👻")
     :init (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
   (use-package dired-subtree :ensure t :defer t)
   ;; VCS integration with `diff-hl'
@@ -543,6 +552,13 @@
          ("C-c f w"                  . chunyang-copy-buffer-name-as-kill))
   :init (add-hook 'kill-emacs-hook #'chunyang-save-scratch))
 
+(use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
+  :ensure t
+  :bind (("C-c t c" . whitespace-cleanup-mode))
+  :init (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+          (add-hook hook #'whitespace-cleanup-mode))
+  :diminish (whitespace-cleanup-mode . " ⌫"))
+
 (use-package easy-repeat :ensure t :defer t)
 
 (use-package ws-butler
@@ -583,7 +599,6 @@
          ("C-c A r" . align-regexp)))
 
 (use-package undo-tree                  ; Branching undo
-  :disabled t
   :ensure t
   :diminish undo-tree-mode
   :init
@@ -740,7 +755,9 @@
 
 ;;; Spelling and syntax checking
 (use-package flyspell
-  :bind ("C-c t i" . chunyang-flyspell)
+  :bind (("C-c t s" . flyspell-mode)
+         ("C-c t S" . chunyang-flyspell))
+  :diminish (flyspell-mode . " ✓")
   :init
   (use-package ispell
     :defer t
