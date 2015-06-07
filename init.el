@@ -1188,6 +1188,11 @@ See also `describe-function-or-variable'."
         mu4e-update-interval (* 15 60)  ; update every 15 minutes
         )
 
+  (setq mu4e-user-mailing-lists
+        '(("macports-dev.lists.macosforge.org"     . "MPDev")
+          ("macports-users.lists.macosforge.org"   . "MPUser")
+          ("macports-tickets.lists.macosforge.org" . "MPTicks")))
+
   ;; show images
   (setq mu4e-show-images t)
 
@@ -1215,9 +1220,32 @@ See also `describe-function-or-variable'."
   (setq user-mail-address "xuchunyang56@gmail.com"
         user-full-name  "Chunyang Xu"
         mu4e-compose-signature
-        (concat
-         "Cheers,\n"
-         "Chunyang Xu\n"))
+        "Chunyang Xu\n")
+
+  (setq chunyang-main-mail-address      "xuchunyang56@gmail.com"
+        chunyang-macports-mail-address  "chunyang@macports.org")
+  ;; Let mu4e know these are mine
+  (setq mu4e-user-mail-address-list `(,chunyang-main-mail-address
+                                      ,chunyang-macports-mail-address))
+
+  ;; use `chunyang-macports-mail-address' in some cases
+  (defun auto-set-from-address ()
+    (let* ((msg mu4e-compose-parent-message))
+      (setq user-mail-address
+            (if (seq-contains-p
+                 (mapcar
+                  (lambda (mail-address)
+                    (if (or (mu4e-message-contact-field-matches msg :to  mail-address)
+                            (mu4e-message-contact-field-matches msg :cc  mail-address))
+                        t nil))
+                  `(,chunyang-macports-mail-address
+                    "macports-dev@lists.macosforge.org"
+                    "macports-users@lists.macosforge.org"))
+                 t)
+                chunyang-macports-mail-address
+              chunyang-main-mail-address))))
+  (add-hook 'mu4e-compose-pre-hook #'auto-set-from-address)
+
   ;; Send via msmtp (for socks proxy support)
   (setq message-sendmail-f-is-evil 't)
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
@@ -1234,7 +1262,8 @@ See also `describe-function-or-variable'."
 (use-package helm-mu
   :ensure t
   :defer t
-  :config (setq helm-mu-gnu-sed-program "gsed"))
+  :config (setq helm-mu-gnu-sed-program "gsed"
+                helm-mu-skip-duplicates t))
 
 (use-package sx                  :ensure t :defer t)
 (use-package helm-zhihu-daily    :ensure t :defer t)
