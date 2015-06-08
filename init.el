@@ -1172,15 +1172,19 @@ See also `describe-function-or-variable'."
 
   (setq mu4e-drafts-folder "/[Gmail].Drafts"
         mu4e-sent-folder   "/[Gmail].Sent Mail"
-        mu4e-trash-folder  "/[Gmail].Trash")
+        mu4e-trash-folder  "/[Gmail].Trash"
+        mu4e-refile-folder "/[Gmail].All Mail")
+
   ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
   (setq mu4e-sent-messages-behavior 'delete)
   ;; skip duplicate messages (caused by the combination of Gmail and offlineimap)
   (setq mu4e-headers-skip-duplicates t)
   ;; setup some handy shortcuts
   (setq mu4e-maildir-shortcuts
-        '(("/INBOX"               . ?i)
-          ("/[Gmail].Sent Mail"   . ?s)))
+        '( ("/INBOX"               . ?i)
+           ("/[Gmail].All Mail"    . ?a)
+           ("/[Gmail].Sent Mail"   . ?s)
+           ("/[Gmail].Trash"       . ?t)))
   ;; Don't use ido to choose other Mail folder
   (setq mu4e-completing-read-function #'completing-read)
   ;; allow for updating mail using 'U' in the main view:
@@ -1191,7 +1195,8 @@ See also `describe-function-or-variable'."
   (setq mu4e-user-mailing-lists
         '(("macports-dev.lists.macosforge.org"     . "MPDev")
           ("macports-users.lists.macosforge.org"   . "MPUser")
-          ("macports-tickets.lists.macosforge.org" . "MPTicks")))
+          ("macports-tickets.lists.macosforge.org" . "MPTicks")
+          ("emacs-china.googlegroups.com"          . "EmacsCN")))
 
   ;; show images
   (setq mu4e-show-images t)
@@ -1407,7 +1412,7 @@ See also `describe-function-or-variable'."
 (use-package orglink
   :ensure t
   :diminish orglink-mode
-  :defer t :init (global-orglink-mode))
+  :init (global-orglink-mode))
 
 (use-package org-bullets
   :disabled t
@@ -1416,7 +1421,7 @@ See also `describe-function-or-variable'."
 
 (use-package calfw
   :ensure t :defer t
-  :init (use-package calfw-org :defer 5))
+  :init (use-package calfw-org :commands cfw:open-org-calendar))
 
 (bind-key "C-h h" #'describe-personal-keybindings)
 (bind-key "C-h C-k" #'find-function-on-key)
