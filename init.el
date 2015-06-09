@@ -24,6 +24,9 @@
   (message "Loading %s..." load-file-name))
 (setq message-log-max 16384)
 
+(when (version< emacs-version "25")
+  (warn "This configuration needs Emacs trunk, but this is %s!" emacs-version))
+
 
 ;;; Package management
 
@@ -33,6 +36,7 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(setq package-archive-priorities '(("gnu" . 20) ("melpa" . 0)))
 
 (package-initialize)
 
@@ -963,6 +967,10 @@ See also `describe-function-or-variable'."
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup))
 
+(use-package ielm
+  :config
+  (add-hook 'ielm-mode-hook #'enable-paredit-mode))
+
 (use-package eshell
   :preface (defun eshell* ()
              "Start a new eshell even if one is active."
@@ -974,6 +982,11 @@ See also `describe-function-or-variable'."
   :config
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
+
+  (defun eshell/x ()
+    (insert "exit")
+    (eshell-send-input)
+    (delete-window))
                                         ; (I don't know what this means)
   (add-hook 'eshell-mode-hook
             (lambda ()
@@ -1109,6 +1122,11 @@ See also `describe-function-or-variable'."
   :load-path "~/wip/helm-chrome/"
   :commands helm-chrome-bookmarks)
 
+(use-package helm-firefox
+  :ensure t :defer t
+  :config (setq helm-firefox-default-directory
+                "~/Library/Application Support/Firefox/"))
+
 (use-package jist                       ; Gist
   :ensure t
   :commands jist-list
@@ -1126,13 +1144,13 @@ See also `describe-function-or-variable'."
           "C-x 4"                       ; other-window
           "C-c h"                       ; Helm
           "C-x n"                       ; Narrowing
-          "C-c p"                       ; Projectile
+          "C-c p"                       ; Project
           "C-c t"                       ; Personal Toggle commands
           "C-c L"                       ; Personal List something commands
           "C-c f"                       ; File
           "C-x v"                       ; VCS
           "C-c A"                       ; Align
-          "C-c /"                       ; Google Search
+          "C-c g"                       ; Google Search
           ))
   (add-hook 'dired-mode-hook
             (lambda () (guide-key/add-local-guide-key-sequence "%")))
@@ -1280,8 +1298,8 @@ See also `describe-function-or-variable'."
 
 (use-package google-this
   :ensure t
-  :defer t
   :diminish google-this-mode
+  :preface (defvar google-this-keybind (kbd "C-c g"))
   :init (google-this-mode))
 
 (use-package elfeed :ensure t :defer t)
@@ -1310,9 +1328,9 @@ See also `describe-function-or-variable'."
             (string (read-string prompt nil nil default)))
        (list string)))
     (browse-url (concat "https://www.google.com/translate_t?text=" text)))
-  :bind (("C-c g"   . trans)
-         ("C-c G"   . google-trans)
-         ("C-c C-g" . trans-message))
+  :bind (("C-c s"   . trans)
+         ("C-c S"   . google-trans)
+         ("C-c C-s" . trans-message))
   :config
   (setq trans-command "proxychains4 -q ~/repos/translate-shell/translate"))
 
@@ -1368,7 +1386,8 @@ See also `describe-function-or-variable'."
   (use-package org-mac-link
     :if (eq system-type 'darwin)
     :ensure t
-    :commands (org-mac-chrome-insert-frontmost-url))
+    :commands (org-mac-firefox-insert-frontmost-url
+               org-mac-chrome-insert-frontmost-url))
 
   (org-babel-do-load-languages
    'org-babel-load-languages
