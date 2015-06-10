@@ -377,6 +377,8 @@
   (helm-descbinds-mode))
 
 (use-package springboard
+  :disabled t                           ; Don't use it for a long time and
+                                        ; occupy a handy shortcuts.
   :ensure t
   :bind ("C-." . springboard))
 
@@ -587,7 +589,6 @@
          ("C-c A r" . align-regexp)))
 
 (use-package undo-tree                  ; Branching undo
-  :disabled t
   :ensure t
   :diminish undo-tree-mode
   :init
@@ -744,29 +745,22 @@
 
 ;;; Spelling and syntax checking
 (use-package flyspell
-  :bind ("C-c t i" . chunyang-flyspell)
   :init
   (use-package ispell
     :defer t
-    :config
-    (setq ispell-program-name "aspell"  ; use aspell instead of ispell
-          ispell-extra-args '("--sug-mode=ultra")))
-
-  (defun chunyang-flyspell (arg)
-    "Enable flyspell as much as possible."
-    (interactive "P")
-    (if arg
-        (progn
-          (remove-hook 'text-mode-hook #'flyspell-mode)
-          (remove-hook 'prog-mode-hook #'flyspell-prog-mode)
-          (message "Disable flyspell"))
-      (add-hook 'text-mode-hook #'flyspell-mode)
-      (add-hook 'prog-mode-hook #'flyspell-prog-mode)
-      (message "Enable flyspell")))
-
+    :config (setq ispell-program-name "aspell"  ; use aspell instead of ispell
+                  ispell-extra-args '("--sug-mode=ultra")))
+  (add-hook 'text-mode-hook #'flyspell-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
   :config
   (unbind-key "C-." flyspell-mode-map)
-  (unbind-key "C-M-i" flyspell-mode-map))
+  (unbind-key "C-M-i" flyspell-mode-map)
+  (use-package helm-flyspell
+    :ensure t
+    :init
+    (bind-key "C-." #'helm-flyspell-correct flyspell-mode-map)))
+
+(use-package writegood-mode :ensure t :defer t)
 
 (use-package flycheck
   :ensure t
@@ -1109,13 +1103,19 @@ See also `describe-function-or-variable'."
 (use-package helm-open-github :ensure t :defer t)
 
 (use-package helm-github-stars
-  :ensure t
-  :defer t
+  ;; :ensure t
+  ;; :defer t
+  :load-path "~/wip/helm-github-stars"
+  :commands (helm-github-stars helm-github-stars-fetch)
   :config
   (load-file "~/.private.el")
   (add-hook 'helm-github-stars-clone-done-hook #'dired)
   (setq helm-github-stars-cache-file "~/.emacs.d/var/hgs-cache"
-        helm-github-stars-refetch-time (/ 6.0 24))
+        helm-github-stars-refetch-time (/ 6.0 24)
+        helm-github-stars-full-frame t
+        helm-github-stars-default-sources '(hgs/helm-c-source-repos
+                                            hgs/helm-c-source-stars))
+
   (bind-key "G" #'helm-github-stars helm-command-map))
 
 (use-package helm-chrome ;; :ensure t :defer t
