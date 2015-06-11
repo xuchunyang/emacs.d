@@ -265,8 +265,10 @@
                (format
                 "Do you really want to Kill all buffers of \"%s\"? "
                 (helm-ls-git-root-dir)))
-          (mapc #'kill-buffer (helm-browse-project-get-buffers
-                               (helm-ls-git-root-dir))))))
+          (ignore-errors
+            (mapc #'kill-buffer (helm-browse-project-get-buffers
+                                 (helm-ls-git-root-dir))))
+          (message nil))))
 
     (defun helm-ls-git-ls--bookmark-around (orig-func &rest args)
       (apply orig-func args)
@@ -357,7 +359,11 @@
     (setq helm-ls-git-grep-command
           "git grep -n%cH --color=always --full-name -e %p %f")
 
-    :bind ("C-c p k" . chunyang-kill-project-buffers)))
+    :bind ("C-c p k" . chunyang-kill-project-buffers))
+
+  (use-package helm-fuzzy-find
+    :load-path "~/wip/helm-fuzzy-find/"
+    :config (bind-key "C-/" #'helm-fuzzy-find helm-command-map)))
 
 (use-package helm-man
   :defer t

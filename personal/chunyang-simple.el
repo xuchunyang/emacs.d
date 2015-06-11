@@ -527,5 +527,16 @@ The original idea is from `tramp-debug-message'."
    ((pcomplete-match "checkout" 1)
     (pcomplete-here* (pcmpl-git-get-refs "heads")))))
 
+;;; Run some commands in ITerm
+(defvar my-eshell-external-programs '("top" "htop"))
+
+(defun my-eshell-send-input (orig-fun &rest args)
+  (let ((program (progn (eshell-bol) (word-at-point))))
+    (if (member program my-eshell-external-programs)
+        (chunyang-run-command-in-iterm program)
+      (apply orig-fun args))))
+
+(advice-add 'eshell-send-input :around #'my-eshell-send-input)
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
