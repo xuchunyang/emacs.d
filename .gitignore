@@ -57,6 +57,11 @@ rcirc-log
 # Helm
 helm-adaptive-history
 
+# smex
+smex-items
+
 # Flycheck
 flycheck*
 
+# yasnippet
+snippets
