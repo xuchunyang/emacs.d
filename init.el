@@ -83,7 +83,6 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  :defer 1
   :if (and (eq system-type 'darwin) (display-graphic-p))
   :config
   (exec-path-from-shell-copy-env "INFOPATH")
@@ -136,8 +135,8 @@
 
 ;;; The mode line
 (use-package powerline
+  :disabled t
   :ensure t
-  :defer t
   :config
   (setq powerline-display-mule-info nil
         powerline-display-buffer-size t)
@@ -145,9 +144,10 @@
   (powerline-default-theme))
 
 (use-package nyan-mode
-  :disabled t
   :ensure t
-  :config (nyan-mode))
+  :config
+  (nyan-mode)
+  (column-number-mode))
 
 
 ;;; The minibuffer
@@ -198,8 +198,9 @@
   (bind-key "C-c C-l"    #'helm-minibuffer-history    minibuffer-local-map)
   (bind-key "M-i"        #'helm-occur-from-isearch    isearch-mode-map)
   (bind-keys :map helm-command-map
-             ("g" . helm-chrome-bookmarks)
-             ("z" . helm-complex-command-history))
+             ("g"   . helm-chrome-bookmarks)
+             ("z"   . helm-complex-command-history)
+             ("C-/" . helm-fuzzy-find))
   (bind-key "M-I" #'helm-do-grep)
 
   (defun toggle-small-helm-window ()
@@ -363,7 +364,7 @@
 
   (use-package helm-fuzzy-find
     :load-path "~/wip/helm-fuzzy-find/"
-    :config (bind-key "C-/" #'helm-fuzzy-find helm-command-map)))
+    :commands helm-fuzzy-find))
 
 (use-package helm-man
   :defer t
@@ -753,8 +754,7 @@
 (use-package flyspell
   :init
   (use-package ispell
-    :defer t
-    :config (setq ispell-program-name "aspell"  ; use aspell instead of ispell
+    :config (setq ispell-program-name "aspell"
                   ispell-extra-args '("--sug-mode=ultra")))
   (add-hook 'text-mode-hook #'flyspell-mode)
   (add-hook 'prog-mode-hook #'flyspell-prog-mode)
