@@ -362,6 +362,10 @@
 
     :bind ("C-c p k" . chunyang-kill-project-buffers))
 
+  (use-package helm-ls-svn
+    :load-path "~/wip/chunyang/helm-ls-svn.el"
+    :bind ("M-8" . helm-ls-svn-ls))
+
   (use-package helm-fuzzy-find
     :load-path "~/wip/helm-fuzzy-find/"
     :commands helm-fuzzy-find))
@@ -1109,9 +1113,8 @@ See also `describe-function-or-variable'."
 (use-package helm-open-github :ensure t :defer t)
 
 (use-package helm-github-stars
-  ;; :ensure t
-  ;; :defer t
-  :load-path "~/wip/helm-github-stars"
+  :ensure t
+  :defer t
   :commands (helm-github-stars helm-github-stars-fetch)
   :config
   (load-file "~/.private.el")
@@ -1440,7 +1443,6 @@ See also `describe-function-or-variable'."
   :init (global-orglink-mode))
 
 (use-package org-bullets
-  :disabled t
   :ensure t
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 
