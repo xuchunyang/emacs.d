@@ -22,6 +22,12 @@ $ sudo port install coreutils
 $ sudo port install aspell aspell-dict-en
 ```
 
+### Fuzzy find
+
+```console
+$ sudo port install fuzzy-find
+```
+
 ### Mail
 
 ```console
