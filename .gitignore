@@ -65,3 +65,6 @@ flycheck*
 
 # yasnippet
 snippets
+
+# helm-github-stars
+hgs-cache

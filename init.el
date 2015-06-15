@@ -64,10 +64,8 @@
 
 
 ;;; Customization interface
-(use-package cus-edit
-  :defer t :init
-  (setq custom-file (locate-user-emacs-file "custom.el"))
-  (load custom-file 'no-error 'no-message))
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file 'no-error 'no-message)
 
 
 ;;; OS X support
@@ -261,15 +259,16 @@
     :init
     (defun chunyang-kill-project-buffers ()
       (interactive)
-      (when (require 'helm-ls-git)
-        (when (yes-or-no-p
-               (format
-                "Do you really want to Kill all buffers of \"%s\"? "
-                (helm-ls-git-root-dir)))
-          (ignore-errors
-            (mapc #'kill-buffer (helm-browse-project-get-buffers
-                                 (helm-ls-git-root-dir))))
-          (message nil))))
+      (and (require 'helm-ls-git)
+           (helm-ls-git-root-dir)
+           (yes-or-no-p
+            (format
+             "Do you really want to Kill all buffers of \"%s\"? "
+             (helm-ls-git-root-dir)))
+           (ignore-errors
+             (mapc #'kill-buffer (helm-browse-project-get-buffers
+                                  (helm-ls-git-root-dir))))
+           (message nil)))
 
     (defun helm-ls-git-ls--bookmark-around (orig-func &rest args)
       (apply orig-func args)
@@ -1114,16 +1113,13 @@ See also `describe-function-or-variable'."
 
 (use-package helm-github-stars
   :ensure t
-  :defer t
-  :commands (helm-github-stars helm-github-stars-fetch)
   :config
   (load-file "~/.private.el")
   (add-hook 'helm-github-stars-clone-done-hook #'dired)
-  (setq helm-github-stars-cache-file "~/.emacs.d/var/hgs-cache"
-        helm-github-stars-refetch-time (/ 6.0 24)
+  (setq helm-github-stars-refetch-time (/ 6.0 24)
         helm-github-stars-full-frame t
-        helm-github-stars-default-sources '(hgs/helm-c-source-repos
-                                            hgs/helm-c-source-stars))
+        helm-github-stars-default-sources '(hgs/helm-c-source-stars
+                                            hgs/helm-c-source-repos))
 
   (bind-key "G" #'helm-github-stars helm-command-map))
 
