@@ -257,12 +257,18 @@
     :ensure t
     :defer t
     :init
+    (defun chunyang--project-root ()
+      (let ((directory default-directory))
+        (or (locate-dominating-file directory ".git")
+            (locate-dominating-file directory ".svn")
+            (locate-dominating-file directory ".hg"))))
+
     (defun chunyang-kill-project-buffers ()
       (interactive)
       (require 'helm-utils)
       (require 'seq)
-      (require 'subr-x)
-      (when-let ((project-root (vc-root-dir)))
+      (let ((project-root (chunyang--project-root)))
+        (unless project-root (user-error "Not under a project"))
         (when (yes-or-no-p
                (format
                 "Kill all buffers of \"%s\"? "
