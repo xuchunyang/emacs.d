@@ -259,16 +259,21 @@
     :init
     (defun chunyang-kill-project-buffers ()
       (interactive)
-      (and (require 'helm-ls-git)
-           (helm-ls-git-root-dir)
-           (yes-or-no-p
-            (format
-             "Do you really want to Kill all buffers of \"%s\"? "
-             (helm-ls-git-root-dir)))
-           (ignore-errors
-             (mapc #'kill-buffer (helm-browse-project-get-buffers
-                                  (helm-ls-git-root-dir))))
-           (message nil)))
+      (require 'helm-utils)
+      (require 'seq)
+      (require 'subr-x)
+      (when-let ((project-root (vc-root-dir)))
+        (when (yes-or-no-p
+               (format
+                "Kill all buffers of \"%s\"? "
+                project-root))
+          (ignore-errors
+            (mapc #'kill-buffer
+                  (seq-filter (lambda (buf)
+                                (with-current-buffer buf
+                                  (string-match (expand-file-name project-root) default-directory)))
+                              (helm-skip-entries (buffer-list) helm-boring-buffer-regexp-list))))
+          (message nil))))
 
     (defun helm-ls-git-ls--bookmark-around (orig-func &rest args)
       (apply orig-func args)
