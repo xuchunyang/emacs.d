@@ -198,7 +198,8 @@
   (bind-keys :map helm-command-map
              ("g"   . helm-chrome-bookmarks)
              ("z"   . helm-complex-command-history)
-             ("C-/" . helm-fuzzy-find))
+             ("C-/" . helm-fuzzy-find)
+             ("G" #'helm-github-stars helm-command-map))
   (bind-key "M-I" #'helm-do-grep)
 
   (defun toggle-small-helm-window ()
@@ -718,7 +719,8 @@
 (use-package color-identifiers-mode
   :ensure t
   :diminish color-identifiers-mode
-  :bind ("C-c t c" . global-color-identifiers-mode))
+  :bind ("C-c t c" . global-color-identifiers-mode)
+  :init (add-hook 'after-init-hook #'global-color-identifiers-mode))
 
 
 ;;; Skeletons, completion and expansion
@@ -1131,9 +1133,7 @@ See also `describe-function-or-variable'."
   (setq helm-github-stars-refetch-time (/ 6.0 24)
         helm-github-stars-full-frame t
         helm-github-stars-default-sources '(hgs/helm-c-source-stars
-                                            hgs/helm-c-source-repos))
-
-  (bind-key "G" #'helm-github-stars helm-command-map))
+                                            hgs/helm-c-source-repos)))
 
 (use-package helm-chrome ;; :ensure t :defer t
   :load-path "~/wip/helm-chrome/"
