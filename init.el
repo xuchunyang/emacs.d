@@ -277,7 +277,8 @@
             (mapc #'kill-buffer
                   (seq-filter (lambda (buf)
                                 (with-current-buffer buf
-                                  (string-match (expand-file-name project-root) default-directory)))
+                                  (string-match (expand-file-name project-root)
+                                                (expand-file-name default-directory))))
                               (helm-skip-entries (buffer-list) helm-boring-buffer-regexp-list))))
           (message nil))))
 
