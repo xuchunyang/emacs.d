@@ -1331,7 +1331,8 @@ See also `describe-function-or-variable'."
   (setq url-automatic-caching t)
   (push "*Youdao Dictionary*" popwin:special-display-config))
 
-(use-package trans
+(use-package translate-shell
+  :load-path "~/wip/translate-shell.el"
   :preface
   (defun google-trans (text)
     "Open https://www.google.com/translate_t?text=text"
@@ -1345,11 +1346,10 @@ See also `describe-function-or-variable'."
             (string (read-string prompt nil nil default)))
        (list string)))
     (browse-url (concat "https://www.google.com/translate_t?text=" text)))
-  :bind (("C-c s"   . trans)
-         ("C-c S"   . google-trans)
-         ("C-c C-s" . trans-message))
+  :bind (("C-c s"   . translate-shell-trans)
+         ("C-c S"   . google-trans))
   :config
-  (setq trans-command "proxychains4 -q ~/repos/translate-shell/translate"))
+  (setq translate-shell-command "proxychains4 -q ~/repos/translate-shell/translate"))
 
 (use-package osx-dictionary
   :ensure t
