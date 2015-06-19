@@ -1069,13 +1069,14 @@ See also `describe-function-or-variable'."
 
 ;;; C
 (use-package ggtags
-  :ensure t :defer t
-  :config
-  (defun chunyang--c-setup ()
-    (when (derived-mode-p 'c-mode 'c++-mode)
-      (ggtags-mode))
-    (setq-local imenu-create-index-function #'ggtags-build-imenu-index))
-  (add-hook 'c-mode-common-hook #'chunyang--c-setup))
+  :ensure t
+  :init
+  (defun chunyang--setup-ggtags ()
+    (ggtags-mode)
+    ;; (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+    )
+  (add-hook 'c-mode-hook #'chunyang--setup-ggtags)
+  (add-hook 'tcl-mode-hook #'chunyang--setup-ggtags))
 
 
 ;;; Version control
