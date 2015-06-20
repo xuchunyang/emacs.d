@@ -377,18 +377,27 @@ The original idea is from `tramp-debug-message'."
 
 ;;; MAc OS X
 
-(defun chunyang-run-command-in-iterm (command &optional arg)
-  "Run command in Iterm.  With ARG, change to `default-directory' firstly."
-  (interactive (list
-                (read-shell-command
-                 "Run command in ITerm: "
-                 (when (use-region-p)
-                   (buffer-substring
-                    (region-beginning) (region-end))))
-                current-prefix-arg))
-  (do-applescript
-   (format
-    "
+(defun project-root ()
+  "Return the project root for current buffer."
+  (let ((directory default-directory))
+    (or (locate-dominating-file directory ".git")
+        (locate-dominating-file directory ".svn")
+        (locate-dominating-file directory ".hg"))))
+
+;; with args, go to project root
+(defun iterm-shell-command (command &optional prefix)
+  "cd to `default-directory' then run COMMAND in iTerm.
+With PREFIX, cd to project root."
+  (interactive (list (read-shell-command
+                      "iTerm Shell Command: ")
+                     current-prefix-arg))
+  (let* ((dir (if prefix (project-root)
+                default-directory))
+         ;; if COMMAND is empty, just change directory
+         (cmd (format "cd %s ;%s" dir command)))
+    (do-applescript
+     (format
+      "
   tell application \"iTerm\"
        activate
        set _session to current session of current terminal
@@ -397,10 +406,7 @@ The original idea is from `tramp-debug-message'."
             write text \"%s\"
        end tell
   end tell
-  "
-    (if (and arg default-directory)
-        (format "cd %s && %s" default-directory command)
-      command))))
+  " cmd))))
 
 
 ;;; 用于回复水木上的帖子哦

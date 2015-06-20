@@ -569,7 +569,8 @@
   :bind (([remap split-window-right] . chunyang-split-window-right)
          ([remap split-window-below] . chunyang-split-window-below)
          ("M-o"                      . chunyang-other-window)
-         ("C-c f w"                  . chunyang-copy-buffer-name-as-kill))
+         ("C-c f w"                  . chunyang-copy-buffer-name-as-kill)
+         ("C-M-!"                    . iterm-shell-command))
   :init (add-hook 'kill-emacs-hook #'chunyang-save-scratch))
 
 (use-package easy-repeat :ensure t :defer t)
@@ -691,6 +692,19 @@
   (setq anzu-replace-to-string-separator " => ")
   (bind-key "M-%" 'anzu-query-replace)
   (bind-key "C-M-%" 'anzu-query-replace-regexp))
+
+(use-package which-func                 ; Current function name in header line
+  :init (which-function-mode)
+  :config
+  (setq which-func-unknown "⊥" ; The default is really boring…
+        which-func-format
+        `((:propertize (" ➤ " which-func-current)
+                       local-map ,which-func-keymap
+                       face which-func
+                       mouse-face mode-line-highlight
+                       help-echo "mouse-1: go to beginning\n\
+mouse-2: toggle rest visibility\n\
+mouse-3: go to end"))))
 
 
 ;;; Highlights
@@ -1334,23 +1348,7 @@ See also `describe-function-or-variable'."
 
 (use-package translate-shell
   :load-path "~/wip/translate-shell.el"
-  :preface
-  (defun google-trans (text)
-    "Open https://www.google.com/translate_t?text=text"
-    (interactive
-     (let* ((default
-              (or (when (use-region-p)
-                    (buffer-substring (region-beginning) (region-end)))
-                  (thing-at-point 'word)))
-            (prompt (if default (format "Google Translate (default \"%s\"): " default)
-                      "Google Translate: "))
-            (string (read-string prompt nil nil default)))
-       (list string)))
-    (browse-url (concat "https://www.google.com/translate_t?text=" text)))
-  :bind (("C-c s"   . translate-shell-trans)
-         ("C-c S"   . google-trans))
-  :config
-  (setq translate-shell-command "proxychains4 -q ~/repos/translate-shell/translate"))
+  :bind (("C-c s"   . translate-shell-brief)))
 
 (use-package osx-dictionary
   :ensure t
@@ -1388,12 +1386,13 @@ See also `describe-function-or-variable'."
            "* %?\n  %i\n  %a")))
 
   (setq org-agenda-custom-commands
-        '(("E" "Agenda and Emacs-related tasks"
-           ((agenda "")
-            (tags-todo "emacs")))
-          ("g" "Agenda and GSoC-related tasks"
-           ((agenda "")
-            (tags "gsoc")))))
+        '(("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
+          ("e" "Emacs-related tasks" tags-todo "+emacs")
+          ("g" "GSoC-related tasks" tags-todo "+gsoc")))
+
+  (setq org-enforce-todo-dependencies t)
+
+  (setq org-log-done 'time)
 
   ;; Clock work time
   (setq org-clock-persist 'history)
