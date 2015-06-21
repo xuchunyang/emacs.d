@@ -450,7 +450,10 @@
   (windmove-default-keybindings))
 
 (use-package desktop                    ; Save buffers, windows and frames
-  :init (desktop-save-mode))
+  :init (desktop-save-mode)
+  :config
+  (add-to-list 'desktop-globals-to-save 'translate-shell-cache)
+  (add-to-list 'desktop-globals-to-save 'translate-shell-brief-cache))
 
 (use-package winner
   :defer 7
@@ -792,6 +795,7 @@ mouse-3: go to end"))))
   :config
   (unbind-key "C-." flyspell-mode-map)
   (unbind-key "C-M-i" flyspell-mode-map)
+  (unbind-key "C-;" flyspell-mode-map)
   (use-package helm-flyspell
     :ensure t
     :init
@@ -1348,7 +1352,13 @@ See also `describe-function-or-variable'."
 
 (use-package translate-shell
   :load-path "~/wip/translate-shell.el"
-  :bind (("C-c s"   . translate-shell-brief)))
+  :bind (("C-c s"   . translate-shell-brief)
+         ("C-c S"   . translate-shell))
+  :config
+  ;; <https://translate.google.com> is blocked in China for no apparent
+  ;; reason. No one ever asked my option.
+  (setq translate-shell-command "proxychains4 -q trans -t en %s"
+        translate-shell-brief-command "proxychains4 -q trans -brief -t zh %s"))
 
 (use-package osx-dictionary
   :ensure t
