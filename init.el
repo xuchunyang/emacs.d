@@ -580,7 +580,23 @@
   (easy-menu-add-item
    nil '("tools")
    ["iTerm Shell Command..." iterm-shell-command t]
-   "Shell Command..."))
+   "Shell Command...")
+
+  (easy-menu-add-item
+   nil '("Tools")
+   '("Your tools"
+     ["Git clone" chunyang-git-clone t]
+     ["Download file" chunyang-git-clone t]
+     ["Copy buffer name" chunyang-copy-buffer-name-as-kill t]
+     "----"
+     ["Youdao Dictionary" youdao-dictionary-search-at-point t]
+     ["Mac Dictionary" osx-dictionary-search-pointer t]
+     ["Google Translate" translate-shell t]
+     ["Bing Translate" bing-dict-brief t]
+     "----"
+     ["Reply 水木" chunyang-reply-smth t]
+     ["Post 微博" chunyang-weibo-post t]) )
+  (easy-menu-add-item nil '("Tools") '("----") "Your tools"))
 
 (use-package easy-repeat :ensure t :defer t)
 
