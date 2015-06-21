@@ -574,7 +574,13 @@
          ("M-o"                      . chunyang-other-window)
          ("C-c f w"                  . chunyang-copy-buffer-name-as-kill)
          ("C-M-!"                    . iterm-shell-command))
-  :init (add-hook 'kill-emacs-hook #'chunyang-save-scratch))
+  :init (add-hook 'kill-emacs-hook #'chunyang-save-scratch)
+  :config
+  (require 'easymenu)
+  (easy-menu-add-item
+   nil '("tools")
+   ["iTerm Shell Command..." iterm-shell-command t]
+   "Shell Command..."))
 
 (use-package easy-repeat :ensure t :defer t)
 
@@ -1367,9 +1373,6 @@ See also `describe-function-or-variable'."
   (push "*osx-dictionary*" popwin:special-display-config))
 
 (use-package bing-dict :ensure t :defer t)
-
-
-;;; MacPorts related tools
 
 
 ;;; Web Development
