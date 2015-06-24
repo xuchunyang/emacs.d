@@ -594,8 +594,7 @@
      ["Google Translate" translate-shell t]
      ["Bing Translate" bing-dict-brief t]
      "----"
-     ["Reply 水木" chunyang-reply-smth t]
-     ["Post 微博" chunyang-weibo-post t]) )
+     ["Reply 水木" chunyang-reply-smth t]))
   (easy-menu-add-item nil '("Tools") '("----") "Your tools"))
 
 (use-package easy-repeat :ensure t :defer t)
@@ -1348,11 +1347,6 @@ See also `describe-function-or-variable'."
 
 (use-package sx                  :ensure t :defer t)
 (use-package helm-zhihu-daily    :ensure t :defer t)
-
-(use-package weibo
-  :ensure t
-  :defer t
-  :config (load-file "~/.private.el"))
 
 (use-package google-this
   :ensure t

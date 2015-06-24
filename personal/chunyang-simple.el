@@ -406,21 +406,6 @@ With PREFIX, cd to project root."
         :candidate-number-limit 9999))
 
 
-(defun chunyang-weibo-post (text)
-  (interactive
-   (let* ((default (when (use-region-p)
-                     (concat
-                      (buffer-substring
-                       (region-beginning) (region-end))
-                      "(Sent from #Emacs#)")))
-          (prompt (if default (format "发微博 (\"%s\"): " default)
-                    "发微博: "))
-          (string (read-string prompt nil nil default)))
-     (list string)))
-  (require 'weibo)
-  (weibo-send-status text))
-
-
 ;;; Eshell (from [[https://www.masteringemacs.org/article/pcomplete-context-sensitive-completion-emacs][PComplete: Context-Sensitive Completion in Emacs - Mastering Emacs]])
 ;; also see [[https://github.com/emacs-helm/helm/wiki#22-completion-in-emacs-shell][Home · emacs-helm/helm Wiki]]
 (defconst pcmpl-git-commands
