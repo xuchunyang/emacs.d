@@ -38,30 +38,6 @@ With ARG, swap two window."
       (chunyang--swap-window)
     (other-window +1)))
 
-(defun chunyang-format-time (time)
-  "Convert 'October 20, 2014' to '2014-10'."
-  (format-time-string
-   "%Y-%m"
-   (apply 'encode-time (parse-time-string
-                        (concat time ", 12:12:12")))))
-
-;;;###autoload
-(defun chunyang-insert-current-date (arg)
-  "Display current date.
-With prefix argument, insert current date at point."
-  (interactive "P")
-  (funcall (if arg 'insert 'message) (format-time-string "%Y/%m/%d")))
-
-(defun chunyang-region-length (beg end)
-  "Return the length of current region."
-  (interactive "r")
-  (message "[%d]" (- end beg)))
-
-(defun chunyang-count-lines-region (beg end)
-  "Count the number of lines in the region."
-  (interactive "r")
-  (message "%d" (count-lines beg end)))
-
 
 ;;;###autoload
 (defun chunyang-make-another-scratch-buffer (arg)
@@ -79,25 +55,6 @@ With ARG, put *scratch* buffer right."
     (switch-to-buffer buf)))
 ;;;###autoload
 (defalias 'demo #'chunyang-make-another-scratch-buffer)
-
-
-;;; stole from https://github.com/expez/.emacs.d/blob/master/lisp/init-util.el
-(defun chunyang-launch (command)
-  "Launch an application from Emacs, with its own output
-buffer. This is like asynch-shell-command but allows for any
-number of processes at a time, rather than just one. If given a
-prefix argument, the process's buffer is displayed."
-  (interactive (list (read-shell-command (concat default-directory "$ "))))
-  (let* ((name (car (split-string-and-unquote command)))
-         (buffer (generate-new-buffer (concat "*" name "*"))))
-    (set-process-sentinel (start-process-shell-command name buffer command)
-                          'chunyang-launch-sentinel)
-    (if (eq (car current-prefix-arg) 4)
-        (display-buffer buffer))))
-
-(defun chunyang-launch-sentinel (proc event)
-  "Reports on changes in `chunyang-launch'ed applications."
-  (message (format "%s: %s" proc event)))
 
 
 ;;; Download stuffs
@@ -179,125 +136,7 @@ prefix argument, the process's buffer is displayed."
            (setq chunyang-git--spinner-stop nil)))))))
 
 
-;;; Misc
-(defun chunyang-sum-numbers-in-region (beg end)
-  "Sum numbers in region.  Notes the effect with `string-to-number'.
-
-See also Emacs SE question: URL
-  `http://emacs.stackexchange.com/questions/10939/sum-numbers-in-region'."
-  (interactive "r")
-  (message
-   "%s"
-   (seq-reduce
-    #'+
-    (mapcar #'string-to-number (split-string (buffer-substring beg end)))
-    0)))
-
-
-;;; Debug and Log
-(defvar chunyang-debug-buffer "*Debug Chunyang Log*")
-
-(defvar chunyang-debug nil
-  "If non-nil, write log message into `chunyang-debug-buffer' buffer.
-It is disabled by default because `chunyang-debug-buffer' grows quickly.")
-
-;; Utility: logging
-(defun chunyang-log (format-string &rest args)
-  "Log message `chunyang-debug' is non-nil.
-Messages are written to the `chunyang-debug-buffer' buffer.
-
-Argument FORMAT-STRING is a string to use with `format'.
-Use optional arguments ARGS like in `format'."
-  (when chunyang-debug
-    (with-current-buffer (get-buffer-create chunyang-debug-buffer)
-      (outline-mode)
-      (buffer-disable-undo)
-      (set (make-local-variable 'inhibit-read-only) t)
-      (goto-char (point-max))
-      (insert (let ((tm (current-time)))
-                (format (concat (if (string-match "Start session" format-string)
-                                    "* " "** ")
-                                "%s.%06d (%s)\n %s\n")
-                        (format-time-string "%H:%M:%S" tm)
-                        (nth 2 tm)
-                        (chunyang-log-get-current-function)
-                        (apply #'format (cons format-string args))))))))
-
-(defun chunyang-log-get-current-function ()
-  "Get function name calling `chunyang-log'.
-The original idea is from `tramp-debug-message'."
-  (cl-loop with exclude-func-re = "^chunyang-\\(?:interpret\\|log\\|.*funcall\\)"
-           for btn from 1 to 40
-           for btf = (cl-second (backtrace-frame btn))
-           for fn  = (if (symbolp btf) (symbol-name btf) "")
-           if (and (string-match "^chunyang" fn)
-                   (not (string-match exclude-func-re fn)))
-           return fn))
-
-(defun chunyang-set-variable ()
-  (interactive)
-  (eval-minibuffer
-   "Eval: " (let ((var (variable-at-point)))
-              (when (boundp var)
-                (format "(setq %s nil)" var)))))
-
-
-;;; Key binding
-;;
-;;
-
-;;; `forward-line'
-;; (bind-key "C-S-n" #'chunyang-line-adjust)
-(defun chunyang-line-adjust (inc)
-  "Move cursor vertically down/up INC lines."
-  (interactive "p")
-  (let ((ev last-command-event)
-        (echo-keystrokes nil))
-    (let* ((base (event-basic-type ev))
-           (step
-            (pcase base
-              (?n inc)
-              (?p (- inc))
-              (t inc))))
-      (forward-line step)
-      (message "Use n,p for further move lines.")
-      (set-transient-map
-       (let ((map (make-sparse-keymap)))
-         (dolist (mods '(() (control)))
-           (dolist (key '(?n ?p))
-             (define-key map (vector (append mods (list key)))
-               (lambda ()               ; `lexical-binding' must be t
-                 (interactive)
-                 (chunyang-line-adjust (abs inc)))
-               )))
-         map)))))
-
-;;; C-x [, C-x ]
-;; (bind-key [remap backward-page] #'chunyang-page-adjust)
-;; (bind-key [remap forward-page]  #'chunyang-page-adjust)
-(defun chunyang-page-adjust (inc)
-  ""
-  (interactive "p")
-  (let ((ev last-command-event)
-        (echo-keystrokes nil))
-    (let* ((base (event-basic-type ev))
-           (step
-            (pcase base
-              (?\[ (- inc))
-              (?\] inc)
-              (t  inc))))
-      (forward-page step)
-      (message "Use [,] for further move.")
-      (set-transient-map
-       (let ((map (make-sparse-keymap)))
-         (dolist (mods '(() (control)))
-           (dolist (key '(91 93))
-             (define-key map (vector (append mods (list key)))
-               (lambda () (interactive) (chunyang-page-adjust (abs inc))))))
-         map)))))
-
-
-;;; MAc OS X
+;;; Opening iTerm
 
 (defun project-root ()
   "Return the project root for current buffer."
@@ -331,19 +170,6 @@ With PREFIX, cd to project root."
   " cmd))))
 
 
-;;; 用于回复水木上的帖子哦
-(defun chunyang-reply-smth ()
-  (interactive)
-  (with-current-buffer (get-buffer-create (make-temp-name "smth-"))
-    (switch-to-buffer (current-buffer))
-    (yank)
-    (unless (fboundp 'chunyang--add-prefix)
-      (fset 'chunyang--add-prefix
-            (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([134217788 24 32 134217790 1 24 114 116 58 32 return] 0 "%d")) arg))))
-    (chunyang--add-prefix)
-    (auto-fill-mode)))
-
-
 ;;;###autoload
 (defun chunyang-copy-buffer-name-as-kill (buf)
   "Put name of the current buffer to kill-ring."
@@ -351,16 +177,7 @@ With PREFIX, cd to project root."
   (kill-new buf))
 
 
-(defun chunyang--new-mail-notify ()
-  (let (new (string-to-number
-             (shell-command-to-string
-              "find Maildir -mmin -3 -a -type f | wc -l")))
-    (if (> new 0)
-        (shell-command "echo -n \"red\" | nc -4u -w0 localhost 1738")
-      (shell-command "echo -n \"black\" | nc -4u -w0 localhost 1738"))))
-
-
-;;; Scratch buffer
+;;; Restore the *scratch* buffer
 (defvar chunyang-scratch-log-file (expand-file-name
                                    ".scratch.bak~" user-emacs-directory))
 
@@ -379,77 +196,6 @@ With PREFIX, cd to project root."
       (with-current-buffer buf
         (erase-buffer)
         (insert-file-contents chunyang-scratch-log-file)))))
-
-
-;;; Package
-(defun helm-show-selected-packages ()
-  (interactive)
-  (helm :sources (helm-build-sync-source "Selected Packages"
-                   :candidates package-selected-packages
-                   :coerce #'intern
-                   :action
-                   (helm-make-actions
-                    "Describe package"
-                    (lambda (candidate)
-                      (describe-package candidate))
-                    "Visit homepage"
-                    (lambda (candidate)
-                      (let* ((pkg candidate)
-                             (desc (cadr (assoc pkg package-archive-contents)))
-                             (extras (package-desc-extras desc))
-                             (url (and (listp extras) (cdr-safe (assoc :url extras)))))
-                        (if (stringp url)
-                            (browse-url url)
-                          (message "Package %s has no homepage"
-                                   (propertize (symbol-name pkg)
-                                               'face 'font-lock-keyword-face)))))))
-        :candidate-number-limit 9999))
-
-
-;;; Eshell (from [[https://www.masteringemacs.org/article/pcomplete-context-sensitive-completion-emacs][PComplete: Context-Sensitive Completion in Emacs - Mastering Emacs]])
-;; also see [[https://github.com/emacs-helm/helm/wiki#22-completion-in-emacs-shell][Home · emacs-helm/helm Wiki]]
-(defconst pcmpl-git-commands
-  '("add" "bisect" "branch" "checkout" "clone"
-    "commit" "diff" "fetch" "grep"
-    "init" "log" "merge" "mv" "pull" "push" "rebase"
-    "reset" "rm" "show" "status" "tag" )
-  "List of `git' commands")
-
-(defvar pcmpl-git-ref-list-cmd "git for-each-ref refs/ --format='%(refname)'"
-  "The `git' command to run to get a list of refs")
-
-(defun pcmpl-git-get-refs (type)
-  "Return a list of `git' refs filtered by TYPE"
-  (with-temp-buffer
-    (insert (shell-command-to-string pcmpl-git-ref-list-cmd))
-    (goto-char (point-min))
-    (let ((ref-list))
-      (while (re-search-forward (concat "^refs/" type "/\\(.+\\)$") nil t)
-        (add-to-list 'ref-list (match-string 1)))
-      ref-list)))
-
-(defun pcomplete/git ()
-  "Completion for `git'"
-  ;; Completion for the command argument.
-  (pcomplete-here* pcmpl-git-commands)
-  ;; complete files/dirs forever if the command is `add' or `rm'
-  (cond
-   ((pcomplete-match (regexp-opt '("add" "rm")) 1)
-    (while (pcomplete-here (pcomplete-entries))))
-   ;; provide branch completion for the command `checkout'.
-   ((pcomplete-match "checkout" 1)
-    (pcomplete-here* (pcmpl-git-get-refs "heads")))))
-
-;;; Run some commands in ITerm
-(defvar my-eshell-external-programs '("top" "htop"))
-
-(defun my-eshell-send-input (orig-fun &rest args)
-  (let ((program (progn (eshell-bol) (word-at-point))))
-    (if (member program my-eshell-external-programs)
-        (chunyang-run-command-in-iterm program)
-      (apply orig-fun args))))
-
-(advice-add 'eshell-send-input :around #'my-eshell-send-input)
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here

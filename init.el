@@ -566,7 +566,6 @@
   :commands (demo
              chunyang-git-clone
              chunyang-run-command-in-iterm
-             chunyang-reply-smth
              chunyang-save-scratch
              chunyang-restore-scratch)
   :bind (([remap split-window-right] . chunyang-split-window-right)
@@ -592,9 +591,7 @@
      ["Youdao Dictionary" youdao-dictionary-search-at-point t]
      ["Mac Dictionary" osx-dictionary-search-pointer t]
      ["Google Translate" translate-shell t]
-     ["Bing Translate" bing-dict-brief t]
-     "----"
-     ["Reply 水木" chunyang-reply-smth t]))
+     ["Bing Translate" bing-dict-brief t]))
   (easy-menu-add-item nil '("Tools") '("----") "Your tools"))
 
 (use-package easy-repeat :ensure t :defer t)
