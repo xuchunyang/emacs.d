@@ -151,7 +151,8 @@
 ;;; The minibuffer
 (use-package helm
   :ensure t :defer t
-  :config (setq helm-split-window-default-side 'other))
+  :config
+  (setq helm-split-window-default-side 'other))
 
 (use-package helm-config
   :defer 3
@@ -790,6 +791,7 @@ mouse-3: go to end"))))
   :ensure t
   :diminish company-mode
   :commands company-complete
+  :init (global-company-mode)
   :config
   ;; Use Company for completion
   (bind-key [remap completion-at-point] #'company-complete company-mode-map)
@@ -797,7 +799,31 @@ mouse-3: go to end"))))
         company-minimum-prefix-length 2
         ;; Easy navigation to candidates with M-<n>
         company-show-numbers t)
-  :init (global-company-mode))
+  (dolist (hook '(git-commit-mode-hook mail-mode-hook))
+    (add-hook hook (lambda ()
+                     (setq-local company-backends '(company-ispell))))))
+
+(use-package auto-complete
+  :disabled t
+  :ensure t
+  :config
+  (ac-config-default)
+  (setq ac-auto-show-menu 0.3
+        ;; ac-delay 0.1
+        ac-quick-help-delay 0.5)
+  (use-package ac-ispell
+    :ensure t
+    :config
+    ;; Completion words longer than 4 characters
+    (setq ac-ispell-requires 4
+          ac-ispell-fuzzy-limit 2)
+
+    (eval-after-load "auto-complete"
+      '(progn
+         (ac-ispell-setup)))
+
+    (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
+    (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)))
 
 (use-package yasnippet :ensure t :defer t)
 
@@ -817,7 +843,11 @@ mouse-3: go to end"))))
   (use-package helm-flyspell
     :ensure t
     :init
-    (bind-key "C-." #'helm-flyspell-correct flyspell-mode-map)))
+    (bind-key "C-." #'helm-flyspell-correct flyspell-mode-map))
+  (use-package flyspell-popup
+    :load-path "~/wip/flyspell-popup"
+    :config
+    (bind-key "C-." #'flyspell-popup-correct flyspell-mode-map)))
 
 (use-package writegood-mode :ensure t :defer t)
 
@@ -856,6 +886,10 @@ mouse-3: go to end"))))
     :config
     (eval-after-load "flycheck"
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))))
+
+(use-package helm-flycheck
+  :ensure t
+  :bind (("C-c ! L" . helm-flycheck)))
 
 
 ;;; Text editing
@@ -1025,10 +1059,17 @@ See also `describe-function-or-variable'."
   (add-hook 'ielm-mode-hook #'enable-paredit-mode))
 
 (use-package eshell
-  :preface (defun eshell* ()
-             "Start a new eshell even if one is active."
-             (interactive)
-             (eshell t))
+  :preface
+  (defun eshell* ()
+    "Start a new eshell even if one is active."
+    (interactive)
+    (eshell t))
+  (defun eshell-clear-buffer ()
+    "Clear terminal"
+    (interactive)
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (eshell-send-input)))
   :bind  (("C-!"   . eshell-command)
           ("C-x m" . eshell)
           ("C-x M" . eshell*))
@@ -1046,6 +1087,7 @@ See also `describe-function-or-variable'."
               (bind-keys :map eshell-mode-map
                          ([remap eshell-pcomplete] . helm-esh-pcomplete)
                          ("M-p"                    . helm-eshell-history)
+                         ("C-l"                    . eshell-clear-buffer)
                          ("C-c C-k"                . compile)
                          ("C-c C-q"                . eshell-kill-process))
               (eshell/export "EDITOR=emacsclient -n")
@@ -1113,6 +1155,18 @@ See also `describe-function-or-variable'."
     )
   (add-hook 'c-mode-hook #'chunyang--setup-ggtags)
   (add-hook 'tcl-mode-hook #'chunyang--setup-ggtags))
+
+
+;;; Tcl
+(defun helm-inferior-tcl-complete ()
+  (interactive)
+  (helm :sources (helm-build-sync-source "inferior tcl completion"
+                   :candidates (ring-elements comint-input-ring))))
+
+(add-hook 'inferior-tcl-mode-hook
+          (lambda ()
+            (define-key inferior-tcl-mode-map
+              [remap completion-at-point] #'helm-inferior-tcl-complete)))
 
 
 ;;; Version control
