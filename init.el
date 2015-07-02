@@ -255,125 +255,7 @@
                     (helm-imenu))
      source (lambda (_candidate) t)))
 
-  (use-package helm-ls-git
-    :ensure t
-    :defer t
-    :init
-    (defun chunyang--project-root ()
-      (let ((directory default-directory))
-        (or (locate-dominating-file directory ".git")
-            (locate-dominating-file directory ".svn")
-            (locate-dominating-file directory ".hg"))))
-
-    (defun chunyang-kill-project-buffers ()
-      (interactive)
-      (require 'helm-utils)
-      (require 'seq)
-      (let ((project-root (chunyang--project-root)))
-        (unless project-root (user-error "Not under a project"))
-        (when (yes-or-no-p
-               (format
-                "Kill all buffers of \"%s\"? "
-                project-root))
-          (ignore-errors
-            (mapc #'kill-buffer
-                  (seq-filter (lambda (buf)
-                                (with-current-buffer buf
-                                  (string-match (expand-file-name project-root)
-                                                (expand-file-name default-directory))))
-                              (helm-skip-entries (buffer-list) helm-boring-buffer-regexp-list))))
-          (message nil))))
-
-    (defun helm-ls-git-ls--bookmark-around (orig-func &rest args)
-      (apply orig-func args)
-
-      (unless (require 'persistent-soft nil t)
-        (error "\"persistent-soft\" not found"))
-
-      (unless (helm-ls-git-not-inside-git-repo)
-        (let* ((sym '-helm-ls-git-ls--bookmark)
-               (location "projects-bookmark-cache")
-               (root (helm-ls-git-root-dir)))
-          (persistent-soft-store
-           sym
-           (delete-dups (cons root (persistent-soft-fetch sym location)))
-           location))))
-    (advice-add 'helm-ls-git-ls :around #'helm-ls-git-ls--bookmark-around)
-
-    (defun helm-ls-git-switch-project ()
-      (interactive)
-      (require 'helm-ls-git)
-      (helm :sources helm-ls-git-ls-project-source
-            :buffer "*helm project*"
-            :keymap (let ((map (make-sparse-keymap)))
-                      (set-keymap-parent map helm-map)
-                      (define-key map (kbd "C-s") #'foo-run-do-ag)
-                      (define-key map (kbd "M-g") #'foo-run-magit-status)
-                      (define-key map (kbd "C-d") #'foo-run-dired)
-                      map)))
-
-    (bind-key "C-c p p" #'helm-ls-git-switch-project)
-
-    (defun foo-dired-as-action (candidate) (dired candidate))
-    (defun foo-run-dired ()
-      "Run `foo-dired-as-action' by key."
-      (interactive)
-      (with-helm-alive-p
-        (helm-quit-and-execute-action 'foo-dired-as-action)))
-
-    (defun foo-magit-status-as-action (candidate) (magit-status candidate))
-    (defun foo-run-magit-status ()
-      "Run `foo-magit-status-as-action' by key."
-      (interactive)
-      (with-helm-alive-p
-        (helm-quit-and-execute-action 'foo-magit-status-as-action)))
-
-    (defun foo-do-ag-as-action (candidate) (helm-do-ag candidate))
-    (defun foo-run-do-ag ()
-      "Run `foo-do-ag-as-action' by key."
-      (interactive)
-      (with-helm-alive-p
-        (helm-quit-and-execute-action 'foo-do-ag-as-action)))
-
-    :config
-    (setq helm-ls-git-status-command 'magit-status)
-    (defvar helm-ls-git-ls-project-source
-      (helm-build-sync-source "Switch Project"
-        :candidates
-        (lambda ()
-          (persistent-soft-fetch '-helm-ls-git-ls--bookmark "projects-bookmark-cache"))
-        :action (helm-make-actions
-                 "Files & Buffers"
-                 (lambda (candidate)
-                   (let ((default-directory candidate))
-                     (call-interactively #'helm-ls-git-ls)))
-                 "Visit homepage (with git-open)"
-                 (lambda (candidate)
-                   (let ((default-directory candidate))
-                     (start-process-shell-command "git-open" nil "git open")))
-                 "Update project(s) (with git-pull"
-                 (lambda (_candidate)
-                   (dolist (project-root (helm-marked-candidates))
-                     (let* ((default-directory project-root)
-                            (command "git pull")
-                            (proc (start-process-shell-command "update-repo" nil command)))
-                       (set-process-sentinel
-                        proc
-                        (lambda (process event)
-                          (if (string-equal event "finished\n")
-                              (message "Update repository (\"%s\") done" project-root)
-                            (message (format "Process: %s had the event `%s'" process event))))))))
-                 "Ag `C-s'" #'foo-do-ag-as-action
-                 "Magit `M-g'" #'foo-magit-status-as-action
-                 "Dired `C-d'" #'foo-dired-as-action
-                 ;; TODO: Remove project from bookmark
-                 )))
-    ;; TODO: Clean non-exist projects
-
-    (setq helm-ls-git-grep-command
-          "git grep -n%cH --color=always --full-name -e %p %f")
-
-    :bind ("C-c p k" . chunyang-kill-project-buffers))
+  (use-package helm-ls-git :ensure t :defer t)
 
   (use-package helm-ls-svn
     :load-path "~/wip/chunyang/helm-ls-svn.el"
@@ -1194,12 +1076,9 @@ See also `describe-function-or-variable'."
   :init (defvar git-messenger-map nil)
   :bind ("C-x v P" . git-messenger:popup-message))
 
-(use-package magit                      ; The one and only Git frontend
+(use-package magit
   :ensure t
-  :diminish magit-auto-revert-mode
-  :bind ("C-x g" . magit-status)
-  :init (setq magit-last-seen-setup-instructions "1.4.0")
-  :config (setq magit-save-some-buffers 'dontask))
+  :bind ("C-x g" . magit-status))
 
 (use-package git-timemachine            ; Go back in Git time
   :ensure t
@@ -1281,6 +1160,13 @@ See also `describe-function-or-variable'."
 (use-package hydra            :ensure t :defer t :disabled t)
 (use-package dash-at-point    :ensure t :defer t)
 (use-package helm-dash        :ensure t :defer t)
+
+(use-package projectile
+  :ensure t
+  :init (projectile-global-mode)
+  (use-package helm-projectile
+    :ensure t
+    :init (helm-projectile-on)))
 
 
 ;;; Net & Web & Email
