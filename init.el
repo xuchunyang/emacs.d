@@ -1166,7 +1166,8 @@ See also `describe-function-or-variable'."
   :init (projectile-global-mode)
   (use-package helm-projectile
     :ensure t
-    :init (helm-projectile-on)))
+    :init (helm-projectile-on))
+  :config (setq projectile-completion-system 'helm))
 
 
 ;;; Net & Web & Email
