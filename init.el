@@ -150,59 +150,20 @@
 
 ;;; The minibuffer
 (use-package helm
-  :ensure t :defer t
+  :ensure t
   :config
   (setq helm-split-window-default-side 'other))
 
 (use-package helm-config
-  :defer 3
-  :bind (("M-x"                            . helm-M-x)
-         ;; File
-         ("C-x C-f"                        . helm-find-files)
-         ("C-x f"                          . helm-recentf)
-         ;; Buffer
-         ([remap switch-to-buffer]         . helm-buffers-list)       ; C-x b
-         ([remap downcase-word]            . helm-mini)               ; M-l
-         ;; Kill ring
-         ([remap yank-pop]                 . helm-show-kill-ring)     ; M-y
-         ([remap suspend-frame]            . helm-resume)             ; C-z
-         ;; Register
-         ([remap jump-to-register]         . helm-register)
-         ;; Help
-         ([remap apropos-command]          . helm-apropos)            ; C-h a
-         ;; Bookmark
-         ([remap bookmark-jump]            . helm-filtered-bookmarks) ; C-x r b
-         ;; Project (Git)
-         ([remap list-directory]           . helm-browse-project)     ; C-x C-d
-         ;; TAGS
-         ;; ([remap xref-find-definitions] . helm-etags-select)
-         ("C-c <SPC>"                      . helm-all-mark-rings)
-         ("M-i"                            . helm-occur)
-         ("C-c i"                          . helm-semantic-or-imenu))
-
   :init
   (defvar helm-command-prefix-key "C-c h")
-
   :config
-  (use-package helm-mode
-    :defer t
-    :diminish helm-mode
-    :init
-    (helm-mode))
-
-  (use-package helm-adaptive
-    :defer t :init
-    (helm-adaptive-mode))
-
-  (bind-key "C-c C-l"    #'helm-minibuffer-history    minibuffer-local-map)
-  (bind-key "M-i"        #'helm-occur-from-isearch    isearch-mode-map)
   (bind-keys :map helm-command-map
              ("g"   . helm-chrome-bookmarks)
              ("z"   . helm-complex-command-history)
              ("C-/" . helm-fuzzy-find)
              ("G" #'helm-github-stars helm-command-map))
   (bind-key "M-I" #'helm-do-grep)
-
   (defun toggle-small-helm-window ()
     (interactive)
     (if (get 'toggle-small-helm-window 'once)
@@ -220,17 +181,30 @@
     (put 'toggle-small-helm-window
          'once (not (get 'toggle-small-helm-window 'once)))))
 
-(use-package helm-command
-  :defer t
-  :config (setq helm-M-x-always-save-history t))
+(use-package helm-mode
+  :diminish helm-mode
+  :init (helm-mode))
 
-(use-package wgrep-helm :ensure t :defer t)
+(require 'helm-misc)
+(require 'helm-command)
+(require 'helm-imenu)
+(require 'helm-semantic)
+(require 'helm-ring)
+
+(use-package helm-adaptive
+  :config (helm-adaptive-mode))
 
 (use-package helm-regexp
   :defer t
   :config
   (dolist (source '(helm-source-occur helm-source-moccur))
     (push source helm-sources-using-default-as-input)))
+
+(use-package helm-command
+  :defer t
+  :config (setq helm-M-x-always-save-history t))
+
+(use-package wgrep-helm :ensure t :defer t)
 
 (use-package helm-buffers
   :defer t
@@ -264,6 +238,35 @@
   (use-package helm-fuzzy-find
     :load-path "~/wip/helm-fuzzy-find/"
     :commands helm-fuzzy-find))
+
+(bind-keys ("M-x"                            . helm-M-x)
+           ;; File
+           ("C-x C-f"                        . helm-find-files)
+           ("C-x f"                          . helm-recentf)
+           ;; Buffer
+           ([remap switch-to-buffer]         . helm-buffers-list)       ; C-x b
+           ([remap downcase-word]            . helm-mini)               ; M-l
+           ;; Kill ring
+           ([remap yank-pop]                 . helm-show-kill-ring)     ; M-y
+           ([remap suspend-frame]            . helm-resume)             ; C-z
+           ;; Register
+           ([remap jump-to-register]         . helm-register)
+           ;; Help
+           ([remap apropos-command]          . helm-apropos)            ; C-h a
+           ;; Bookmark
+           ([remap bookmark-jump]            . helm-filtered-bookmarks) ; C-x r b
+           ;; Project (Git)
+           ([remap list-directory]           . helm-browse-project)     ; C-x C-d
+           ;; TAGS
+           ;; ([remap xref-find-definitions] . helm-etags-select)
+           ("C-c <SPC>"                      . helm-all-mark-rings)
+           ("M-i"                            . helm-occur)
+           ("C-c i"                          . helm-semantic-or-imenu))
+
+;; `helm-regexp.el'
+(bind-key "M-i" #'helm-occur-from-isearch isearch-mode-map)
+;; `helm-misc.el'
+(bind-key "C-c C-l"    #'helm-minibuffer-history    minibuffer-local-map)
 
 (use-package helm-man
   :defer t
