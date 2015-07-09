@@ -715,6 +715,7 @@ mouse-3: go to end"))))
 
 ;;; Spelling and syntax checking
 (use-package flyspell
+  :diminish flyspell-mode
   :init
   (use-package ispell
     :config (setq ispell-program-name "aspell"
@@ -1173,7 +1174,10 @@ See also `describe-function-or-variable'."
   (use-package helm-projectile
     :ensure t
     :init (helm-projectile-on))
-  :config (setq projectile-completion-system 'helm))
+  :config (setq projectile-completion-system 'helm
+                projectile-mode-line '(:eval
+                                       (format " P[%s]"
+                                               (projectile-project-name)))))
 
 
 ;;; Net & Web & Email
