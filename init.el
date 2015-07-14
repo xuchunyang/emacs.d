@@ -488,13 +488,16 @@
   :defer t
   :init (add-hook 'prog-mode-hook 'ws-butler-mode))
 
+(use-package subword                    ; Subword/superword editing
+  :defer t
+  :diminish subword-mode)
+
 (use-package adaptive-wrap              ; Choose wrap prefix automatically
   :ensure t
   :defer t
   :init (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
 
 (use-package visual-fill-column
-  :disabled t
   :ensure t
   :defer t
   :init (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
@@ -788,11 +791,16 @@ mouse-3: go to end"))))
 ;;; Other markup languages
 (use-package markdown-mode
   :ensure t
-  :mode (("\\`README\\.md\\'" . gfm-mode)
-         ("\\.mdpp\\'"        . gfm-mode)
-         ("\\.md\\'"          . markdown-mode)
-         ("\\.markdown\\'"    . markdown-mode))
-  :config (setq markdown-command "kramdown"))
+  :config
+  ;; No filling in GFM, because line breaks are significant.
+  (add-hook 'gfm-mode-hook #'turn-off-auto-fill)
+  ;; Use visual lines instead
+  (add-hook 'gfm-mode-hook #'visual-line-mode)
+
+  (bind-key "C-c C-s C" #'markdown-insert-gfm-code-block markdown-mode-map)
+  (bind-key "C-c C-s P" #'markdown-insert-gfm-code-block markdown-mode-map)
+
+  (setq markdown-command "kramdown"))
 
 (use-package yaml-mode :ensure t :defer t)
 
@@ -935,8 +943,8 @@ See also `describe-function-or-variable'."
   ;; TODO make my own hook func
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   (add-hook 'emacs-lisp-mode-hook #'ipretty-mode)
-  (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
-    (add-hook hook 'turn-on-elisp-slime-nav-mode))
+  ;; (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+  ;;   (add-hook hook 'turn-on-elisp-slime-nav-mode))
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup))
 
