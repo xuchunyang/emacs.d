@@ -162,7 +162,7 @@
              ("g"   . helm-chrome-bookmarks)
              ("z"   . helm-complex-command-history)
              ("C-/" . helm-fuzzy-find)
-             ("G" #'helm-github-stars helm-command-map))
+             ("G"   . helm-github-stars))
   (bind-key "M-I" #'helm-do-grep)
   (defun toggle-small-helm-window ()
     (interactive)
@@ -1142,6 +1142,7 @@ See also `describe-function-or-variable'."
   :config (load-file "~/.private.el"))
 
 (use-package guide-key
+  :disabled t
   :ensure t
   :diminish guide-key-mode
   :commands guide-key-mode
@@ -1164,6 +1165,13 @@ See also `describe-function-or-variable'."
   (add-hook 'dired-mode-hook
             (lambda () (guide-key/add-local-guide-key-sequence "%")))
   (guide-key-mode))
+
+(use-package which-key
+  :load-path "~/wip/emacs-which-key"
+  :diminish which-key-mode
+  :config
+  (which-key-mode)
+  (which-key-setup-side-window-right))
 
 (use-package keyfreq
   :disabled t
