@@ -1093,7 +1093,10 @@ See also `describe-function-or-variable'."
 
 (use-package magit
   :ensure t
-  :bind ("C-x g" . magit-status))
+  :bind (("C-x g"   . magit-status)
+         ("C-x M-g" . magit-dispatch-popup))
+  :config
+  (setq magit-revert-buffers t))
 
 (use-package git-timemachine            ; Go back in Git time
   :ensure t
