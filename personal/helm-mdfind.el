@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;
+;; Another (Normal) Emacs interface for mdfind: https://github.com/emacsmirror/mdfind
 
 ;;; Code:
 
