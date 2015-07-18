@@ -1196,7 +1196,9 @@ See also `describe-function-or-variable'."
   :config (setq projectile-completion-system 'helm
                 projectile-mode-line '(:eval
                                        (format " P[%s]"
-                                               (projectile-project-name)))))
+                                               (projectile-project-name)))
+                ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
+                projectile-svn-command "svn-ls-files"))
 
 
 ;;; Net & Web & Email
@@ -1371,23 +1373,27 @@ See also `describe-function-or-variable'."
          ("C-c C-o" . org-open-at-point-global))
 
   :config
-  (setq org-directory "~/Dropbox/Notes")
-  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  (setq org-adapt-indentation nil)
 
-  (setq org-agenda-files `(,org-default-notes-file))
+  (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
 
   (setq org-capture-templates
-        `(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
-           "* TODO %?\n  %i\n  %a")
-          ("n" "Note" entry (file+headline org-default-notes-file "Notes")
-           "* %?\n  %i\n  %a")))
+        '(("t" "Todo list item"
+           entry (file+headline org-default-notes-file "Tasks")
+           "* TODO %?\n%i\n%a")
+          ("n" "Quick Note"
+           entry (file+headline org-default-notes-file "Notes")
+           "* %?\n%i\n%a")
+          ("j" "Journal entry"
+           entry (file+datetree "~/Dropbox/Notes/journal.org")
+           "* %?\nEntered on %U\n%i\n%a")))
+
+  (setq org-agenda-files (list org-default-notes-file))
 
   (setq org-agenda-custom-commands
         '(("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
           ("e" "Emacs-related tasks" tags-todo "+emacs")
           ("g" "GSoC-related tasks" tags-todo "+gsoc")))
-
-  (setq org-enforce-todo-dependencies t)
 
   (setq org-log-done 'time)
 
@@ -1448,8 +1454,9 @@ See also `describe-function-or-variable'."
   :init (global-orglink-mode))
 
 (use-package org-bullets
+  :disabled t
   :ensure t
-  :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
+  :config (add-hook 'org-mode-hook #'org-bullets-mode))
 
 (use-package calfw
   :ensure t :defer t
