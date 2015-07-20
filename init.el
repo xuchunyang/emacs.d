@@ -46,7 +46,7 @@
   (package-install 'use-package))
 
 (eval-and-compile
-  (defvar use-package-verbose t)
+  (defvar use-package-verbose nil)
   ;; (defvar use-package-expand-minimally t)
   (eval-after-load 'advice
     `(setq ad-redefinition-action 'accept))
@@ -373,12 +373,17 @@
 (bind-key "C-c f v l" #'add-file-local-variable)
 (bind-key "C-c f v p" #'add-file-local-variable-prop-line)
 
+(use-package ignoramus                  ; Ignore uninteresting files everywhere
+  :ensure t
+  :config
+  (ignoramus-setup))
+
 (use-package dired                      ; Edit directories
   :defer t
   :config
   (use-package dired-x
     :commands dired-omit-mode
-    :init (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
+    :init (add-hook 'dired-mode-hook #'dired-omit-mode))
   (use-package dired-subtree :ensure t :defer t)
   ;; VCS integration with `diff-hl'
   (use-package diff-hl
@@ -393,6 +398,9 @@
   (push '(direx:direx-mode :position left :width 25 :dedicated t)
         popwin:special-display-config)
   (bind-key "C-x C-J" #'direx:jump-to-directory-other-window))
+
+(use-package ranger
+  :load-path "~/wip/ranger")
 
 (use-package bookmark
   :defer t
@@ -713,7 +721,11 @@ mouse-3: go to end"))))
     (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
     (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)))
 
-(use-package yasnippet :ensure t :defer t)
+(use-package yasnippet
+  :disabled t
+  :ensure t
+  :diminish yas-minor-mode
+  :config (yas-global-mode))
 
 
 ;;; Spelling and syntax checking
@@ -791,6 +803,7 @@ mouse-3: go to end"))))
 ;;; Other markup languages
 (use-package markdown-mode
   :ensure t
+  :mode ("\\.mdpp\\'" . gfm-mode)
   :config
   ;; No filling in GFM, because line breaks are significant.
   (add-hook 'gfm-mode-hook #'turn-off-auto-fill)
@@ -1088,7 +1101,6 @@ See also `describe-function-or-variable'."
 
 (use-package git-messenger
   :ensure t
-  :init (defvar git-messenger-map nil)
   :bind ("C-x v P" . git-messenger:popup-message))
 
 (use-package magit
@@ -1183,7 +1195,124 @@ See also `describe-function-or-variable'."
   (keyfreq-mode)
   (keyfreq-autosave-mode))
 
-(use-package hydra            :ensure t :defer t :disabled t)
+(use-package hydra
+  :ensure t
+  :config
+  (defhydra hydra-zoom (global-map "<f2>")
+    "zoom"
+    ("g" text-scale-increase "in")
+    ("l" text-scale-decrease "out"))
+
+  (defhydra hydra-toggle (:color blue)
+    "toggle"
+    ("d" toggle-debug-on-error "debug")
+    ("f" auto-fill-mode "fill")
+    ("t" toggle-truncate-lines "truncate")
+    ("w" whitespace-mode "whitespace")
+    ("F" toggle-frame-fullscreen "fullscreen")
+    ("m" toggle-frame-maximized "maximize")
+    ("f" global-flycheck-mode "Flycheck")
+    ("c" global-color-identifiers-mode "Colorful identifiers")
+    ("R" writeroom-mode "Distraction-free editing")
+    ("l" nlinum-mode "Line number")
+    ("L" hl-line-mode "Highlight line")
+    ("r" rainbow-mode "Colorize color names")
+    ("q" nil "cancel"))
+  (global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
+
+  (defhydra hydra-page (ctl-x-map "" :pre (widen))
+    "page"
+    ("]" forward-page "next")
+    ("[" backward-page "prev")
+    ("n" narrow-to-page "narrow" :bind nil :exit t))
+
+  (defhydra hydra-goto-line (goto-map ""
+                                      :pre (linum-mode 1)
+                                      :post (linum-mode -1))
+    "goto-line"
+    ("g" goto-line "go")
+    ("m" set-mark-command "mark" :bind nil)
+    ("q" nil "quit"))
+
+  (defhydra hydra-move-text (:body-pre (use-package move-text :ensure t :defer t))
+    "Move text"
+    ("j" move-text-up "up")
+    ("k" move-text-down "down"))
+
+  (defhydra hydra-git-gutter (:body-pre (git-gutter-mode 1)
+                                        :hint nil)
+    "
+Git gutter:
+  _j_: next hunk        _s_tage hunk     _q_uit
+  _k_: previous hunk    _r_evert hunk    _Q_uit and deactivate git-gutter
+  ^ ^                   _p_opup hunk
+  _h_: first hunk
+  _l_: last hunk        set start _R_evision
+"
+    ("j" git-gutter:next-hunk)
+    ("k" git-gutter:previous-hunk)
+    ("h" (progn (goto-char (point-min))
+                (git-gutter:next-hunk 1)))
+    ("l" (progn (goto-char (point-min))
+                (git-gutter:previous-hunk 1)))
+    ("s" git-gutter:stage-hunk)
+    ("r" git-gutter:revert-hunk)
+    ("p" git-gutter:popup-hunk)
+    ("R" git-gutter:set-start-revision)
+    ("q" nil :color blue)
+    ("Q" (progn (git-gutter-mode -1)
+                ;; git-gutter-fringe doesn't seem to
+                ;; clear the markup right away
+                (sit-for 0.1)
+                (git-gutter:clear))
+     :color blue))
+
+  (defhydra hydra-projectile-other-window (:color teal)
+    "projectile-other-window"
+    ("f"  projectile-find-file-other-window        "file")
+    ("g"  projectile-find-file-dwim-other-window   "file dwim")
+    ("d"  projectile-find-dir-other-window         "dir")
+    ("b"  projectile-switch-to-buffer-other-window "buffer")
+    ("q"  nil                                      "cancel" :color blue))
+
+  (defhydra hydra-projectile (:color teal
+                                     :hint nil)
+    "
+     PROJECTILE: %(projectile-project-root)
+
+     Find File            Search/Tags          Buffers                Cache
+------------------------------------------------------------------------------------------
+_s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache clear
+ _ff_: file dwim       _g_: update gtags      _b_: switch to buffer  _x_: remove known project
+ _fd_: file curr dir   _o_: multi-occur     _s-k_: Kill all buffers  _X_: cleanup non-existing
+  _r_: recent file                                               ^^^^_z_: cache current
+  _d_: dir
+
+"
+    ("a"   projectile-ag)
+    ("b"   projectile-switch-to-buffer)
+    ("c"   projectile-invalidate-cache)
+    ("d"   projectile-find-dir)
+    ("s-f" projectile-find-file)
+    ("ff"  projectile-find-file-dwim)
+    ("fd"  projectile-find-file-in-directory)
+    ("g"   ggtags-update-tags)
+    ("s-g" ggtags-update-tags)
+    ("i"   projectile-ibuffer)
+    ("K"   projectile-kill-buffers)
+    ("s-k" projectile-kill-buffers)
+    ("m"   projectile-multi-occur)
+    ("o"   projectile-multi-occur)
+    ("s-p" projectile-switch-project "switch project")
+    ("p"   projectile-switch-project)
+    ("s"   projectile-switch-project)
+    ("r"   projectile-recentf)
+    ("x"   projectile-remove-known-project)
+    ("X"   projectile-cleanup-known-projects)
+    ("z"   projectile-cache-current-file)
+    ("`"   hydra-projectile-other-window/body "other window")
+    ("q"   nil "cancel" :color blue)))
+
 (use-package dash-at-point    :ensure t :defer t)
 (use-package helm-dash        :ensure t :defer t)
 
