@@ -1322,12 +1322,30 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (use-package helm-projectile
     :ensure t
     :init (helm-projectile-on))
-  :config (setq projectile-completion-system 'helm
-                projectile-mode-line '(:eval
-                                       (format " P[%s]"
-                                               (projectile-project-name)))
-                ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
-                projectile-svn-command "svn-ls-files"))
+  :config
+  (setq projectile-completion-system 'helm
+        projectile-mode-line '(:eval
+                               (format " P[%s]"
+                                       (projectile-project-name)))
+        ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
+        projectile-svn-command "svn-ls-files")
+
+  (defun projectile-kill-projects ()
+    (interactive)
+    (let ((projects
+           (delq nil
+                 (cl-delete-duplicates
+                  (mapcar (lambda (buf)
+                            (with-current-buffer buf
+                              (when (projectile-project-p)
+                                (cons (projectile-project-name) buf))))
+                          (buffer-list))
+                  :test (lambda (a b) (string= (car a) (car b)))))))
+      (mapc (lambda (elt)
+              (with-current-buffer (cdr elt)
+                (projectile-kill-buffers))) projects)))
+  (bind-keys :map projectile-command-map
+             ("K" . projectile-kill-projects)))
 
 
 ;;; Net & Web & Email
