@@ -1145,6 +1145,15 @@ See also `describe-function-or-variable'."
 
 
 ;;; Tools and utilities
+
+(use-package ediff
+  :defer t
+  :config
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-custom-diff-program "diff"
+        ediff-custom-diff-options "-u"))
+
 (use-package server
   :defer 7
   :config
