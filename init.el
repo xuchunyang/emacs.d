@@ -1540,22 +1540,27 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
          ("C-c C-o" . org-open-at-point-global))
 
   :config
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "|" "DONE(d!)" "CANCELED(c@)")))
+
+  (setq org-directory "~/Dropbox/Notes")
+  (setq org-agenda-files (list org-directory))
+
+  (bind-key "<f12>" #'org-agenda-list)
+  (bind-key "<f11>" #'org-clock-goto)
+
   (setq org-adapt-indentation nil)
 
   (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
 
   (setq org-capture-templates
-        '(("t" "Todo list item"
-           entry (file+headline org-default-notes-file "Tasks")
+        '(("t" "todo"
+           entry (file (expand-file-name "refile.org" org-directory))
            "* TODO %?\n%i\n%a")
-          ("n" "Quick Note"
-           entry (file+headline org-default-notes-file "Notes")
-           "* %?\n%i\n%a")
-          ("j" "Journal entry"
-           entry (file+datetree "~/Dropbox/Notes/journal.org")
-           "* %?\nEntered on %U\n%i\n%a")))
-
-  (setq org-agenda-files (list org-default-notes-file))
+          ("n" "note"
+           entry (file (expand-file-name "refile.org" org-directory))
+           "* %?\n%i\n%a")))
 
   (setq org-agenda-custom-commands
         '(("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
