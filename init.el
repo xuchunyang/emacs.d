@@ -216,7 +216,23 @@
                       (helm-imenu))
      source (lambda (_candidate) t)))
   (add-to-list 'helm-boring-buffer-regexp-list "TAGS")
-  (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff"))
+  (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff")
+
+  (defun helm-buffer-switch-new-window (_candidate)
+    "Display buffers in new windows."
+    ;; Select the bottom right window
+    (require 'winner)
+    (select-window (car (last (winner-sorted-window-list))))
+    ;; Display buffers in new windows
+    (dolist (buf (helm-marked-candidates))
+      (select-window (split-window-right))
+      (switch-to-buffer buf))
+    ;; Adjust size of windows
+    (balance-windows))
+
+  (add-to-list 'helm-type-buffer-actions
+               '("Display buffer(s) in new window(s)" .
+                 helm-buffer-switch-new-window) 'append))
 
 (use-package helm-files
   :bind ("C-c p h" . helm-browse-project)
