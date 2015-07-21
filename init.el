@@ -209,12 +209,6 @@
 (use-package helm-buffers
   :defer t
   :config
-  (defmethod helm-setup-user-source :after ((source helm-source-buffers))
-    (helm-source-add-action-to-source-if
-     "Imenu buffer" (lambda (candidate)
-                      (switch-to-buffer candidate)
-                      (helm-imenu))
-     source (lambda (_candidate) t)))
   (add-to-list 'helm-boring-buffer-regexp-list "TAGS")
   (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff")
 
@@ -238,13 +232,6 @@
   :bind ("C-c p h" . helm-browse-project)
   :config
   (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
-  (defmethod helm-setup-user-source :after ((source helm-source-ffiles))
-    (helm-source-add-action-to-source-if
-     "Imenu file" (lambda (candidate)
-                    (find-file candidate)
-                    (helm-imenu))
-     source (lambda (_candidate) t)))
-
   (use-package helm-ls-git :ensure t :defer t)
 
   (use-package helm-ls-svn
