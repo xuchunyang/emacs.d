@@ -574,11 +574,15 @@
 
 (use-package imenu
   :init
-  (defun imenu-use-package ()
+  (defun chunyang-imenu--setup-elisp ()
+    ;; use-package
     (add-to-list 'imenu-generic-expression
                  '("Packages"
-                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2)))
-  (add-hook 'emacs-lisp-mode-hook #'imenu-use-package))
+                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2))
+    ;; hydra
+    (add-to-list 'imenu-generic-expression
+                 '("hydra" "^\\s-*(defhydra\\s-+\\(\\(\\sw\\|\\s_\\)+\\)[[:space:]\n]+[^)]" 1)))
+  (add-hook 'emacs-lisp-mode-hook #'chunyang-imenu--setup-elisp))
 
 (use-package imenu-anywhere             ; Helm-based imenu across open buffers
   :ensure t
