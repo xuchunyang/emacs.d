@@ -28,5 +28,26 @@
 
 (require 'eshell)
 
+(defvar eshell-z-table (make-hash-table :test 'equal
+                                        :size 100))
+
+(defun eshell-z--add ()
+  "Add entry."
+  ;; $HOME isn't worth matching
+  (unless (string= (expand-file-name default-directory)
+                   (expand-file-name "~/"))
+    (if-let ((key default-directory)
+             (val (gethash key eshell-z-table)))
+        (puthash key (cons key
+                           (list :freq (1+ (plist-get (cdr val) :freq))
+                                 :date (current-time)))
+                 eshell-z-table)
+      (puthash key (cons key
+                         (list :freq 1
+                               :date (current-time)))
+               eshell-z-table))))
+
+(add-hook 'eshell-post-command-hook #'eshell-z--add)
+
 (provide 'eshell-z)
 ;;; eshell-z.el ends here
