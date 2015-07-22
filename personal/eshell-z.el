@@ -3,9 +3,10 @@
 ;; Copyright (C) 2015  Chunyang Xu
 
 ;; Author: Chunyang Xu <xuchunyang56@gmail.com>
+;; Package-Requires: ((emacs "24.4") (seq "1.0"))
 ;; Keywords: convenience
 ;; Version: 0.1
-;; URL: https://github.com/xuchunyang/emacs.d
+;; Homepage: https://github.com/xuchunyang/eshell-z
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -27,6 +28,7 @@
 ;;; Code:
 
 (require 'eshell)
+(require 'subr-x)
 
 (defvar eshell-z-table (make-hash-table :test 'equal
                                         :size 100))
@@ -48,6 +50,23 @@
                eshell-z-table))))
 
 (add-hook 'eshell-post-command-hook #'eshell-z--add)
+
+(defun eshell/z (&rest args)
+  "Jump around."
+  (setq args (eshell-flatten-list args))
+  (let ((path (car args))
+        (case-fold-search (eshell-under-windows-p)))
+    (if (numberp path)
+        (setq path (number-to-string path)))
+    (if-let ((newdir
+              (caar (seq-filter
+                     (lambda (elt)
+                       (string-match path (car elt)))
+                     (sort (hash-table-values eshell-z-table)
+                           (lambda (elt1 elt2)
+                             (> (plist-get (cdr elt1) :freq)
+                                (plist-get (cdr elt2) :freq))))))))
+        (eshell/cd (list newdir)))))
 
 (provide 'eshell-z)
 ;;; eshell-z.el ends here
