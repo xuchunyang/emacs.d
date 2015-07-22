@@ -101,19 +101,22 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
 (defun eshell/z (&rest args)
   "Jump around."
   (setq args (eshell-flatten-list args))
-  (let ((path (car args))
-        (case-fold-search (eshell-under-windows-p)))
-    (if (numberp path)
-        (setq path (number-to-string path)))
-    (if-let ((newdir
-              (caar (seq-filter
-                     (lambda (elt)
-                       (string-match path (car elt)))
-                     (sort (hash-table-values eshell-z-freq-dir-hash-table)
-                           (lambda (elt1 elt2)
-                             (> (plist-get (cdr elt1) :freq)
-                                (plist-get (cdr elt2) :freq))))))))
-        (eshell/cd (list newdir)))))
+  (let ((paths (sort (hash-table-values eshell-z-freq-dir-hash-table)
+                     (lambda (elt1 elt2)
+                       (> (plist-get (cdr elt1) :freq)
+                          (plist-get (cdr elt2) :freq))))))
+    (if (null args)
+        (completing-read "pattern " paths nil t)
+      (let ((path (car args))
+            (case-fold-search (eshell-under-windows-p)))
+        (if (numberp path)
+            (setq path (number-to-string path)))
+        (if-let ((newdir
+                  (caar (seq-filter
+                         (lambda (elt)
+                           (string-match path (car elt)))
+                         paths))))
+            (eshell/cd (list newdir)))))))
 
 (provide 'eshell-z)
 ;;; eshell-z.el ends here
