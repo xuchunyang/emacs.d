@@ -31,11 +31,60 @@
 (require 'em-dirs)
 (require 'subr-x)
 
-(defvar eshell-z-freq-dir-hash-table (make-hash-table :test 'equal :size 100)
+(defcustom eshell-z-freq-dir-hash-table-file-name
+  (expand-file-name "freqdir" eshell-directory-name)
+  "If non-nil, name of the file to read/write the freq-dir-hash-table.
+If it is nil, the freq-dir-hash-table will not be written to disk."
+  :type 'file
+  :group 'eshell-dirs)
+
+(defvar eshell-z-freq-dir-hash-table nil
   "The frequent directory that Eshell was in.")
+
+(defun eshell-z--read-freq-dir-hash-table ()
+  "Set `eshell-z-freq-dir-hash-table' from a history file."
+  (let ((file eshell-z-freq-dir-hash-table-file-name))
+    (cond
+     ((or (null file)
+          (equal file "")
+          (file-directory-p file)
+          (not (file-readable-p file)))
+      nil)
+     (t
+      (let ((res (with-temp-buffer
+                   (insert-file-contents file)
+                   (read (current-buffer)))))
+        ;; strict check
+        (if (hash-table-p res)
+            (setq eshell-z-freq-dir-hash-table res)
+          (error "Invalid file %s" file)))))))
+
+(defun eshell-z--write-freq-dir-hash-table ()
+  "Write `eshell-z-freq-dir-hash-table' to a history file."
+  (let ((file eshell-z-freq-dir-hash-table-file-name))
+    (cond
+     ((or (null file)
+          (equal file "")
+          (null eshell-z-freq-dir-hash-table)
+          (hash-table-empty-p eshell-z-freq-dir-hash-table))
+      nil)
+     ((and (file-exists-p file)
+           (not (file-directory-p file))
+           (not (file-writable-p file)))
+      (message "Cannot write freq-dir-hash-table file %s" file))
+     (t
+      (with-temp-buffer
+        (print eshell-z-freq-dir-hash-table (current-buffer))
+        (write-region (point-min) (point-max) file))))))
+
+(add-hook 'eshell-exit-hook 'eshell-z--write-freq-dir-hash-table)
 
 (defun eshell-z--add ()
   "Add entry."
+  (if eshell-z-freq-dir-hash-table-file-name
+      (eshell-z--read-freq-dir-hash-table))
+  (unless eshell-z-freq-dir-hash-table
+    (setq eshell-z-freq-dir-hash-table (make-hash-table :test 'equal)))
   ;; $HOME isn't worth matching
   (unless (string= (expand-file-name default-directory)
                    (expand-file-name "~/"))
