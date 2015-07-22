@@ -31,8 +31,8 @@
 (require 'em-dirs)
 (require 'subr-x)
 
-(defvar eshell-z-table (make-hash-table :test 'equal
-                                        :size 100))
+(defvar eshell-z-freq-dir-hash-table (make-hash-table :test 'equal :size 100)
+  "The frequent directory that Eshell was in.")
 
 (defun eshell-z--add ()
   "Add entry."
@@ -40,15 +40,15 @@
   (unless (string= (expand-file-name default-directory)
                    (expand-file-name "~/"))
     (if-let ((key default-directory)
-             (val (gethash key eshell-z-table)))
+             (val (gethash key eshell-z-freq-dir-hash-table)))
         (puthash key (cons key
                            (list :freq (1+ (plist-get (cdr val) :freq))
                                  :date (current-time)))
-                 eshell-z-table)
+                 eshell-z-freq-dir-hash-table)
       (puthash key (cons key
                          (list :freq 1
                                :date (current-time)))
-               eshell-z-table))))
+               eshell-z-freq-dir-hash-table))))
 
 (add-hook 'eshell-post-command-hook #'eshell-z--add)
 
@@ -64,7 +64,7 @@
               (caar (seq-filter
                      (lambda (elt)
                        (string-match path (car elt)))
-                     (sort (hash-table-values eshell-z-table)
+                     (sort (hash-table-values eshell-z-freq-dir-hash-table)
                            (lambda (elt1 elt2)
                              (> (plist-get (cdr elt1) :freq)
                                 (plist-get (cdr elt2) :freq))))))))
