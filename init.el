@@ -1023,7 +1023,7 @@ See also `describe-function-or-variable'."
               (bind-keys :map eshell-mode-map
                          ([remap eshell-pcomplete] . helm-esh-pcomplete)
                          ("M-p"                    . helm-eshell-history)
-                         ("C-l"                    . eshell-clear-buffer)
+                         ;; ("C-l"                    . eshell-clear-buffer)
                          ("C-c C-k"                . compile)
                          ("C-c C-q"                . eshell-kill-process))
               (eshell/export "EDITOR=emacsclient -n")
