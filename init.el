@@ -202,10 +202,7 @@
   :config (helm-adaptive-mode))
 
 (use-package helm-regexp
-  :defer t
-  :config
-  (dolist (source '(helm-source-occur helm-source-moccur))
-    (push source helm-sources-using-default-as-input)))
+  :defer t)
 
 (use-package helm-command
   :defer t
@@ -819,15 +816,23 @@ mouse-3: go to end"))))
   :ensure t
   :mode ("\\.mdpp\\'" . gfm-mode)
   :config
+  (let ((stylesheet (expand-file-name
+                     (locate-user-emacs-file "etc/pandoc.css"))))
+    (setq markdown-command
+          (mapconcat #'shell-quote-argument
+                     `("pandoc" "--toc" "--section-divs"
+                       "--css" ,(concat "file://" stylesheet)
+                       "--standalone" "-f" "markdown" "-t" "html5")
+                     " ")))
+  ;; (setq markdown-command "kramdown")
+
   ;; No filling in GFM, because line breaks are significant.
   (add-hook 'gfm-mode-hook #'turn-off-auto-fill)
   ;; Use visual lines instead
   (add-hook 'gfm-mode-hook #'visual-line-mode)
 
   (bind-key "C-c C-s C" #'markdown-insert-gfm-code-block markdown-mode-map)
-  (bind-key "C-c C-s P" #'markdown-insert-gfm-code-block markdown-mode-map)
-
-  (setq markdown-command "kramdown"))
+  (bind-key "C-c C-s P" #'markdown-insert-gfm-code-block markdown-mode-map))
 
 (use-package yaml-mode :ensure t :defer t)
 
@@ -1571,6 +1576,10 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
           ("g" "GSoC-related tasks" tags-todo "+gsoc")))
 
   (setq org-log-done 'time)
+
+  ;; Targets include this file and any file contributing to the agenda - up to 3 levels deep
+  (setq org-refile-targets (quote ((nil :maxlevel . 3)
+                                   (org-agenda-files :maxlevel . 3))))
 
   ;; Clock work time
   (setq org-clock-persist 'history)
