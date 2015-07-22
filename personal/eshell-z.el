@@ -28,6 +28,7 @@
 ;;; Code:
 
 (require 'eshell)
+(require 'em-dirs)
 (require 'subr-x)
 
 (defvar eshell-z-table (make-hash-table :test 'equal
@@ -51,6 +52,7 @@
 
 (add-hook 'eshell-post-command-hook #'eshell-z--add)
 
+;; TODO: Try to process command option using esh-opt.el
 (defun eshell/z (&rest args)
   "Jump around."
   (setq args (eshell-flatten-list args))
