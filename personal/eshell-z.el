@@ -51,13 +51,9 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
           (not (file-readable-p file)))
       nil)
      (t
-      (let ((res (with-temp-buffer
-                   (insert-file-contents file)
-                   (read (current-buffer)))))
-        ;; strict check
-        (if (hash-table-p res)
-            (setq eshell-z-freq-dir-hash-table res)
-          (error "Invalid file %s" file)))))))
+      (setq eshell-z-freq-dir-hash-table (with-temp-buffer
+                                           (insert-file-contents file)
+                                           (read (current-buffer))))))))
 
 (defun eshell-z--write-freq-dir-hash-table ()
   "Write `eshell-z-freq-dir-hash-table' to a history file."
