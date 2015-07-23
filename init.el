@@ -922,11 +922,6 @@ mouse-3: go to end"))))
       (with-current-buffer out-buffer-name
         (view-mode))))
 
-  (defun string-first-line (string)
-    (and (stringp string)
-         (string-match ".*$" string)
-         (match-string 0 string)))
-
   (defun chunyang-elisp-function-or-variable-quickhelp (symbol)
     "Display a short documentation of the function or variable using `popup'.
 
@@ -941,11 +936,13 @@ See also `describe-function-or-variable'."
         (message "You didn't specify a function or variable.")
       (let* ((fdoc (when (fboundp symbol)
                      (or (documentation symbol t) "Not documented.")))
-             (fdoc-short (string-first-line fdoc))
+             (fdoc-short (and (stringp fdoc)
+                              (substring fdoc 0 (string-match "\n" fdoc))))
              (vdoc (when  (boundp symbol)
                      (or (documentation-property symbol 'variable-documentation t)
                          "Not documented as a variable.")))
-             (vdoc-short (string-first-line vdoc)))
+             (vdoc-short (and (stringp vdoc)
+                              (substring vdoc 0 (string-match "\n" vdoc)))))
         (and (require 'popup nil 'no-error)
              (popup-tip
               (or
