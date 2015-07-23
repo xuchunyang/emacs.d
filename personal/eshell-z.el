@@ -125,7 +125,7 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
                        (> (plist-get (cdr elt1) :freq)
                           (plist-get (cdr elt2) :freq))))))
     (if (null args)
-        (completing-read "pattern " paths nil t)
+        (eshell/cd (list (completing-read "pattern " paths nil t)))
       (let ((path (car args))
             (case-fold-search (eshell-under-windows-p)))
         (if (numberp path)
