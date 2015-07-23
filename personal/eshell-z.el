@@ -32,7 +32,8 @@
 (require 'subr-x)
 
 (defcustom eshell-z-freq-dir-hash-table-file-name
-  (expand-file-name "freqdir" eshell-directory-name)
+  (or (getenv "_Z_DATA")
+      (expand-file-name ".z" (getenv "HOME")))
   "If non-nil, name of the file to read/write the freq-dir-hash-table.
 If it is nil, the freq-dir-hash-table will not be written to disk."
   :type 'file
@@ -51,9 +52,19 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
           (not (file-readable-p file)))
       nil)
      (t
-      (setq eshell-z-freq-dir-hash-table (with-temp-buffer
-                                           (insert-file-contents file)
-                                           (read (current-buffer))))))))
+      (setq eshell-z-freq-dir-hash-table
+            (let ((m (make-hash-table :test 'equal)))
+              (mapc (lambda (elt)
+                      (let* ((entries (split-string elt "|"))
+                             (key (car entries))
+                             (freq (string-to-number (cadr entries)))
+                             (time (caddr entries)))
+                        (puthash key (cons key (list :freq freq :time time)) m)))
+                    (with-temp-buffer
+                      (let ((jka-compr-compression-info-list nil))
+                        (insert-file-contents file))
+                      (split-string (buffer-string) "\n" t)))
+              m))))))
 
 (defun eshell-z--write-freq-dir-hash-table ()
   "Write `eshell-z-freq-dir-hash-table' to a history file."
@@ -70,10 +81,16 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
       (message "Cannot write freq-dir-hash-table file %s" file))
      (t
       (with-temp-buffer
-        (print eshell-z-freq-dir-hash-table (current-buffer))
-        (write-region (point-min) (point-max) file))))))
-
-(add-hook 'eshell-exit-hook 'eshell-z--write-freq-dir-hash-table)
+        (insert
+         (mapconcat (lambda (val)
+                      (let ((dir (car val))
+                            (freq (number-to-string (plist-get (cdr val) :freq)))
+                            (time (plist-get (cdr val) :time)))
+                        (format "%s|%s|%s" dir freq time)))
+                    (hash-table-values eshell-z-freq-dir-hash-table) "\n"))
+        (insert "\n")
+        (let ((jka-compr-compression-info-list nil))
+          (write-region (point-min) (point-max) file nil 'silent)))))))
 
 (defun eshell-z--add ()
   "Add entry."
@@ -84,16 +101,18 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
   ;; $HOME isn't worth matching
   (unless (string= (expand-file-name default-directory)
                    (expand-file-name "~/"))
-    (if-let ((key default-directory)
+    (if-let ((key (substring default-directory 0 -1)) ; Remove end slash, z doesn't use it
              (val (gethash key eshell-z-freq-dir-hash-table)))
         (puthash key (cons key
                            (list :freq (1+ (plist-get (cdr val) :freq))
-                                 :date (current-time)))
+                                 :time (number-to-string (truncate (time-to-seconds)))))
                  eshell-z-freq-dir-hash-table)
       (puthash key (cons key
                          (list :freq 1
-                               :date (current-time)))
-               eshell-z-freq-dir-hash-table))))
+                               :time (number-to-string (truncate (time-to-seconds)))))
+               eshell-z-freq-dir-hash-table)))
+  (if eshell-z-freq-dir-hash-table-file-name
+      (eshell-z--write-freq-dir-hash-table)))
 
 (add-hook 'eshell-post-command-hook #'eshell-z--add)
 
