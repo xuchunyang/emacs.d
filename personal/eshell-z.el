@@ -108,7 +108,7 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
     (setq eshell-z-freq-dir-hash-table (make-hash-table :test 'equal)))
   ;; $HOME isn't worth matching
   (unless (string= (expand-file-name default-directory)
-                   (expand-file-name "~/"))
+                   (expand-file-name (concat (getenv "HOME") "/")))
     (let* (
            ;; Remove end slash, z doesn't use it
            (key (substring default-directory 0 -1))
