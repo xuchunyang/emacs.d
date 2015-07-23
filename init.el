@@ -923,7 +923,7 @@ mouse-3: go to end"))))
         (view-mode))))
 
   (defun chunyang-elisp-function-or-variable-quickhelp (symbol)
-    "Display a short documentation of the function or variable using `popup'.
+    "Display a short documentation of function or variable using `popup'.
 
 See also `describe-function-or-variable'."
     (interactive
