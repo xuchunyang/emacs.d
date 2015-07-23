@@ -3,7 +3,7 @@
 ;; Copyright (C) 2015  Chunyang Xu
 
 ;; Author: Chunyang Xu <xuchunyang56@gmail.com>
-;; Package-Requires: ((emacs "24.4") (seq "1.0"))
+;; Package-Requires: ((seq "1.0"))
 ;; Keywords: convenience
 ;; Version: 0.1
 ;; Homepage: https://github.com/xuchunyang/eshell-z
@@ -29,7 +29,6 @@
 
 (require 'eshell)
 (require 'em-dirs)
-(require 'subr-x)
 
 (defcustom eshell-z-freq-dir-hash-table-file-name
   (or (getenv "_Z_DATA")
@@ -59,12 +58,20 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
                              (key (car entries))
                              (freq (string-to-number (cadr entries)))
                              (time (caddr entries)))
-                        (puthash key (cons key (list :freq freq :time time)) m)))
+                        (puthash key (cons key (list :freq freq :time time))
+                                 m)))
                     (with-temp-buffer
                       (let ((jka-compr-compression-info-list nil))
                         (insert-file-contents file))
                       (split-string (buffer-string) "\n" t)))
               m))))))
+
+;; Same as `hash-table-values' of `subr-x.el' in Emacs 24.4+
+(defsubst eshell-z--hash-table-values (hash-table)
+  "Return a list of values in HASH-TABLE."
+  (let ((values '()))
+    (maphash (lambda (_k v) (push v values)) hash-table)
+    values))
 
 (defun eshell-z--write-freq-dir-hash-table ()
   "Write `eshell-z-freq-dir-hash-table' to a history file."
@@ -73,7 +80,7 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
      ((or (null file)
           (equal file "")
           (null eshell-z-freq-dir-hash-table)
-          (hash-table-empty-p eshell-z-freq-dir-hash-table))
+          (zerop (hash-table-count eshell-z-freq-dir-hash-table)))
       nil)
      ((and (file-exists-p file)
            (not (file-directory-p file))
@@ -82,12 +89,13 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
      (t
       (with-temp-buffer
         (insert
-         (mapconcat (lambda (val)
-                      (let ((dir (car val))
-                            (freq (number-to-string (plist-get (cdr val) :freq)))
-                            (time (plist-get (cdr val) :time)))
-                        (format "%s|%s|%s" dir freq time)))
-                    (hash-table-values eshell-z-freq-dir-hash-table) "\n"))
+         (mapconcat
+          (lambda (val)
+            (let ((dir (car val))
+                  (freq (number-to-string (plist-get (cdr val) :freq)))
+                  (time (plist-get (cdr val) :time)))
+              (format "%s|%s|%s" dir freq time)))
+          (eshell-z--hash-table-values eshell-z-freq-dir-hash-table) "\n"))
         (insert "\n")
         (let ((jka-compr-compression-info-list nil))
           (write-region (point-min) (point-max) file nil 'silent)))))))
@@ -101,23 +109,29 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
   ;; $HOME isn't worth matching
   (unless (string= (expand-file-name default-directory)
                    (expand-file-name "~/"))
-    (if-let ((key (substring default-directory 0 -1)) ; Remove end slash, z doesn't use it
-             (val (gethash key eshell-z-freq-dir-hash-table)))
+    (let* (
+           ;; Remove end slash, z doesn't use it
+           (key (substring default-directory 0 -1))
+           (val (gethash key eshell-z-freq-dir-hash-table)))
+      (if val
+          (puthash key (cons key
+                             (list :freq (1+ (plist-get (cdr val) :freq))
+                                   :time (number-to-string
+                                          (truncate (time-to-seconds)))))
+                   eshell-z-freq-dir-hash-table)
         (puthash key (cons key
-                           (list :freq (1+ (plist-get (cdr val) :freq))
-                                 :time (number-to-string (truncate (time-to-seconds)))))
-                 eshell-z-freq-dir-hash-table)
-      (puthash key (cons key
-                         (list :freq 1
-                               :time (number-to-string (truncate (time-to-seconds)))))
-               eshell-z-freq-dir-hash-table)))
+                           (list :freq 1
+                                 :time (number-to-string
+                                        (truncate (time-to-seconds)))))
+                 eshell-z-freq-dir-hash-table))))
   (if eshell-z-freq-dir-hash-table-file-name
       (eshell-z--write-freq-dir-hash-table)))
 
 (add-hook 'eshell-post-command-hook #'eshell-z--add)
 
 (defun eshell-z--frecent (value)
-  "Calculate rank of a VALUE of `eshell-z-freq-dir-hash-table' base on frequency and time."
+  "Calculate rank of a VALUE of `eshell-z-freq-dir-hash-table'.
+Base on frequency and time."
   (let* ((freq (plist-get (cdr value) :freq))
          (time (string-to-number (plist-get (cdr value) :time)))
          (dx (- (truncate (time-to-seconds)) time)))
@@ -145,7 +159,7 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
      (?x "delete" nil delete "remove the current directory from the datafile" )
      (?h "help" nil nil "show a brief help message")
      :usage "[-rtxh] [regex1 regex2 ... regexn]")
-   (let ((paths (sort (hash-table-values eshell-z-freq-dir-hash-table)
+   (let ((paths (sort (eshell-z--hash-table-values eshell-z-freq-dir-hash-table)
                       (if rank-only
                           (lambda (elt1 elt2)
                             (> (eshell-z--rank elt1)
@@ -159,11 +173,12 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
                                (eshell-z--frecent elt2))))))))
      (if list
          (eshell-print
-          (mapconcat #'car (nreverse (seq-filter
-                                      (lambda (elt)
-                                        (string-match (mapconcat #'identity args ".*")
-                                                      (car elt)))
-                                      paths)) "\n"))
+          (mapconcat #'car (nreverse
+                            (seq-filter
+                             (lambda (elt)
+                               (string-match (mapconcat #'identity args ".*")
+                                             (car elt)))
+                             paths)) "\n"))
        (if (null args)
            (eshell/cd (list (completing-read "pattern " paths nil t)))
          (let ((path (car args))
@@ -173,13 +188,14 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
            ;; if we hit enter on a completion just go there
            (if (file-accessible-directory-p path)
                (eshell/cd (list path))
-             (if-let ((newdir
-                       (caar (seq-filter
-                              (lambda (elt)
-                                (string-match (mapconcat #'identity args ".*")
-                                              (car elt)))
-                              paths))))
-                 (eshell/cd (list newdir))))))))
+             (let ((newdir
+                    (caar (seq-filter
+                           (lambda (elt)
+                             (string-match (mapconcat #'identity args ".*")
+                                           (car elt)))
+                           paths))))
+               (if (file-accessible-directory-p newdir)
+                   (eshell/cd (list newdir)))))))))
    nil))
 
 (provide 'eshell-z)
