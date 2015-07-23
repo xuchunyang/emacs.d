@@ -116,26 +116,41 @@ If it is nil, the freq-dir-hash-table will not be written to disk."
 
 (add-hook 'eshell-post-command-hook #'eshell-z--add)
 
-;; TODO: Try to process command option using esh-opt.el
+(defun eshell-z--rank (value)
+  "Calculate rank of a VALUE of `eshell-z-freq-dir-hash-table' Base on frequency and time."
+  (let* ((freq (plist-get (cdr value) :freq))
+         (time (string-to-number (plist-get (cdr value) :time)))
+         (dx (- (truncate (time-to-seconds)) time)))
+    (cond ((< dx 3600) (* freq 4))
+          ((< dx 86400) (* freq 2))
+          ((< dx 604800) (/ freq 2))
+          (t (/ freq 4)))))
+
+;; TODO: Handle more complex command line arguments
+;; TODO: eshell command line arguments completion with pcomplete
 (defun eshell/z (&rest args)
   "Jump around."
   (setq args (eshell-flatten-list args))
   (let ((paths (sort (hash-table-values eshell-z-freq-dir-hash-table)
                      (lambda (elt1 elt2)
-                       (> (plist-get (cdr elt1) :freq)
-                          (plist-get (cdr elt2) :freq))))))
+                       (> (eshell-z--rank elt1)
+                          (eshell-z--rank elt2))))))
     (if (null args)
         (eshell/cd (list (completing-read "pattern " paths nil t)))
       (let ((path (car args))
             (case-fold-search (eshell-under-windows-p)))
         (if (numberp path)
             (setq path (number-to-string path)))
-        (if-let ((newdir
-                  (caar (seq-filter
-                         (lambda (elt)
-                           (string-match path (car elt)))
-                         paths))))
-            (eshell/cd (list newdir)))))))
+        ;; if we hit enter on a completion just go there
+        (if (file-accessible-directory-p path)
+            (eshell/cd (list path))
+          (if-let ((newdir
+                    (caar (seq-filter
+                           (lambda (elt)
+                             (string-match (mapconcat #'identity args ".*")
+                                           (car elt)))
+                           paths))))
+              (eshell/cd (list newdir))))))))
 
 (provide 'eshell-z)
 ;;; eshell-z.el ends here
