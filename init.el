@@ -1115,8 +1115,13 @@ See also `describe-function-or-variable'."
              ("C-x v n" . git-gutter:next-hunk)
              ("C-x v s" . git-gutter:stage-hunk)
              ("C-x v r" . git-gutter:revert-hunk))
+  ;; Support SVN too, I use it
   (setq git-gutter:handled-backends '(git svn))
-  (global-git-gutter-mode t))
+  ;; Live update
+  (setq git-gutter:update-interval 2)
+  :init
+  ;; Enable globally at the beginning
+  (global-git-gutter-mode))
 
 (use-package git-messenger
   :ensure t
@@ -1127,7 +1132,9 @@ See also `describe-function-or-variable'."
   :bind (("C-x g"   . magit-status)
          ("C-x M-g" . magit-dispatch-popup))
   :config
-  (setq magit-revert-buffers t))
+  (setq magit-revert-buffers t)
+  ;; Use 'C-t' to toggle the display
+  (setq magit-popup-show-common-commands nil))
 
 (use-package git-timemachine            ; Go back in Git time
   :ensure t
