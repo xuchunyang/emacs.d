@@ -197,5 +197,13 @@ With PREFIX, cd to project root."
         (erase-buffer)
         (insert-file-contents chunyang-scratch-log-file)))))
 
+
+;; From [[http://lists.gnu.org/archive/html/help-gnu-emacs/2008-06/msg00087.html][Re: Timing execution of function calls in Emacs lisp]]
+(defmacro measure-time (&rest body)
+  "Measure the time it takes to evaluate BODY."
+  `(let ((time (current-time)))
+     ,@body
+     (message "%.06f" (float-time (time-since time)))))
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
