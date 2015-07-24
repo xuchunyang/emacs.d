@@ -1026,6 +1026,9 @@ See also `describe-function-or-variable'."
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n"))))
 
+(use-package eshell-z
+  :load-path "~/wip/eshell-z")
+
 (use-package aggressive-indent
   :ensure t
   :defer t
@@ -1210,8 +1213,7 @@ See also `describe-function-or-variable'."
   :load-path "~/wip/emacs-which-key"
   :diminish which-key-mode
   :config
-  (which-key-mode)
-  (which-key-setup-side-window-right))
+  (which-key-mode))
 
 (use-package keyfreq
   :disabled t
