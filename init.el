@@ -1017,12 +1017,15 @@ See also `describe-function-or-variable'."
                                         ; (I don't know what this means)
   (add-hook 'eshell-mode-hook
             (lambda ()
+              ;; Setup smart shell
+              (require 'em-smart)
+              (eshell-smart-initialize)
               (bind-keys :map eshell-mode-map
-                         ([remap eshell-pcomplete] . helm-esh-pcomplete)
-                         ("M-p"                    . helm-eshell-history)
-                         ;; ("C-l"                    . eshell-clear-buffer)
-                         ("C-c C-k"                . compile)
-                         ("C-c C-q"                . eshell-kill-process))
+                         ("TAB"     . helm-esh-pcomplete)
+                         ("M-p"     . helm-eshell-history)
+                         ("C-l"     . eshell-clear-buffer)
+                         ("C-c C-k" . compile)
+                         ("C-c C-q" . eshell-kill-process))
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n"))))
 
