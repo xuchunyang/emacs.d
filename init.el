@@ -1136,6 +1136,8 @@ See also `describe-function-or-variable'."
          ("C-x M-g" . magit-dispatch-popup))
   :config
   (setq magit-revert-buffers t)
+  ;; Just push, no question (version 2.2.0
+  (setq magit-push-always-verify nil)
   ;; Use 'C-t' to toggle the display
   (setq magit-popup-show-common-commands nil))
 
