@@ -1642,6 +1642,10 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
                 org-clock-current-task
                 "\"")))))
 
+(use-package toc-org
+  :ensure t
+  :config (add-hook 'org-mode-hook 'toc-org-enable))
+
 (use-package orglink
   :ensure t
   :diminish orglink-mode
