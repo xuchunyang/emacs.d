@@ -466,7 +466,6 @@
 (use-package chunyang-simple
   :commands (demo
              chunyang-git-clone
-             chunyang-run-command-in-iterm
              chunyang-save-scratch
              chunyang-restore-scratch)
   :bind (([remap split-window-right] . chunyang-split-window-right)
