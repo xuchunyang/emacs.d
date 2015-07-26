@@ -522,6 +522,7 @@
          ("M-z"               . zop-up-to-char)))
 
 (use-package easy-kill                  ; Easy killing and marking on C-w
+  :disabled t
   :ensure t
   :bind (([remap kill-ring-save] . easy-kill)
          ([remap mark-sexp]      . easy-mark)))
