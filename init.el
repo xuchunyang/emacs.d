@@ -230,11 +230,40 @@
 
   (add-to-list 'helm-type-buffer-actions
                '("Display buffer(s) in new window(s)" .
-                 helm-buffer-switch-new-window) 'append))
+                 helm-buffer-switch-new-window) 'append)
+
+  (defun helm-buffer-imenu (candidate)
+    "Imenu action for helm buffers."
+    (switch-to-buffer candidate)
+    ;; (call-interactively #'helm-imenu)
+    (require 'helm-imenu)
+    (unless helm-source-imenu
+      (setq helm-source-imenu
+            (helm-make-source "Imenu" 'helm-imenu-source
+              :fuzzy-match helm-imenu-fuzzy-match)))
+    (let ((imenu-auto-rescan t))
+      ;; FIXME: can't execute action in nest helm session,
+      ;; maybe something is special in `helm-source-imenu'.
+      (helm :sources 'helm-source-imenu
+            :buffer "*helm imenu*"
+            :resume 'noresume
+            :allow-nest t)))
+
+  (add-to-list 'helm-type-buffer-actions
+               '("Imenu" . helm-buffer-imenu) 'append))
 
 (use-package helm-files
   :bind ("C-c p h" . helm-browse-project)
   :config
+  ;; Add imenu action to 'C-x C-f'
+  (defun helm-find-file-imenu (file)
+    (helm-find-file-or-marked file)
+    (call-interactively #'helm-imenu))
+
+  (add-to-list 'helm-find-files-actions
+               '("Imenu" . helm-find-file-imenu)
+               'append)
+
   (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
   (use-package helm-ls-git :ensure t :defer t)
 
@@ -989,12 +1018,10 @@ See also `describe-function-or-variable'."
     (eshell t))
   (defun eshell-clear-buffer ()
     "Clear terminal"
-    (interactive)
     (let ((inhibit-read-only t))
       (erase-buffer)
       (eshell-send-input)))
   (defun eshell/j (&optional initial-input)
-    (interactive)
     (let ((dirs
            (delete-dups
             (mapcar #'expand-file-name (ring-elements eshell-last-dir-ring)))))
@@ -1003,6 +1030,10 @@ See also `describe-function-or-variable'."
               :candidates dirs
               :action (lambda (candidate) (eshell/cd candidate)))
             :input initial-input)))
+  (defun eshell/mcd (dir)
+    "make a directory and cd into it"
+    (eshell/mkdir "-p" dir)
+    (eshell/cd dir))
   :bind  (("C-!"   . eshell-command)
           ("C-x m" . eshell)
           ("C-x M" . eshell*))
