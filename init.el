@@ -308,6 +308,33 @@
   :defer t
   :config (setq helm-man-format-switches "%s"))
 
+(use-package helm-imenu
+  :config
+  ;; Re-define `helm-imenu-transformer' to support more colors
+  (defvar helm-imenu-prop-alist
+    '(("Variables" . font-lock-variable-name-face)
+      ("Function"  . font-lock-function-name-face)
+      ("Types"     . font-lock-type-face)
+      ;; User defined
+      ("Package"   . font-lock-keyword-face)
+      ("hydra"     . font-lock-comment-face)))
+  (defun helm-imenu-transformer (candidates)
+    (cl-loop for (k . v) in candidates
+             for types = (or (helm-imenu--get-prop k)
+                             (list "Function" k))
+             for bufname = (buffer-name (marker-buffer v))
+             for disp1 = (mapconcat
+                          (lambda (x)
+                            (propertize
+                             x 'face (catch 'break
+                                       (dolist (elt helm-imenu-prop-alist)
+                                         (when (string-equal x (car elt))
+                                           (throw 'break (cdr elt)))))))
+                          types helm-imenu-delimiter)
+             for disp = (propertize disp1 'help-echo bufname)
+             collect
+             (cons disp (cons k v)))))
+
 (use-package helm-ag
   :ensure t
   :bind ("C-c p s" . helm-do-ag-project-root))
@@ -613,7 +640,7 @@
   (defun chunyang-imenu--setup-elisp ()
     ;; use-package
     (add-to-list 'imenu-generic-expression
-                 '("Packages"
+                 '("Package"
                    "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2))
     ;; hydra
     (add-to-list 'imenu-generic-expression
@@ -1170,7 +1197,21 @@ See also `describe-function-or-variable'."
   ;; Just push, no question (version 2.2.0
   (setq magit-push-always-verify nil)
   ;; Use 'C-t' to toggle the display
-  (setq magit-popup-show-common-commands nil))
+  (setq magit-popup-show-common-commands nil)
+
+  ;; [[http://endlessparentheses.com/create-github-prs-from-emacs-with-magit.html][Create Github PRs from Emacs with Magit (again) · Endless Parentheses]]
+  (defun endless/visit-pull-request-url ()
+    "Visit the current branch's PR on Github."
+    (interactive)
+    (browse-url
+     (format "https://github.com/%s/pull/new/%s"
+             (replace-regexp-in-string
+              "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+              (magit-get "remote"
+                         (magit-get-remote)
+                         "url"))
+             (cdr (magit-get-remote-branch)))))
+  (bind-key "v" #'endless/visit-pull-request-url magit-mode-map))
 
 (use-package git-timemachine            ; Go back in Git time
   :ensure t
@@ -1415,7 +1456,8 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
               (with-current-buffer (cdr elt)
                 (projectile-kill-buffers))) projects)))
   (bind-keys :map projectile-command-map
-             ("K" . projectile-kill-projects)))
+             ("K" . projectile-kill-projects)
+             ("s" . helm-projectile-ag)))
 
 
 ;;; Net & Web & Email

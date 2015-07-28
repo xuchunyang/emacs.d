@@ -71,3 +71,7 @@ hgs-cache
 
 # game
 games/
+
+# org-trello
+.trello/
+request/
