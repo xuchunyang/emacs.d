@@ -1226,6 +1226,9 @@ See also `describe-function-or-variable'."
 ;; svn issues a warning ("cannot set LC_CTYPE locale") if LANG is not set.
 (setenv "LANG" "C")
 
+(use-package ztree
+  :ensure t)
+
 
 ;;; Tools and utilities
 
