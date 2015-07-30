@@ -340,10 +340,7 @@
   :bind ("C-c p s" . helm-do-ag-project-root))
 
 (use-package helm-descbinds
-  :ensure t
-  :bind ("C-h b" . helm-descbinds)
-  :init
-  (fset 'describe-bindings 'helm-descbinds)
+  :load-path "~/wip/helm-descbinds"
   :config
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
@@ -666,8 +663,9 @@
   :config
   (dolist (file '("TAGS" "GPATH" "GRTAGS" "GTAGS"))
     (add-to-list 'grep-find-ignored-files file))
-  (use-package wgrep :ensure t :defer t) ; conf done by package.el (autload)
-  )
+  (add-to-list 'grep-find-ignored-directories "auto")
+  (add-to-list 'grep-find-ignored-directories "elpa")
+  (use-package wgrep :ensure t :defer t))
 
 (use-package anzu                       ; Position/matches count for isearch
   :ensure t
@@ -1297,6 +1295,7 @@ See also `describe-function-or-variable'."
   (guide-key-mode))
 
 (use-package which-key
+  :disabled t
   :load-path "~/wip/emacs-which-key"
   :diminish which-key-mode
   :config
