@@ -157,11 +157,13 @@
 
 ;;; The minibuffer
 (use-package helm
+  :disabled t
   :ensure t
   :config
   (setq helm-split-window-default-side 'other))
 
 (use-package helm-config
+  :disabled t
   :init
   (defvar helm-command-prefix-key "C-c h")
   :config
@@ -189,6 +191,7 @@
          'once (not (get 'toggle-small-helm-window 'once)))))
 
 (use-package helm-mode
+  :disabled t
   :diminish helm-mode
   :init (helm-mode))
 
@@ -199,6 +202,7 @@
 (require 'helm-ring)
 
 (use-package helm-adaptive
+  :disabled t
   :config (helm-adaptive-mode))
 
 (use-package helm-regexp
@@ -211,6 +215,7 @@
 (use-package wgrep-helm :ensure t :defer t)
 
 (use-package helm-buffers
+  :disabled t
   :defer t
   :config
   (add-to-list 'helm-boring-buffer-regexp-list "TAGS")
@@ -253,6 +258,7 @@
                '("Imenu" . helm-buffer-imenu) 'append))
 
 (use-package helm-files
+  :disabled t
   :bind ("C-c p h" . helm-browse-project)
   :config
   ;; Add imenu action to 'C-x C-f'
@@ -275,40 +281,41 @@
     :load-path "~/wip/helm-fuzzy-find/"
     :commands helm-fuzzy-find))
 
-(bind-keys ("M-x"                            . helm-M-x)
-           ;; File
-           ("C-x C-f"                        . helm-find-files)
-           ("C-x f"                          . helm-recentf)
-           ;; Buffer
-           ([remap switch-to-buffer]         . helm-buffers-list)       ; C-x b
-           ([remap downcase-word]            . helm-mini)               ; M-l
-           ;; Kill ring
-           ([remap yank-pop]                 . helm-show-kill-ring)     ; M-y
-           ([remap suspend-frame]            . helm-resume)             ; C-z
-           ;; Register
-           ([remap jump-to-register]         . helm-register)
-           ;; Help
-           ([remap apropos-command]          . helm-apropos)            ; C-h a
-           ;; Bookmark
-           ([remap bookmark-jump]            . helm-filtered-bookmarks) ; C-x r b
-           ;; Project (Git)
-           ([remap list-directory]           . helm-browse-project)     ; C-x C-d
-           ;; TAGS
-           ;; ([remap xref-find-definitions] . helm-etags-select)
-           ("C-c <SPC>"                      . helm-all-mark-rings)
-           ("M-i"                            . helm-occur)
-           ("C-c i"                          . helm-semantic-or-imenu))
+;; (bind-keys ("M-x"                            . helm-M-x)
+;;            ;; File
+;;            ("C-x C-f"                        . helm-find-files)
+;;            ("C-x f"                          . helm-recentf)
+;;            ;; Buffer
+;;            ([remap switch-to-buffer]         . helm-buffers-list)       ; C-x b
+;;            ([remap downcase-word]            . helm-mini)               ; M-l
+;;            ;; Kill ring
+;;            ([remap yank-pop]                 . helm-show-kill-ring)     ; M-y
+;;            ([remap suspend-frame]            . helm-resume)             ; C-z
+;;            ;; Register
+;;            ([remap jump-to-register]         . helm-register)
+;;            ;; Help
+;;            ([remap apropos-command]          . helm-apropos)            ; C-h a
+;;            ;; Bookmark
+;;            ([remap bookmark-jump]            . helm-filtered-bookmarks) ; C-x r b
+;;            ;; Project (Git)
+;;            ([remap list-directory]           . helm-browse-project)     ; C-x C-d
+;;            ;; TAGS
+;;            ;; ([remap xref-find-definitions] . helm-etags-select)
+;;            ("C-c <SPC>"                      . helm-all-mark-rings)
+;;            ("M-i"                            . helm-occur)
+;;            ("C-c i"                          . helm-semantic-or-imenu))
 
 ;; `helm-regexp.el'
-(bind-key "M-i" #'helm-occur-from-isearch isearch-mode-map)
+;; (bind-key "M-i" #'helm-occur-from-isearch isearch-mode-map)
 ;; `helm-misc.el'
-(bind-key "C-c C-l"    #'helm-minibuffer-history    minibuffer-local-map)
+;; (bind-key "C-c C-l"    #'helm-minibuffer-history    minibuffer-local-map)
 
 (use-package helm-man
   :defer t
   :config (setq helm-man-format-switches "%s"))
 
 (use-package helm-imenu
+  :disabled t
   :config
   ;; Re-define `helm-imenu-transformer' to support more colors
   (defvar helm-imenu-prop-alist
@@ -357,6 +364,29 @@
   (setq history-length 1000
         history-delete-duplicates t)
   (savehist-mode))
+
+(use-package swiper
+  :load-path "~/wip/swiper"
+  :bind (("C-s"     . swiper)
+         ("C-r"     . swiper)
+         ("C-c C-r" . ivy-resume)
+         ("C-z"     . ivy-resume))
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (ivy-mode))
+
+;; Important missing function for me
+;; 1. imehu
+;; 2. kill-ring ('M-y')
+(bind-keys ("M-y" . helm-show-kill-ring)
+           ("C-o" . helm-imenu))
+
+(use-package counsel
+  :load-path "~/wip/swiper"
+  :bind (("M-x"     . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("M-l"     . ivy-switch-buffer)
+         ("C-x f"   . ivy-recentf)))
 
 
 ;;; Buffer, Windows and Frames
@@ -1433,15 +1463,18 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :ensure t
   :init (projectile-global-mode)
   (use-package helm-projectile
+    :disabled t
     :ensure t
     :init (helm-projectile-on))
   :config
-  (setq projectile-completion-system 'helm
-        projectile-mode-line '(:eval
-                               (format " P[%s]"
-                                       (projectile-project-name)))
-        ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
-        projectile-svn-command "svn-ls-files")
+  (setq
+   ;; projectile-completion-system 'helm
+   projectile-completion-system 'ivy
+   projectile-mode-line '(:eval
+                          (format " P[%s]"
+                                  (projectile-project-name)))
+   ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
+   projectile-svn-command "svn-ls-files")
 
   (defun projectile-kill-projects ()
     (interactive)
