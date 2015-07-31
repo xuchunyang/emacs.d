@@ -141,6 +141,8 @@
   :init
   (powerline-default-theme))
 
+(column-number-mode)
+
 (use-package smart-mode-line
   :ensure t
   :config
@@ -149,10 +151,10 @@
   (sml/setup))
 
 (use-package nyan-mode
+  :disabled t
   :ensure t
   :config
-  (nyan-mode)
-  (column-number-mode))
+  (nyan-mode))
 
 
 ;;; The minibuffer
