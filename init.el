@@ -367,8 +367,8 @@
 
 (use-package swiper
   :load-path "~/wip/swiper"
-  :bind (("C-s"     . swiper)
-         ("C-r"     . swiper)
+  :bind (;; ("C-s"     . swiper)
+         ;; ("C-r"     . swiper)
          ("C-c C-r" . ivy-resume)
          ("C-z"     . ivy-resume))
   :config
@@ -379,7 +379,8 @@
 ;; 1. imehu
 ;; 2. kill-ring ('M-y')
 (bind-keys ("M-y" . helm-show-kill-ring)
-           ("C-o" . helm-imenu))
+           ("C-o" . helm-imenu)
+           ("M-i" . helm-occur))
 
 (use-package counsel
   :load-path "~/wip/swiper"
@@ -1489,7 +1490,8 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
                   :test (lambda (a b) (string= (car a) (car b)))))))
       (mapc (lambda (elt)
               (with-current-buffer (cdr elt)
-                (projectile-kill-buffers))) projects)))
+                (projectile-kill-buffers))) projects)
+      (message "")))
   (bind-keys :map projectile-command-map
              ("K" . projectile-kill-projects)
              ("s" . helm-projectile-ag)))
