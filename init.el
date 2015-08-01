@@ -581,6 +581,14 @@
      ["Bing Translate" bing-dict-brief t]))
   (easy-menu-add-item nil '("Tools") '("----") "Your tools"))
 
+(use-package avy
+  :disabled t
+  :load-path "~/wip/avy")
+(use-package ace-window
+  :disabled t
+  :load-path "~/wip/ace-window"
+  :bind ("M-o" . ace-window))
+
 (use-package easy-repeat :ensure t :defer t)
 
 (use-package ws-butler
