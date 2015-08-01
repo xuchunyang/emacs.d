@@ -374,7 +374,8 @@
          ("C-c C-r" . ivy-resume)
          ("C-z"     . ivy-resume))
   :config
-  (setq ivy-use-virtual-buffers t)
+  (setq ivy-use-virtual-buffers t
+        ivy-count-format nil)
   (ivy-mode))
 
 ;; Important missing function for me
@@ -608,7 +609,6 @@
          ("M-z"               . zop-up-to-char)))
 
 (use-package easy-kill                  ; Easy killing and marking on C-w
-  :disabled t
   :ensure t
   :bind (([remap kill-ring-save] . easy-kill)
          ([remap mark-sexp]      . easy-mark)))
@@ -1003,11 +1003,11 @@ mouse-3: go to end"))))
 (use-package lisp-mode
   :defer t
   :preface
-  (defadvice pp-display-expression (after make-read-only (expression out-buffer-name) activate)
-    "Enable `view-mode' in the output buffer - if any - so it can be closed with `\"q\"."
-    (when (get-buffer out-buffer-name)
-      (with-current-buffer out-buffer-name
-        (view-mode))))
+  ;; (defadvice pp-display-expression (after make-read-only (expression out-buffer-name) activate)
+  ;;   "Enable `view-mode' in the output buffer - if any - so it can be closed with `\"q\"."
+  ;;   (when (get-buffer out-buffer-name)
+  ;;     (with-current-buffer out-buffer-name
+  ;;       (view-mode))))
 
   (defun chunyang-elisp-function-or-variable-quickhelp (symbol)
     "Display a short documentation of function or variable using `popup'.
@@ -1328,7 +1328,6 @@ See also `describe-function-or-variable'."
   (guide-key-mode))
 
 (use-package which-key
-  :disabled t
   :load-path "~/wip/emacs-which-key"
   :diminish which-key-mode
   :config
