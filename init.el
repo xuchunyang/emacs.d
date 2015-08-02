@@ -129,6 +129,7 @@
 (use-package zenburn-theme                     :ensure t :defer t)
 (use-package solarized-theme                   :ensure t :defer t)
 (use-package color-theme-sanityinc-tomorrow    :ensure t :defer t)
+(use-package spacemacs-theme                   :ensure t :defer t)
 
 
 ;;; The mode line
@@ -566,7 +567,8 @@
          ([remap split-window-below] . chunyang-split-window-below)
          ("M-o"                      . chunyang-other-window)
          ("C-c f w"                  . chunyang-copy-buffer-name-as-kill)
-         ("C-M-!"                    . iterm-shell-command))
+         ("C-M-!"                    . iterm-shell-command)
+         ("C-x t"                    . chunyang-switch-scratch))
   :init (add-hook 'kill-emacs-hook #'chunyang-save-scratch)
   :config
   (require 'easymenu)

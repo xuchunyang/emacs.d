@@ -197,6 +197,10 @@ With PREFIX, cd to project root."
         (erase-buffer)
         (insert-file-contents chunyang-scratch-log-file)))))
 
+(defun chunyang-switch-scratch ()
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
 
 ;; From [[http://lists.gnu.org/archive/html/help-gnu-emacs/2008-06/msg00087.html][Re: Timing execution of function calls in Emacs lisp]]
 (defmacro measure-time (&rest body)
