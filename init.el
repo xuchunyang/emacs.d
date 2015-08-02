@@ -433,7 +433,7 @@
   :bind (([remap list-buffers] . ibuffer)))
 
 (use-package windmove
-  :defer 7
+  :disabled t
   :config
   (windmove-default-keybindings))
 
@@ -1730,7 +1730,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (use-package org-mac-link
     :if (eq system-type 'darwin)
     :ensure t
-    :commands (org-mac-firefox-insert-frontmost-url
+    :commands (;; org-mac-firefox-insert-frontmost-url
                org-mac-chrome-insert-frontmost-url))
 
   (org-babel-do-load-languages
@@ -1777,6 +1777,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :config (add-hook 'org-mode-hook 'toc-org-enable))
 
 (use-package orglink
+  :disabled t
   :ensure t
   :diminish orglink-mode
   :init (global-orglink-mode))
