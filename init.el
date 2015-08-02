@@ -1115,8 +1115,8 @@ See also `describe-function-or-variable'."
   (add-hook 'eshell-mode-hook
             (lambda ()
               ;; Setup smart shell
-              (require 'em-smart)
-              (eshell-smart-initialize)
+              ;; (require 'em-smart)
+              ;; (eshell-smart-initialize)
               (bind-keys :map eshell-mode-map
                          ("TAB"     . helm-esh-pcomplete)
                          ("M-p"     . helm-eshell-history)
