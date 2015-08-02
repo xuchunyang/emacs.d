@@ -1096,15 +1096,6 @@ See also `describe-function-or-variable'."
     (let ((inhibit-read-only t))
       (erase-buffer)
       (eshell-send-input)))
-  (defun eshell/j (&optional initial-input)
-    (let ((dirs
-           (delete-dups
-            (mapcar #'expand-file-name (ring-elements eshell-last-dir-ring)))))
-      (helm :sources
-            (helm-build-sync-source "cd to recent eshell directories"
-              :candidates dirs
-              :action (lambda (candidate) (eshell/cd candidate)))
-            :input initial-input)))
   (defun eshell/mcd (dir)
     "make a directory and cd into it"
     (eshell/mkdir "-p" dir)

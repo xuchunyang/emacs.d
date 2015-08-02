@@ -43,7 +43,8 @@ var
 eww-bookmarks
 
 # eshell
-eshell
+/eshell/*
+!/eshell/alias
 
 # rcirc
 rcirc-log
