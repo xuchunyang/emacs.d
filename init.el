@@ -443,6 +443,28 @@
   (add-to-list 'desktop-globals-to-save 'translate-shell-cache)
   (add-to-list 'desktop-globals-to-save 'translate-shell-brief-cache))
 
+(use-package wconf
+  :disabled t
+  :ensure t
+  :config
+  (add-hook 'desktop-after-read-hook      ;so we have all buffers again
+            (lambda ()
+              (wconf-load)
+              (wconf-switch-to-config 0)
+              (add-hook 'kill-emacs-hook
+                        (lambda ()
+                          (wconf-store-all)
+                          (wconf-save))))
+            'append)
+
+  (global-set-key (kbd "C-c w s") #'wconf-store)
+  (global-set-key (kbd "C-c w S") #'wconf-store-all)
+  (global-set-key (kbd "C-c w r") #'wconf-restore)
+  (global-set-key (kbd "C-c w R") #'wconf-restore-all)
+  (global-set-key (kbd "C-c w w") #'wconf-switch-to-config)
+  (global-set-key (kbd "C-<prior>") #'wconf-use-previous)
+  (global-set-key (kbd "C-<next>") #'wconf-use-next))
+
 (use-package winner
   :defer 7
   :bind (("M-N" . winner-redo)

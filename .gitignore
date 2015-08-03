@@ -82,3 +82,6 @@ request/
 
 # persistent-scratch
 .persistent-scratch
+
+# wconf
+wconf-window-configs.el
