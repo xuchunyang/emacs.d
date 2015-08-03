@@ -502,6 +502,7 @@
   (bind-key "C-x C-J" #'direx:jump-to-directory-other-window))
 
 (use-package ranger
+  :disabled t
   :load-path "~/wip/ranger")
 
 (use-package bookmark
