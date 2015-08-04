@@ -683,6 +683,8 @@
 (put 'view-hello-file
      'disabled "I mistype C-h h a lot and it is too slow to block Emacs")
 
+(put 'upcase-region 'disabled nil)
+
 
 ;;; Navigation and scrolling
 (setq scroll-margin 0                   ; Drag the point along while scrolling
@@ -1205,6 +1207,9 @@ See also `describe-function-or-variable'."
 
 ;;; Ruby
 
+(use-package inf-ruby
+  :ensure t)
+
 
 ;;; C
 (use-package ggtags
@@ -1643,6 +1648,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (setq message-kill-buffer-on-exit t)
 
   (use-package mu4e-maildirs-extension  ; Show maildirs summary in mu4e-main-view
+    :disabled t
     :ensure t
     :defer t
     :init (mu4e-maildirs-extension)))
