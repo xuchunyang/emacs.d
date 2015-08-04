@@ -145,6 +145,7 @@
 (column-number-mode)
 
 (use-package smart-mode-line
+  :disabled t
   :ensure t
   :config
   (setq sml/no-confirm-load-theme t)
@@ -1308,7 +1309,7 @@ See also `describe-function-or-variable'."
   :config
   (unless (server-running-p) (server-start)))
 
-(use-package helm-open-github :ensure t :defer t)
+(use-package helm-open-github :ensure t)
 
 (use-package helm-github-stars
   :ensure t
@@ -1360,6 +1361,7 @@ See also `describe-function-or-variable'."
   (guide-key-mode))
 
 (use-package which-key
+  :disabled t
   :load-path "~/wip/emacs-which-key"
   :diminish which-key-mode
   :config
@@ -1539,7 +1541,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (setq rcirc-log-flag t)
   (add-to-list 'rcirc-server-alist
                '("irc.freenode.net"
-                 :channels ("#macports-gsoc")))
+                 :channels ("#emacs" "#macports-gsoc")))
   (load-file  "~/.private.el")
   (add-hook 'rcirc-mode-hook #'flyspell-mode)
   (rcirc-track-minor-mode))
