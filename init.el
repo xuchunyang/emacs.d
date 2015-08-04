@@ -721,7 +721,8 @@
   :ensure t
   :bind ("C-c I" . helm-imenu-anywhere))
 
-(use-package imenu-list :ensure t :defer t)
+(use-package imenu-list
+  :load-path "~/wip/imenu-list")
 
 (use-package origami :ensure t :defer t)
 
