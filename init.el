@@ -148,7 +148,7 @@
   :ensure t
   :config
   (setq sml/no-confirm-load-theme t)
-  (setq sml/theme 'respectful)
+  ;; (setq sml/theme 'respectful)
   (sml/setup))
 
 (use-package nyan-mode
