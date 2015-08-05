@@ -36,7 +36,9 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(setq package-archive-priorities '(("gnu" . 20) ("melpa" . 0)))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+
+(setq package-archive-priorities '(("org" . 30) ("gnu" . 20) ("melpa" . 0)))
 
 (package-initialize)
 
@@ -1704,6 +1706,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 
 ;;; org-mode
+
 (use-package org
   :bind (("C-c a"   . org-agenda)
          ("C-c c"   . org-capture)
@@ -1795,12 +1798,14 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
                 org-clock-current-task
                 "\"")))))
 
+(use-package org-plus-contrib           ; Various org-mode extensions
+  :ensure t)
+
 (use-package toc-org
   :ensure t
   :config (add-hook 'org-mode-hook 'toc-org-enable))
 
 (use-package orglink
-  :disabled t
   :ensure t
   :diminish orglink-mode
   :init (global-orglink-mode))
