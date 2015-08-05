@@ -410,6 +410,19 @@
   :config
   (setq ivy-use-virtual-buffers t
         ivy-count-format "(%d/%d) ")
+
+  ;; [[https://github.com/abo-abo/swiper/wiki/Customize-candidate-menu-style][Customize candidate menu style · abo-abo/swiper Wiki]]
+  (setq ivy-format-function 'eh-ivy-format-function)
+  (defun eh-ivy-format-function (cands)
+    (let ((i -1))
+      (mapconcat
+       (lambda (s)
+         (concat (if (eq (cl-incf i) ivy--index)
+                     "👉 "
+                   "   ")
+                 s))
+       cands "\n")))
+
   (ivy-mode))
 
 (use-package counsel
@@ -681,6 +694,7 @@
 (use-package avy
   :disabled t
   :load-path "~/wip/avy")
+
 (use-package ace-window
   :disabled t
   :load-path "~/wip/ace-window"
