@@ -120,8 +120,26 @@
 ;; ridiculously bizarre thing entirely.
 (fset 'display-startup-echo-area-message #'ignore)
 
-(and (window-system) (member "Source Code Pro for Powerline" (font-family-list))
-     (set-face-attribute 'default nil :font "Source Code Pro for Powerline 13"))
+
+;; Font setup
+(set-frame-font "Source Code Pro-13" nil t)   ; Default font
+
+;; Additional fonts for special characters and fallbacks
+;; Test range: 🐷 ⊄ ∫ 𝛼 α 🜚
+(when (eq system-type 'darwin)
+  ;; Colored Emoji on OS X
+  (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji")
+                    nil 'prepend)
+  (set-fontset-font t 'symbol (font-spec :family "Apple Symbols") nil 'append))
+(set-fontset-font t 'mathematical (font-spec :family "XITS Math") nil 'append)
+;; Fallback for Greek characters which Source Code Pro doesn't provide.
+(set-fontset-font t 'greek (pcase system-type
+                             (`darwin (font-spec :family "Menlo"))
+                             (_ (font-spec :family "DejaVu Sans Mono")))
+                  nil 'append)
+
+;; A general fallback for all kinds of unknown symbols
+(set-fontset-font t nil (font-spec :family "Apple Symbols") nil 'append)
 
 ;;; TODO Chinese font setup
 ;; (when (member "STFangsong" (font-family-list))
