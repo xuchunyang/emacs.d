@@ -437,6 +437,7 @@
 (bind-keys ("M-y" . helm-show-kill-ring)
            ("C-o" . helm-imenu)
            ("M-i" . helm-occur))
+(setq helm-split-window-default-side 'other)
 
 (defun chunyang-use-ivy ()
   (interactive)
@@ -1378,6 +1379,11 @@ See also `describe-function-or-variable'."
 
 
 ;;; Tools and utilities
+(use-package edit-server
+  :ensure t
+  :config
+  (setq edit-server-new-frame nil)
+  (edit-server-start))
 
 (use-package ediff
   :defer t
