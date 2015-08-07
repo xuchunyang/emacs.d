@@ -164,6 +164,41 @@
 
 
 ;;; The mode line
+(setq-default mode-line-format
+              '("%e" mode-line-front-space
+                "👿 "
+                ;; Standard info about the current buffer
+                mode-line-mule-info
+                mode-line-client
+                mode-line-modified
+                mode-line-remote
+                mode-line-frame-identification
+                mode-line-buffer-identification " " mode-line-position
+                (projectile-mode projectile-mode-line)
+                (vc-mode (:propertize (:eval vc-mode) face italic))
+                " "
+                (flycheck-mode flycheck-mode-line) ; Flycheck status
+                (isearch-mode " ")
+                (anzu-mode (:eval                  ; isearch pos/matches
+                            (when (> anzu--total-matched 0)
+                              (anzu--update-mode-line))))
+                (multiple-cursors-mode mc/mode-line) ; Number of cursors
+                ;; And the modes, which we don't really care for anyway
+                " " mode-line-misc-info mode-line-modes mode-line-end-spaces)
+              mode-line-remote
+              '(:eval
+                (when-let (host (file-remote-p default-directory 'host))
+                  (propertize (concat "@" host) 'face
+                              '(italic warning))))
+              ;; Remove which func from the mode line, since we have it in the
+              ;; header line
+              mode-line-misc-info
+              (assq-delete-all 'which-func-mode mode-line-misc-info)
+
+              ;; header-line-format
+              ;; '(which-func-mode ("" which-func-format " "))
+              )
+
 (use-package powerline
   :disabled t
   :ensure t
@@ -432,7 +467,9 @@
                  s))
        cands "\n")))
 
-  (ivy-mode))
+  (use-package ivy
+    :diminish (ivy-mode . " 🙏")
+    :config (ivy-mode)))
 
 (use-package counsel
   :if prefer-ivy
@@ -846,14 +883,16 @@
 
 (use-package anzu                       ; Position/matches count for isearch
   :ensure t
-  :diminish anzu-mode
-  :init
-  (global-anzu-mode +1)
+  :init (global-anzu-mode)
+  :config
   (setq anzu-replace-to-string-separator " => ")
   (bind-key "M-%" 'anzu-query-replace)
-  (bind-key "C-M-%" 'anzu-query-replace-regexp))
+  (bind-key "C-M-%" 'anzu-query-replace-regexp)
+  (setq anzu-cons-mode-line-p nil)
+  :diminish anzu-mode)
 
 (use-package which-func                 ; Current function name in header line
+  :disabled t
   :init (which-function-mode)
   :config
   (setq which-func-unknown "⊥" ; The default is really boring…
@@ -996,6 +1035,7 @@ mouse-3: go to end"))))
 
 (use-package flycheck
   :ensure t
+  :diminish flycheck-mode
   :bind (("C-c t f" . global-flycheck-mode)
          ("C-c L e" . list-flycheck-errors))
   :config
@@ -1025,6 +1065,7 @@ mouse-3: go to end"))))
                   #'flycheck-pos-tip-error-messages))
 
   (use-package flycheck-color-mode-line
+    :disabled t
     :ensure t
     :config
     (eval-after-load "flycheck"
@@ -1472,23 +1513,24 @@ See also `describe-function-or-variable'."
 
 (use-package which-key
   :load-path "~/wip/emacs-which-key"
-  :init (which-key-mode)
-  :config (setq which-key-idle-delay 0.4
-                which-key-key-replacement-alist
-                '(("<\\([[:alnum:]-]+\\)>" . "\\1")
-                  ("up"                    . "↑")
-                  ("right"                 . "→")
-                  ("down"                  . "↓")
-                  ("left"                  . "←")
-                  ("DEL"                   . "⌫")
-                  ("deletechar"            . "⌦")
-                  ("RET"                   . "⏎"))
-                which-key-description-replacement-alist
-                '(("Prefix Command" . "prefix")
-                  ;; Remove my personal prefix from all bindings, since it's
-                  ;; only there to avoid name clashes, but doesn't add any value
-                  ;; at all
-                  ("chunyang-"     . "")))
+  :config
+  (setq which-key-idle-delay 1.0
+        which-key-key-replacement-alist
+        '(("<\\([[:alnum:]-]+\\)>" . "\\1")
+          ("up"                    . "↑")
+          ("right"                 . "→")
+          ("down"                  . "↓")
+          ("left"                  . "←")
+          ("DEL"                   . "⌫")
+          ("deletechar"            . "⌦")
+          ("RET"                   . "⏎"))
+        which-key-description-replacement-alist
+        '(("Prefix Command" . "prefix")
+          ;; Remove my personal prefix from all bindings, since it's
+          ;; only there to avoid name clashes, but doesn't add any value
+          ;; at all
+          ("chunyang-"     . "")))
+  (which-key-mode)
   :diminish (which-key-mode . " Ⓚ"))
 
 (use-package keyfreq
@@ -1945,6 +1987,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 (use-package paradox
   :ensure t
   :config
+  ;; Don't ask for a token, please, and don't bug me about asynchronous updates
+  (setq paradox-github-token t
+        paradox-execute-asynchronously nil)
   (defun chunyang-visit-package-homepage (pkg)
     (interactive (list
                   (intern
