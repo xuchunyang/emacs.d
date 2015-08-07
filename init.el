@@ -617,7 +617,6 @@
   :config (setq bookmark-save-flag 1))
 
 (use-package recentf                    ; Save recently visited files
-  :defer t
   :config
   (setq recentf-max-saved-items 200
         ;; Cleanup recent files only when Emacs is idle, but not when the mode
@@ -1912,5 +1911,23 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 (bind-key "C-h h" #'describe-personal-keybindings)
 (bind-key "C-h C-k" #'find-function-on-key)
+
+(use-package paradox
+  :ensure t
+  :config
+  (defun package-visit-homepage (pkg)
+    (interactive (list
+                  (intern
+                   (completing-read "Package: "
+                                    (mapcar
+                                     (lambda (pkg) (symbol-name (car pkg)))
+                                     package-alist)
+                                    nil t))))
+    (let ((url (paradox--package-homepage pkg)))
+      (if url
+          (browse-url url)
+        (message "Package %s has no homepage"
+                 (propertize (symbol-name pkg)
+                             'face 'font-lock-keyword-face))))))
 
 ;;; init.el ends here
