@@ -640,6 +640,10 @@
 (use-package autorevert                 ; Auto-revert buffers of changed files
   :init (global-auto-revert-mode))
 
+(use-package launch                     ; Open files in external programs
+  :ensure t
+  :defer t)
+
 
 ;;; Basic editing
 
