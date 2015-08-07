@@ -672,7 +672,7 @@
              chunyang-restore-scratch)
   :bind (([remap split-window-right] . chunyang-split-window-right)
          ([remap split-window-below] . chunyang-split-window-below)
-         ("M-o"                      . chunyang-other-window)
+         ;; ("M-o"                      . chunyang-other-window)
          ("C-c f w"                  . chunyang-copy-buffer-name-as-kill)
          ("C-M-!"                    . iterm-shell-command)
          ("C-x t"                    . chunyang-switch-scratch))
@@ -698,13 +698,15 @@
   (easy-menu-add-item nil '("Tools") '("----") "Your tools"))
 
 (use-package avy
-  :disabled t
   :load-path "~/wip/avy")
 
 (use-package ace-window
-  :disabled t
+  :if (require 'avy)
   :load-path "~/wip/ace-window"
-  :bind ("M-o" . ace-window))
+  :bind ("M-o" . ace-window)
+  :config
+  (setq aw-ignore-current t)
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 (use-package easy-repeat :ensure t :defer t)
 
