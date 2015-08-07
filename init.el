@@ -468,7 +468,7 @@
        cands "\n")))
 
   (use-package ivy
-    :diminish (ivy-mode . " 🙏")
+    ;; :diminish (ivy-mode . " 🙏")
     :config (ivy-mode)))
 
 (use-package counsel
