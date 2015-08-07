@@ -393,6 +393,7 @@
          ("C-c S" . helm-do-ag-project-root)))
 
 (use-package helm-descbinds
+  :disabled t
   :load-path "~/wip/helm-descbinds"
   :config
   (setq helm-descbinds-window-style 'split-window)
@@ -1470,11 +1471,25 @@ See also `describe-function-or-variable'."
   (guide-key-mode))
 
 (use-package which-key
-  :disabled t
   :load-path "~/wip/emacs-which-key"
-  :diminish which-key-mode
-  :config
-  (which-key-mode))
+  :init (which-key-mode)
+  :config (setq which-key-idle-delay 0.4
+                which-key-key-replacement-alist
+                '(("<\\([[:alnum:]-]+\\)>" . "\\1")
+                  ("up"                    . "↑")
+                  ("right"                 . "→")
+                  ("down"                  . "↓")
+                  ("left"                  . "←")
+                  ("DEL"                   . "⌫")
+                  ("deletechar"            . "⌦")
+                  ("RET"                   . "⏎"))
+                which-key-description-replacement-alist
+                '(("Prefix Command" . "prefix")
+                  ;; Remove my personal prefix from all bindings, since it's
+                  ;; only there to avoid name clashes, but doesn't add any value
+                  ;; at all
+                  ("chunyang-"     . "")))
+  :diminish (which-key-mode . " Ⓚ"))
 
 (use-package keyfreq
   :disabled t
