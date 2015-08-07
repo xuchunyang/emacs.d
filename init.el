@@ -12,7 +12,7 @@
 ;; User key prefixes:
 ;;
 ;; - C-c A: Align
-;; - C-c h: Helm
+;; - C-c h: Helm (not using now)
 ;; - C-c L: List things
 ;; - C-c t: Toggle things
 ;; - C-x v: VCS
@@ -56,6 +56,9 @@
 
 (require 'bind-key)
 (require 'diminish)
+
+(bind-key "C-c L p" #'package-list-packages)
+(bind-key "C-c L P" #'package-list-packages-no-fetch)
 
 ;; My personal packages
 (push (expand-file-name "personal" user-emacs-directory) load-path)
@@ -382,7 +385,9 @@
 
 (use-package helm-ag
   :ensure t
-  :bind ("C-c p s" . helm-do-ag-project-root))
+  :bind (("C-c s" . helm-do-ag) ; C-u chooses file type, C-- enter your own cmd
+                                ; options
+         ("C-c S" . helm-do-ag-project-root)))
 
 (use-package helm-descbinds
   :load-path "~/wip/helm-descbinds"
@@ -431,7 +436,8 @@
   :bind (("M-x"     . counsel-M-x)
          ("C-x C-f" . counsel-find-file)
          ("M-l"     . ivy-switch-buffer)
-         ("C-x f"   . ivy-recentf)))
+         ("C-x f"   . ivy-recentf))
+  :init (require 'counsel))
 
 ;;; Use these even using ivy
 (bind-keys ("M-y" . helm-show-kill-ring)
@@ -1011,7 +1017,7 @@ mouse-3: go to end"))))
 
 (use-package helm-flycheck
   :ensure t
-  :bind (("C-c ! L" . helm-flycheck)))
+  :bind (("C-c L f" . helm-flycheck)))
 
 
 ;;; Text editing
@@ -1767,6 +1773,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (push "*Youdao Dictionary*" popwin:special-display-config))
 
 (use-package translate-shell
+  :disabled t
   :load-path "~/wip/translate-shell.el"
   :bind (("C-c s"   . translate-shell-brief)
          ("C-c S"   . translate-shell))
