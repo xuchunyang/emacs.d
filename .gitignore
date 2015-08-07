@@ -14,7 +14,6 @@ custom.el
 
 site-lisp
 lib
-lisp
 
 # Org-mode
 .org-id-locations

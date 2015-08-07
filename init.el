@@ -61,7 +61,7 @@
 (bind-key "C-c L P" #'package-list-packages-no-fetch)
 
 ;; My personal packages
-(push (expand-file-name "personal" user-emacs-directory) load-path)
+(push (expand-file-name "lisp" user-emacs-directory) load-path)
 
 
 ;;; Initialization
