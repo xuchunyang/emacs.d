@@ -57,6 +57,9 @@
 (require 'bind-key)
 (require 'diminish)
 
+(require 'subr-x)
+(require 'rx)
+
 (bind-key "C-c L p" #'package-list-packages)
 (bind-key "C-c L P" #'package-list-packages-no-fetch)
 
@@ -1942,14 +1945,15 @@ none."
                        (completing-read "Feature: " features nil
                                         'require-match))))
        (list symbol)))
+    (require 'find-func)
+    (require 'lisp-mnt)
     (let* ((library (if (symbolp feature) (symbol-name feature) feature))
            (library-file (find-library-name library)))
       (when library-file
         (with-temp-buffer
           (insert-file-contents library-file)
-          (let ((url (or (lm-header "Homepage") (lm-header "URL"))))
-            (if url
-                (browse-url url)
-              (user-error "Library %s has no URL header" library))))))))
+          (if-let ((url (or (lm-header "Homepage") (lm-header "URL"))))
+              (browse-url url)
+            (user-error "Library %s has no URL header" library)))))))
 
 ;;; init.el ends here
