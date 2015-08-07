@@ -517,6 +517,12 @@
   :defer t
   :config (setq uniquify-buffer-name-style 'forward))
 
+(use-package chunyang-buffers          ; Personal buffer tools
+  :load-path "lisp/"
+  :commands (lunaryorn-do-not-kill-important-buffers)
+  :init (add-hook 'kill-buffer-query-functions
+                  #'lunaryorn-do-not-kill-important-buffers))
+
 (use-package ibuffer                    ; Better buffer list
   :bind (([remap list-buffers] . ibuffer)))
 
