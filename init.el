@@ -1917,7 +1917,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 (use-package paradox
   :ensure t
   :config
-  (defun package-visit-homepage (pkg)
+  (defun chunyang-visit-package-homepage (pkg)
     (interactive (list
                   (intern
                    (completing-read "Package: "
@@ -1930,6 +1930,26 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
           (browse-url url)
         (message "Package %s has no homepage"
                  (propertize (symbol-name pkg)
-                             'face 'font-lock-keyword-face))))))
+                             'face 'font-lock-keyword-face)))))
+
+  (defun lunaryorn-browse-feature-url (feature)
+    "Browse the URL of the given FEATURE.
+
+Interactively, use the symbol at point, or prompt, if there is
+none."
+    (interactive
+     (let ((symbol (or (symbol-at-point)
+                       (completing-read "Feature: " features nil
+                                        'require-match))))
+       (list symbol)))
+    (let* ((library (if (symbolp feature) (symbol-name feature) feature))
+           (library-file (find-library-name library)))
+      (when library-file
+        (with-temp-buffer
+          (insert-file-contents library-file)
+          (let ((url (or (lm-header "Homepage") (lm-header "URL"))))
+            (if url
+                (browse-url url)
+              (user-error "Library %s has no URL header" library))))))))
 
 ;;; init.el ends here
