@@ -218,6 +218,20 @@
   ;; (setq sml/theme 'respectful)
   (sml/setup))
 
+(use-package telephone-line
+  :load-path "~/wip/telephone-line"
+  :commands (telephone-line-enable telephone-line-disable)
+  :config
+  (setq telephone-line-lhs
+        '((accent . (telephone-line-vc-segment
+                     telephone-line-process-segment))
+          (nil    . (telephone-line-minor-mode-segment
+                     telephone-line-buffer-segment))))
+
+  (setq telephone-line-rhs
+        '((accent . (telephone-line-major-mode-segment))
+          (nil    . (telephone-line-misc-info-segment)))))
+
 (use-package nyan-mode
   :disabled t
   :ensure t
