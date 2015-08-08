@@ -473,6 +473,9 @@
   :load-path "~/wip/swiper"
   :bind ("C-z" . ivy-resume)
   :config
+  ;; Type `C-u C-j' or `C-M-j' or `C-RET' to use entered text and exit
+  (bind-key "<C-return>" #'ivy-immediate-done ivy-minibuffer-map)
+
   (setq ivy-use-virtual-buffers t
         ivy-count-format "(%d/%d) ")
 
