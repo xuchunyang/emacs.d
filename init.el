@@ -227,7 +227,7 @@
 
 ;;; The minibuffer
 
-(defvar prefer-helm nil)
+(defvar prefer-helm t)
 (defvar prefer-ivy (not prefer-helm))
 
 (use-package helm
@@ -298,7 +298,7 @@
   (add-to-list 'helm-boring-buffer-regexp-list "TAGS")
   (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff")
 
-  (defun helm-buffer-switch-new-window (_candidate)
+  (defun helm-buffer-switch-to-new-window (_candidate)
     "Display buffers in new windows."
     ;; Select the bottom right window
     (require 'winner)
@@ -311,8 +311,15 @@
     (balance-windows))
 
   (add-to-list 'helm-type-buffer-actions
-               '("Display buffer(s) in new window(s)" .
+               '("Display buffer(s) in new window(s) `M-o'" .
                  helm-buffer-switch-new-window) 'append)
+
+  (defun helm-buffer-switch-new-window ()
+    (interactive)
+    (with-helm-alive-p
+      (helm-quit-and-execute-action 'helm-buffer-switch-to-new-window)))
+
+  (define-key helm-buffer-map (kbd "M-o") #'helm-buffer-switch-new-window)
 
   (defun helm-buffer-imenu (candidate)
     "Imenu action for helm buffers."
@@ -488,6 +495,10 @@
 
 (defun chunyang-use-ivy ()
   (interactive)
+
+  (setq prefer-helm nil
+        prefer-ivy t)
+
   ;; Disable helm
   (helm-mode -1)
   (helm-projectile-off)
@@ -523,6 +534,9 @@
   (helm-mode)
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
+
+  (setq prefer-helm t
+        prefer-ivy nil)
 
   (load user-init-file))
 
