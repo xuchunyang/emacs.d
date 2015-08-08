@@ -389,7 +389,7 @@
              ("M-l"                            . helm-mini)               ; M-l
              ;; Kill ring
              ([remap yank-pop]                 . helm-show-kill-ring)     ; M-y
-             ([remap suspend-frame]            . helm-resume)             ; C-z
+             ("C-z"                            . helm-resume)
              ;; Register
              ([remap jump-to-register]         . helm-register)
              ;; Help
@@ -881,11 +881,17 @@
   (defun chunyang-imenu--setup-elisp ()
     ;; use-package
     (add-to-list 'imenu-generic-expression
-                 '("Package"
-                   "\\(^\\s-*(use-package +\\)\\(\\_<.+\\_>\\)" 2))
+                 `("Package" ,(rx "(use-package" (optional "-with-elapsed-timer")
+                                  symbol-end (1+ (syntax whitespace)) symbol-start
+                                  (group-n 1 (1+ (or (syntax word) (syntax symbol))))
+                                  symbol-end) 1)
+                 )
     ;; hydra
     (add-to-list 'imenu-generic-expression
-                 '("hydra" "^\\s-*(defhydra\\s-+\\(\\(\\sw\\|\\s_\\)+\\)[[:space:]\n]+[^)]" 1)))
+                 `("hydra" ,(rx "(defhydra"
+                                symbol-end (1+ (syntax whitespace)) symbol-start
+                                (group-n 1 (1+ (or (syntax word) (syntax symbol))))
+                                symbol-end) 1)))
   (add-hook 'emacs-lisp-mode-hook #'chunyang-imenu--setup-elisp))
 
 (use-package imenu-anywhere             ; Helm-based imenu across open buffers
