@@ -182,7 +182,7 @@
                 (anzu-mode (:eval                  ; isearch pos/matches
                             (when (> anzu--total-matched 0)
                               (anzu--update-mode-line))))
-                (multiple-cursors-mode mc/mode-line) ; Number of cursors
+                ;; (multiple-cursors-mode mc/mode-line) ; Number of cursors
                 ;; And the modes, which we don't really care for anyway
                 " " mode-line-misc-info mode-line-modes mode-line-end-spaces)
               mode-line-remote
@@ -836,6 +836,17 @@
   :bind (("C-c A a" . align)
          ("C-c A c" . align-current)
          ("C-c A r" . align-regexp)))
+
+(use-package multiple-cursors           ; Edit text with multiple cursors
+  :ensure t
+  :bind (("C-c o e"     . mc/mark-more-like-this-extended)
+         ("C-c o n"     . mc/mark-next-like-this)
+         ("C-c o p"     . mc/mark-previous-like-this)
+         ("C-c o l"     . mc/edit-lines)
+         ("C-c o C-a"   . mc/edit-beginnings-of-lines)
+         ("C-c o C-e"   . mc/edit-ends-of-lines)
+         ("C-c o h"     . mc/mark-all-like-this-dwim)
+         ("C-c o C-s"   . mc/mark-all-in-region)))
 
 (use-package undo-tree                  ; Branching undo
   :ensure t
