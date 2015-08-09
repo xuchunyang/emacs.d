@@ -1727,9 +1727,10 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
            (delq nil
                  (cl-delete-duplicates
                   (mapcar (lambda (buf)
-                            (with-current-buffer buf
-                              (when (projectile-project-p)
-                                (cons (projectile-project-name) buf))))
+                            (unless (string-prefix-p " " (buffer-name buf))
+                              (with-current-buffer buf
+                                (when (projectile-project-p)
+                                  (cons (projectile-project-name) buf)))))
                           (buffer-list))
                   :test (lambda (a b) (string= (car a) (car b)))))))
       (mapc (lambda (elt)
@@ -2039,6 +2040,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
                    (completing-read "Package: "
                                     (mapcar
                                      (lambda (pkg) (symbol-name (car pkg)))
+                                     ;; FIXME: `package-alist' only for
+                                     ;; installed package while I also need
+                                     ;; other packages as well.
                                      package-alist)
                                     nil t))))
     (let ((url (paradox--package-homepage pkg)))
