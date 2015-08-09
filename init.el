@@ -1717,6 +1717,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 (use-package projectile
   :ensure t
+  :diminish projectile-mode
   :init (projectile-global-mode)
   (use-package helm-projectile
     :if prefer-helm
@@ -1753,7 +1754,17 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (bind-keys :map projectile-command-map
              ("K" . projectile-kill-projects)
              ;; ("s" . helm-projectile-ag)
-             ))
+             )
+  ;; Change projectile name by using [[info:elisp#Directory%20Local%20Variables][info:elisp#Directory Local Variables]]
+  (defvar my-project-name nil)
+
+  (defun projectile-project-name--prefer-mine (orig-fun &rest args)
+    (or my-project-name (apply orig-fun args)))
+
+  (advice-add 'projectile-project-name
+              :around #'projectile-project-name--prefer-mine)
+
+  (put 'my-project-name 'safe-local-variable #'stringp))
 
 
 ;;; Net & Web & Email
