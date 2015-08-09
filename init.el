@@ -1513,7 +1513,8 @@ See also `describe-function-or-variable'."
   :config
   (unless (server-running-p) (server-start)))
 
-(use-package helm-open-github :ensure t)
+(use-package helm-open-github  :ensure t :defer t)
+(use-package gh-md             :ensure t :defer t)
 
 (use-package helm-github-stars
   :ensure t
