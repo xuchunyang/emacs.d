@@ -2085,4 +2085,18 @@ none."
               (browse-url url)
             (user-error "Library %s has no URL header" library)))))))
 
+
+;;; My own ELPA package management utilities
+
+;; TODO: Implement `:config'
+;; TODO: Implement `bind'
+;; TODO: Implement `:if'
+(defmacro use-pkg (name &rest args)
+  (declare (indent 1))
+  (unless (member :disabled args)
+    (unless (package-installed-p name)
+      (package-install name))))
+
+(use-pkg string-edit)
+
 ;;; init.el ends here
