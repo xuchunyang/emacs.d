@@ -400,7 +400,7 @@
              ([remap list-directory]           . helm-browse-project)     ; C-x C-d
              ;; TAGS
              ;; ([remap xref-find-definitions] . helm-etags-select)
-             ("C-c <SPC>"                      . helm-all-mark-rings)
+             ;; ("C-c <SPC>"                      . helm-all-mark-rings)
              ("M-i"                            . helm-occur)
              ("C-c i"                          . helm-semantic-or-imenu)))
 
@@ -780,7 +780,12 @@
   (easy-menu-add-item nil '("Tools") '("----") "Your tools"))
 
 (use-package avy
-  :load-path "~/wip/avy")
+  :load-path "~/wip/avy"
+  :bind (("C-c SPC" . avy-goto-char)
+         ("M-g f"   . avy-goto-line))
+  :config
+  (with-eval-after-load "isearch"
+    (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)))
 
 (use-package ace-window
   :if (require 'avy)
@@ -1608,13 +1613,13 @@ See also `describe-function-or-variable'."
     ("[" backward-page "prev")
     ("n" narrow-to-page "narrow" :bind nil :exit t))
 
-  (defhydra hydra-goto-line (goto-map ""
-                                      :pre (linum-mode 1)
-                                      :post (linum-mode -1))
-    "goto-line"
-    ("g" goto-line "go")
-    ("m" set-mark-command "mark" :bind nil)
-    ("q" nil "quit"))
+  ;; (defhydra hydra-goto-line (goto-map ""
+  ;;                                     :pre (linum-mode 1)
+  ;;                                     :post (linum-mode -1))
+  ;;   "goto-line"
+  ;;   ("g" goto-line "go")
+  ;;   ("m" set-mark-command "mark" :bind nil)
+  ;;   ("q" nil "quit"))
 
   (defhydra hydra-move-text (:body-pre (use-package move-text :ensure t :defer t))
     "Move text"
