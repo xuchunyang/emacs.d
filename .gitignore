@@ -84,3 +84,6 @@ request/
 
 # wconf
 wconf-window-configs.el
+
+# multiple-cursors
+.mc-lists.el
