@@ -302,7 +302,7 @@
   :defer t
   :config (setq helm-M-x-always-save-history t))
 
-(use-package wgrep-helm :ensure t :defer t)
+(use-package wgrep-helm :ensure t)
 
 (use-package helm-buffers
   :if prefer-helm
@@ -985,7 +985,9 @@ mouse-3: go to end"))))
   :ensure t
   :diminish color-identifiers-mode
   :bind ("C-c t c" . global-color-identifiers-mode)
-  :init (add-hook 'after-init-hook #'global-color-identifiers-mode))
+  ;; Need to save my eyes
+  ;; :init (add-hook 'after-init-hook #'global-color-identifiers-mode)
+  )
 
 
 ;;; Skeletons, completion and expansion
