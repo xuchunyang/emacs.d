@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2015  Chunyang Xu
 
-;; Author: Chunyang Xu <xuchunyang56@gmail.com>
+;; Author: Chunyang Xu <xu.chunyang@icloud.com>
 ;; Keywords: convenience
 ;; Package-Requires: ((helm-core "1.7.5"))
 
