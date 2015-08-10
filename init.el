@@ -1804,7 +1804,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
            ("/Sent Messages"       . ?s)
            ("/Archive"             . ?a)))
   ;; show images
-  (setq mu4e-show-images t)
+  (setq mu4e-view-show-images t)
 
   ;; use imagemagick, if available
   (when (fboundp 'imagemagick-register-types)
