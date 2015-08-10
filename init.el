@@ -1782,39 +1782,26 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 (use-package mu4e
   :load-path "/opt/local/share/emacs/site-lisp/mu4e"
-  :commands mu4e
   :config
-  ;; Creating org-mode links
-  (use-package org-mu4e)
+  (setq mu4e-maildir (expand-file-name "~/Mail")) ; must be absolute path
 
-  (setq mu4e-drafts-folder "/[Gmail].Drafts"
-        mu4e-sent-folder   "/[Gmail].Sent Mail"
-        mu4e-trash-folder  "/[Gmail].Trash"
-        mu4e-refile-folder "/[Gmail].All Mail")
+  ;; Setup
+  (setq mu4e-drafts-folder "/Drafts"
+        mu4e-sent-folder   "/Sent Messages"
+        mu4e-trash-folder  "/Deleted Messages"
+        mu4e-refile-folder "/Archive")
 
-  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (setq mu4e-sent-messages-behavior 'delete)
-  ;; skip duplicate messages (caused by the combination of Gmail and offlineimap)
-  (setq mu4e-headers-skip-duplicates t)
-  ;; setup some handy shortcuts
+  ;; Fetch
+  ;; (setq mu4e-get-mail-command "offlineimap"
+  ;;       mu4e-update-interval (* 15 60))
+
+  ;; Let me fetch new mail manually, read new mail when I'm ready.
+
+  ;; Read
   (setq mu4e-maildir-shortcuts
         '( ("/INBOX"               . ?i)
-           ("/[Gmail].All Mail"    . ?a)
-           ("/[Gmail].Sent Mail"   . ?s)
-           ("/[Gmail].Trash"       . ?t)))
-  ;; Don't use ido to choose other Mail folder
-  (setq mu4e-completing-read-function #'completing-read)
-  ;; allow for updating mail using 'U' in the main view:
-  (setq mu4e-get-mail-command "proxychains4 offlineimap"
-        mu4e-update-interval (* 15 60)  ; update every 15 minutes
-        )
-
-  (setq mu4e-user-mailing-lists
-        '(("macports-dev.lists.macosforge.org"     . "MPDev")
-          ("macports-users.lists.macosforge.org"   . "MPUser")
-          ("macports-tickets.lists.macosforge.org" . "MPTicks")
-          ("emacs-china.googlegroups.com"          . "EmacsCN")))
-
+           ("/Sent Messages"       . ?s)
+           ("/Archive"             . ?a)))
   ;; show images
   (setq mu4e-show-images t)
 
@@ -1831,6 +1818,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   ;;   - view in browser (provided below)
   (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
+  ;; Write
   ;; spell check
   (add-hook 'mu4e-compose-mode-hook
             (defun my-do-compose-stuff ()
@@ -1839,47 +1827,30 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
               (flyspell-mode)))
 
   ;; something about ourselves
-  (setq user-mail-address "xuchunyang56@gmail.com"
+  (setq user-mail-address "xu.chunyang@icloud.com"
         user-full-name  "Chunyang Xu"
         mu4e-compose-signature
         "Chunyang Xu\n")
 
-  (setq chunyang-main-mail-address      "xuchunyang56@gmail.com"
-        chunyang-macports-mail-address  "chunyang@macports.org")
-  ;; Let mu4e know these are mine
-  (setq mu4e-user-mail-address-list `(,chunyang-main-mail-address
-                                      ,chunyang-macports-mail-address))
+  ;; Send
+  (setq send-mail-function 'smtpmail-send-it
+        message-send-mail-function 'smtpmail-send-it
+        smtpmail-starttls-credentials '(("smtp.mail.me.com" 587 nil nil))
+        smtpmail-auth-credentials  (expand-file-name "~/.authinfo")
+        smtpmail-default-smtp-server "smtp.mail.me.com"
+        smtpmail-smtp-server "smtp.mail.me.com"
+        smtpmail-smtp-service 587
+        starttls-extra-arguments nil
+        starttls-gnutls-program (executable-find "gnutls-cli")
+        starttls-use-gnutls t)
 
-  ;; use `chunyang-macports-mail-address' in some cases
-  (defun auto-set-from-address ()
-    (let* ((msg mu4e-compose-parent-message))
-      (setq user-mail-address
-            (if (seq-contains-p
-                 (mapcar
-                  (lambda (mail-address)
-                    (if (or (mu4e-message-contact-field-matches msg :to  mail-address)
-                            (mu4e-message-contact-field-matches msg :cc  mail-address))
-                        t nil))
-                  `(,chunyang-macports-mail-address
-                    "macports-dev@lists.macosforge.org"
-                    "macports-users@lists.macosforge.org"))
-                 t)
-                chunyang-macports-mail-address
-              chunyang-main-mail-address))))
-  (add-hook 'mu4e-compose-pre-hook #'auto-set-from-address)
-
-  ;; Send via msmtp (for socks proxy support)
-  (setq message-sendmail-f-is-evil 't)
-  (setq message-send-mail-function 'message-send-mail-with-sendmail)
-  (setq sendmail-program "msmtp")
-  (setq message-sendmail-extra-arguments (list '"-a" "default"))
   ;; don't keep message buffers around
   (setq message-kill-buffer-on-exit t)
 
+  ;; org-mode support
+  (require 'org-mu4e)
   (use-package mu4e-maildirs-extension  ; Show maildirs summary in mu4e-main-view
-    :disabled t
     :ensure t
-    :defer t
     :init (mu4e-maildirs-extension)))
 
 (use-package helm-mu
