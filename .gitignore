@@ -87,3 +87,6 @@ wconf-window-configs.el
 
 # multiple-cursors
 .mc-lists.el
+
+# security manager settings (Emacs 25)
+network-security.data
