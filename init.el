@@ -36,9 +36,8 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
-(setq package-archive-priorities '(("org" . 30) ("gnu" . 20) ("melpa" . 0)))
+(setq package-archive-priorities '(("gnu" . 20) ("melpa" . 0)))
 
 (package-initialize)
 
@@ -1997,7 +1996,8 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
                 org-clock-current-task
                 "\"")))))
 
-(use-package org-plus-contrib         ; Various org-mode extensions
+(use-package org-plus-contrib           ; Various org-mode extensions
+  :disabled                             ; only available from org elpa
   ;; Just install, don't require that feature
   :ensure t :defer t)
 
