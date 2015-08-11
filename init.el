@@ -789,7 +789,23 @@
 (use-package ace-window
   :if (require 'avy)
   :load-path "~/wip/ace-window"
-  :bind ("M-o" . ace-window)
+  :preface
+  (defun chunyang-ace-window (arg)
+    "A modified version of `ace-window'.
+When number of window <= 3, invoke `other-window', otherwise `ace-window'.
+One C-u, swap window, two C-u, delete window."
+    (interactive "p")
+    (cl-case arg
+      (0
+       (setq aw-ignore-on
+             (not aw-ignore-on))
+       (ace-select-window))
+      (4 (ace-swap-window))
+      (16 (ace-delete-window))
+      (t (if (<= (length (window-list)) 3)
+             (other-window 1)
+           (ace-select-window)))))
+  :bind ("M-o" . chunyang-ace-window)
   :config
   (setq aw-ignore-current t)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
