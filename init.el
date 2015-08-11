@@ -1784,25 +1784,29 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 (use-package mu4e
   :load-path "/opt/local/share/emacs/site-lisp/mu4e"
   :config
-  (setq mu4e-maildir (expand-file-name "~/Mail")) ; must be absolute path
-
   ;; Setup
   (setq mu4e-drafts-folder "/Drafts"
         mu4e-sent-folder   "/Sent Messages"
         mu4e-trash-folder  "/Deleted Messages"
         mu4e-refile-folder "/Archive")
 
+  (setq mu4e-attachment-dir (expand-file-name "~/Downloads"))
+
   ;; Fetch
-  ;; (setq mu4e-get-mail-command "offlineimap"
-  ;;       mu4e-update-interval (* 15 60))
+  (setq mu4e-get-mail-command "offlineimap")
 
   ;; Let me fetch new mail manually, read new mail when I'm ready.
 
   ;; Read
-  (setq mu4e-maildir-shortcuts
-        '( ("/INBOX"               . ?i)
-           ("/Sent Messages"       . ?s)
-           ("/Archive"             . ?a)))
+  (setq mu4e-bookmarks
+        '(("flag:unread AND NOT flag:trashed" "Unread messages"      ?u)
+          ("date:today..now"                  "Today's messages"     ?t)
+          ("date:7d..now"                     "Last 7 days"          ?w))
+        mu4e-maildir-shortcuts
+        '(("/INBOX"               . ?i)
+          ("/Sent Messages"       . ?s)
+          ("/Archive"             . ?a)))
+
   ;; show images
   (setq mu4e-view-show-images t)
 
