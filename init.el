@@ -1223,7 +1223,10 @@ mouse-3: go to end"))))
   ;; Highlight symbol occurrences
   (add-hook 'prog-mode-hook #'highlight-symbol-mode)
   :config
-  (setq highlight-symbol-on-navigation-p t))
+  (setq highlight-symbol-idle-delay 0.4     ; Highlight almost immediately
+        highlight-symbol-on-navigation-p t) ; Highlight immediately after
+                                        ; navigation
+  )
 
 (use-package rainbow-mode               ; Fontify color values in code
   :ensure t
@@ -1799,6 +1802,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 (use-package mu4e
   :load-path "/opt/local/share/emacs/site-lisp/mu4e"
+  :commands mu4e
   :config
   ;; Setup
   (setq mu4e-drafts-folder "/Drafts"
@@ -1807,6 +1811,8 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
         mu4e-refile-folder "/Archive")
 
   (setq mu4e-attachment-dir (expand-file-name "~/Downloads"))
+
+  (setq mu4e-confirm-quit nil)
 
   ;; Fetch
   (setq mu4e-get-mail-command "offlineimap")
@@ -1894,12 +1900,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 ;;; Dictionary
 (use-package youdao-dictionary
-  :ensure t
-  :bind (("C-c y" . youdao-dictionary-search-at-point)
-         ("C-c Y" . youdao-dictionary-search-at-point+))
-  :config
-  (setq url-automatic-caching t)
-  (push "*Youdao Dictionary*" popwin:special-display-config))
+  :load-path "~/wip/youdao-dictionary"
+  :bind ("C-c y" . youdao-dictionary-search)
+  :config (setq url-automatic-caching t))
 
 (use-package translate-shell
   :disabled t
