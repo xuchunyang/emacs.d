@@ -816,7 +816,7 @@ One C-u, swap window, two C-u, delete window."
   :ensure t
   :diminish ws-butler-mode
   :defer t
-  :init (add-hook 'prog-mode-hook 'ws-butler-mode))
+  :init (add-hook 'prog-mode-hook #'ws-butler-mode))
 
 (use-package subword                    ; Subword/superword editing
   :defer t
@@ -833,19 +833,26 @@ One C-u, swap window, two C-u, delete window."
   :init (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 
 (use-package zop-to-char
+  :disabled t
   :ensure t
-  :bind (([remap zap-to-char] . zop-to-char)
-         ("M-z"               . zop-up-to-char)))
+  :bind (("M-z" . zop-to-char)))
+
+(use-package avy-zap
+  :disabled t
+  :if (require 'avy)
+  :load-path "~/wip/avy-zap"
+  :bind (("M-z" . avy-zap-to-char-dwim)
+         ("M-Z" . avy-zap-up-to-char-dwim)))
 
 (use-package easy-kill                  ; Easy killing and marking on C-w
   :ensure t
-  :bind (([remap kill-ring-save] . easy-kill)
-         ([remap mark-sexp]      . easy-mark)))
+  :bind (([remap kill-ring-save] . easy-kill) ; M-w
+         ([remap mark-sexp]      . easy-mark) ; C-M-SPC
+         ))
 
 (use-package expand-region              ; Expand region by semantic units
-  :disabled t
   :ensure t
-  :bind (("C-=" . er/expand-region)))
+  :bind ("C-=" . er/expand-region))
 
 (use-package align                      ; Align text in buffers
   :bind (("C-c A a" . align)
@@ -1214,6 +1221,7 @@ mouse-3: go to end"))))
   (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 
 (use-package highlight-symbol           ; Highlighting and commands for symbols
+  :disabled t
   :ensure t
   :diminish highlight-symbol-mode
   :defer t
@@ -1799,6 +1807,11 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (load-file  "~/.private.el")
   (add-hook 'rcirc-mode-hook #'flyspell-mode)
   (rcirc-track-minor-mode))
+
+(use-package circe
+  :disabled t
+  :load-path "~/repos/circe/"
+  :config (load-file "~/.private.el"))
 
 (use-package mu4e
   :load-path "/opt/local/share/emacs/site-lisp/mu4e"
