@@ -5,8 +5,7 @@
   (setq mac-command-modifier 'meta
         mac-option-modifier 'control))
 ;;; Font
-(when (window-system) (member "Source Code Pro for Powerline" (font-family-list))
-      (set-face-attribute 'default nil :font "Source Code Pro for Powerline 13"))
+(set-frame-font "Source Code Pro-13" nil t)
 
 (add-to-list 'load-path "~/wip/swiper/")
 (require 'swiper)
