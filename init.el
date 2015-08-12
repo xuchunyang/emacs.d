@@ -1508,6 +1508,10 @@ See also `describe-function-or-variable'."
   :ensure t
   :bind ("C-x v t" . git-timemachine))
 
+(use-package gitconfig-mode             ; Edit .gitconfig files
+  :ensure t
+  :defer t)
+
 ;;; emacs vc-mode & svn
 ;;  - [[http://lifegoo.pluskid.org/wiki/EmacsSubversion.html][Emacs 配合 Subversion 使用]]
 ;;  - [[http://lifegoo.pluskid.org/wiki/EmacsVC.html][EmacsVC]]
