@@ -1512,6 +1512,10 @@ See also `describe-function-or-variable'."
   :ensure t
   :defer t)
 
+(use-package gitignore-mode             ; Edit .gitignore files
+  :ensure t
+  :defer t)
+
 ;;; emacs vc-mode & svn
 ;;  - [[http://lifegoo.pluskid.org/wiki/EmacsSubversion.html][Emacs 配合 Subversion 使用]]
 ;;  - [[http://lifegoo.pluskid.org/wiki/EmacsVC.html][EmacsVC]]
