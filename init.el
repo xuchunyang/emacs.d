@@ -1828,8 +1828,24 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   ;; Setup
   (setq mu4e-drafts-folder "/Drafts"
         mu4e-sent-folder   "/Sent Messages"
-        mu4e-trash-folder  "/Deleted Messages"
-        mu4e-refile-folder "/Archive")
+        mu4e-trash-folder  "/Deleted Messages")
+
+  (setq mu4e-refile-folder
+        (lambda (msg)
+          (cond
+           ;; messages to the mu mailing list go to the /mu foldern
+           ((mu4e-message-contact-field-matches
+             msg :to "mu-discuss@googlegroups.com")
+            "/mu")
+           ;; messages to the emacs-devel or emacs-user mailing list go to the /Emacs folder
+           ((or (mu4e-message-contact-field-matches
+                 msg :to (rx (or "help-gnu-emacs@gnu.org" "emacs-devel@gnu.org")))
+                (mu4e-message-contact-field-matches
+                 msg :cc (rx (or "help-gnu-emacs@gnu.org" "emacs-devel@gnu.org"))))
+            "/Emacs")
+           ;; everything else goes to /archive
+           ;; important to have a catch-all at the end!
+           (t  "/Archive"))))
 
   (setq mu4e-attachment-dir (expand-file-name "~/Downloads"))
 
