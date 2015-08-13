@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2015  Chunyang Xu
 
-;; Author: Chunyang Xu <xu.chunyang@icloud.com>
+;; Author: Chunyang Xu <xuchunyang56@gmail.com>
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
