@@ -1221,10 +1221,11 @@ mouse-3: go to end"))))
   (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 
 (use-package highlight-symbol           ; Highlighting and commands for symbols
-  :disabled t
-  :ensure t
+  :load-path "~/repos/highlight-symbol.el"
+  ;; :ensure t
   :diminish highlight-symbol-mode
-  :defer t
+  ;; :defer t
+  :commands (highlight-symbol-mode highlight-symbol-nav-mode)
   :init
   ;; Navigate occurrences of the symbol under point with M-n and M-p
   (add-hook 'prog-mode-hook #'highlight-symbol-nav-mode)
