@@ -1988,7 +1988,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :config
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "DONE(d!)" "CANCELED(c@)")))
+        '((sequence "TODO" "|" "DONE")
+          (sequence "REPORT" "BUG" "KNOWNCAUSE" "|" "FIXED")
+          (sequence "|" "CANCELED(@)")))
 
   (setq org-directory "~/Dropbox/Notes")
   (setq org-agenda-files (list org-directory))
