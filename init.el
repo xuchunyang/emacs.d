@@ -151,15 +151,26 @@
 ;;   (set-fontset-font t 'han (font-spec :family "STFangsong"))
 ;;   (setq face-font-rescale-alist '(("STFangsong" . 1.3))))
 
-(use-package zenburn-theme                     :ensure t :defer t)
-
-(use-package solarized-theme
+(use-package zenburn
   :disabled t
-  :ensure t
-  :defer t)
+  :ensure zenburn-theme
+  :defer t
+  :init (load-theme 'zenburn 'no-confirm))
 
-(use-package color-theme-sanityinc-tomorrow    :ensure t :defer t)
-(use-package spacemacs-theme                   :ensure t :defer t)
+(use-package solarized
+  :disabled t
+  :ensure solarized-theme
+  :defer t
+  :init (load-theme 'solarized-dark 'no-confirm))
+
+(use-package sanityinc-tomorrow
+  :disabled t
+  :ensure color-theme-sanityinc-tomorrow)
+
+(use-package spacemacs
+  :ensure spacemacs-theme
+  :defer t
+  :init (load-theme 'spacemacs-dark 'no-confirm))
 
 
 ;;; The mode line
