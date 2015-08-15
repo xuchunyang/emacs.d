@@ -821,6 +821,24 @@ One C-u, swap window, two C-u, delete window."
   (setq aw-ignore-current t)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
+(use-package golden-ratio
+  :ensure t
+  :diminish golden-ratio-mode
+  :defer t
+  :config
+  (defun my/helm-alive-p ()
+    (if (boundp 'helm-alive-p)
+        (symbol-value 'helm-alive-p)))
+
+  ;; Inhibit helm
+  (add-to-list 'golden-ratio-inhibit-functions #'my/helm-alive-p)
+  ;; Inhibit ERC, mu4e and which-key
+  (setq golden-ratio-auto-scale t
+        golden-ratio-exclude-modes
+        '(erc-mode mu4e-headers-mode mu4e-view-mode)
+        golden-ratio-exclude-buffer-names
+        (list which-key-buffer-name)))
+
 (use-package easy-repeat :ensure t :defer t)
 
 (use-package ws-butler
@@ -1387,6 +1405,13 @@ See also `describe-function-or-variable'."
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n"))))
 
+(use-package with-editor                ; Try this, though don't know what's function
+  :disabled t
+  :ensure t
+  :init
+  (add-hook 'shell-mode-hook  #'with-editor-export-editor)
+  (add-hook 'eshell-mode-hook #'with-editor-export-editor))
+
 (use-package eshell-z
   :load-path "~/wip/eshell-z")
 
@@ -1664,6 +1689,7 @@ See also `describe-function-or-variable'."
     ("l" nlinum-mode "Line number")
     ("L" hl-line-mode "Highlight line")
     ("r" rainbow-mode "Colorize color names")
+    ("g" golden-ratio-mode "Window golden ratio")
     ("q" nil "cancel"))
   (global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
 
