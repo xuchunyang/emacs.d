@@ -473,10 +473,11 @@
 
 ;; Save Minibuffer histroy
 (use-package savehist
-  :init
+  :init (savehist-mode)
+  :config
   (setq history-length 1000
-        history-delete-duplicates t)
-  (savehist-mode))
+        history-delete-duplicates t
+        savehist-additional-variables '(extended-command-history)))
 
 (use-package swiper
   :if prefer-ivy
