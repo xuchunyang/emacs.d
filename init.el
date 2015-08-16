@@ -1403,6 +1403,16 @@ See also `describe-function-or-variable'."
     "make a directory and cd into it"
     (eshell/mkdir "-p" dir)
     (eshell/cd dir))
+  (defun eshell-insert-last-arg ()
+    "Insert the last arg of the last command, like ESC-. in shell."
+    (interactive)
+    (with-current-buffer "*eshell*"
+      (let ((last-arg
+             (car (last
+                   (split-string
+                    (substring-no-properties (eshell-get-history 0)))))))
+        (when last-arg
+          (insert last-arg)))))
   :bind  (("C-!"   . eshell-command)
           ("C-x m" . eshell)
           ("C-x M" . eshell*))
@@ -1425,7 +1435,8 @@ See also `describe-function-or-variable'."
                          ("M-p"     . helm-eshell-history)
                          ("C-l"     . eshell-clear-buffer)
                          ("C-c C-k" . compile)
-                         ("C-c C-q" . eshell-kill-process))
+                         ("C-c C-q" . eshell-kill-process)
+                         ("C-c ."   . eshell-insert-last-arg))
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n"))))
 
