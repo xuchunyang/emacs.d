@@ -378,6 +378,29 @@
                '("Imenu" . helm-find-file-imenu)
                'append)
 
+  ;; Add Virtual Dired files action (inspired by `helm-projectile')
+  (defun chunyang-dired-files (file)
+    (let ((files (mapcar #'file-relative-name (helm-marked-candidates)))
+          (new-name (completing-read
+                     "Select or enter a new buffer name: "
+                     (cl-loop for b in (buffer-list)
+                              when (with-current-buffer b (eq major-mode 'dired-mode))
+                              collect (buffer-name b)))))
+      (with-current-buffer (dired (cons (make-temp-name new-name)
+                                        files))
+        (when (get-buffer new-name)
+          (kill-buffer new-name))
+        (rename-buffer new-name))))
+  (add-to-list 'helm-find-files-actions
+               '("Dired file(s) by Chunyang `C-c f'" . chunyang-dired-files)
+               'append)
+  (defun helm-buffer-run-dired-files ()
+    "Run ediff action from `helm-source-buffers-list'."
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'chunyang-dired-files)))
+  (bind-key "C-c f" #'helm-buffer-run-dired-files helm-find-files-map)
+
   (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
   (use-package helm-ls-git :ensure t :defer t)
 
