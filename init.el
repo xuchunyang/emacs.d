@@ -48,7 +48,7 @@
   (package-install 'use-package))
 
 (eval-and-compile
-  (defvar use-package-verbose nil)
+  (defvar use-package-verbose t)
   ;; (defvar use-package-expand-minimally t)
   (eval-after-load 'advice
     `(setq ad-redefinition-action 'accept))
@@ -64,7 +64,7 @@
 (bind-key "C-c L P" #'package-list-packages-no-fetch)
 
 ;; My personal packages
-(push (expand-file-name "lisp" user-emacs-directory) load-path)
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 
 ;;; Initialization
@@ -74,6 +74,8 @@
 ;;; Customization interface
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file 'no-error 'no-message)
+
+(load "~/.private.el" 'no-error)
 
 
 ;;; OS X support
@@ -90,7 +92,7 @@
 (use-package exec-path-from-shell
   :ensure t
   :if (and (eq system-type 'darwin) (display-graphic-p))
-  :config
+  :init
   (exec-path-from-shell-copy-env "INFOPATH")
   (exec-path-from-shell-copy-env "MANPATH")
   (exec-path-from-shell-initialize))
@@ -294,14 +296,15 @@
   :diminish helm-mode
   :init (helm-mode))
 
-(when prefer-helm
-  (require 'helm-misc)
-  (require 'helm-command)
-  (require 'helm-imenu)
-  (require 'helm-semantic)
-  (require 'helm-ring))
+;; (when prefer-helm
+;;   (require 'helm-misc)
+;;   (require 'helm-command)
+;;   (require 'helm-imenu)
+;;   (require 'helm-semantic)
+;;   (require 'helm-ring))
 
 (use-package helm-adaptive
+  :disabled t                           ; I don't its function really is
   :if prefer-helm
   :config (helm-adaptive-mode))
 
@@ -489,12 +492,6 @@
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
 
-(use-package springboard
-  :disabled t                           ; Don't use it for a long time and
-                                        ; occupy a handy shortcuts.
-  :ensure t
-  :bind ("C-." . springboard))
-
 ;; Save Minibuffer histroy
 (use-package savehist
   :init (savehist-mode)
@@ -605,9 +602,7 @@
 
 (use-package popwin
   :ensure t
-  ;; :commands popwin-mode
-  ;; :init (popwin-mode)
-  )
+  :defer t)
 
 (use-package frame
   :bind (("C-c t F" . toggle-frame-fullscreen)
@@ -636,10 +631,7 @@
   (windmove-default-keybindings))
 
 (use-package desktop                    ; Save buffers, windows and frames
-  :init (desktop-save-mode)
-  :config
-  (add-to-list 'desktop-globals-to-save 'translate-shell-cache)
-  (add-to-list 'desktop-globals-to-save 'translate-shell-brief-cache))
+  :init (desktop-save-mode))
 
 (use-package wconf
   :disabled t
@@ -697,8 +689,7 @@
 
 (use-package ignoramus                  ; Ignore uninteresting files everywhere
   :ensure t
-  :config
-  (ignoramus-setup))
+  :init (ignoramus-setup))
 
 (use-package dired                      ; Edit directories
   :defer t
@@ -867,6 +858,7 @@ One C-u, swap window, two C-u, delete window."
 (use-package easy-repeat :ensure t :defer t)
 
 (use-package ws-butler
+  :disabled t
   :ensure t
   :diminish ws-butler-mode
   :defer t
@@ -929,7 +921,8 @@ One C-u, swap window, two C-u, delete window."
   :diminish undo-tree-mode
   :init
   (global-undo-tree-mode)
-  (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config))
+  ;; (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config)
+  )
 
 (use-package nlinum                     ; Line numbers in display margin
   :ensure t
@@ -1158,7 +1151,7 @@ mouse-3: go to end"))))
     :init
     (bind-key "C-." #'helm-flyspell-correct flyspell-mode-map))
   (use-package flyspell-popup
-    :load-path "~/wip/flyspell-popup"
+    :ensure t
     :config
     (bind-key "C-." #'flyspell-popup-correct flyspell-mode-map)))
 
@@ -1539,8 +1532,6 @@ See also `describe-function-or-variable'."
              ("C-x v r" . git-gutter:revert-hunk))
   ;; Support SVN too, I use it
   (setq git-gutter:handled-backends '(git svn))
-  ;; Live update
-  (setq git-gutter:update-interval 2)
   :init
   ;; Enable globally at the beginning
   (global-git-gutter-mode))
@@ -1596,12 +1587,14 @@ See also `describe-function-or-variable'."
 (setenv "LANG" "C")
 
 (use-package ztree
-  :ensure t)
+  :ensure t
+  :defer t)
 
 
 ;;; Tools and utilities
 (use-package edit-server
   :ensure t
+  :defer 10
   :config
   (setq edit-server-new-frame nil)
   (edit-server-start))
@@ -1625,7 +1618,6 @@ See also `describe-function-or-variable'."
 (use-package helm-github-stars
   :ensure t
   :config
-  (load-file "~/.private.el")
   (add-hook 'helm-github-stars-clone-done-hook #'dired)
   (setq helm-github-stars-refetch-time (/ 6.0 24)
         helm-github-stars-full-frame t
@@ -1644,8 +1636,7 @@ See also `describe-function-or-variable'."
 (use-package jist                       ; Gist
   :disabled t
   :ensure t
-  :commands jist-list
-  :config (load-file "~/.private.el"))
+  :defer t)
 
 (use-package guide-key
   :disabled t
@@ -1673,6 +1664,7 @@ See also `describe-function-or-variable'."
   (guide-key-mode))
 
 (use-package which-key
+  :disabled t
   :ensure t
   :config
   (setq which-key-idle-delay 1.0
@@ -1826,23 +1818,19 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 (use-package projectile
   :ensure t
   :diminish projectile-mode
-  :init (projectile-global-mode)
+  :init
+  (projectile-global-mode)
+  :config
   (use-package helm-projectile
+    :disabled t
     :ensure t
     :if prefer-helm
     :ensure t
     :config
     (helm-projectile-on))
-  :config
-  (setq
-   projectile-completion-system (if prefer-helm 'helm
-                                  'ivy)
-   projectile-mode-line '(:eval
-                          (format " P[%s]"
-                                  (projectile-project-name)))
-   ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
-   projectile-svn-command "svn-ls-files")
-
+  (setq projectile-completion-system (if prefer-helm 'helm 'ivy)
+        ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
+        projectile-svn-command "svn-ls-files")
   (defun projectile-kill-projects ()
     (interactive)
     (let ((projects
@@ -1859,21 +1847,8 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
               (with-current-buffer (cdr elt)
                 (projectile-kill-buffers))) projects)
       (message "")))
-
   (bind-keys :map projectile-command-map
-             ("K" . projectile-kill-projects)
-             ;; ("s" . helm-projectile-ag)
-             )
-  ;; Change projectile name by using [[info:elisp#Directory%20Local%20Variables][info:elisp#Directory Local Variables]]
-  (defvar my-project-name nil)
-
-  (defun projectile-project-name--prefer-mine (orig-fun &rest args)
-    (or my-project-name (apply orig-fun args)))
-
-  (advice-add 'projectile-project-name
-              :around #'projectile-project-name--prefer-mine)
-
-  (put 'my-project-name 'safe-local-variable #'stringp))
+             ("K" . projectile-kill-projects)))
 
 
 ;;; Net & Web & Email
@@ -1885,14 +1860,8 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (add-to-list 'rcirc-server-alist
                '("irc.freenode.net"
                  :channels ("#emacs" "#macports-gsoc")))
-  (load-file  "~/.private.el")
   (add-hook 'rcirc-mode-hook #'flyspell-mode)
   (rcirc-track-minor-mode))
-
-(use-package circe
-  :disabled t
-  :load-path "~/repos/circe/"
-  :config (load-file "~/.private.el"))
 
 (use-package mu4e
   :load-path "/opt/local/share/emacs/site-lisp/mu4e"
@@ -2140,7 +2109,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 (use-package toc-org
   :ensure t
-  :config (add-hook 'org-mode-hook 'toc-org-enable))
+  :init (add-hook 'org-mode-hook #'toc-org-enable))
 
 (use-package orglink
   :ensure t
@@ -2149,7 +2118,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 (use-package org-bullets
   :ensure t
-  :config (add-hook 'org-mode-hook #'org-bullets-mode))
+  :init (add-hook 'org-mode-hook #'org-bullets-mode))
 
 (use-package calfw
   :disabled t
