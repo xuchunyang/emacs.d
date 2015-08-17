@@ -36,8 +36,9 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 
-(setq package-archive-priorities '(("gnu" . 20) ("melpa" . 0)))
+(setq package-archive-priorities '(("gnu" . 20) ("melpa-stable" . 10) ("melpa" . 0)))
 
 (package-initialize)
 
@@ -170,9 +171,9 @@
 (use-package spacemacs
   :ensure spacemacs-theme
   :defer t
-  :init (load-theme 'spacemacs-dark 'no-confirm))
-
+  :init (load-theme 'spacemacs-dark 'nofafa-confirm))
 
+
 ;;; The mode line
 (setq-default mode-line-format
               '("%e" mode-line-front-space
@@ -1274,11 +1275,8 @@ mouse-3: go to end"))))
   (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 
 (use-package highlight-symbol           ; Highlighting and commands for symbols
-  :load-path "~/repos/highlight-symbol.el"
-  ;; :ensure t
+  :ensure t
   :diminish highlight-symbol-mode
-  ;; :defer t
-  :commands (highlight-symbol-mode highlight-symbol-nav-mode)
   :init
   ;; Navigate occurrences of the symbol under point with M-n and M-p
   (add-hook 'prog-mode-hook #'highlight-symbol-nav-mode)
@@ -1644,6 +1642,7 @@ See also `describe-function-or-variable'."
                 "~/Library/Application Support/Firefox/"))
 
 (use-package jist                       ; Gist
+  :disabled t
   :ensure t
   :commands jist-list
   :config (load-file "~/.private.el"))
@@ -1674,7 +1673,7 @@ See also `describe-function-or-variable'."
   (guide-key-mode))
 
 (use-package which-key
-  :load-path "~/wip/emacs-which-key"
+  :ensure t
   :config
   (setq which-key-idle-delay 1.0
         which-key-key-replacement-alist
@@ -1829,6 +1828,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :diminish projectile-mode
   :init (projectile-global-mode)
   (use-package helm-projectile
+    :ensure t
     :if prefer-helm
     :ensure t
     :config
@@ -2148,11 +2148,11 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :init (global-orglink-mode))
 
 (use-package org-bullets
-  :disabled t
   :ensure t
   :config (add-hook 'org-mode-hook #'org-bullets-mode))
 
 (use-package calfw
+  :disabled t
   :ensure t :defer t
   :init (use-package calfw-org :commands cfw:open-org-calendar))
 
