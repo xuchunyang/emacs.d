@@ -1353,6 +1353,11 @@ See also `describe-function-or-variable'."
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup))
 
+(use-package chunyang-elisp
+  :commands comment-or-uncomment-sexp
+  :config
+  (bind-key "C-M-;" #'comment-or-uncomment-sexp emacs-lisp-mode-map))
+
 (use-package ielm
   :config
   (add-hook 'ielm-mode-hook #'enable-paredit-mode))
