@@ -178,40 +178,40 @@
 
 
 ;;; The mode line
-(setq-default mode-line-format
-              '("%e" mode-line-front-space
-                "👿 "
-                ;; Standard info about the current buffer
-                mode-line-mule-info
-                mode-line-client
-                mode-line-modified
-                mode-line-remote
-                mode-line-frame-identification
-                mode-line-buffer-identification " " mode-line-position
-                (projectile-mode projectile-mode-line)
-                (vc-mode (:propertize (:eval vc-mode) face italic))
-                " "
-                (flycheck-mode flycheck-mode-line) ; Flycheck status
-                (isearch-mode " ")
-                (anzu-mode (:eval                  ; isearch pos/matches
-                            (when (> anzu--total-matched 0)
-                              (anzu--update-mode-line))))
-                ;; (multiple-cursors-mode mc/mode-line) ; Number of cursors
-                ;; And the modes, which we don't really care for anyway
-                " " mode-line-misc-info mode-line-modes mode-line-end-spaces)
-              mode-line-remote
-              '(:eval
-                (when-let (host (file-remote-p default-directory 'host))
-                  (propertize (concat "@" host) 'face
-                              '(italic warning))))
-              ;; Remove which func from the mode line, since we have it in the
-              ;; header line
-              mode-line-misc-info
-              (assq-delete-all 'which-func-mode mode-line-misc-info)
+;; (setq-default mode-line-format
+;;               '("%e" mode-line-front-space
+;;                 "👿 "
+;;                 ;; Standard info about the current buffer
+;;                 mode-line-mule-info
+;;                 mode-line-client
+;;                 mode-line-modified
+;;                 mode-line-remote
+;;                 mode-line-frame-identification
+;;                 mode-line-buffer-identification " " mode-line-position
+;;                 (projectile-mode projectile-mode-line)
+;;                 (vc-mode (:propertize (:eval vc-mode) face italic))
+;;                 " "
+;;                 (flycheck-mode flycheck-mode-line) ; Flycheck status
+;;                 (isearch-mode " ")
+;;                 (anzu-mode (:eval                  ; isearch pos/matches
+;;                             (when (> anzu--total-matched 0)
+;;                               (anzu--update-mode-line))))
+;;                 ;; (multiple-cursors-mode mc/mode-line) ; Number of cursors
+;;                 ;; And the modes, which we don't really care for anyway
+;;                 " " mode-line-misc-info mode-line-modes mode-line-end-spaces)
+;;               mode-line-remote
+;;               '(:eval
+;;                 (when-let (host (file-remote-p default-directory 'host))
+;;                   (propertize (concat "@" host) 'face
+;;                               '(italic warning))))
+;;               ;; Remove which func from the mode line, since we have it in the
+;;               ;; header line
+;;               mode-line-misc-info
+;;               (assq-delete-all 'which-func-mode mode-line-misc-info)
 
-              ;; header-line-format
-              ;; '(which-func-mode ("" which-func-format " "))
-              )
+;;               ;; header-line-format
+;;               ;; '(which-func-mode ("" which-func-format " "))
+;;               )
 
 (use-package powerline
   :disabled t
@@ -487,7 +487,6 @@
          ("C-c S" . helm-do-ag-project-root)))
 
 (use-package helm-descbinds
-  :disabled t
   :load-path "~/wip/helm-descbinds"
   :config
   (setq helm-descbinds-window-style 'split-window)
@@ -1006,13 +1005,12 @@ One C-u, swap window, two C-u, delete window."
 
 (use-package anzu                       ; Position/matches count for isearch
   :ensure t
+  :diminish anzu-mode
   :init (global-anzu-mode)
   :config
   (setq anzu-replace-to-string-separator " => ")
   (bind-key "M-%" 'anzu-query-replace)
-  (bind-key "C-M-%" 'anzu-query-replace-regexp)
-  (setq anzu-cons-mode-line-p nil)
-  :diminish anzu-mode)
+  (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
 (use-package which-func                 ; Current function name in header line
   :disabled t
@@ -1160,12 +1158,10 @@ mouse-3: go to end"))))
 
 (use-package flycheck
   :ensure t
-  :diminish flycheck-mode
   :bind (("C-c t f" . global-flycheck-mode)
          ("C-c L e" . list-flycheck-errors))
   :config
   (setq flycheck-emacs-lisp-load-path 'inherit)
-
   ;; Configuring buffer display in Emacs
   ;; http://www.lunaryorn.com/2015/04/29/the-power-of-display-buffer-alist.html
   (add-to-list 'display-buffer-alist
@@ -1211,25 +1207,9 @@ mouse-3: go to end"))))
 ;;; Other markup languages
 (use-package markdown-mode
   :ensure t
-  :mode ("\\.mdpp\\'" . gfm-mode)
+  :mode ("README\\.md\\'" . gfm-mode)
   :config
-  (let ((stylesheet (expand-file-name
-                     (locate-user-emacs-file "etc/pandoc.css"))))
-    (setq markdown-command
-          (mapconcat #'shell-quote-argument
-                     `("pandoc" "--toc" "--section-divs"
-                       "--css" ,(concat "file://" stylesheet)
-                       "--standalone" "-f" "markdown" "-t" "html5")
-                     " ")))
-  ;; (setq markdown-command "kramdown")
-
-  ;; No filling in GFM, because line breaks are significant.
-  (add-hook 'gfm-mode-hook #'turn-off-auto-fill)
-  ;; Use visual lines instead
-  (add-hook 'gfm-mode-hook #'visual-line-mode)
-
-  (bind-key "C-c C-s C" #'markdown-insert-gfm-code-block markdown-mode-map)
-  (bind-key "C-c C-s P" #'markdown-insert-gfm-code-block markdown-mode-map))
+  (setq markdown-command "kramdown"))
 
 (use-package yaml-mode :ensure t :defer t)
 
@@ -1277,10 +1257,7 @@ mouse-3: go to end"))))
   ;; Highlight symbol occurrences
   (add-hook 'prog-mode-hook #'highlight-symbol-mode)
   :config
-  (setq highlight-symbol-idle-delay 0.4     ; Highlight almost immediately
-        highlight-symbol-on-navigation-p t) ; Highlight immediately after
-                                        ; navigation
-  )
+  (setq highlight-symbol-on-navigation-p t))
 
 (use-package rainbow-mode               ; Fontify color values in code
   :ensure t
@@ -1499,6 +1476,7 @@ See also `describe-function-or-variable'."
 
 ;;; C
 (use-package ggtags
+  :disabled t
   :ensure t
   :init
   (defun chunyang--setup-ggtags ()
@@ -1817,6 +1795,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 (use-package helm-dash        :ensure t :defer t)
 
 (use-package projectile
+  :disabled t
   :ensure t
   :diminish projectile-mode
   :init
@@ -1942,8 +1921,6 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   ;; Send
   (setq send-mail-function 'smtpmail-send-it
         message-send-mail-function 'smtpmail-send-it
-        smtpmail-starttls-credentials '(("smtp.mail.me.com" 587 nil nil))
-        smtpmail-auth-credentials  (expand-file-name "~/.authinfo")
         smtpmail-default-smtp-server "smtp.mail.me.com"
         smtpmail-smtp-server "smtp.mail.me.com"
         smtpmail-smtp-service 587
@@ -1972,7 +1949,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 (use-package google-this
   :ensure t
   :diminish google-this-mode
-  :preface (defvar google-this-keybind (kbd "C-c g"))
+  :preface (defvar google-this-keybind (kbd "C-c G"))
   :init (google-this-mode))
 
 (use-package elfeed :ensure t :defer t)
@@ -2186,6 +2163,47 @@ none."
     (unless (package-installed-p name)
       (package-install name))))
 
-(use-pkg string-edit)
+;; (use-pkg string-edit)
+
+
+;;; Emacs Developments
+
+(setq tags-table-list
+      '("~/repos/emacs"))
+
+(defvar helm-git-files-cache nil
+  "Syntax ( (\"git root directory\" . files) ).")
+
+(defun helm-git-files (&optional force-rebuild-cache)
+  "Find file in the current Git repository.
+If FORCE-REBUILD-CACHE is non-nil, rebuild cache anyway."
+  (interactive "P")
+  (let* ((default-directory (locate-dominating-file
+                             default-directory ".git"))
+         (cands (cdr (assoc default-directory helm-git-files-cache))))
+    (when (or force-rebuild-cache (null cands))
+      (setq cands (split-string
+                   (shell-command-to-string
+                    "git ls-files --full-name --")
+                   "\n"
+                   t))
+      (push (cons default-directory cands) helm-git-files-cache))
+    (helm :sources (helm-build-in-buffer-source "Git files"
+                     :data cands
+                     :candidate-number-limit 9999
+                     :keymap helm-generic-files-map
+                     :action helm-type-file-actions)
+          :buffer "*Helm Git files*")))
+
+(define-key (current-global-map) (kbd "C-c g") #'helm-git-files)
+
+(use-package checkdoc
+  :config (setq checkdoc-arguments-in-order-flag nil
+                checkdoc-force-docstrings-flag nil))
+
+(use-package debbugs
+  :ensure t
+  :defer t
+  )
 
 ;;; init.el ends here
