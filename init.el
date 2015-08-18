@@ -36,9 +36,10 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+;; (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 
-(setq package-archive-priorities '(("gnu" . 20) ("melpa-stable" . 10) ("melpa" . 0)))
+;; gnu > melpa-stable > melpa
+;; (setq package-archive-priorities '(("gnu" . 20) ("melpa-stable" . 10) ("melpa" . 0)))
 
 (package-initialize)
 
