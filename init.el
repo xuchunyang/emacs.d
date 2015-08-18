@@ -2186,6 +2186,7 @@ If FORCE-REBUILD-CACHE is non-nil, rebuild cache anyway."
   (let* ((default-directory (locate-dominating-file
                              default-directory ".git"))
          (cands (cdr (assoc default-directory helm-git-files-cache))))
+    (unless default-directory (user-error "Not in a Git repo"))
     (when (or force-rebuild-cache (null cands))
       (setq cands (split-string
                    (shell-command-to-string
