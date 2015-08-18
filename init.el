@@ -858,7 +858,6 @@ One C-u, swap window, two C-u, delete window."
 (use-package easy-repeat :ensure t :defer t)
 
 (use-package ws-butler
-  :disabled t
   :ensure t
   :diminish ws-butler-mode
   :defer t
@@ -2202,6 +2201,29 @@ If FORCE-REBUILD-CACHE is non-nil, rebuild cache anyway."
           :buffer "*Helm Git files*")))
 
 (define-key (current-global-map) (kbd "C-c g") #'helm-git-files)
+(define-key (current-global-map) (kbd "C-c p f") #'helm-git-files)
+
+(defun git-buffers (root)
+  "Return opening buffers belong to DIRECTORY git repository."
+  (cl-loop for b in (buffer-list)
+           when (string= root (with-current-buffer b
+                                (and (or (buffer-file-name)
+                                         (string-match-p "magit" (buffer-name))
+                                         (eq major-mode 'dired-mode))
+                                     (locate-dominating-file
+                                      default-directory ".git"))))
+           collect b))
+
+(defun kill-git-buffers ()
+  (interactive)
+  (if-let ((root (locate-dominating-file
+                  default-directory ".git")))
+      (when (yes-or-no-p (format "Kill all buffers in %s?" root))
+        (let (message-log-max)
+          (mapc #'kill-buffer (git-buffers root))))
+    (user-error "Not in a Git repo")))
+
+(define-key (current-global-map) (kbd "C-c p k") #'kill-git-buffers)
 
 (use-package checkdoc
   :config (setq checkdoc-arguments-in-order-flag nil

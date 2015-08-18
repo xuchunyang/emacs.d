@@ -137,6 +137,36 @@ With a prefix argument N, (un)comment that many sexps."
       (uncomment-sexp n)
     (dotimes (_ (or n 1))
       (comment-sexp--raw))))
+
+;;; package
+(defun open-package-melpa-page (package)
+  "Adopt from `describe-package'."
+  (interactive
+   (let* ((guess (or (function-called-at-point)
+                     (symbol-at-point))))
+     (require 'finder-inf nil t)
+     ;; Load the package list if necessary (but don't activate them).
+     (unless package--initialized
+       (package-initialize t))
+     (let ((packages (append (mapcar 'car package-alist)
+                             (mapcar 'car package-archive-contents)
+                             (mapcar 'car package--builtins))))
+       (unless (memq guess packages)
+         (setq guess nil))
+       (setq packages (mapcar 'symbol-name packages))
+       (let ((val
+              (completing-read (if guess
+                                   (format "Describe package (default %s): "
+                                           guess)
+                                 "Describe package: ")
+                               packages nil t nil nil (when guess
+                                                        (symbol-name guess)))))
+         (list (intern val))))))
+
+  (if (not (or (package-desc-p package) (and package (symbolp package))))
+      (message "No package specified")
+    (browse-url (format "http://melpa.org/#/%s"
+                        (symbol-name package)))))
 
 (provide 'chunyang-elisp)
 
