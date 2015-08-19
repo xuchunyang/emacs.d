@@ -1978,9 +1978,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 (use-package osx-dictionary
   :ensure t
-  :bind (("C-c d" . osx-dictionary-search-pointer))
-  :config
-  (push "*osx-dictionary*" popwin:special-display-config))
+  :bind ("C-c d" . osx-dictionary-search-pointer))
 
 (use-package bing-dict :ensure t :defer t)
 
@@ -2000,9 +1998,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :config
 
   (setq org-todo-keywords
-        '((sequence "TODO" "|" "DONE")
+        '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)")
           (sequence "REPORT" "BUG" "KNOWNCAUSE" "|" "FIXED")
-          (sequence "|" "CANCELED(@)")))
+          (sequence "|" "CANCELED(c@)")))
 
   (setq org-directory "~/Dropbox/Notes")
   (setq org-agenda-files (list org-directory))
