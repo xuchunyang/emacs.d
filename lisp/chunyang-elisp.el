@@ -168,6 +168,27 @@ With a prefix argument N, (un)comment that many sexps."
     (browse-url (format "http://melpa.org/#/%s"
                         (symbol-name package)))))
 
+
+;;; Ugly hack - Make `&' save recent value during C-x C-e, just like `*' in IELM
+
+(with-eval-after-load "elisp-mode"
+  (defvar & nil
+    "Most recent value evaluated in *scratch*.")
+
+  (defun eval-last-sexp (eval-last-sexp-arg-internal)
+    "Re-define version by Chunyang Xu, for save recent value to `&'."
+    (interactive "P")
+    (if (null eval-expression-debug-on-error)
+        (elisp--eval-last-sexp eval-last-sexp-arg-internal)
+      (let ((value
+             (let ((debug-on-error elisp--eval-last-sexp-fake-value))
+               (cons (elisp--eval-last-sexp eval-last-sexp-arg-internal)
+                     debug-on-error))))
+        (unless (eq (cdr value) elisp--eval-last-sexp-fake-value)
+          (setq debug-on-error (cdr value)))
+        (prog1 (car value)
+          (setq & (car value)))))))
+
 (provide 'chunyang-elisp)
 
 ;;; chunyang-elisp.el ends here
