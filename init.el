@@ -538,7 +538,7 @@
 
 ;;; Use these even using ivy
 (bind-keys ("M-y" . helm-show-kill-ring)
-           ("C-o" . helm-imenu)
+           ("C-o" . helm-semantic-or-imenu)
            ("M-i" . helm-occur))
 (setq helm-split-window-default-side 'other)
 
@@ -565,7 +565,7 @@
   ;; 1. imehu
   ;; 2. kill-ring ('M-y')
   (bind-keys ("M-y" . helm-show-kill-ring)
-             ("C-o" . helm-imenu)
+             ("C-o" . helm-semantic-or-imenu)
              ("M-i" . helm-occur))
 
   (use-package counsel
