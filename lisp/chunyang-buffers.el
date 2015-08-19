@@ -39,5 +39,15 @@ Add this to `kill-buffer-query-functions'."
     (bury-buffer)
     nil))
 
+;; NOTE: It's much better to add an action to helm buffer commands
+(defun chunyang-insert-buffer-name ()
+  "Insert a buffer name at point."
+  (interactive)
+  (helm :sources (helm-build-sync-source "Buffers"
+                   :candidates (helm-skip-entries
+                                (mapcar #'buffer-name (buffer-list))
+                                helm-boring-buffer-regexp-list)
+                   :action #'insert)))
+
 (provide 'chunyang-buffers)
 ;;; chunyang-buffers.el ends here
