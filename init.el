@@ -2173,6 +2173,41 @@ none."
 (setq tags-table-list
       '("~/repos/emacs"))
 
+(defvar my-project-roots nil
+  "A list of Git project repo roots.")
+
+(add-to-list 'savehist-additional-variables 'my-project-roots)
+
+(defun helm-action-to-key-def (func)
+  (lambda ()
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action func))))
+
+(defvar helm-projects-keymap
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map helm-map)
+    (define-key map (kbd "C-d") (helm-action-to-key-def 'dired))
+    (define-key map (kbd "C-s") (helm-action-to-key-def 'helm-do-ag))
+    (define-key map (kbd "M-g") (helm-action-to-key-def 'magit-status))
+    map))
+
+(defun helm-projects ()
+  (interactive)
+  (helm :sources
+        (helm-build-sync-source "Git Projects"
+          :candidates my-project-roots
+          :keymap helm-projects-keymap
+          :action '(("Find file". (lambda (cand)
+                                    (let ((default-directory cand))
+                                      (call-interactively #'helm-git-files))))
+                    ("Dired" . dired)
+                    ("Magit" . magit-status)
+                    ("Ag search" . helm-do-ag)))
+        :buffer "*Helm projects*"))
+
+(bind-key "C-c p p" #'helm-projects)
+
 (defvar helm-git-files-cache nil
   "Syntax ( (\"git root directory\" . files) ).")
 
@@ -2191,6 +2226,7 @@ If FORCE-REBUILD-CACHE is non-nil, rebuild cache anyway."
                    "\n"
                    t))
       (push (cons default-directory cands) helm-git-files-cache))
+    (add-to-list 'my-project-roots default-directory)
     (helm :sources (helm-build-in-buffer-source "Git files"
                      :data cands
                      :candidate-number-limit 9999
