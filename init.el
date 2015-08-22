@@ -95,7 +95,6 @@
   :if (and (eq system-type 'darwin) (display-graphic-p))
   :init
   (exec-path-from-shell-copy-env "INFOPATH")
-  (exec-path-from-shell-copy-env "MANPATH")
   (exec-path-from-shell-initialize))
 
 (use-package info
@@ -233,18 +232,17 @@
   (sml/setup))
 
 (use-package telephone-line
-  :load-path "~/wip/telephone-line"
-  :commands (telephone-line-enable telephone-line-disable)
-  :config
-  (setq telephone-line-lhs
-        '((accent . (telephone-line-vc-segment
-                     telephone-line-process-segment))
-          (nil    . (telephone-line-minor-mode-segment
-                     telephone-line-buffer-segment))))
+  :disabled t
+  :ensure t
+  :init
+  (telephone-line-mode))
 
-  (setq telephone-line-rhs
-        '((accent . (telephone-line-major-mode-segment))
-          (nil    . (telephone-line-misc-info-segment)))))
+(use-package ocodo-svg-modelines
+  :disabled t
+  :ensure t
+  :config
+  (ocodo-svg-modelines-init)
+  (smt/set-theme 'default))
 
 (use-package nyan-mode
   :disabled t
@@ -832,8 +830,8 @@ One C-u, swap window, two C-u, delete window."
       (t (if (<= (length (window-list)) 3)
              (other-window 1)
            (ace-select-window)))))
-  :bind ("M-o" . chunyang-ace-window)
   :config
+  (bind-key "M-o" #'chunyang-ace-window)
   (setq aw-ignore-current t)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
@@ -2027,8 +2025,8 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (setq org-log-done 'time)
 
   ;; Targets include this file and any file contributing to the agenda - up to 3 levels deep
-  (setq org-refile-targets (quote ((nil :maxlevel . 3)
-                                   (org-agenda-files :maxlevel . 3))))
+  (setq org-refile-targets (quote (;; (nil :maxlevel . 1)
+                                   (org-default-notes-file :maxlevel . 2))))
 
   ;; Clock work time
   (setq org-clock-persist 'history)
@@ -2093,7 +2091,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 (use-package orglink
   :ensure t
   :diminish orglink-mode
-  :init (global-orglink-mode))
+  :config (global-orglink-mode))
 
 (use-package org-bullets
   :ensure t
@@ -2158,13 +2156,17 @@ none."
 ;; TODO: Implement `:config'
 ;; TODO: Implement `bind'
 ;; TODO: Implement `:if'
+;;; FIXME: "One of the most common mistakes made when writing macros is
+;; evaluating one of the arguments multiple times."
 (defmacro use-pkg (name &rest args)
   (declare (indent 1))
   (unless (member :disabled args)
-    (unless (package-installed-p name)
-      (package-install name))))
+    (let ((name name))
+      (unless (package-installed-p name)
+        (package-install name)))))
 
-;; (use-pkg string-edit)
+
+(use-pkg string-edit)
 
 
 ;;; Emacs Developments
