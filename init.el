@@ -102,10 +102,8 @@
   :config
   (add-to-list 'Info-directory-list "/opt/local/share/info"))
 
-(use-package osx-trash                  ; Trash support for OS X
-  :if (eq system-type 'darwin)
-  :ensure t
-  :init (osx-trash-setup))
+(use-package chunyang-osx
+  :if (eq system-type 'darwin))
 
 
 ;;; User interface
