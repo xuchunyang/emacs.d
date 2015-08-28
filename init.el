@@ -2267,4 +2267,9 @@ If FORCE-REBUILD-CACHE is non-nil, rebuild cache anyway."
   :defer t
   )
 
+
+;; MacPorts
+(add-to-list 'load-path "~/Projects/portfile-mode")
+(require 'portfile-mode)
+
 ;;; init.el ends here
