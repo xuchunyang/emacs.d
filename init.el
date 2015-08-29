@@ -1838,7 +1838,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (setq rcirc-log-flag t)
   (add-to-list 'rcirc-server-alist
                '("irc.freenode.net"
-                 :channels ("#emacs" "#macports-gsoc")))
+                 :channels ("#emacs" "#emacsconf")))
   (add-hook 'rcirc-mode-hook #'flyspell-mode)
   (rcirc-track-minor-mode))
 
@@ -2017,8 +2017,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
   (setq org-agenda-custom-commands
         '(("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
-          ("e" "Emacs-related tasks" tags-todo "+emacs")
-          ("g" "GSoC-related tasks" tags-todo "+gsoc")))
+          ("e" "Emacs-related tasks" tags-todo "+emacs")))
 
   (setq org-log-done 'time)
 
