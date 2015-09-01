@@ -31,6 +31,13 @@
 
 
 ;; Utility: logging
+(defmacro m (&rest args)
+  "`message-box' ARGS (DEBUG)."
+  `(message-box ,(let ((fmt "%S"))
+                   (dotimes (i (1- (length args)))
+                     (setq fmt (concat fmt " - %S")))
+                   fmt) ,@args))
+
 (defun chunyang-elisp-log (format-string &rest args)
   "Log message if `chunyang-elisp-debug-buffer' is non-nil.
 Messages are written to  the `chunyang-elisp-debug-buffer' buffer.
