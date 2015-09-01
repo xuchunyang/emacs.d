@@ -1847,35 +1847,18 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :commands mu4e
   :config
   ;; Setup
-  (setq mu4e-drafts-folder "/Drafts"
-        mu4e-sent-folder   "/Sent Messages"
-        mu4e-trash-folder  "/Deleted Messages")
+  (setq mu4e-drafts-folder "/[Gmail].Drafts"
+        mu4e-sent-folder   "/[Gmail].Sent Mail"
+        mu4e-trash-folder  "/[Gmail].Trash"
+        mu4e-refile-folder "/[Gmail].All Mail")
 
-  (setq mu4e-refile-folder
-        (lambda (msg)
-          (cond
-           ;; messages to the mu mailing list go to the /mu foldern
-           ((mu4e-message-contact-field-matches
-             msg :to "mu-discuss@googlegroups.com")
-            "/mu")
-           ;; messages to the emacs-devel or emacs-user mailing list go to the /Emacs folder
-           ((or (mu4e-message-contact-field-matches
-                 msg :to (rx (or "help-gnu-emacs@gnu.org" "emacs-devel@gnu.org")))
-                (mu4e-message-contact-field-matches
-                 msg :cc (rx (or "help-gnu-emacs@gnu.org" "emacs-devel@gnu.org"))))
-            "/Emacs")
-           ;; everything else goes to /archive
-           ;; important to have a catch-all at the end!
-           (t  "/Archive"))))
+  (setq mu4e-headers-skip-duplicates t)
 
   (setq mu4e-attachment-dir (expand-file-name "~/Downloads"))
 
-  (setq mu4e-confirm-quit nil)
-
-  ;; Fetch
-  (setq mu4e-get-mail-command "offlineimap")
-
-  ;; Let me fetch new mail manually, read new mail when I'm ready.
+  ;; Fetch - Read new mail when I'm ready.
+  ;; updating mail using 'U' in the main view:
+  (setq mu4e-get-mail-command "proxychains4 offlineimap")
 
   ;; Read
   (setq mu4e-bookmarks
@@ -1883,9 +1866,10 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
           ("date:today..now"                  "Today's messages"     ?t)
           ("date:7d..now"                     "Last 7 days"          ?w))
         mu4e-maildir-shortcuts
-        '(("/INBOX"               . ?i)
-          ("/Sent Messages"       . ?s)
-          ("/Archive"             . ?a)))
+        '( ("/INBOX"               . ?i)
+           ("/[Gmail].Sent Mail"   . ?s)
+           ("/[Gmail].Trash"       . ?t)
+           ("/[Gmail].All Mail"    . ?a)))
 
   ;; show images
   (setq mu4e-view-show-images t)
@@ -1911,21 +1895,18 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
               (set-fill-column 72)
               (flyspell-mode)))
 
-  ;; something about ourselves
-  (setq user-mail-address "xu.chunyang@icloud.com"
+  (setq user-mail-address "xuchunyang56@gmail.com"
         user-full-name  "Chunyang Xu"
-        mu4e-compose-signature
-        "Chunyang Xu\n")
+        mu4e-compose-signature "Chunyang Xu")
 
-  ;; Send
-  (setq send-mail-function 'smtpmail-send-it
-        message-send-mail-function 'smtpmail-send-it
-        smtpmail-default-smtp-server "smtp.mail.me.com"
-        smtpmail-smtp-server "smtp.mail.me.com"
-        smtpmail-smtp-service 587
-        starttls-extra-arguments nil
-        starttls-gnutls-program (executable-find "gnutls-cli")
-        starttls-use-gnutls t)
+  ;; Send via msmtp (for socks proxy support)
+  (setq message-sendmail-f-is-evil 't)
+  (setq message-send-mail-function 'message-send-mail-with-sendmail)
+  (setq sendmail-program "msmtp")
+  (setq message-sendmail-extra-arguments (list "-a" "default"))
+
+  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+  (setq mu4e-sent-messages-behavior 'delete)
 
   ;; don't keep message buffers around
   (setq message-kill-buffer-on-exit t)
@@ -1933,6 +1914,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   ;; org-mode support
   (require 'org-mu4e)
   (use-package mu4e-maildirs-extension  ; Show maildirs summary in mu4e-main-view
+    :disabled t
     :ensure t
     :init (mu4e-maildirs-extension)))
 
