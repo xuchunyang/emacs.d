@@ -258,7 +258,65 @@
   :if prefer-helm
   :ensure t
   :config
-  (setq helm-split-window-default-side 'other))
+  ;; (setq helm-split-window-default-side 'other)
+
+  (setq helm-echo-input-in-header-line t)
+  ;; Hide minibuffer when the above option is on.
+  (add-hook 'helm-minibuffer-set-up-hook
+            #'helm-hide-minibuffer-maybe)
+
+  ;; Don't use helm's own displaying mode line function
+  ;; (fset 'helm-display-mode-line #'ignore)
+
+  ;; (add-hook 'helm-after-initialize-hook
+  ;;           (defun hide-mode-line-in-helm-buffer ()
+  ;;             "Hide mode line in `helm-buffer'."
+  ;;             (with-helm-buffer
+  ;;               (setq-local mode-line-format nil))))
+
+  (setq shackle-rules
+        '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.4)))
+  (shackle-mode)
+
+  ;; 1. Collect bottom buffers
+  (defvar bottom-buffers nil
+    "List of bottom buffers before helm session.
+Its element is a pair of `buffer-name' and `mode-line-format'.")
+
+  (defun bottom-buffers-init ()
+    (setq bottom-buffers
+          (cl-loop for w in (window-list)
+                   when (window-at-side-p w 'bottom)
+                   collect (with-current-buffer (window-buffer w)
+                             (cons (buffer-name) mode-line-format)))))
+
+  (add-hook 'helm-before-initialize-hook #'bottom-buffers-init)
+
+  ;; 2. Hide mode line
+  (defun bottom-buffers-hide-mode-line ()
+    (mapc (lambda (elt)
+            (with-current-buffer (car elt)
+              (setq-local mode-line-format nil)))
+          bottom-buffers))
+
+  (add-hook 'helm-after-initialize-hook #'bottom-buffers-hide-mode-line)
+
+  ;; 3. Restore mode line
+  (defun bottom-buffers-show-mode-line ()
+    (when bottom-buffers
+      (mapc (lambda (elt)
+              (with-current-buffer (car elt)
+                (setq-local mode-line-format (cdr elt))))
+            bottom-buffers)
+      (setq bottom-buffers nil)))
+
+  (add-hook 'helm-exit-minibuffer-hook #'bottom-buffers-show-mode-line)
+
+  (defun helm-keyboard-quit-advice (orig-func &rest args)
+    (bottom-buffers-show-mode-line)
+    (apply orig-func args))
+
+  (advice-add 'helm-keyboard-quit :around #'helm-keyboard-quit-advice))
 
 (use-package helm-config
   :if prefer-helm
