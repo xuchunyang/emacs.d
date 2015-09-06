@@ -1,1 +1,1 @@
-/Users/xcy/.emacs.d/init.org
+init.org
