@@ -3,6 +3,9 @@
 Try init.org.
 
 * Init
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle ~/.emacs.d/init2.el
+:END:
 
 ** Package management
 

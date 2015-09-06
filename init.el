@@ -3,4 +3,4 @@
 (package-initialize)                    ; uncommented now because I need ELPA org
 
 ;; `org-babel-load-file' is autoloaded, no need require anything
-(org-babel-load-file (locate-user-emacs-file "emacs-init.org"))
+(org-babel-load-file (locate-user-emacs-file "init.org"))
