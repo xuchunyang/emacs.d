@@ -1,6 +1,10 @@
+#+OPTIONS: toc:nil num:nil ^:nil
+
 * Preface
 
 Try init.org.
+
+#+TOC: headlines 2
 
 * Init
 :PROPERTIES:
