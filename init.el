@@ -2211,10 +2211,6 @@ none."
 (setq tags-table-list
       '("~/repos/emacs"))
 
-(defvar my-project-roots nil
-  "A list of Git project repo roots.")
-
-(add-to-list 'savehist-additional-variables 'my-project-roots)
 
 (defun helm-action-to-key-def (func)
   (lambda ()
@@ -2222,80 +2218,7 @@ none."
     (with-helm-alive-p
       (helm-exit-and-execute-action func))))
 
-(defvar helm-projects-keymap
-  (let ((map (make-sparse-keymap)))
-    (set-keymap-parent map helm-map)
-    (define-key map (kbd "C-d") (helm-action-to-key-def 'dired))
-    (define-key map (kbd "C-s") (helm-action-to-key-def 'helm-do-ag))
-    (define-key map (kbd "M-g") (helm-action-to-key-def 'magit-status))
-    map))
 
-(defun helm-projects ()
-  (interactive)
-  (helm :sources
-        (helm-build-sync-source "Git Projects"
-          :candidates my-project-roots
-          :keymap helm-projects-keymap
-          :action '(("Find file". (lambda (cand)
-                                    (let ((default-directory cand))
-                                      (call-interactively #'helm-git-files))))
-                    ("Dired" . dired)
-                    ("Magit" . magit-status)
-                    ("Ag search" . helm-do-ag)))
-        :buffer "*Helm projects*"))
-
-(bind-key "C-c p p" #'helm-projects)
-
-(defvar helm-git-files-cache nil
-  "Syntax ( (\"git root directory\" . files) ).")
-
-(defun helm-git-files (&optional force-rebuild-cache)
-  "Find file in the current Git repository.
-If FORCE-REBUILD-CACHE is non-nil, rebuild cache anyway."
-  (interactive "P")
-  (let* ((default-directory (locate-dominating-file
-                             default-directory ".git"))
-         (cands (cdr (assoc default-directory helm-git-files-cache))))
-    (unless default-directory (user-error "Not in a Git repo"))
-    (when (or force-rebuild-cache (null cands))
-      (setq cands (split-string
-                   (shell-command-to-string
-                    "git ls-files --full-name --")
-                   "\n"
-                   t))
-      (push (cons default-directory cands) helm-git-files-cache))
-    (add-to-list 'my-project-roots default-directory)
-    (helm :sources (helm-build-in-buffer-source "Git files"
-                     :data cands
-                     :candidate-number-limit 9999
-                     :keymap helm-generic-files-map
-                     :action helm-type-file-actions)
-          :buffer "*Helm Git files*")))
-
-(define-key (current-global-map) (kbd "C-c g") #'helm-git-files)
-(define-key (current-global-map) (kbd "C-c p f") #'helm-git-files)
-
-(defun git-buffers (root)
-  "Return opening buffers belong to DIRECTORY git repository."
-  (cl-loop for b in (buffer-list)
-           when (string= root (with-current-buffer b
-                                (and (or (buffer-file-name)
-                                         (string-match-p "magit" (buffer-name))
-                                         (eq major-mode 'dired-mode))
-                                     (locate-dominating-file
-                                      default-directory ".git"))))
-           collect b))
-
-(defun kill-git-buffers ()
-  (interactive)
-  (if-let ((root (locate-dominating-file
-                  default-directory ".git")))
-      (when (yes-or-no-p (format "Kill all buffers in %s?" root))
-        (let (message-log-max)
-          (mapc #'kill-buffer (git-buffers root))))
-    (user-error "Not in a Git repo")))
-
-(define-key (current-global-map) (kbd "C-c p k") #'kill-git-buffers)
 
 (use-package checkdoc
   :config (setq checkdoc-arguments-in-order-flag nil
