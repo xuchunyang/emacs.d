@@ -9,15 +9,6 @@
 
 ;;; Commentary:
 
-;; User key prefixes:
-;;
-;; - C-c A: Align
-;; - C-c h: Helm (not using now)
-;; - C-c L: List things
-;; - C-c t: Toggle things
-;; - C-x v: VCS
-;; - C-c /: Google Search
-
 ;;; Code:
 
 (unless noninteractive
