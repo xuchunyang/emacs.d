@@ -2331,3 +2331,49 @@ Show unfinished commands in echo area, one second is a bit too long.
 #+BEGIN_SRC emacs-lisp
 (setq echo-keystrokes 0.5)
 #+END_SRC
+
+* Stuff to do
+** Fix maximize window with session.el on OS X
+
+Some extra blank space always is left when start Emacs. Not sure it is caused by
+session.el or Emacs for OS X.
+
+** Write a simple user option for making helm always use the bottom window
+
+Currently, I am using =shackle= with some dirty hacks for this, however, I think
+a helm built-in solution is very necessary, otherwise, the elusive way of window
+usage by helm is quite annoy.
+
+The first idea I've get is do it with existing custom options (though I'm not
+sure which one, maybe ~helm-display-function~), then add it to helm and send a
+PR. I should also have a look at =display-buffer-alist= and third libraries like
+=shackle= and =popwin=.
+
+** Is it possible to use Network proxy within Emacs?
+
+Unfortunately, I am living in China where many important networks are blocked by
+[[https://en.wikipedia.org/wiki/Great_Firewall][Great Firewall]], so to use twittering-mode is impossible.
+
+How network stuff works is still like magic.
+
+** Publish my =init.org= as HTML to website if necessary
+** What about another new GUI Emacs for Mac OS X?
+
+The idea comes from [[http://vimr.org/][VimR — Refined Vim Experience For OS X]].
+
+Try to reuse code from emacs-mac if really want to try.
+
+** Use Yasnippet for keeping my personal snippet
+
+This is not the typical use-case of =yasnippet=, and I am still not a big fan of
+it, but I find myself repeating myself a lot.
+
+** Write easy-to-use commands to search Emacs src, others' configs and my own configs
+
+They all can be done via =helm-projectile=, but I don't like this package
+because it is overly complex design, which makes it buggy, besides, it doesn't
+play good with =helm=.
+
+** Write another helm front-end for projectile
+
+The exiting one is complex and buggy.
