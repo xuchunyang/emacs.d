@@ -105,10 +105,7 @@ Don't complain about redefinitions (advice), I don't want to know.
 
 *** Bootstrap =package.el=
 
-I am not sure what I am doing here.
-
 #+BEGIN_SRC emacs-lisp
-(setq package-enable-at-startup nil)
 ;; commented, see init.el
 ;; (package-initialize)
 #+END_SRC
