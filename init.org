@@ -389,6 +389,7 @@ buffer needs yes/no, let me forget about it.
 
 (bao solarized-theme
   :setup (load-theme 'solarized-dark :no-confirm)
+  :feature solarized
   :after
   (progn
     ;; make the fringe stand out from the background
