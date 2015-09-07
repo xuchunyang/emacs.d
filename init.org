@@ -1036,6 +1036,8 @@ Ensure that M-v always undoes C-v, so you can go back exactly.
 
 ** Spelling and syntax checking
 
+Spell checking with =ispell= and =flyspell=.
+
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
   :diminish flyspell-mode
@@ -1057,9 +1059,35 @@ Ensure that M-v always undoes C-v, so you can go back exactly.
     :ensure t
     :config
     (bind-key "C-." #'flyspell-popup-correct flyspell-mode-map)))
+#+END_SRC
+
+English grammar and style check.
+
+#+BEGIN_SRC emacs-lisp
+(bao langtool
+  :after
+  (setq langtool-language-tool-jar
+        "~/Downloads/LanguageTool-3.0/languagetool-commandline.jar"
+        langtool-default-language "en-US"
+        langtool-mother-tongue "en"
+        ;; Disable annoying rules when working in org-mode, see more rules at
+        ;; [[https://www.languagetool.org/languages/][LanguageTool Supported Languages]]
+        ;; Even though, it is still almost unuseable.
+        langtool-disabled-rules
+        '(
+          ;; Whitespace repetition (bad formatting)
+          "WHITESPACE_RULE"
+          ;; Unpaired braces, brackets, quotation marks and similar symbols
+          "EN_UNPAIRED_BRACKETS"
+          ;; Use of whitespace before comma and before/after parentheses
+          "COMMA_PARENTHESIS_WHITESPACE")))
 
 (use-package writegood-mode :ensure t :defer t)
+#+END_SRC
 
+Programming syntax check.
+
+#+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t
   :bind (("C-c t f" . global-flycheck-mode)
