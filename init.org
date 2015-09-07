@@ -380,14 +380,44 @@ buffer needs yes/no, let me forget about it.
 *** Load Theme
 
 #+BEGIN_SRC emacs-lisp
-(use-package spacemacs-theme :ensure t :defer t)
-
-;; Load this outside because theme package seems special and I don't know how to
-;; use it with `use-package'.
-(load-theme 'spacemacs-dark :no-confirm)
-
 ;; Let's disable questions about theme loading while we're at it.
 (setq custom-safe-themes t)
+
+(bao spacemacs-theme
+  :disabled t
+  :setup (load-theme 'spacemacs-dark :no-confirm))
+
+(bao solarized-theme
+  :setup (load-theme 'solarized-dark :no-confirm)
+  :after
+  (progn
+    ;; make the fringe stand out from the background
+    (setq solarized-distinct-fringe-background t)
+
+    ;; Don't change the font for some headings and titles
+    (setq solarized-use-variable-pitch nil)
+
+    ;; make the modeline high contrast
+    (setq solarized-high-contrast-mode-line t)
+
+    ;; Use less bolding
+    (setq solarized-use-less-bold t)
+
+    ;; Use more italics
+    (setq solarized-use-more-italic t)
+
+    ;; Use less colors for indicators such as git:gutter, flycheck and similar
+    ;; (setq solarized-emphasize-indicators nil)
+
+    ;; Don't change size of org-mode headlines (but keep other size-changes)
+    (setq solarized-scale-org-headlines nil)
+
+    ;; Avoid all font-size changes
+    (setq solarized-height-minus-1 1)
+    (setq solarized-height-plus-1 1)
+    (setq solarized-height-plus-2 1)
+    (setq solarized-height-plus-3 1)
+    (setq solarized-height-plus-4 1)))
 #+END_SRC
 
 *** Mode line
