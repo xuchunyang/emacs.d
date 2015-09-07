@@ -42,7 +42,7 @@ Add more elpa archives like melpa and org elpa.
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 
 ;; For org-plus-contrib
-;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 #+END_SRC
 
 Some packages appear (usually with different version) in more than one archives
@@ -2273,7 +2273,6 @@ Gmail is blocked on purpose in my country.  All of them can be installed from
   (setq org-src-tab-acts-natively t))
 
 (use-package org-plus-contrib           ; Various org-mode extensions
-  :disabled                             ; only available from org elpa
   ;; Just install, don't require that feature
   :ensure t :defer t)
 
