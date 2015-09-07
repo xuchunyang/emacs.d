@@ -80,7 +80,7 @@ Reasons for me to use it:
 
 #+END_SRC
 
-*** TODO Write own package helper, works only for =package.el=
+*** TODO Write own =package.el= helper with my limited elisp knowledge
 
 Define ~use-pkg~ macros.
 
