@@ -5,4 +5,4 @@
                                         ; again (for Emacs commit 066b26d)
 
 ;; `org-babel-load-file' is autoloaded, no need require anything
-(org-babel-load-file (locate-user-emacs-file "init.org"))
+(org-babel-load-file (locate-user-emacs-file "emacs-init.org"))

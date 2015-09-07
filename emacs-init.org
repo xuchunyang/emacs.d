@@ -3,7 +3,7 @@
 
 * Preface
 
-Try init.org.
+Try emacs-init.org.
 
 #+TOC: headlines 2
 
@@ -76,7 +76,7 @@ Try init.org.
    - [[#fix-maximize-window-with-sessionel-on-os-x][Fix maximize window with session.el on OS X]]
    - [[#write-a-simple-user-option-for-making-helm-always-use-the-bottom-window][Write a simple user option for making helm always use the bottom window]]
    - [[#is-it-possible-to-use-network-proxy-within-emacs][Is it possible to use Network proxy within Emacs?]]
-   - [[#publish-my-initorg-as-html-to-website-if-necessary][Publish my =init.org= as HTML to website if necessary]]
+   - [[#publish-my-emacs-initorg-as-html-to-website-if-necessary][Publish my =emacs-init.org= as HTML to website if necessary]]
    - [[#what-about-another-new-gui-emacs-for-mac-os-x][What about another new GUI Emacs for Mac OS X?]]
    - [[#use-yasnippet-for-keeping-my-personal-snippet][Use Yasnippet for keeping my personal snippet]]
    - [[#write-easy-to-use-commands-to-search-emacs-src-others-configs-and-my-own-configs][Write easy-to-use commands to search Emacs src, others' configs and my own configs]]
@@ -84,9 +84,6 @@ Try init.org.
    - [[#fix-theme-cant-always-load-correctly-issue][Fix theme can't always load correctly issue]]
 
 * Init
-:PROPERTIES:
-:header-args:emacs-lisp: :tangle ~/.emacs.d/init2.el
-:END:
 
 ** Package management
 
@@ -112,7 +109,7 @@ Don't complain about redefinitions (advice), I don't want to know.
 
 Add more elpa archives like melpa and org elpa.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 
 ;; For org-plus-contrib
@@ -245,6 +242,16 @@ Some practical examples.
 (require 'subr-x)
 (require 'rx)                           ; Use Lisp style to build regexp
 (use-package dash :ensure t)
+#+END_SRC
+
+From [[http://lists.gnu.org/archive/html/help-gnu-emacs/2008-06/msg00087.html][Re: Timing execution of function calls in Emacs lisp]].
+
+#+BEGIN_SRC emacs-lisp
+(defmacro measure-time (&rest body)
+  "Measure the time it takes to evaluate BODY."
+  `(let ((time (current-time)))
+     ,@body
+     (message "%.06f" (float-time (time-since time)))))
 #+END_SRC
 
 ** Initialization
@@ -381,10 +388,10 @@ buffer needs yes/no, let me forget about it.
 (setq custom-safe-themes t)
 
 (bao spacemacs-theme
-  :disabled t
   :setup (load-theme 'spacemacs-dark :no-confirm))
 
 (bao solarized-theme
+  :disabled t
   :setup (load-theme 'solarized-dark :no-confirm)
   :feature solarized
   :after
@@ -530,8 +537,12 @@ Buffer.
 (use-package autorevert                 ; Auto-revert buffers of changed files
   :init (global-auto-revert-mode))
 
+(use-package chunyang-simple
+  :bind (("C-x 3" . chunyang-split-window-right)
+         ("C-x 2" . chunyang-split-window-below)
+         ("C-x t" . chunyang-switch-scratch)))
+
 (use-package chunyang-buffers          ; Personal buffer tools
-  :load-path "lisp/"
   :commands (lunaryorn-do-not-kill-important-buffers)
   :init (add-hook 'kill-buffer-query-functions
                   #'lunaryorn-do-not-kill-important-buffers))
@@ -2411,6 +2422,7 @@ Gmail is blocked on purpose in my country.  All of them can be installed from
   (setq org-src-tab-acts-natively t))
 
 (use-package org-plus-contrib           ; Various org-mode extensions
+  :disabled t
   ;; Just install, don't require that feature
   :ensure t :defer t)
 
@@ -2494,7 +2506,7 @@ Unfortunately, I am living in China where many important networks are blocked by
 
 How network stuff works is still like magic.
 
-** Publish my =init.org= as HTML to website if necessary
+** Publish my =emacs-init.org= as HTML to website if necessary
 ** What about another new GUI Emacs for Mac OS X?
 
 The idea comes from [[http://vimr.org/][VimR — Refined Vim Experience For OS X]].
