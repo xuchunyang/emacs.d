@@ -1,13 +1,10 @@
 ;;; chunyang-simple.el --- Simple editing functions  -*- lexical-binding: t; -*-
 
-;;; Commentary:
-
 ;;; Code:
 
 (require 'subr-x)
 
 
-;;;###autoload
 (defun chunyang-split-window-right ()
   "Split window with another buffer."
   (interactive)
@@ -29,7 +26,6 @@
     (switch-to-buffer other-buffer)
     (switch-to-buffer-other-window this-buffer)))
 
-;;;###autoload
 (defun chunyang-other-window (arg)
   "Run `other-window'.
 With ARG, swap two window."
@@ -39,7 +35,6 @@ With ARG, swap two window."
     (other-window +1)))
 
 
-;;;###autoload
 (defun chunyang-make-another-scratch-buffer (arg)
   "Make another *scratch* buffer.
 With ARG, put *scratch* buffer right."
@@ -53,7 +48,7 @@ With ARG, put *scratch* buffer right."
       (split-window-right)
       (other-window 1))
     (switch-to-buffer buf)))
-;;;###autoload
+
 (defalias 'demo #'chunyang-make-another-scratch-buffer)
 
 
@@ -170,7 +165,6 @@ With PREFIX, cd to project root."
   " cmd))))
 
 
-;;;###autoload
 (defun chunyang-copy-buffer-name-as-kill (buf)
   "Put name of the current buffer to kill-ring."
   (interactive "b")
@@ -200,14 +194,6 @@ With PREFIX, cd to project root."
 (defun chunyang-switch-scratch ()
   (interactive)
   (switch-to-buffer "*scratch*"))
-
-
-;; From [[http://lists.gnu.org/archive/html/help-gnu-emacs/2008-06/msg00087.html][Re: Timing execution of function calls in Emacs lisp]]
-(defmacro measure-time (&rest body)
-  "Measure the time it takes to evaluate BODY."
-  `(let ((time (current-time)))
-     ,@body
-     (message "%.06f" (float-time (time-since time)))))
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
