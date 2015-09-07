@@ -2377,3 +2377,5 @@ play good with =helm=.
 ** Write another helm front-end for projectile
 
 The exiting one is complex and buggy.
+
+** Fix theme can't always load correctly issue
