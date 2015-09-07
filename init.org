@@ -84,7 +84,7 @@ Reasons for me to use it:
 
 Define ~use-pkg~ macros.
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
 (cl-defmacro use-pkg (pkg
                       &key
                       disabled
@@ -104,7 +104,8 @@ Define ~use-pkg~ macros.
      ;; Setup after FEATURE is loaded
      (with-eval-after-load ',feature
        ,after
-       (diminish ',diminish))))
+       (when ,diminish
+         (diminish ',diminish)))))
 #+END_SRC
 
 Indentation and Font lock support.
