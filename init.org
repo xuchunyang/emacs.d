@@ -2476,7 +2476,7 @@ Show unfinished commands in echo area, one second is a bit too long.
 * Stuff to do
 ** Fix maximize window with session.el on OS X
 
-Some extra blank space always is left when start Emacs. Not sure it is caused by
+Some extra blank space is always left when start Emacs. Not sure it is caused by
 session.el or Emacs for OS X.
 
 ** Write a simple user option for making helm always use the bottom window
@@ -2485,9 +2485,9 @@ Currently, I am using =shackle= with some dirty hacks for this, however, I think
 a helm built-in solution is very necessary, otherwise, the elusive way of window
 usage by helm is quite annoy.
 
-The first idea I've get is do it with existing custom options (though I'm not
-sure which one, maybe ~helm-display-function~), then add it to helm and send a
-PR. I should also have a look at =display-buffer-alist= and third libraries like
+The first idea I've got is using existing custom options (though I'm not sure
+which one, maybe ~helm-display-function~), then add it to helm and send a PR. I
+should also have a look at =display-buffer-alist= and third libraries like
 =shackle= and =popwin=.
 
 ** Is it possible to use Network proxy within Emacs?
