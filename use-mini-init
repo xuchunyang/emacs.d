@@ -1,5 +1,0 @@
-#!/bin/bash
-# -*- mode: sh; -*-
-
-mv init.el init.el.backup
-mv mini-init.el init.el
