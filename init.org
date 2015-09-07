@@ -93,19 +93,24 @@ Define ~bao~ ("包") macros.
                   after
                   diminish          ; Hide its lighter
                   )
-  `(unless ,disabled
-     ;; Make sure PKG is available
-     (unless (package-installed-p ',pkg)
-       (unless (assoc ',pkg package-archive-contents)
-         (package-refresh-contents))
-       (package-install ',pkg))
-     ;; Setup after PKG whenever available
-     ,setup
-     ;; Setup after FEATURE is loaded
-     (with-eval-after-load ',feature
-       ,after
-       (when ',diminish
-         (diminish ',diminish)))))
+  `(condition-case err
+       (unless ,disabled
+         ;; Make sure PKG is available
+         (unless (package-installed-p ',pkg)
+           (unless (assoc ',pkg package-archive-contents)
+             (package-refresh-contents))
+           (package-install ',pkg))
+         ;; Setup after PKG whenever available
+         ,setup
+         ;; Setup after FEATURE is loaded
+         (with-eval-after-load ',feature
+           ,after
+           (when ',diminish
+             (diminish ',diminish))))
+     (error (ignore
+             (display-warning 'bar (format "%s: %s"
+                                           ',pkg (error-message-string err))
+                              :error)))))
 #+END_SRC
 
 Indentation and Font lock support.
