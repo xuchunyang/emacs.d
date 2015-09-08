@@ -21,7 +21,7 @@ Try emacs-init.org.
    - [[#mac-os-x][Mac OS X]]
    - [[#user-interface][User Interface]]
      - [[#hide-tool-bar-and-scroll-bar][Hide Tool bar and Scroll bar]]
-     - [[#no-gnu-startup-screen--message][No GNU startup screen & message]]
+     - [[#no-gnu-startup-screen--message--beeping][No GNU startup screen & message & beeping]]
      - [[#overwrite-all-yesno-with-yn][Overwrite all yes/no with y/n]]
      - [[#setup-font][Setup Font]]
      - [[#load-theme][Load Theme]]
@@ -333,11 +333,12 @@ fact, I do use Menu bar a lot to discover packages' highlighted abilities.
 (scroll-bar-mode -1)
 #+END_SRC
 
-*** No GNU startup screen & message
+*** No GNU startup screen & message & beeping
 
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-screen t)
 (fset 'display-startup-echo-area-message #'ignore)
+(setq ring-bell-function #'ignore)
 #+END_SRC
 
 *** Overwrite all yes/no with y/n
