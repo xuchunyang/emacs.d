@@ -82,6 +82,8 @@ Try emacs-init.org.
    - [[#write-easy-to-use-commands-to-search-emacs-src-others-configs-and-my-own-configs][Write easy-to-use commands to search Emacs src, others' configs and my own configs]]
    - [[#write-another-helm-front-end-for-projectile][Write another helm front-end for projectile]]
    - [[#fix-theme-cant-always-load-correctly-issue][Fix theme can't always load correctly issue]]
+   - [[#learn-the-mode-line-format-syntax-to-customize-mode-line-manually-and-third-part-packages][Learn the ~mode-line-format~ syntax to customize mode line manually and third-part packages]]
+   - [[#check-bad-use-package-setups-especially-in-config][Check bad =use-package= setups, especially in =:config=]]
 
 * Init
 
@@ -2546,3 +2548,6 @@ play good with =helm=.
 The exiting one is complex and buggy.
 
 ** Fix theme can't always load correctly issue
+
+** Learn the ~mode-line-format~ syntax to customize mode line manually and third-part packages
+** Check bad =use-package= setups, especially in =:config=
