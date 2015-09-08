@@ -1367,14 +1367,14 @@ See also `describe-function-or-variable'."
   :ensure t
   :diminish git-gutter-mode
   :bind ("C-x C-g" . git-gutter:toggle)
+  :init (global-git-gutter-mode)
   :config
   (bind-keys ("C-x v p" . git-gutter:previous-hunk)
              ("C-x v n" . git-gutter:next-hunk)
              ("C-x v s" . git-gutter:stage-hunk)
              ("C-x v r" . git-gutter:revert-hunk))
   ;; Support SVN too, I use it
-  (setq git-gutter:handled-backends '(git svn))
-  (global-git-gutter-mode))
+  (setq git-gutter:handled-backends '(git svn)))
 
 (use-package git-messenger
   :ensure t
@@ -2376,7 +2376,7 @@ Gmail is blocked on purpose in my country.  All of them can be installed from
          ("C-c c"   . org-capture)
          ("C-c l"   . org-store-link)
          ("C-c C-o" . org-open-at-point-global))
-  :init (require 'org)
+  :init (require 'org)                  ; FIXME: Dhould not do this
   :config
 
   (add-hook 'org-mode-hook
