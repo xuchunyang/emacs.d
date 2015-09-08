@@ -155,17 +155,17 @@ Reasons for me to use it:
 
 *** TODO Write own =package.el= helper with my limited elisp knowledge
 
-Define ~bao~ ("包") macros.
+Define my own silly ~pkg~ macro.
 
 #+BEGIN_SRC emacs-lisp
-(cl-defmacro bao (pkg
-                  &key
-                  disabled
-                  setup
-                  (feature pkg)
-                  after
-                  diminish          ; Hide its lighter
-                  )
+(cl-defmacro pkg (pkg
+                   &key
+                   disabled
+                   setup
+                   (feature pkg)
+                   after
+                   diminish          ; Hide its lighter
+                   )
   `(condition-case err
        (unless ,disabled
          ;; Make sure PKG is available
@@ -189,14 +189,14 @@ Define ~bao~ ("包") macros.
 Indentation and Font lock support.
 
 #+BEGIN_SRC emacs-lisp
-(put 'bao 'lisp-indent-function 'defun)
+(put 'pkg 'lisp-indent-function 'defun)
 
-(defconst bao-font-lock-keywords
-  '(("(\\(bao\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+(defconst pkg-font-lock-keywords
+  '(("(\\(pkg\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
      (1 font-lock-keyword-face)
      (2 font-lock-constant-face nil t))))
 
-(font-lock-add-keywords 'emacs-lisp-mode bao-font-lock-keywords)
+(font-lock-add-keywords 'emacs-lisp-mode pkg-font-lock-keywords)
 #+END_SRC
 
 Some practical examples.
@@ -207,10 +207,10 @@ Some practical examples.
 ;; 3. 1 + bind some autoloaded commands to keys
 ;; 4. 1 + run autoloaded command
 
-(bao ace-link
+(pkg ace-link
   :setup (ace-link-setup-default))
 
-(bao orglink
+(pkg orglink
   :diminish orglink-mode
   :setup (global-orglink-mode))
 
@@ -390,14 +390,14 @@ buffer needs yes/no, let me forget about it.
 ;; Let's disable questions about theme loading while we're at it.
 (setq custom-safe-themes t)
 
-(bao spacemacs-theme
+(pkg spacemacs-theme
   :disabled t
   :setup (load-theme 'spacemacs-dark :no-confirm))
 
-(bao zenburn-theme
+(pkg zenburn-theme
   :setup (load-theme 'zenburn :no-confirm))
 
-(bao solarized-theme
+(pkg solarized-theme
   :disabled t
   :feature solarized
   :setup
@@ -1082,7 +1082,7 @@ Spell checking with =ispell= and =flyspell=.
 English grammar and style check.
 
 #+BEGIN_SRC emacs-lisp
-(bao langtool
+(pkg langtool
   :after
   (setq langtool-language-tool-jar
         "~/Downloads/LanguageTool-3.0/languagetool-commandline.jar"
@@ -2440,7 +2440,7 @@ Gmail is blocked on purpose in my country.  All of them can be installed from
   :init (add-hook 'org-mode-hook #'toc-org-enable))
 
 (use-package orglink
-  :disabled t                           ; Try `bao'
+  :disabled t                           ; Try `pkg'
   :ensure t
   :diminish orglink-mode
   :config (global-orglink-mode))
