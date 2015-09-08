@@ -1908,7 +1908,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (bind-key "C-c f" #'helm-buffer-run-dired-files helm-find-files-map)
 
   (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
-  (use-package helm-ls-git :ensure t :defer t)
+
+  (pkg helm-ls-git
+    :setup (setq helm-ls-git-default-sources '(helm-source-ls-git)))
 
   (use-package helm-ls-svn
     :load-path "~/wip/chunyang/helm-ls-svn.el"
@@ -1977,6 +1979,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
            ;; File
            ("C-x C-f"                        . helm-find-files)
            ("C-x f"                          . helm-recentf)
+           ("C-x C-d"                        . helm-browse-project)
            ;; Buffer
            ([remap switch-to-buffer]         . helm-buffers-list)       ; C-x b
            ("M-l"                            . helm-mini)               ; M-l
@@ -2373,6 +2376,11 @@ Gmail is blocked on purpose in my country.  All of them can be installed from
          ("C-c C-o" . org-open-at-point-global))
   :init (require 'org)
   :config
+
+  (add-hook 'org-mode-hook
+            (defun my-org-key-bind-setup ()
+              (bind-key "C-o" #'helm-org-headlines org-mode-map)))
+
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)")
           (sequence "REPORT" "BUG" "KNOWNCAUSE" "|" "FIXED")
