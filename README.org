@@ -1,1 +1,1 @@
-init.org
+emacs-init.org
