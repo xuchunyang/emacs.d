@@ -1784,8 +1784,11 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
 
 (pkg eshell-did-you-mean
   :load-path "~/wip/eshell-did-you-mean"
-  :setup (add-to-list 'eshell-preoutput-filter-functions
-                      #'eshell-did-you-mean-output-filter))
+  :setup
+  (progn
+    (require 'eshell-did-you-mean)
+    (add-to-list 'eshell-preoutput-filter-functions
+                 #'eshell-did-you-mean-output-filter)))
 #+END_SRC
 
 ** [[https://github.com/emacs-helm/helm][helm]]
