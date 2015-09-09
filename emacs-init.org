@@ -1366,15 +1366,17 @@ See also `describe-function-or-variable'."
 (use-package git-gutter
   :ensure t
   :diminish git-gutter-mode
-  :bind ("C-x C-g" . git-gutter:toggle)
-  :init (global-git-gutter-mode)
-  :config
-  (bind-keys ("C-x v p" . git-gutter:previous-hunk)
-             ("C-x v n" . git-gutter:next-hunk)
-             ("C-x v s" . git-gutter:stage-hunk)
-             ("C-x v r" . git-gutter:revert-hunk))
-  ;; Support SVN too, I use it
-  (setq git-gutter:handled-backends '(git svn)))
+  :bind (("C-x C-g" . git-gutter:toggle)
+         ("C-x v n" . git-gutter:next-hunk)
+         ("C-x v p" . git-gutter:previous-hunk)
+         ("C-x v s" . git-gutter:stage-hunk)
+         ("C-x v r" . git-gutter:revert-hunk))
+  :init
+  ;; FIXME Fix `use-package' setup
+  ;; must set this before enabling `global-git-gutter-mode'
+  (setq git-gutter:update-interval 2)
+  (setq git-gutter:handled-backends '(git svn))
+  (global-git-gutter-mode))
 
 (use-package git-messenger
   :ensure t
