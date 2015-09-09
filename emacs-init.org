@@ -563,6 +563,10 @@ Buffer.
   :commands (lunaryorn-do-not-kill-important-buffers)
   :init (add-hook 'kill-buffer-query-functions
                   #'lunaryorn-do-not-kill-important-buffers))
+
+;; Add extra key bindings in all special (including derived) mode,
+(define-key special-mode-map [?Q] #'kill-buffer)
+(define-key special-mode-map [?O] #'delete-other-windows)
 #+END_SRC
 
 Windows.
