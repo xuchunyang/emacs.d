@@ -1403,25 +1403,7 @@ See also `describe-function-or-variable'."
   :bind (("C-x g"   . magit-status)
          ("C-x M-g" . magit-dispatch-popup))
   :config
-  (setq magit-revert-buffers t)
-  ;; Just push, no question (version 2.2.0
-  (setq magit-push-always-verify nil)
-  ;; Use 'C-t' to toggle the display
-  (setq magit-popup-show-common-commands nil)
-
-  ;; [[http://endlessparentheses.com/create-github-prs-from-emacs-with-magit.html][Create Github PRs from Emacs with Magit (again) · Endless Parentheses]]
-  (defun endless/visit-pull-request-url ()
-    "Visit the current branch's PR on Github."
-    (interactive)
-    (browse-url
-     (format "https://github.com/%s/pull/new/%s"
-             (replace-regexp-in-string
-              "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
-              (magit-get "remote"
-                         (magit-get-remote)
-                         "url"))
-             (cdr (magit-get-remote-branch)))))
-  (bind-key "v" #'endless/visit-pull-request-url magit-mode-map))
+  (setq magit-revert-buffers t))
 
 (use-package git-timemachine            ; Go back in Git time
   :ensure t
