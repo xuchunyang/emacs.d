@@ -164,18 +164,22 @@ Define my own silly ~pkg~ macro.
 (cl-defmacro pkg (pkg
                    &key
                    disabled
+                   load-path
                    setup
                    (feature pkg)
                    after
                    diminish          ; Hide its lighter
                    )
+  "If load-path is Non-nil, don't make sure pkg is available via package.el."
   `(condition-case err
        (unless ,disabled
-         ;; Make sure PKG is available
-         (unless (package-installed-p ',pkg)
-           (unless (assoc ',pkg package-archive-contents)
-             (package-refresh-contents))
-           (package-install ',pkg))
+         (if ,load-path
+             (add-to-list 'load-path ,load-path)
+           ;; Make sure PKG is available
+           (unless (package-installed-p ',pkg)
+             (unless (assoc ',pkg package-archive-contents)
+               (package-refresh-contents))
+             (package-install ',pkg)))
          ;; Setup after PKG whenever available
          ,setup
          ;; Setup after FEATURE is loaded
@@ -1790,14 +1794,14 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n"))))
 
-(use-package eshell-z
-  :load-path "~/wip/eshell-z")
+(pkg eshell-z
+  :load-path "~/wip/eshell-z"
+  :setup (require 'eshell-z))
 
-(use-package eshell-did-you-mean
+(pkg eshell-did-you-mean
   :load-path "~/wip/eshell-did-you-mean"
-  :config
-  (add-to-list 'eshell-preoutput-filter-functions
-               #'eshell-did-you-mean-output-filter))
+  :setup (add-to-list 'eshell-preoutput-filter-functions
+                      #'eshell-did-you-mean-output-filter))
 #+END_SRC
 
 ** [[https://github.com/emacs-helm/helm][helm]]
