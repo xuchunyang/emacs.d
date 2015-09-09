@@ -302,9 +302,6 @@ Change some key bindings for Mac keyboard.
 Fix shell environments for GNU Emacs.
 
 #+BEGIN_SRC emacs-lisp
-;; http://emacs.stackexchange.com/questions/10570/executing-commands-through-shell-command-what-is-the-path-used
-(setq shell-command-switch "-ic")       ; NOTE: I don't know what's the purpose
-
 (use-package exec-path-from-shell       ; NOTE: This package is slow
   :ensure t
   :if (and (eq system-type 'darwin) (display-graphic-p))
