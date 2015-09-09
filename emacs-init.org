@@ -1911,7 +1911,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
 
   (pkg helm-ls-git
-    :setup (setq helm-ls-git-default-sources '(helm-source-ls-git)))
+    :setup (setq helm-ls-git-default-sources
+                 '(helm-source-ls-git
+                   helm-source-ls-git-buffers)))
 
   (use-package helm-ls-svn
     :load-path "~/wip/chunyang/helm-ls-svn.el"
