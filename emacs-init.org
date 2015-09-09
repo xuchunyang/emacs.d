@@ -1,5 +1,7 @@
-#+OPTIONS: toc:nil num:nil ^:nil
+#+TITLE: My Emacs Configuration
 #+EXCLUDE_TAGS: TOC@3
+#+OPTIONS: toc:nil num:nil ^:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
 
 * Preface
 
@@ -77,7 +79,6 @@ Try emacs-init.org.
    - [[#fix-maximize-window-with-sessionel-on-os-x][Fix maximize window with session.el on OS X]]
    - [[#write-a-simple-user-option-for-making-helm-always-use-the-bottom-window][Write a simple user option for making helm always use the bottom window]]
    - [[#is-it-possible-to-use-network-proxy-within-emacs][Is it possible to use Network proxy within Emacs?]]
-   - [[#publish-my-emacs-initorg-as-html-to-website-if-necessary][Publish my =emacs-init.org= as HTML to website if necessary]]
    - [[#what-about-another-new-gui-emacs-for-mac-os-x][What about another new GUI Emacs for Mac OS X?]]
    - [[#use-yasnippet-for-keeping-my-personal-snippet][Use Yasnippet for keeping my personal snippet]]
    - [[#write-easy-to-use-commands-to-search-emacs-src-others-configs-and-my-own-configs][Write easy-to-use commands to search Emacs src, others' configs and my own configs]]
@@ -2537,7 +2538,6 @@ Unfortunately, I am living in China where many important networks are blocked by
 
 How network stuff works is still like magic.
 
-** Publish my =emacs-init.org= as HTML to website if necessary
 ** What about another new GUI Emacs for Mac OS X?
 
 The idea comes from [[http://vimr.org/][VimR — Refined Vim Experience For OS X]].
