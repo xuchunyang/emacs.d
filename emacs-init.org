@@ -2311,7 +2311,8 @@ Gmail is blocked on purpose in my country.  All of them can be installed from
 #+BEGIN_SRC emacs-lisp
 (use-package youdao-dictionary
   :ensure t
-  :bind ("C-c y" . youdao-dictionary-search)
+  :bind (("C-c y" . youdao-dictionary-search)
+         ("C-c Y" . youdao-dictionary-search-at-point+))
   :config (setq url-automatic-caching t))
 
 (use-package translate-shell
