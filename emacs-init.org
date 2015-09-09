@@ -1662,16 +1662,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :init
   (projectile-global-mode)
   :config
-  (use-package helm-projectile
-    :disabled t
-    :ensure t
-    :if prefer-helm
-    :ensure t
-    :config
-    (helm-projectile-on))
-  (setq projectile-completion-system (if prefer-helm 'helm 'ivy)
-        ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
-        projectile-svn-command "svn-ls-files")
+  ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
+  (setq projectile-svn-command "svn-ls-files")
+  (setq projectile-completion-system 'helm)
   (defun projectile-kill-projects ()
     (interactive)
     (let ((projects
@@ -1689,7 +1682,11 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
                 (projectile-kill-buffers))) projects)
       (message "")))
   (bind-keys :map projectile-command-map
-             ("K" . projectile-kill-projects)))
+             ("K" . projectile-kill-projects))
+
+  (use-package helm-projectile
+    :ensure t
+    :init (helm-projectile-on)))
 #+END_SRC
 
 ** Web & IRC & Email & RSS
