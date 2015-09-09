@@ -50,6 +50,7 @@ Try emacs-init.org.
      - [[#scheme][Scheme]]
      - [[#ruby][Ruby]]
      - [[#c][C]]
+     - [[#lua][Lua]]
    - [[#version-control][Version Control]]
    - [[#tools-and-utilities][Tools and utilities]]
    - [[#web--irc--email--rss][Web & IRC & Email & RSS]]
@@ -1358,6 +1359,12 @@ See also `describe-function-or-variable'."
     )
   (add-hook 'c-mode-hook #'chunyang--setup-ggtags)
   (add-hook 'tcl-mode-hook #'chunyang--setup-ggtags))
+#+END_SRC
+
+*** Lua
+
+#+BEGIN_SRC emacs-lisp
+(pkg lua-mode)
 #+END_SRC
 
 ** Version Control
