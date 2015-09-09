@@ -876,21 +876,21 @@ Ensure that M-v always undoes C-v, so you can go back exactly.
 
 (use-package imenu
   :init
-  (defun chunyang-imenu--setup-elisp ()
-    ;; use-package
-    (add-to-list 'imenu-generic-expression
-                 `("Package" ,(rx "(use-package" (optional "-with-elapsed-timer")
-                                  symbol-end (1+ (syntax whitespace)) symbol-start
-                                  (group-n 1 (1+ (or (syntax word) (syntax symbol))))
-                                  symbol-end) 1)
-                 )
-    ;; hydra
-    (add-to-list 'imenu-generic-expression
-                 `("hydra" ,(rx "(defhydra"
-                                symbol-end (1+ (syntax whitespace)) symbol-start
-                                (group-n 1 (1+ (or (syntax word) (syntax symbol))))
-                                symbol-end) 1)))
-  (add-hook 'emacs-lisp-mode-hook #'chunyang-imenu--setup-elisp))
+  ;; Helper function
+  (defun my-imenu--build-expression (name)
+    "Return `imenu-generic-expression' of macro or function NAME."
+    (list
+     name (rx-to-string
+           `(and ,(concat "(" name)
+                 symbol-end (1+ (syntax whitespace)) symbol-start
+                 (group-n 1 (1+ (or (syntax word) (syntax symbol))))
+                 symbol-end)) 1))
+
+  (defun my-imenu--setup-elisp ()
+    (dolist (name '("use-package" "pkg" "defhydra"))
+      (add-to-list 'imenu-generic-expression (my-imenu--build-expression name))))
+
+  (add-hook 'emacs-lisp-mode-hook #'my-imenu--setup-elisp))
 
 (use-package imenu-anywhere             ; Helm-based imenu across open buffers
   :ensure t
@@ -1947,35 +1947,6 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   ;; with `package.el', since autoload stuff usually is done automatically by
   ;; the latter.
   :defer t)
-
-(use-package helm-imenu
-  :defer t
-  :config
-  ;; TODO This dirty really should be removed
-  ;; Re-define `helm-imenu-transformer' to support more colors
-  (defvar helm-imenu-prop-alist
-    '(("Variables" . font-lock-variable-name-face)
-      ("Function"  . font-lock-function-name-face)
-      ("Types"     . font-lock-type-face)
-      ;; User defined
-      ("Package"   . font-lock-keyword-face)
-      ("hydra"     . font-lock-comment-face)))
-  (defun helm-imenu-transformer (candidates)
-    (cl-loop for (k . v) in candidates
-             for types = (or (helm-imenu--get-prop k)
-                             (list "Function" k))
-             for bufname = (buffer-name (marker-buffer v))
-             for disp1 = (mapconcat
-                          (lambda (x)
-                            (propertize
-                             x 'face (catch 'break
-                                       (dolist (elt helm-imenu-prop-alist)
-                                         (when (string-equal x (car elt))
-                                           (throw 'break (cdr elt)))))))
-                          types helm-imenu-delimiter)
-             for disp = (propertize disp1 'help-echo bufname)
-             collect
-             (cons disp (cons k v)))))
 
 (use-package helm-ring
   :defer t
