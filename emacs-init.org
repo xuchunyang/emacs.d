@@ -1648,7 +1648,6 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
     ("q"   nil "cancel" :color blue)))
 
 (use-package dash-at-point    :ensure t :defer t)
-(use-package helm-dash        :ensure t :defer t)
 
 (use-package projectile
   :disabled t
