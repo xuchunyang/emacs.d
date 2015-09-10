@@ -1750,12 +1750,9 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
   (setq eshell-banner-message
-        (with-temp-buffer
-          (insert-image (create-image (locate-user-emacs-file "img/eshell.png"))
-                        "eshell"
-                        nil)
-          (insert "\n\n\n")
-          (buffer-string)))
+        '(concat
+          (shell-command-to-string "fortune -s | cowsay -W 70")
+          "\n\n"))
 
   (defun eshell/x ()
     (insert "exit")
