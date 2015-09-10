@@ -2183,8 +2183,13 @@ providing more features and being more focus.
 
 Disabled for being conflicted with =helm=.
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
+(pkg swiper
+  :load-path "~/wip/swiper"
+  :setup (require 'swiper))
+
 (use-package swiper
+  :disabled t
   :load-path "~/wip/swiper"
   :bind ("C-z" . ivy-resume)
   :config
@@ -2211,6 +2216,7 @@ Disabled for being conflicted with =helm=.
     :config (ivy-mode)))
 
 (use-package counsel
+  :disabled t
   :load-path "~/wip/swiper"
   :bind (("M-x"     . counsel-M-x)
          ("C-x C-f" . counsel-find-file)
