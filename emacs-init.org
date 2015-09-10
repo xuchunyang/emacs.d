@@ -1868,7 +1868,13 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
             :allow-nest t)))
 
   (add-to-list 'helm-type-buffer-actions
-               '("Imenu" . helm-buffer-imenu) 'append))
+               '("Imenu" . helm-buffer-imenu) 'append)
+
+  (setq helm-mini-default-sources
+        '(helm-source-buffers-list
+          helm-source-bookmark-helm-find-files
+          helm-source-recentf
+          helm-source-buffer-not-found)))
 
 (use-package helm-files
   :defer t
