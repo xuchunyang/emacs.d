@@ -76,7 +76,8 @@ Try emacs-init.org.
    - [[#misc-built-in-packages][Misc built-in packages]]
    - [[#echo-area][Echo Area]]
  - [[#stuff-to-do][Stuff to do]]
-   - [[#fix-maximize-window-with-sessionel-on-os-x][Fix maximize window with session.el on OS X]]
+   - [[#persistent-scratch-buffer][Persistent =*scratch*= buffer]]
+   - [[#fix-maximize-window-with-desktopel-on-os-x][Fix maximize window with desktop.el on OS X]]
    - [[#write-a-simple-user-option-for-making-helm-always-use-the-bottom-window][Write a simple user option for making helm always use the bottom window]]
    - [[#is-it-possible-to-use-network-proxy-within-emacs][Is it possible to use Network proxy within Emacs?]]
    - [[#what-about-another-new-gui-emacs-for-mac-os-x][What about another new GUI Emacs for Mac OS X?]]
@@ -981,7 +982,7 @@ Ensure that M-v always undoes C-v, so you can go back exactly.
 
 (use-package rainbow-mode               ; Fontify color values in code
   :ensure t
-  :bind (("C-c t r" . rainbow-mode))
+  :diminish rainbow-mode
   :config (add-hook 'css-mode-hook #'rainbow-mode))
 
 #+END_SRC
@@ -1753,6 +1754,8 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
         '(concat
           (shell-command-to-string "fortune -s | cowsay -W 70")
           "\n\n"))
+  ;; needed at least for `eshell-git-prompt'
+  (setq eshell-highlight-prompt nil)
 
   (defun eshell/x ()
     (insert "exit")
@@ -1773,6 +1776,11 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
                          ("C-c ."   . eshell-insert-last-arg))
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n"))))
+
+(pkg eshell-git-prompt
+  :load-path "~/wip/eshell-git-prompt"
+  :setup (progn (require 'eshell-git-prompt)
+                (eshell-git-prompt-use-theme 'powerline)))
 
 (pkg eshell-z
   :load-path "~/wip/eshell-z"
@@ -2315,7 +2323,7 @@ Gmail is blocked on purpose in my country.  All of them can be installed from
 
 #+BEGIN_SRC emacs-lisp
 (use-package youdao-dictionary
-  :ensure t
+  :load-path "~/wip/youdao-dictionary"
   :bind (("C-c y" . youdao-dictionary-search)
          ("C-c Y" . youdao-dictionary-search-at-point+))
   :config (setq url-automatic-caching t))
@@ -2478,7 +2486,11 @@ Show unfinished commands in echo area, one second is a bit too long.
 #+END_SRC
 
 * Stuff to do
-** Fix maximize window with session.el on OS X
+** Persistent =*scratch*= buffer
+
+Do it myself, or use features provided by desktop.el, savehist.el or others.
+
+** Fix maximize window with desktop.el on OS X
 
 Some extra blank space is always left when start Emacs. Not sure it is caused by
 session.el or Emacs for OS X.
