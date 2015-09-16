@@ -1,92 +1,16 @@
-#+TITLE: My Emacs Configuration
+#+TITLE: Chunyang Xu's Emacs Configuration
+#+AUTHOR: Chunyang Xu
+#+EMAIL: xuchunyang56@gmail.com
 #+EXCLUDE_TAGS: TOC@3
 #+OPTIONS: toc:nil num:nil ^:nil
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
 
 * Preface
 
-Try emacs-init.org.
+This is my Emacs configuration, written in [[http://orgmode.org/][Org mode]]. You can find the latest
+version of this configuration in [[https://github.com/xuchunyang/emacs.d][the Github repository]].
 
 #+TOC: headlines 2
-
-* Table of Contents                                                   :TOC@3:
- - [[#preface][Preface]]
- - [[#init][Init]]
-   - [[#package-management][Package management]]
-     - [[#bootstrap-packageel][Bootstrap =package.el=]]
-     - [[#bootstrap-use-package][Bootstrap =use-package=]]
-     - [[#write-own-packageel-helper-with-my-limited-elisp-knowledge][Write own =package.el= helper with my limited elisp knowledge]]
-     - [[#add-local-load-path][Add local ~load-path~]]
-     - [[#better-package-menu][Better Package Menu]]
-   - [[#helper-libraries][Helper Libraries]]
-   - [[#initialization][Initialization]]
-   - [[#mac-os-x][Mac OS X]]
-   - [[#user-interface][User Interface]]
-     - [[#hide-tool-bar-and-scroll-bar][Hide Tool bar and Scroll bar]]
-     - [[#no-gnu-startup-screen--message--beeping][No GNU startup screen & message & beeping]]
-     - [[#overwrite-all-yesno-with-yn][Overwrite all yes/no with y/n]]
-     - [[#setup-font][Setup Font]]
-     - [[#load-theme][Load Theme]]
-     - [[#mode-line][Mode line]]
-   - [[#emacs-session-persistence][Emacs session persistence]]
-   - [[#buffers-windows-and-frames][Buffers, Windows and Frames]]
-   - [[#file-handling][File Handling]]
-   - [[#basic-editing][Basic Editing]]
-     - [[#tab-whitespace-pairs][TAB, Whitespace, Pairs]]
-     - [[#fill][Fill]]
-     - [[#kill-ring][Kill Ring]]
-     - [[#jump-to-char-word-link-etc][Jump to Char, Word, Link etc]]
-   - [[#navigation-and-scrolling][Navigation and scrolling]]
-   - [[#search][Search]]
-   - [[#highlight][Highlight]]
-   - [[#skeletons-completion-and-expansion][Skeletons, completion and expansion]]
-   - [[#spelling-and-syntax-checking][Spelling and syntax checking]]
-   - [[#markdown][Markdown]]
-   - [[#yaml][YAML]]
-   - [[#programming-utilities][Programming utilities]]
-   - [[#generic-lisp][Generic Lisp]]
-   - [[#emacs-lisp][Emacs lisp]]
-   - [[#other-programming-languages][Other Programming languages]]
-     - [[#common-lisp][Common Lisp]]
-     - [[#haskell][Haskell]]
-     - [[#scheme][Scheme]]
-     - [[#ruby][Ruby]]
-     - [[#c][C]]
-     - [[#lua][Lua]]
-   - [[#version-control][Version Control]]
-   - [[#tools-and-utilities][Tools and utilities]]
-   - [[#web--irc--email--rss][Web & IRC & Email & RSS]]
-   - [[#eshell][Eshell]]
-   - [[#helm][helm]]
-     - [[#initial-setup-since-helm-is-a-very-large-package][Initial Setup since helm is a very large package]]
-     - [[#always-show-helms-completing-buffer-in-the-bottom-with-shackle-and-some-dirty-hack][Always show helm's completing buffer in the bottom with shackle and some dirty hack]]
-     - [[#hide-helms-mode-line][Hide helm's mode line]]
-     - [[#hide-all-bottom-buffers-mode-line-during-helm-session][Hide all bottom buffers' mode line during helm session]]
-     - [[#make-helm-window-smaller-by-using-display-buffer-alist][Make helm window smaller by using ~display-buffer-alist~]]
-   - [[#helm-descbinds][helm-descbinds]]
-   - [[#helm-ag][helm-ag]]
-   - [[#swiper-only-use-ivy-as-helm-replacement][swiper (only use =ivy= as =helm= replacement)]]
-   - [[#mu4e][mu4e]]
-   - [[#dictionary][Dictionary]]
-   - [[#web-development][Web Development]]
-   - [[#org][Org]]
-   - [[#emacs-helper][Emacs Helper]]
-     - [[#add-a-common-help-key-bindings-here][Add a common help key bindings here]]
-   - [[#emacs-development][Emacs Development]]
-   - [[#misc-built-in-packages][Misc built-in packages]]
-   - [[#echo-area][Echo Area]]
- - [[#stuff-to-do][Stuff to do]]
-   - [[#persistent-scratch-buffer][Persistent =*scratch*= buffer]]
-   - [[#fix-maximize-window-with-desktopel-on-os-x][Fix maximize window with desktop.el on OS X]]
-   - [[#write-a-simple-user-option-for-making-helm-always-use-the-bottom-window][Write a simple user option for making helm always use the bottom window]]
-   - [[#is-it-possible-to-use-network-proxy-within-emacs][Is it possible to use Network proxy within Emacs?]]
-   - [[#what-about-another-new-gui-emacs-for-mac-os-x][What about another new GUI Emacs for Mac OS X?]]
-   - [[#use-yasnippet-for-keeping-my-personal-snippet][Use Yasnippet for keeping my personal snippet]]
-   - [[#write-easy-to-use-commands-to-search-emacs-src-others-configs-and-my-own-configs][Write easy-to-use commands to search Emacs src, others' configs and my own configs]]
-   - [[#write-another-helm-front-end-for-projectile][Write another helm front-end for projectile]]
-   - [[#fix-theme-cant-always-load-correctly-issue][Fix theme can't always load correctly issue]]
-   - [[#learn-the-mode-line-format-syntax-to-customize-mode-line-manually-and-third-part-packages][Learn the ~mode-line-format~ syntax to customize mode line manually and third-part packages]]
-   - [[#check-bad-use-package-setups-especially-in-config][Check bad =use-package= setups, especially in =:config=]]
 
 * Init
 
@@ -218,10 +142,6 @@ Some practical examples.
 
 (pkg ace-link
   :setup (ace-link-setup-default))
-
-(pkg orglink
-  :diminish orglink-mode
-  :setup (global-orglink-mode))
 
 ;; 5. 1 + eval-after-load
 ;; 6. 1 + 2 + run some code
@@ -493,7 +413,17 @@ Save buffers, windows and frames
 
 #+BEGIN_SRC emacs-lisp
 (use-package desktop
-  :init (desktop-save-mode))
+  :config
+  (add-to-list 'desktop-globals-to-save 'initial-scratch-message)
+  (desktop-save-mode)
+
+  ;; must after ?
+  (add-hook 'kill-emacs-hook
+            (lambda ()
+              (setq initial-scratch-message
+                    (with-current-buffer "*scratch*"
+                      (setq initial-scratch-message
+                            (buffer-string)))))))
 #+END_SRC
 
 Save minibuffer history. Data is saved in ~savehist-file~.
@@ -562,9 +492,13 @@ Buffer.
   :init (add-hook 'kill-buffer-query-functions
                   #'lunaryorn-do-not-kill-important-buffers))
 
+;; FIXME: This is not working
 ;; Add extra key bindings in all special (including derived) mode,
 (define-key special-mode-map [?Q] #'kill-buffer)
 (define-key special-mode-map [?O] #'delete-other-windows)
+
+(with-eval-after-load "info"
+  (define-key Info-mode-map [?Q] #'kill-buffer))
 #+END_SRC
 
 Windows.
@@ -601,28 +535,6 @@ One C-u, swap window, two C-u, delete window."
   :bind (("M-N" . winner-redo)
          ("M-P" . winner-undo))
   :config (winner-mode))
-
-(use-package wconf
-  :disabled t
-  :ensure t
-  :config
-  (add-hook 'desktop-after-read-hook      ;so we have all buffers again
-            (lambda ()
-              (wconf-load)
-              (wconf-switch-to-config 0)
-              (add-hook 'kill-emacs-hook
-                        (lambda ()
-                          (wconf-store-all)
-                          (wconf-save))))
-            'append)
-
-  (global-set-key (kbd "C-c w s") #'wconf-store)
-  (global-set-key (kbd "C-c w S") #'wconf-store-all)
-  (global-set-key (kbd "C-c w r") #'wconf-restore)
-  (global-set-key (kbd "C-c w R") #'wconf-restore-all)
-  (global-set-key (kbd "C-c w w") #'wconf-switch-to-config)
-  (global-set-key (kbd "C-<prior>") #'wconf-use-previous)
-  (global-set-key (kbd "C-<next>") #'wconf-use-next))
 
 (use-package writeroom-mode             ; Distraction-free editing
   :ensure t
@@ -775,7 +687,7 @@ Frames.
     (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)))
 
 (use-package ace-link
-  :disabled t                           ; Try ace-link
+  :disabled t                           ; Try `pkg'
   :ensure t
   :defer t
   :init (ace-link-setup-default))
@@ -1460,228 +1372,10 @@ See also `describe-function-or-variable'."
         helm-github-stars-default-sources '(hgs/helm-c-source-stars
                                             hgs/helm-c-source-repos)))
 
-(use-package helm-chrome ;; :ensure t :defer t
-  :load-path "~/wip/helm-chrome/"
-  :commands helm-chrome-bookmarks)
-
-(use-package helm-firefox
-  :ensure t :defer t
-  :config (setq helm-firefox-default-directory
-                "~/Library/Application Support/Firefox/"))
-
-(use-package jist                       ; Gist
-  :disabled t
-  :ensure t
-  :defer t)
-
-(use-package guide-key
-  :disabled t
-  :ensure t
-  :diminish guide-key-mode
-  :commands guide-key-mode
-  :defer 7
-  :config
-  (setq guide-key/guide-key-sequence
-        '("C-h"                         ; Help
-          "C-x r"                       ; Registers and Rectangle
-          "C-x 4"                       ; other-window
-          "C-c h"                       ; Helm
-          "C-x n"                       ; Narrowing
-          "C-c p"                       ; Project
-          "C-c t"                       ; Personal Toggle commands
-          "C-c L"                       ; Personal List something commands
-          "C-c f"                       ; File
-          "C-x v"                       ; VCS
-          "C-c A"                       ; Align
-          "C-c g"                       ; Google Search
-          ))
-  (add-hook 'dired-mode-hook
-            (lambda () (guide-key/add-local-guide-key-sequence "%")))
-  (guide-key-mode))
-
 (use-package which-key
   :disabled t
   :ensure t
-  :config
-  (setq which-key-idle-delay 1.0
-        which-key-key-replacement-alist
-        '(("<\\([[:alnum:]-]+\\)>" . "\\1")
-          ("up"                    . "↑")
-          ("right"                 . "→")
-          ("down"                  . "↓")
-          ("left"                  . "←")
-          ("DEL"                   . "⌫")
-          ("deletechar"            . "⌦")
-          ("RET"                   . "⏎"))
-        which-key-description-replacement-alist
-        '(("Prefix Command" . "prefix")
-          ;; Remove my personal prefix from all bindings, since it's
-          ;; only there to avoid name clashes, but doesn't add any value
-          ;; at all
-          ("chunyang-"     . "")))
-  (which-key-mode)
-  :diminish (which-key-mode . " Ⓚ"))
-
-(use-package keyfreq
-  :disabled t
-  :ensure t
-  :config
-  (keyfreq-mode)
-  (keyfreq-autosave-mode))
-
-(use-package hydra
-  :ensure t
-  :config
-  (defhydra hydra-zoom (global-map "<f2>")
-    "zoom"
-    ("g" text-scale-increase "in")
-    ("l" text-scale-decrease "out"))
-
-  (defhydra hydra-toggle (:color blue)
-    "toggle"
-    ("d" toggle-debug-on-error "debug")
-    ("f" auto-fill-mode "fill")
-    ("t" toggle-truncate-lines "truncate")
-    ("w" whitespace-mode "whitespace")
-    ("F" toggle-frame-fullscreen "fullscreen")
-    ("m" toggle-frame-maximized "maximize")
-    ("f" global-flycheck-mode "Flycheck")
-    ("c" global-color-identifiers-mode "Colorful identifiers")
-    ("R" writeroom-mode "Distraction-free editing")
-    ("l" nlinum-mode "Line number")
-    ("L" hl-line-mode "Highlight line")
-    ("r" rainbow-mode "Colorize color names")
-    ("g" golden-ratio-mode "Window golden ratio")
-    ("q" nil "cancel"))
-  (global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
-
-  (defhydra hydra-page (ctl-x-map "" :pre (widen))
-    "page"
-    ("]" forward-page "next")
-    ("[" backward-page "prev")
-    ("n" narrow-to-page "narrow" :bind nil :exit t))
-
-  ;; (defhydra hydra-goto-line (goto-map ""
-  ;;                                     :pre (linum-mode 1)
-  ;;                                     :post (linum-mode -1))
-  ;;   "goto-line"
-  ;;   ("g" goto-line "go")
-  ;;   ("m" set-mark-command "mark" :bind nil)
-  ;;   ("q" nil "quit"))
-
-  (defhydra hydra-move-text (:body-pre (use-package move-text :ensure t :defer t))
-    "Move text"
-    ("j" move-text-up "up")
-    ("k" move-text-down "down"))
-
-  (defhydra hydra-git-gutter (:body-pre (git-gutter-mode 1)
-                                        :hint nil)
-    "
-Git gutter:
-  _j_: next hunk        _s_tage hunk     _q_uit
-  _k_: previous hunk    _r_evert hunk    _Q_uit and deactivate git-gutter
-  ^ ^                   _p_opup hunk
-  _h_: first hunk
-  _l_: last hunk        set start _R_evision
-"
-    ("j" git-gutter:next-hunk)
-    ("k" git-gutter:previous-hunk)
-    ("h" (progn (goto-char (point-min))
-                (git-gutter:next-hunk 1)))
-    ("l" (progn (goto-char (point-min))
-                (git-gutter:previous-hunk 1)))
-    ("s" git-gutter:stage-hunk)
-    ("r" git-gutter:revert-hunk)
-    ("p" git-gutter:popup-hunk)
-    ("R" git-gutter:set-start-revision)
-    ("q" nil :color blue)
-    ("Q" (progn (git-gutter-mode -1)
-                ;; git-gutter-fringe doesn't seem to
-                ;; clear the markup right away
-                (sit-for 0.1)
-                (git-gutter:clear))
-     :color blue))
-
-  (defhydra hydra-projectile-other-window (:color teal)
-    "projectile-other-window"
-    ("f"  projectile-find-file-other-window        "file")
-    ("g"  projectile-find-file-dwim-other-window   "file dwim")
-    ("d"  projectile-find-dir-other-window         "dir")
-    ("b"  projectile-switch-to-buffer-other-window "buffer")
-    ("q"  nil                                      "cancel" :color blue))
-
-  (defhydra hydra-projectile (:color teal
-                                     :hint nil)
-    "
-     PROJECTILE: %(projectile-project-root)
-
-     Find File            Search/Tags          Buffers                Cache
-------------------------------------------------------------------------------------------
-_s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache clear
- _ff_: file dwim       _g_: update gtags      _b_: switch to buffer  _x_: remove known project
- _fd_: file curr dir   _o_: multi-occur     _s-k_: Kill all buffers  _X_: cleanup non-existing
-  _r_: recent file                                               ^^^^_z_: cache current
-  _d_: dir
-
-"
-    ("a"   projectile-ag)
-    ("b"   projectile-switch-to-buffer)
-    ("c"   projectile-invalidate-cache)
-    ("d"   projectile-find-dir)
-    ("s-f" projectile-find-file)
-    ("ff"  projectile-find-file-dwim)
-    ("fd"  projectile-find-file-in-directory)
-    ("g"   ggtags-update-tags)
-    ("s-g" ggtags-update-tags)
-    ("i"   projectile-ibuffer)
-    ("K"   projectile-kill-buffers)
-    ("s-k" projectile-kill-buffers)
-    ("m"   projectile-multi-occur)
-    ("o"   projectile-multi-occur)
-    ("s-p" projectile-switch-project "switch project")
-    ("p"   projectile-switch-project)
-    ("s"   projectile-switch-project)
-    ("r"   projectile-recentf)
-    ("x"   projectile-remove-known-project)
-    ("X"   projectile-cleanup-known-projects)
-    ("z"   projectile-cache-current-file)
-    ("`"   hydra-projectile-other-window/body "other window")
-    ("q"   nil "cancel" :color blue)))
-
-(use-package dash-at-point    :ensure t :defer t)
-
-(use-package projectile
-  :disabled t
-  :ensure t
-  :diminish projectile-mode
-  :init
-  (projectile-global-mode)
-  :config
-  ;; Put [[https://svn.macports.org/repository/macports/users/chunyang/svn-ls-files/svn-ls-files][svn-ls-file]] into on the PATH
-  (setq projectile-svn-command "svn-ls-files")
-  (setq projectile-completion-system 'helm)
-  (defun projectile-kill-projects ()
-    (interactive)
-    (let ((projects
-           (delq nil
-                 (cl-delete-duplicates
-                  (mapcar (lambda (buf)
-                            (unless (string-prefix-p " " (buffer-name buf))
-                              (with-current-buffer buf
-                                (when (projectile-project-p)
-                                  (cons (projectile-project-name) buf)))))
-                          (buffer-list))
-                  :test (lambda (a b) (string= (car a) (car b)))))))
-      (mapc (lambda (elt)
-              (with-current-buffer (cdr elt)
-                (projectile-kill-buffers))) projects)
-      (message "")))
-  (bind-keys :map projectile-command-map
-             ("K" . projectile-kill-projects))
-
-  (use-package helm-projectile
-    :ensure t
-    :init (helm-projectile-on)))
+  :config (which-key-mode))
 #+END_SRC
 
 ** Web & IRC & Email & RSS
@@ -1711,8 +1405,6 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :diminish google-this-mode
   :preface (defvar google-this-keybind (kbd "C-c G"))
   :init (google-this-mode))
-
-(use-package elfeed :ensure t :defer t)
 
 #+END_SRC
 
@@ -1751,9 +1443,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
   (setq eshell-banner-message
-        '(concat
-          (shell-command-to-string "fortune -s | cowsay -W 70")
-          "\n\n"))
+        '(concat (shell-command-to-string "fortune") "\n"))
   ;; needed at least for `eshell-git-prompt'
   (setq eshell-highlight-prompt nil)
 
@@ -1791,8 +1481,7 @@ _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache 
   :setup
   (progn
     (require 'eshell-did-you-mean)
-    (add-to-list 'eshell-preoutput-filter-functions
-                 #'eshell-did-you-mean-output-filter)))
+    (eshell-did-you-mean-setup)))
 #+END_SRC
 
 ** [[https://github.com/emacs-helm/helm][helm]]
@@ -2429,24 +2118,15 @@ Gmail is blocked on purpose in my country.  All of them can be installed from
   ;; Just install, don't require that feature
   :ensure t :defer t)
 
-(use-package toc-org
-  :ensure t
-  :init (add-hook 'org-mode-hook #'toc-org-enable))
+(pkg toc-org)
 
-(use-package orglink
-  :disabled t                           ; Try `pkg'
-  :ensure t
+(pkg orglink
   :diminish orglink-mode
-  :config (global-orglink-mode))
+  :setup (global-orglink-mode))
 
 (use-package org-bullets
   :ensure t
   :init (add-hook 'org-mode-hook #'org-bullets-mode))
-
-(use-package calfw
-  :disabled t
-  :ensure t :defer t
-  :init (use-package calfw-org :commands cfw:open-org-calendar))
 #+END_SRC
 
 ** Emacs Helper
