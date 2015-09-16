@@ -35,6 +35,14 @@ With ARG, swap two window."
     (other-window +1)))
 
 
+(defun mark-window ()
+  "Put mark at end of window, point at beginning."
+  (interactive)
+  (goto-char (window-end nil :update))
+  (push-mark nil t t)
+  (goto-char (window-start)))
+
+
 (defun chunyang-make-another-scratch-buffer (arg)
   "Make another *scratch* buffer.
 With ARG, put *scratch* buffer right."
