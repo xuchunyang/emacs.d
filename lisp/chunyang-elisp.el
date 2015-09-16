@@ -26,17 +26,15 @@
 
 (defvar chunyang-elisp-debug-buffer "*Debug ELisp Log*")
 
-(defvar chunyang-elisp-debug nil
+(defvar chunyang-elisp-debug t
   "If non-nil, write log message into `chunyang-elisp-debug-buffer' buffer.")
 
 
 ;; Utility: logging
-(defmacro m (&rest args)
-  "`message-box' ARGS (DEBUG)."
-  `(message-box ,(let ((fmt "%S"))
-                   (dotimes (i (1- (length args)))
-                     (setq fmt (concat fmt " - %S")))
-                   fmt) ,@args))
+(defun m (&rest args)
+  (message-box "%s"
+               (mapconcat (lambda (elt) (format "%s" elt))
+                          args " - ")))
 
 (defun chunyang-elisp-log (format-string &rest args)
   "Log message if `chunyang-elisp-debug-buffer' is non-nil.
