@@ -1262,23 +1262,14 @@
 *** Ruby
 
     #+BEGIN_SRC emacs-lisp
-      (use-package inf-ruby
-        :ensure t)
+      (pkg inf-ruby)
     #+END_SRC
 
 *** C
 
     #+BEGIN_SRC emacs-lisp
-      (use-package ggtags
-        :disabled t
-        :ensure t
-        :init
-        (defun chunyang--setup-ggtags ()
-          (ggtags-mode)
-          ;; (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
-          )
-        (add-hook 'c-mode-hook #'chunyang--setup-ggtags)
-        (add-hook 'tcl-mode-hook #'chunyang--setup-ggtags))
+      (pkg ggtags
+        :setup (add-hook 'c-mode-hook #'ggtags-mode))
     #+END_SRC
 
 *** Lua
