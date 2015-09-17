@@ -2068,9 +2068,6 @@
        (setq org-directory "~/Dropbox/Notes")
        (setq org-agenda-files (list org-directory))
 
-       (bind-key "<f12>" #'org-agenda-list)
-       (bind-key "<f11>" #'org-clock-goto)
-
        (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
 
        (setq org-capture-templates
@@ -2081,27 +2078,11 @@
                 entry (file (expand-file-name "refile.org" org-directory))
                 "* %?\n%i\n%a")))
 
-       (setq org-agenda-custom-commands
-             '(("n" "Agenda and all TODO's" ((agenda "") (alltodo "")))
-               ("e" "Emacs-related tasks" tags-todo "+emacs")))
-
        (setq org-log-done 'time)
 
        ;; Targets include this file and any file contributing to the agenda - up to 3 levels deep
        (setq org-refile-targets (quote (;; (nil :maxlevel . 1)
                                         (org-default-notes-file :maxlevel . 2))))
-
-       ;; Clock work time
-       ;; (setq org-clock-persist 'history)
-       ;; (org-clock-persistence-insinuate)
-       ;; (setq org-clock-persist t)
-       ;; (setq org-clock-persist-query-resume nil)
-
-       (use-package org-mac-link
-         :if (eq system-type 'darwin)
-         :ensure t
-         :commands (;; org-mac-firefox-insert-frontmost-url
-                    org-mac-chrome-insert-frontmost-url))
 
        (org-babel-do-load-languages
         'org-babel-load-languages
@@ -2120,15 +2101,22 @@
        ;; Just install, don't require that feature
        :ensure t :defer t)
 
-     (pkg toc-org)
+     (use-package org-mac-link
+       :if (eq system-type 'darwin)
+       :ensure t
+       :commands (;; org-mac-firefox-insert-frontmost-url
+                  org-mac-chrome-insert-frontmost-url))
 
      (pkg orglink
        :diminish orglink-mode
        :setup (global-orglink-mode))
 
-     (use-package org-bullets
-       :ensure t
-       :init (add-hook 'org-mode-hook #'org-bullets-mode))
+     (pkg toc-org)
+
+     (pkg org-bullets
+       :disabled t
+       :setup
+       (add-hook 'org-mode-hook #'org-bullets-mode))
    #+END_SRC
 
 ** Emacs Helper
