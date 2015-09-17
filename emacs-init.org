@@ -2193,3 +2193,7 @@
 ** Fix theme can't always load correctly issue
 ** Learn the ~mode-line-format~ syntax to customize mode line manually and third-part packages
 ** Check bad =use-package= setups, especially in =:config=
+** The incremental search for Chinese Pinyin
+
+   Like [[http://0xcc.net/migemo/][Migemo: The incremental search for Japanese remains of Roman]], it has
+   vim/emacs plugin, helm supports it too.
