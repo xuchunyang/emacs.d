@@ -490,13 +490,8 @@
        :init (add-hook 'kill-buffer-query-functions
                        #'lunaryorn-do-not-kill-important-buffers))
 
-     ;; FIXME: This is not working
-     ;; Add extra key bindings in all special (including derived) mode,
-     (define-key special-mode-map [?Q] #'kill-buffer)
-     (define-key special-mode-map [?O] #'delete-other-windows)
-
-     (with-eval-after-load "info"
-       (define-key Info-mode-map [?Q] #'kill-buffer))
+     (bind-key "O" #'delete-other-windows  special-mode-map)
+     (bind-key "Q" #'kill-this-buffer      special-mode-map)
    #+END_SRC
 
    Windows.
