@@ -1564,6 +1564,13 @@ See also `describe-function-or-variable'."
   (add-to-list 'helm-type-buffer-actions
                '("Imenu" . helm-buffer-imenu) 'append)
 
+  (defun helm-buffer-insert-buffer-name (candidate)
+    (insert (buffer-name candidate)))
+
+  (add-to-list 'helm-type-buffer-actions
+               '("Insert buffer name at point" .
+                 helm-buffer-insert-buffer-name) :append)
+
   (setq helm-mini-default-sources
         '(helm-source-buffers-list
           helm-source-bookmark-helm-find-files
