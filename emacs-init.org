@@ -2142,10 +2142,6 @@
    #+END_SRC
 
 * Stuff to do
-** Persistent =*scratch*= buffer
-
-   Do it myself, or use features provided by desktop.el, savehist.el or others.
-
 ** Fix maximize window with desktop.el on OS X
 
    Some extra blank space is always left when start Emacs. Not sure it is caused by
