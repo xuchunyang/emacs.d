@@ -1684,21 +1684,8 @@
       (use-package helm
         :ensure t
         :config
+        ;; Not necessary
         (setq helm-split-window-default-side 'other)
-
-        ;; (setq helm-echo-input-in-header-line t)
-        ;; Hide minibuffer when the above option is on.
-        ;; (add-hook 'helm-minibuffer-set-up-hook
-        ;;           #'helm-hide-minibuffer-maybe)
-
-        ;; Don't use helm's own displaying mode line function
-        ;; (fset 'helm-display-mode-line #'ignore)
-
-        ;; (add-hook 'helm-after-initialize-hook
-        ;;           (defun hide-mode-line-in-helm-buffer ()
-        ;;             "Hide mode line in `helm-buffer'."
-        ;;             (with-helm-buffer
-        ;;               (setq-local mode-line-format nil))))
 
         (use-package shackle
           :ensure t
@@ -1722,39 +1709,35 @@
             (shackle-mode)
             (apply orig-func args))
 
-          (advice-add 'helm-keyboard-quit :around #'helm-keyboard-quit--enable-shackle-mode))
-        )
+          (advice-add 'helm-keyboard-quit :around #'helm-keyboard-quit--enable-shackle-mode)))
     #+END_SRC
 
-*** TODO Hide helm's mode line
+*** Hide helm's mode line
 
-    The mode line of helm completing buffer is very informative by providing
-    candidates number, process status and help message, I don't want to hide it by
-    default unless I am really want a clean look.
+    The mode line of helm completing buffer is very informative. The following
+    dirty hack provides a way to not display it.
 
     #+BEGIN_SRC emacs-lisp :tangle no
-      (use-package helm
-        :config
-        (setq helm-echo-input-in-header-line t)
-        ;; Hide minibuffer when the above option is on.
-        (add-hook 'helm-minibuffer-set-up-hook
-                  #'helm-hide-minibuffer-maybe)
+      (setq helm-echo-input-in-header-line t)
+      ;; Hide minibuffer when the above option is on.
+      (add-hook 'helm-minibuffer-set-up-hook #'helm-hide-minibuffer-maybe)
 
-        ;; Don't use helm's own displaying mode line function
-        (fset 'helm-display-mode-line #'ignore)
+      ;; Don't use helm's own displaying mode line function
+      (fset 'helm-display-mode-line #'ignore)
 
-        (add-hook 'helm-after-initialize-hook
-                  (defun hide-mode-line-in-helm-buffer ()
-                    "Hide mode line in `helm-buffer'."
-                    (with-helm-buffer
-                      (setq-local mode-line-format nil)))))
+      (defun hide-mode-line-of-helm-buffer ()
+        "Hide mode line in `helm-buffer'."
+        (with-helm-buffer
+          (setq-local mode-line-format nil)))
+
+      (add-hook 'helm-after-initialize-hook #'hide-mode-line-of-helm-buffer)
     #+END_SRC
 
-*** TODO Hide all bottom buffers' mode line during helm session
+*** Hide all bottom buffers' mode line during helm session
 
-    This is my answer to a Emacs SE question (TODO: add link here), it is not work
-    perfectly, for example, at least not working in ~helm-resume~, so don't use it
-    in day-to-day life. Just for fun.
+    This is my answer to [[http://emacs.stackexchange.com/questions/15233/hide-modeline-in-all-bottom-windows-while-helm-is-active][Hide modeline in all bottom windows while helm is
+    active?]], it is not work perfectly, for example, at least not working in
+    ~helm-resume~, so I don't use it in day-to-day life. Just for fun.
 
     #+BEGIN_SRC emacs-lisp :tangle no
       ;; 1. Collect bottom buffers
@@ -1805,8 +1788,7 @@
           (remove-hook 'helm-before-initialize-hook #'bottom-buffers-init)
           (remove-hook 'helm-after-initialize-hook #'bottom-buffers-hide-mode-line)
           (remove-hook 'helm-exit-minibuffer-hook #'bottom-buffers-show-mode-line)
-          (advice-remove 'helm-keyboard-quit #'helm-keyboard-quit-advice))
-        )
+          (advice-remove 'helm-keyboard-quit #'helm-keyboard-quit-advice)))
     #+END_SRC
 
 *** TODO Make helm window smaller by using ~display-buffer-alist~
