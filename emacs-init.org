@@ -406,7 +406,13 @@
 
 ** Emacs session persistence
 
-   Save buffers, windows and frames
+   Save Emacs session and persist the contents of the =*scratch*= buffer.
+
+   When restoring =*scratch*= from the ~initial-scratch-message~ variable,
+   ~substitute-command-keys~ will process the variable and some magic
+   translation will be made, such as "'" (normal single quote) becomes "’" (I
+   don't what it is and how to type it). I don't want to learn these new stuff
+   at least for now, it is annoying and maybe not worth at all.
 
    #+BEGIN_SRC emacs-lisp
      (use-package desktop
@@ -414,9 +420,10 @@
        (add-to-list 'desktop-globals-to-save 'initial-scratch-message)
        (desktop-save-mode)
 
-       ;; must after ?
        (add-hook 'kill-emacs-hook
                  (lambda ()
+                   ;; Notes: This function must be placed BEFORE `desktop.el' saving
+                   ;; values.
                    (setq initial-scratch-message
                          (with-current-buffer "*scratch*"
                            (setq initial-scratch-message
