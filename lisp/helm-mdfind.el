@@ -4,7 +4,7 @@
 
 ;; Author: Chunyang Xu <xuchunyang56@gmail.com>
 ;; Keywords: convenience
-;; Package-Requires: ((helm-core "1.7.5"))
+;; Package-Requires: ((helm "1.7.9"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
