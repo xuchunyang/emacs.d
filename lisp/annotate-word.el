@@ -24,7 +24,10 @@
                 (and prog-mode-p (nth 4 (syntax-ppss))))
         (let* ((word (match-string 0))
                (pt (match-end 0))
-               (annotation (cdr (assoc word annotate-word-alist))))
+               (annotation (assoc-default word annotate-word-alist
+                                          (lambda (s1 s2)
+                                            (string= (downcase s1)
+                                                     (downcase s2))))))
           (when annotation
             (setq annotation (concat "(" annotation ")"))
             (annotate-word--overlay annotation pt)))))))
