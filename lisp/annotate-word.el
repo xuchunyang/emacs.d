@@ -29,7 +29,8 @@
                                             (string= (downcase s1)
                                                      (downcase s2))))))
           (when annotation
-            (setq annotation (concat "(" annotation ")"))
+            (setq annotation (format " (%s)"
+                                     (propertize annotation 'face 'italic)))
             (annotate-word--overlay annotation pt)))))))
 
 (defun annotate-word-clear ()
