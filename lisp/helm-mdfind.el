@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; Another (Normal) Emacs interface for mdfind: https://github.com/emacsmirror/mdfind
+;; Another (traditional) Emacs interface for mdfind: https://github.com/emacsmirror/mdfind
 
 ;;; Code:
 
@@ -31,7 +31,7 @@
 (defun helm-mdfind-shell-command-fn ()
   (let* (process-connection-type
          non-essential
-         (cmd (concat "mdfind" " " (shell-quote-argument helm-pattern)))
+         (cmd (format "mdfind -onlyin %s -name %s" helm-mdfind-basedir (shell-quote-argument helm-pattern)))
          (proc (start-file-process-shell-command "mdfind" helm-buffer cmd)))
     (helm-log "mdfind command:\n%s" cmd)
     (prog1 proc
@@ -55,18 +55,24 @@
            (helm-log "Error: mdfind %s"
                      (replace-regexp-in-string "\n" "" event))))))))
 
+(defvar helm-mdfind-basedir "~")
+
 (defvar helm-source-mdfind
   (helm-build-async-source "mdfind"
-    :header-name "mdfind"
+    :header-name (lambda (name)
+                   (format "%s in %s" name helm-mdfind-basedir))
     :candidates-process #'helm-mdfind-shell-command-fn
     :action (helm-actions-from-type-file)
-    :requires-pattern 3
-    :nohighlight t))
+    :requires-pattern 3))
 
-(defun helm-mdfind ()
-  (interactive)
-  (helm :sources 'helm-source-mdfind
-        :buffer "*helm mdfind*"))
+(defun helm-mdfind (&optional arg)
+  (interactive "P")
+  (let ((helm-mdfind-basedir (if arg
+                                 (read-directory-name "Search in directory: ")
+                               (or (vc-root-dir)
+                                   default-directory))))
+    (helm :sources 'helm-source-mdfind
+          :buffer "*helm mdfind*")))
 
 (provide 'helm-mdfind)
 ;;; helm-mdfind.el ends here
