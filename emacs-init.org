@@ -10,7 +10,7 @@
   This is my Emacs configuration, written in [[http://orgmode.org/][Org mode]]. You can find the latest
   version of this configuration in [[https://github.com/xuchunyang/emacs.d][the Github repository]].
 
-#+TOC: headlines 2
+  #+TOC: headlines 2
 
 * Init
 
@@ -28,7 +28,7 @@
      (with-eval-after-load 'advice
        (setq ad-redefinition-action 'accept))
    #+END_SRC
-  
+
 *** Bootstrap =package.el=
 
     All moved to =init.el=.
@@ -574,8 +574,10 @@
        :bind (("C-c f u" . revert-buffer)
               ("C-c f n" . normal-mode))
        :config
-       ;; FIXME: shoud not hard code
-       (setq insert-directory-program "/opt/local/bin/gls"))
+       ;; Prefer GNU variants
+       (setq insert-directory-program "gls"
+             find-program "gfind"
+             grep-program "grep"))
 
      ;;; Additional bindings for built-ins
      (bind-key "C-c f v l" #'add-file-local-variable)
@@ -991,13 +993,17 @@
        (unbind-key "C-M-i" flyspell-mode-map)
        (unbind-key "C-;" flyspell-mode-map)
        (use-package helm-flyspell
+         :disabled t
          :ensure t
          :init
          (bind-key "C-." #'helm-flyspell-correct flyspell-mode-map))
-       (use-package flyspell-popup
-         :ensure t
-         :config
-         (bind-key "C-." #'flyspell-popup-correct flyspell-mode-map)))
+       (pkg flyspell-popup
+         :load-path "~/wip/flyspell-popup"
+         :setup
+         (progn
+           (require 'flyspell-popup)
+           (bind-key "C-." #'flyspell-popup-correct flyspell-mode-map)
+           (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode))))
    #+END_SRC
 
    English grammar and style check.
@@ -1033,25 +1039,9 @@
               ("C-c L e" . list-flycheck-errors))
        :config
        (setq flycheck-emacs-lisp-load-path 'inherit)
-       ;; Configuring buffer display in Emacs
-       ;; http://www.lunaryorn.com/2015/04/29/the-power-of-display-buffer-alist.html
-       (add-to-list 'display-buffer-alist
-                    `(,(rx bos "*Flycheck errors*" eos)
-                      (display-buffer-reuse-window
-                       display-buffer-in-side-window)
-                      (reusable-frames . visible)
-                      (side            . bottom)
-                      (window-height   . 0.4)))
-
-       (defun lunaryorn-quit-bottom-side-windows ()
-         "Quit side windows of the current frame."
-         (interactive)
-         (dolist (window (window-at-side-list))
-           (quit-window nil window)))
-
-       (global-set-key (kbd "C-c q") #'lunaryorn-quit-bottom-side-windows)
 
        (use-package flycheck-pos-tip           ; Show Flycheck messages in popups
+         :disabled t
          :ensure t
          :config (setq flycheck-display-errors-function
                        #'flycheck-pos-tip-error-messages))
@@ -1271,6 +1261,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (pkg ggtags
+        :disabled t
         :setup (add-hook 'c-mode-hook #'ggtags-mode))
     #+END_SRC
 
@@ -1292,9 +1283,6 @@
               ("C-x v s" . git-gutter:stage-hunk)
               ("C-x v r" . git-gutter:revert-hunk))
        :init
-       ;; FIXME Fix `use-package' setup
-       ;; must set this before enabling `global-git-gutter-mode'
-       (setq git-gutter:update-interval 2)
        (setq git-gutter:handled-backends '(git svn))
        (global-git-gutter-mode))
 
@@ -1563,13 +1551,7 @@
 
         (add-to-list 'helm-type-buffer-actions
                      '("Insert buffer name at point" .
-                       helm-buffer-insert-buffer-name) :append)
-
-        (setq helm-mini-default-sources
-              '(helm-source-buffers-list
-                helm-source-bookmark-helm-find-files
-                helm-source-recentf
-                helm-source-buffer-not-found)))
+                       helm-buffer-insert-buffer-name) :append))
 
       (use-package helm-files
         :defer t
@@ -2025,7 +2007,7 @@
    #+END_SRC
 
 ** Org
-   
+
    #+BEGIN_SRC emacs-lisp
      (use-package org
        :bind (("C-c a"   . org-agenda)
@@ -2113,6 +2095,8 @@
 ** Misc built-in packages
 
    #+BEGIN_SRC emacs-lisp
+     (global-prettify-symbols-mode)
+
      (use-package bookmark
        :defer t
        :config (setq bookmark-save-flag 1))
@@ -2121,7 +2105,6 @@
        :config (setq checkdoc-arguments-in-order-flag nil
                      checkdoc-force-docstrings-flag nil))
    #+END_SRC
-
 ** Echo Area
 
    Show unfinished commands in echo area, one second is a bit too long.
@@ -2129,6 +2112,14 @@
    #+BEGIN_SRC emacs-lisp
      (setq echo-keystrokes 0.5)
    #+END_SRC
+
+** helm-pages
+
+#+BEGIN_SRC emacs-lisp
+  (pkg helm-pages
+    :load-path "~/wip/helm-pages"
+    :setup (require 'helm-pages))
+#+END_SRC
 
 * Stuff to do
 ** Fix maximize window with desktop.el on OS X
@@ -2153,6 +2144,10 @@
    [[https://en.wikipedia.org/wiki/Great_Firewall][Great Firewall]], so to use twittering-mode is impossible.
 
    How network stuff works is still like magic.
+
+** Learn how =tooltip= works in Cocoa GNU Emacs
+
+   Write a new one for better view
 
 ** What about another new GUI Emacs for Mac OS X?
 
@@ -2182,3 +2177,9 @@
 
    Like [[http://0xcc.net/migemo/][Migemo: The incremental search for Japanese remains of Roman]], it has
    vim/emacs plugin, helm supports it too.
+** Make a useful dictionary app for Emacs
+
+   - Provide suggestion for unfinished and incorrect words in real time
+   - Preview word's explanation in real time
+
+** Restart GUI Emacs
