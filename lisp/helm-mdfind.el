@@ -57,16 +57,18 @@
 
 (defvar helm-mdfind-basedir "~")
 
-(defvar helm-source-mdfind
-  (helm-build-async-source "mdfind"
-    :header-name (lambda (name)
-                   (format "%s in %s" name helm-mdfind-basedir))
-    :candidates-process #'helm-mdfind-shell-command-fn
-    :action (helm-actions-from-type-file)
-    :requires-pattern 3))
+(defvar helm-source-mdfind nil)
 
 (defun helm-mdfind (&optional arg)
   (interactive "P")
+  (unless helm-source-mdfind
+    (setq helm-source-mdfind
+          (helm-build-async-source "mdfind"
+            :header-name (lambda (name)
+                           (format "%s in %s" name helm-mdfind-basedir))
+            :candidates-process #'helm-mdfind-shell-command-fn
+            :action (helm-actions-from-type-file)
+            :requires-pattern 3)))
   (let ((helm-mdfind-basedir (if arg
                                  (read-directory-name "Search in directory: ")
                                (or (vc-root-dir)
