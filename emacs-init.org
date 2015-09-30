@@ -1980,7 +1980,8 @@
        :load-path "~/wip/youdao-dictionary"
        :bind (("C-c y" . youdao-dictionary-search)
               ("C-c Y" . youdao-dictionary-search-at-point+))
-       :config (setq url-automatic-caching t))
+       :config (setq url-cache-expire-time (* 60 60 24) ; 24 hours
+                     url-automatic-caching t))
 
      (use-package translate-shell
        :disabled t
@@ -1997,7 +1998,27 @@
        :ensure t
        :bind ("C-c d" . osx-dictionary-search-pointer))
 
-     (use-package bing-dict :ensure t :defer t)
+     (use-package bing-dict
+       :ensure t
+       :preface
+       (defun say ()
+         (interactive)
+         (let ((text (if (use-region-p)
+                         (buffer-substring (region-beginning) (region-end))
+                       (thing-at-point 'word))))
+           (when text
+             (start-process "say" nil "say" text))))
+       :config
+       (setq bing-dict-query-word-at-point-timer
+             (run-with-idle-timer 2.1 t (lambda ()
+                                          (let ((word (thing-at-point 'word)))
+                                            (when (and word (> (length word) 3))
+                                              (my-log "%s" word)
+                                              (bing-dict-brief word))))))
+       (defun bing-dict-stop-timer ()
+         (interactive)
+         (cancel-timer bing-dict-query-word-at-point-timer)
+         (message "bing-dict-query-word-at-point-timer canceled")))
    #+END_SRC
 
 ** Web Development
