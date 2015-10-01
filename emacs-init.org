@@ -1668,32 +1668,15 @@
       (use-package helm
         :ensure t
         :config
-        ;; Not necessary
-        (setq helm-split-window-default-side 'other)
+        (setq helm-display-function #'pop-to-buffer)
 
         (use-package shackle
           :ensure t
           :diminish shackle-mode
           :config
           (setq shackle-rules
-                '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.5)))
-          (shackle-mode)
-
-          ;; Turn off `shackle-mode' when there is only one window
-          (add-hook 'helm-before-initialize-hook
-                    (defun helm-disable-shackle-mode-maybe ()
-                      (when (one-window-p)
-                        (shackle-mode -1))))
-
-          ;; Turn on `shackle-mode' when quitting helm session normally
-          (add-hook 'helm-exit-minibuffer-hook #'shackle-mode)
-
-          ;; Turn on `shackle-mode' when quitting helm session abnormally
-          (defun helm-keyboard-quit--enable-shackle-mode (orig-func &rest args)
-            (shackle-mode)
-            (apply orig-func args))
-
-          (advice-add 'helm-keyboard-quit :around #'helm-keyboard-quit--enable-shackle-mode)))
+                '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.46)))
+          (shackle-mode)))
     #+END_SRC
 
 *** Hide helm's mode line
@@ -2136,17 +2119,6 @@
 
    Some extra blank space is always left when start Emacs. Not sure it is caused by
    session.el or Emacs for OS X.
-
-** Write a simple user option for making helm always use the bottom window
-
-   Currently, I am using =shackle= with some dirty hacks for this, however, I think
-   a helm built-in solution is very necessary, otherwise, the elusive way of window
-   usage by helm is quite annoy.
-
-   The first idea I've got is using existing custom options (though I'm not sure
-   which one, maybe ~helm-display-function~), then add it to helm and send a PR. I
-   should also have a look at =display-buffer-alist= and third libraries like
-   =shackle= and =popwin=.
 
 ** Is it possible to use Network proxy within Emacs?
 
