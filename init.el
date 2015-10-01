@@ -10,5 +10,10 @@
 ;; Various org-mode extensions
 (add-to-list 'load-path "~/wip/org-mode/contrib/lisp" :append)
 
+;;; Install helm from Git
+(add-to-list 'load-path "~/wip/async")
+(add-to-list 'load-path "~/wip/helm")
+(require 'helm-config)
+
 ;; `org-babel-load-file' is autoloaded, no need require anything
 (org-babel-load-file (locate-user-emacs-file "emacs-init.org"))
