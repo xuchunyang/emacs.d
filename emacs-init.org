@@ -747,6 +747,13 @@
       (put 'view-hello-file
            'disabled "I mistype C-h h a lot and it is too slow to block Emacs")
 
+      (defun view-help-buffer ()
+        "View the `*Help*' buffer."
+        (interactive)
+        (display-buffer (help-buffer)))
+
+      (bind-key "C-h h" #'view-help-buffer)
+
       (put 'upcase-region 'disabled nil)
     #+END_SRC
 
