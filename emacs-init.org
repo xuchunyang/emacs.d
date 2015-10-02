@@ -2134,15 +2134,13 @@
 
    How network stuff works is still like magic.
 
-** Learn how =tooltip= works in Cocoa GNU Emacs
-
-   Write a new one for better view
-
 ** What about another new GUI Emacs for Mac OS X?
 
    The idea comes from [[http://vimr.org/][VimR — Refined Vim Experience For OS X]].
 
    Try to reuse code from emacs-mac if really want to try.
+
+** Emacs for OS X: Write a command prompt in GUI, like C-P in Sublime and Atom, or C-O in Xcode
 
 ** Use Yasnippet for keeping my personal snippet
 
