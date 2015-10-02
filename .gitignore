@@ -97,3 +97,5 @@ wconf-window-configs.el
 
 # security manager settings (Emacs 25)
 network-security.data
+
+/semanticdb
