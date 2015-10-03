@@ -2005,12 +2005,13 @@
              (start-process "say" nil "say" text))))
        :config
        (setq bing-dict-query-word-at-point-timer
-             (run-with-idle-timer 2.1 t (lambda ()
-                                          (let ((word (thing-at-point 'word)))
-                                            (when (and word (> (length word) 3)
-                                                       (not (minibufferp)))
-                                              (my-log "%s" word)
-                                              (bing-dict-brief word))))))
+             (run-with-idle-timer 2.1 t
+                                  (lambda ()
+                                    (let ((word (thing-at-point 'word)))
+                                      (when (and word (> (length word) 3) (< (length word) 21)
+                                                 (not (minibufferp)))
+                                        (my-log "%s" word)
+                                        (bing-dict-brief word))))))
        (defun bing-dict-stop-timer ()
          (interactive)
          (cancel-timer bing-dict-query-word-at-point-timer)
