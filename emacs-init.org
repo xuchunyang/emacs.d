@@ -2038,10 +2038,10 @@
        (setq org-capture-templates
              '(("t" "todo"
                 entry (file (expand-file-name "refile.org" org-directory))
-                "* TODO %?\n%i\n%a")
+                "* TODO %?\n  %i\n  %a")
                ("n" "note"
                 entry (file (expand-file-name "refile.org" org-directory))
-                "* %?\n%i\n%a")))
+                "* %?\n  %i\n  %a")))
 
        (setq org-log-done 'time)
 
