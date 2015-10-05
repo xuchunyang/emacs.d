@@ -469,15 +469,12 @@
    Buffer.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package uniquify                   ; Make buffer names unique, already
-                                             ; enabled globally from 24.4
-       :defer t
+     (use-package uniquify                   ; Make buffer names unique (turn on by default)
+       :disabled t
        :config (setq uniquify-buffer-name-style 'forward))
 
-     (use-package ibuffer                    ; Better buffer list
-       :bind ([remap list-buffers] .         ; C-x C-b
-              ibuffer)
-       )
+     (use-package ibuffer                    ; Better buffer list, compare to `list-buffers'
+       :bind ("C-x C-b" . ibuffer))
 
      (use-package autorevert                 ; Auto-revert buffers of changed files
        :init (global-auto-revert-mode))
@@ -485,7 +482,7 @@
      (use-package chunyang-simple
        :bind (("C-x 3" . chunyang-split-window-right)
               ("C-x 2" . chunyang-split-window-below)
-              ("C-x t" . chunyang-switch-scratch)))
+              ("C-h t" . chunyang-switch-scratch)))
 
      (use-package chunyang-buffers          ; Personal buffer tools
        :commands (lunaryorn-do-not-kill-important-buffers)
@@ -755,6 +752,7 @@
       (bind-key "C-h h" #'view-help-buffer)
 
       (put 'upcase-region 'disabled nil)
+      (put 'downcase-region 'disabled nil)
     #+END_SRC
 
 ** Navigation and scrolling
