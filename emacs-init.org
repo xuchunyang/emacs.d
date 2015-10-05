@@ -2119,6 +2119,14 @@
     :setup (require 'helm-pages))
 #+END_SRC
 
+** helm-joe
+
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-joe
+    :commands helm-joe)
+#+END_SRC
+
+
 * Stuff to do
 ** Fix maximize window with desktop.el on OS X
 
