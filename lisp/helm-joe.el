@@ -12,9 +12,15 @@ joe is a .gitignore generator, for more info, see URL
         (helm-build-sync-source "joe"
           :candidates
           (lambda ()
-            (split-string
-             (shell-command-to-string "joe ls")
-             ", " :omit-nulls))
+            (let* ((strings
+                    (split-string
+                     (shell-command-to-string "joe ls")
+                     ", " :omit-nulls))
+                   (pos (1- (length strings)))
+                   (elt (nth pos strings)))
+              ;; Remove trailing newline of last element
+              (setf (nth pos strings) (replace-regexp-in-string "\n" "" elt))
+              strings))
           :candidate-number-limit 999
           :persistent-action (lambda (_candidate) (ignore))
           :persistent-help "Do nothing"
