@@ -1615,7 +1615,7 @@
         (add-to-list 'helm-kill-ring-actions
                      '("Yank(s)" .
                        (lambda (_candidate)
-                         (insert
+                         (helm-kill-ring-action
                           (mapconcat #'identity (helm-marked-candidates) "\n"))))))
 
       (use-package helm-man
