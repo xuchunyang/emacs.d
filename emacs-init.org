@@ -308,10 +308,17 @@
       (setq custom-safe-themes t)
 
       (pkg spacemacs-theme
-        :disabled t
-        :setup (load-theme 'spacemacs-dark :no-confirm))
+        :load-path "~/wip/spacemacs-theme"
+        :setup
+        (progn
+          (add-to-list 'custom-theme-load-path "~/wip/spacemacs-theme")
+          (setq spacemacs-theme-comment-bg nil
+                spacemacs-theme-org-height nil
+                spacemacs-theme-org-highlight nil)
+          (load-theme 'spacemacs-dark :no-confirm)))
 
       (pkg zenburn-theme
+        :disabled t
         :setup (load-theme 'zenburn :no-confirm))
 
       (pkg solarized-theme
