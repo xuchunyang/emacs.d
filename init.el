@@ -13,6 +13,7 @@
 ;;; Install helm from Git
 (add-to-list 'load-path "~/wip/async")
 (add-to-list 'load-path "~/wip/helm")
+(setq helm-command-prefix-key "C-c h")
 (require 'helm-config)
 
 ;; `org-babel-load-file' is autoloaded, no need require anything
