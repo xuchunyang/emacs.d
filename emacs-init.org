@@ -1956,7 +1956,7 @@
                                     (let ((word (thing-at-point 'word)))
                                       (when (and word (> (length word) 3) (< (length word) 21)
                                                  (not (minibufferp)))
-                                        (my-log "%s" word)
+                                        ;; (my-log "%s" word)
                                         (bing-dict-brief word))))))
        (defun bing-dict-stop-timer ()
          (interactive)

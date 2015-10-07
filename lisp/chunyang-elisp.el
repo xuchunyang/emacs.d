@@ -59,6 +59,13 @@ Adapted from `helm-log'."
                         (buffer-name (current-buffer)) (line-number-at-pos)
                         (apply #'format (cons format-string args))))))))
 
+(defun view-debug-log-buffer ()
+  "View the `*Debug ELisp Log*' buffer."
+  (interactive)
+  (display-buffer "*Debug ELisp Log*"))
+
+(global-set-key (kbd "C-h g") #'view-debug-log-buffer)
+
 (defalias 'my-log #'chunyang-elisp-log)
 
 (defun uncomment-sexp (&optional n)
