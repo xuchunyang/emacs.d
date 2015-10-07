@@ -1526,26 +1526,6 @@
 
         (define-key helm-buffer-map (kbd "M-o") #'helm-buffer-switch-new-window)
 
-        (defun helm-buffer-imenu (candidate)
-          "Imenu action for helm buffers."
-          (switch-to-buffer candidate)
-          ;; (call-interactively #'helm-imenu)
-          (require 'helm-imenu)
-          (unless helm-source-imenu
-            (setq helm-source-imenu
-                  (helm-make-source "Imenu" 'helm-imenu-source
-                    :fuzzy-match helm-imenu-fuzzy-match)))
-          (let ((imenu-auto-rescan t))
-            ;; FIXME: can't execute action in nest helm session,
-            ;; maybe something is special in `helm-source-imenu'.
-            (helm :sources 'helm-source-imenu
-                  :buffer "*helm imenu*"
-                  :resume 'noresume
-                  :allow-nest t)))
-
-        (add-to-list 'helm-type-buffer-actions
-                     '("Imenu" . helm-buffer-imenu) 'append)
-
         (defun helm-buffer-insert-buffer-name (candidate)
           (insert (buffer-name candidate)))
 
@@ -1556,38 +1536,6 @@
       (use-package helm-files
         :defer t
         :config
-        ;; Add imenu action to 'C-x C-f'
-        (defun helm-find-file-imenu (file)
-          (helm-find-file-or-marked file)
-          (call-interactively #'helm-imenu))
-
-        (add-to-list 'helm-find-files-actions
-                     '("Imenu" . helm-find-file-imenu)
-                     'append)
-
-        ;; Add Virtual Dired files action (inspired by `helm-projectile')
-        (defun chunyang-dired-files (file)
-          (let ((files (mapcar #'file-relative-name (helm-marked-candidates)))
-                (new-name (completing-read
-                           "Select or enter a new buffer name: "
-                           (cl-loop for b in (buffer-list)
-                                    when (with-current-buffer b (eq major-mode 'dired-mode))
-                                    collect (buffer-name b)))))
-            (with-current-buffer (dired (cons (make-temp-name new-name)
-                                              files))
-              (when (get-buffer new-name)
-                (kill-buffer new-name))
-              (rename-buffer new-name))))
-        (add-to-list 'helm-find-files-actions
-                     '("Dired file(s) by Chunyang `C-c f'" . chunyang-dired-files)
-                     'append)
-        (defun helm-buffer-run-dired-files ()
-          "Run ediff action from `helm-source-buffers-list'."
-          (interactive)
-          (with-helm-alive-p
-            (helm-exit-and-execute-action 'chunyang-dired-files)))
-        (bind-key "C-c f" #'helm-buffer-run-dired-files helm-find-files-map)
-
         (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
 
         (pkg helm-ls-git)
