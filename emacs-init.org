@@ -1573,6 +1573,9 @@
         ;; latest OS X (10.10) and also not available on MacPorts
         (setq helm-man-format-switches "%s"))
 
+      (use-package helm-elisp                 ; Helm commands for Emacs Lisp
+        :bind ("C-c f l" . helm-locate-library))
+
       ;; Set up shorter key bindings
       (bind-keys ("M-x"                            . helm-M-x)
                  ;; File
