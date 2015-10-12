@@ -32,9 +32,12 @@
 ;; To learn what a feature is, see (info "(elisp) Named Features")
 
 ;; TODO: Find out some practical use cases, if any
-;; TODO: Integrate to `use-package', to serve as a keyword, if I want
 
 ;;; Code:
+
+;;*---------------------------------------------------------------------*/
+;;*    Internal                                                         */
+;;*---------------------------------------------------------------------*/
 (defvar before-load-alist nil)
 
 (defun require--eval-before-load (orig-fun &rest args)
@@ -84,6 +87,40 @@ FEATURE is a symbol like 'helm-config."
   "Execute BODY right before FEATURE will be loaded."
   (declare (indent 1))
   `(eval-before-load ,feature (lambda () ,@body)))
+
+;;*---------------------------------------------------------------------*/
+;;*    Utility functions                                                */
+;;*---------------------------------------------------------------------*/
+(defun eval-before-load--append-nth (list element n)
+  "Return a new list by appending ELEMENT at Nth of LIST."
+  (if (<= n 0)
+      (cons element list)
+    (nconc (cl-subseq list 0 n)
+           (cons element (nthcdr n list)))))
+
+;;*---------------------------------------------------------------------*/
+;;*    `use-package' integration                                        */
+;;*---------------------------------------------------------------------*/
+(require 'use-package nil t)
+
+(when (featurep 'use-package)
+  ;; First step: Add the keyword
+  (unless (memq :pre-config use-package-keywords)
+    (setq use-package-keywords
+          (eval-before-load--append-nth
+           use-package-keywords
+           :pre-config (or (cl-position :config use-package-keywords)
+                           (length use-package-keywords)))))
+  ;; Second step: Create a normalizer
+  (defalias 'use-package-normalize/:pre-config 'use-package-normalize-forms))
+
+;; Third step: Create a handler
+(defun use-package-handler/:pre-config (name _keyword arg rest state)
+  (let ((body (use-package-process-keywords name rest state)))
+    (use-package-concat
+     `((eval-before-load ',name
+         ,@arg))
+     body)))
 
 (provide 'eval-before-load)
 ;;; eval-before-load.el ends here
