@@ -34,6 +34,7 @@
 ;; TODO: Find out some practical use cases, if any
 
 ;;; Code:
+(require 'cl-lib)
 
 ;;*---------------------------------------------------------------------*/
 ;;*    Internal                                                         */
