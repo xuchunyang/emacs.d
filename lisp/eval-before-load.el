@@ -18,7 +18,20 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-
+;;
+;; There is a Emacs built-in function `eval-after-load', which lets you to
+;; execute some code right _after_ a library is loaded, while this package
+;; provides function `eval-before-load', which lets you to execute some code
+;; right _before_ a library will be loaded.
+;;
+;; Like the handy macro `with-eval-after-load', one `with-eval-before-load' is
+;; also provided.
+;;
+;; If you are using `use-package', a `:pre-config' use-package keyword is
+;; provided, I hope it is not buggy, according to my current Emacs Lisp
+;; knowledge, how `use-package' works is still a mystery in many ways.
+;;
+;;
 ;; NOTICE
 ;;
 ;; Unlike `eval-after-load', currently `eval-before-load' works only for
@@ -30,8 +43,12 @@
 ;; I didn't do it.
 ;;
 ;; To learn what a feature is, see (info "(elisp) Named Features")
-
-;; TODO: Find out some practical use cases, if any
+;;
+;;
+;; TODO
+;; ====
+;;
+;; 1. Find out some practical use cases, if any
 
 ;;; Code:
 (require 'cl-lib)
