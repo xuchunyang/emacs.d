@@ -1510,28 +1510,7 @@
         (add-to-list 'helm-boring-buffer-regexp-list "TAGS")
         (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff")
 
-        (defun helm-buffer-switch-to-new-window (_candidate)
-          "Display buffers in new windows."
-          ;; Select the bottom right window
-          (require 'winner)
-          (select-window (car (last (winner-sorted-window-list))))
-          ;; Display buffers in new windows
-          (dolist (buf (helm-marked-candidates))
-            (select-window (split-window-right))
-            (switch-to-buffer buf))
-          ;; Adjust size of windows
-          (balance-windows))
-
-        (add-to-list 'helm-type-buffer-actions
-                     '("Display buffer(s) in new window(s) `M-o'" .
-                       helm-buffer-switch-new-window) 'append)
-
-        (defun helm-buffer-switch-new-window ()
-          (interactive)
-          (with-helm-alive-p
-            (helm-quit-and-execute-action 'helm-buffer-switch-to-new-window)))
-
-        (define-key helm-buffer-map (kbd "M-o") #'helm-buffer-switch-new-window)
+        (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window)
 
         (defun helm-buffer-insert-buffer-name (candidate)
           (insert (buffer-name candidate)))
@@ -1544,6 +1523,9 @@
         :defer t
         :config
         (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
+
+        (define-key helm-find-files-map [?\M-o] #'helm-ff-run-switch-other-window)
+        (define-key helm-generic-files-map [?\M-o] #'helm-ff-run-switch-other-window)
 
         (pkg helm-ls-git)
 
