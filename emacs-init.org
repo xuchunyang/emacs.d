@@ -1962,6 +1962,21 @@
          (interactive)
          (cancel-timer bing-dict-query-word-at-point-timer)
          (message "bing-dict-query-word-at-point-timer canceled")))
+
+  
+     (defvar google-translate-history nil)
+
+     (defun google-translate (query)
+       (interactive
+        (let* ((initial-input
+                (when (use-region-p)
+                  (buffer-substring (region-beginning) (region-end))))
+               (string (read-string "Translate: "
+                                    initial-input
+                                    'google-translate-history)))
+          (list string)))
+       (browse-url (format "https://www.google.com/translate_t?text=%s"
+                           (url-hexify-string query))))
    #+END_SRC
 
 ** Web Development
