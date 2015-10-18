@@ -506,13 +506,14 @@
 
 ;; (setq scroll-preserve-screen-position 'always)
 
-(setq scroll-margin 0                   ; Drag the point along while scrolling
-      scroll-conservatively 1000        ; Never recenter the screen while scrolling
-      scroll-error-top-bottom t         ; Move to beg/end of buffer before
+(setq scroll-error-top-bottom t         ; Move to beg/end of buffer before
                                         ; signalling an error
-      ;; These settings make trackpad scrolling on OS X much more predictable
-      ;; and smooth
-      mouse-wheel-progressive-speed nil
+      scroll-conservatively 100         ; Smooth Scrolling
+      )
+
+;; These settings make trackpad scrolling on OS X much more predictable
+;; and smooth
+(setq mouse-wheel-progressive-speed nil
       mouse-wheel-scroll-amount '(1))
 
 (use-package page-break-lines           ; Turn page breaks into lines
