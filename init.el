@@ -757,8 +757,7 @@
 (use-package markdown-mode
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
-  :config
-  (setq markdown-command "kramdown"))
+  :config (setq markdown-command "kramdown"))
 
 (use-package yaml-mode :ensure t :defer t)
 
@@ -780,8 +779,7 @@
   (add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output))
 
 (use-package quickrun
-  :ensure t :defer t
-  :config (push "*quickrun*" popwin:special-display-config))
+  :ensure t :defer t)
 
 (use-package prog-mode
   :bind ("C-c t p" . prettify-symbols-mode)
@@ -821,11 +819,10 @@ See also `describe-function-or-variable'."
     (interactive
      (let* ((v-or-f (variable-at-point))
             (found (symbolp v-or-f))
-            (v-or-f (if found v-or-f (function-called-at-point)))
-            (found (or found v-or-f)))
+            (v-or-f (if found v-or-f (function-called-at-point))))
        (list v-or-f)))
     (if (not (and symbol (symbolp symbol)))
-        (message "You didn't specify a function or variable.")
+        (message "You didn't specify a function or variable")
       (let* ((fdoc (when (fboundp symbol)
                      (or (documentation symbol t) "Not documented.")))
              (fdoc-short (and (stringp fdoc)
@@ -869,8 +866,7 @@ See also `describe-function-or-variable'."
   (add-hook 'emacs-lisp-mode-hook #'ipretty-mode)
   ;; (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
   ;;   (add-hook hook 'turn-on-elisp-slime-nav-mode))
-  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-  )
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
 
 (use-package chunyang-elisp
   :config
@@ -1137,14 +1133,14 @@ See also `describe-function-or-variable'."
       (when text
         (start-process "say" nil "say" text))))
   :config
-  (setq bing-dict-query-word-at-point-timer
-        (run-with-idle-timer 2.1 t
-                             (lambda ()
-                               (let ((word (thing-at-point 'word)))
-                                 (when (and word (> (length word) 3) (< (length word) 21)
-                                            (not (minibufferp)))
-                                   ;; (my-log "%s" word)
-                                   (bing-dict-brief word))))))
+  (defvar bing-dict-query-word-at-point-timer
+    (run-with-idle-timer 2.1 t
+                         (lambda ()
+                           (let ((word (thing-at-point 'word)))
+                             (when (and word (> (length word) 3) (< (length word) 21)
+                                        (not (minibufferp)))
+                               ;; (my-log "%s" word)
+                               (bing-dict-brief word))))))
   (defun bing-dict-stop-timer ()
     (interactive)
     (cancel-timer bing-dict-query-word-at-point-timer)
