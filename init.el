@@ -420,6 +420,14 @@
 
 (diminish 'auto-fill-function)          ; Not `auto-fill-mode' as usual
 
+(use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
+  :ensure t
+  :bind (("C-c t c" . whitespace-cleanup-mode)
+         ("C-c x w" . whitespace-cleanup))
+  :init (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+          (add-hook hook #'whitespace-cleanup-mode))
+  :diminish whitespace-cleanup-mode)
+
 (use-package subword                    ; Subword/superword editing
   :defer t
   :diminish subword-mode)
@@ -575,7 +583,14 @@
 
 ;;; Highlight
 (use-package whitespace                 ; Highlight bad whitespace (tab)
-  :bind ("C-c t w" . whitespace-mode))
+  :bind ("C-c t w" . whitespace-mode)
+  :init (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+          (add-hook hook #'whitespace-mode))
+  :config
+  (setq whitespace-style '(face indentation space-after-tab space-before-tab
+                                tab-mark empty trailing lines-tail)
+        whitespace-line-column nil)
+  :diminish whitespace-mode)
 
 (use-package hl-line
   :bind ("C-c t L" . hl-line-mode)
