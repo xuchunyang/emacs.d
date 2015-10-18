@@ -216,6 +216,14 @@
     :load-path "~/wip/helm-fuzzy-find/"
     :commands helm-fuzzy-find))
 
+(use-package helm-color                 ; Input colors with Helm
+  :ensure helm
+  :bind ("C-c i C" . helm-colors))
+
+(use-package helm-unicode               ; Unicode input with Helm
+  :ensure t
+  :bind ("C-c i 8" . helm-unicode))
+
 (use-package helm-grep
   ;; Must make sure `wgrep-helm' is available first and do NOT load it
   ;; since it is soft loaded in `helm-grep'
