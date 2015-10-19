@@ -1173,18 +1173,19 @@ See also `describe-function-or-variable'."
       (when text
         (start-process "say" nil "say" text))))
   :config
-  (defvar bing-dict-query-word-at-point-timer
-    (run-with-idle-timer 2.1 t
-                         (lambda ()
-                           (let ((word (thing-at-point 'word)))
-                             (when (and word (> (length word) 3) (< (length word) 21)
-                                        (not (minibufferp)))
-                               ;; (my-log "%s" word)
-                               (bing-dict-brief word))))))
-  (defun bing-dict-stop-timer ()
-    (interactive)
-    (cancel-timer bing-dict-query-word-at-point-timer)
-    (message "bing-dict-query-word-at-point-timer canceled")))
+  ;; (defvar bing-dict-query-word-at-point-timer
+  ;;   (run-with-idle-timer 2.1 t
+  ;;                        (lambda ()
+  ;;                          (let ((word (thing-at-point 'word)))
+  ;;                            (when (and word (> (length word) 3) (< (length word) 21)
+  ;;                                       (not (minibufferp)))
+  ;;                              ;; (my-log "%s" word)
+  ;;                              (bing-dict-brief word))))))
+  ;; (defun bing-dict-stop-timer ()
+  ;;   (interactive)
+  ;;   (cancel-timer bing-dict-query-word-at-point-timer)
+  ;;   (message "bing-dict-query-word-at-point-timer canceled"))
+  )
 
 (defvar google-translate-history nil)
 
@@ -1284,48 +1285,24 @@ See also `describe-function-or-variable'."
          ("C-c l"   . org-store-link)
          ("C-c C-o" . org-open-at-point-global))
   :config
+  ;; Easy navigation
   (setq org-use-speed-commands t)
-
-  (use-package helm-org
-    :ensure helm
-    :defer t
-    :config
-    (setq helm-org-headings-fontify t)
-    (bind-key "C-o" #'helm-org-headlines org-mode-map))
-
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)")
-          (sequence "REPORT" "BUG" "KNOWNCAUSE" "|" "FIXED")
-          (sequence "|" "CANCELED(c@)")))
-
-  (setq org-directory "~/Dropbox/Notes")
-  (setq org-agenda-files (list org-directory))
-  (setq org-agenda-start-with-log-mode t)
-
-  (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
-
-  (setq org-capture-templates
-        '(("t" "todo"
-           entry (file (expand-file-name "refile.org" org-directory))
-           "* TODO %?\n  %i\n  %a")
-          ("n" "note"
-           entry (file (expand-file-name "refile.org" org-directory))
-           "* %?\n  %i\n  %a")))
-
+  (bind-key "C-o" #'helm-org-headlines org-mode-map)
+  ;; Agenda
   (setq org-log-done 'time)
+  (setq org-directory           "~/org"
+        org-agenda-files        (list "~/org")
+        org-default-notes-file  "~/org/todo.org")
+  (setq org-agenda-start-with-log-mode t)
+  ;; Capture
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file "~/org/todo.org")
+           "* TODO %?\n  %a\n\n  %i"))))
 
-  ;; Targets include this file and any file contributing to the agenda - up to 3 levels deep
-  (setq org-refile-targets (quote (;; (nil :maxlevel . 1)
-                                   (org-default-notes-file :maxlevel . 2))))
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (sh . t)))
-
-  (setq org-confirm-babel-evaluate nil)
-
-  (setq org-edit-src-auto-save-idle-delay 5))
+(use-package helm-org
+  :ensure helm
+  :defer t
+  :config (setq helm-org-headings-fontify t))
 
 (use-package org-mac-link
   :if (eq system-type 'darwin)
