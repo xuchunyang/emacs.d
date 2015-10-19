@@ -196,7 +196,6 @@
   :config (helm-mode))
 
 (use-package helm-adaptive
-  :disabled t                           ; I don't its function really is
   :config (helm-adaptive-mode))
 
 (use-package helm-command               ; helm-M-x
@@ -614,9 +613,7 @@
   :diminish whitespace-mode)
 
 (use-package hl-line
-  :bind ("C-c t L" . hl-line-mode)
-  :init
-  (use-package hl-line+ :ensure t :defer t))
+  :bind ("C-c t L" . hl-line-mode))
 
 (use-package paren                      ; Highlight paired delimiters
   :init (show-paren-mode))
@@ -1289,7 +1286,14 @@ See also `describe-function-or-variable'."
          ("C-c l"   . org-store-link)
          ("C-c C-o" . org-open-at-point-global))
   :config
-  (bind-key "C-o" #'helm-org-headlines org-mode-map)
+  (setq org-use-speed-commands t)
+
+  (use-package helm-org
+    :ensure helm
+    :defer t
+    :config
+    (setq helm-org-headings-fontify t)
+    (bind-key "C-o" #'helm-org-headlines org-mode-map))
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAITING(w@)" "|" "DONE(d)")
@@ -1298,6 +1302,7 @@ See also `describe-function-or-variable'."
 
   (setq org-directory "~/Dropbox/Notes")
   (setq org-agenda-files (list org-directory))
+  (setq org-agenda-start-with-log-mode t)
 
   (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
 
