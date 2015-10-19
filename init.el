@@ -1021,6 +1021,23 @@ See also `describe-function-or-variable'."
   :config (which-key-mode))
 
 
+;;; Project
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :init (projectile-global-mode)
+  :config
+  (setq projectile-completion-system 'helm
+        projectile-mode-line '(" P["
+                               (:propertize (:eval (projectile-project-name))
+                                            face bold)
+                               "]")))
+
+(use-package helm-projectile
+  :ensure t
+  :init (helm-projectile-on))
+
+
 ;;; Web & IRC & Email & RSS
 (use-package mu4e
   :load-path "/opt/local/share/emacs/site-lisp/mu4e"
