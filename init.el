@@ -604,8 +604,6 @@
 ;;; Highlight
 (use-package whitespace                 ; Highlight bad whitespace (tab)
   :bind ("C-c t w" . whitespace-mode)
-  :init (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-          (add-hook hook #'whitespace-mode))
   :config
   (setq whitespace-style '(face indentation space-after-tab space-before-tab
                                 tab-mark empty trailing lines-tail)
