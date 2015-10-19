@@ -310,10 +310,9 @@
 
 (use-package helm-ag
   :ensure t
-  ;; TODO: Copy more command usages here
-  :bind (("C-c s" . helm-do-ag) ; C-u chooses file type, C-- enter your own cmd
-                                        ; options
-         ("C-c S" . helm-do-ag-project-root)))
+  :bind (("C-c S" . helm-do-ag)    ; C-u chooses file type, C-- enter own option
+         ("C-c s" . helm-do-ag-project-root)
+         ("C-c C-s" . helm-do-ag-project-root)))
 
 ;;; Buffers, Windows and Frames
 
