@@ -106,6 +106,28 @@
   (load-theme 'spacemacs-dark :no-confirm))
 
 ;; Mode line
+(defvar chunyang-mode-line-format mode-line-format
+  "Original value of `mode-line-format'.")
+
+(defun chunyang-revert-modeline ()
+  "Revert to the default Emacs mode-line."
+  (interactive)
+  (setq-default mode-line-format chunyang-mode-line-format))
+
+(setq-default mode-line-format
+              '("%e" mode-line-front-space
+                ;; Standard info about the current buffer
+                mode-line-mule-info
+                mode-line-client
+                mode-line-modified
+                mode-line-remote
+                mode-line-frame-identification
+                mode-line-buffer-identification "    " mode-line-position
+                (projectile-mode projectile-mode-line)
+                (vc-mode (:propertize (:eval vc-mode) face italic))
+                ;; Other modes
+                " " mode-line-modes mode-line-misc-info mode-line-end-spaces))
+
 (column-number-mode)
 (size-indication-mode)
 
