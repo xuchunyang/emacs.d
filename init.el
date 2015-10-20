@@ -806,7 +806,7 @@
 
 (use-package prog-mode
   :bind ("C-c t p" . prettify-symbols-mode)
-  :init (prettify-symbols-mode))
+  :init (global-prettify-symbols-mode))
 
 
 ;;; Generic Lisp
