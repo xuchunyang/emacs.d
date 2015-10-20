@@ -1287,6 +1287,7 @@ See also `describe-function-or-variable'."
   :config
   ;; Easy navigation
   (setq org-use-speed-commands t)
+  (setq org-special-ctrl-a/e t)
   (bind-key "C-o" #'helm-org-headlines org-mode-map)
   ;; Agenda
   (setq org-log-done 'time)
