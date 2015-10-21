@@ -254,6 +254,10 @@
   ;; the latter.
   :defer t)
 
+(use-package helm-regexp
+  :defer t
+  :init (bind-key "M-i" #'helm-occur-from-isearch isearch-mode-map))
+
 (use-package helm-ring
   :defer t
   :config
