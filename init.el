@@ -249,10 +249,10 @@
   ;; Must make sure `wgrep-helm' is available first and do NOT load it
   ;; since it is soft loaded in `helm-grep'
   :preface (use-package wgrep-helm :ensure t :defer t)
-  ;; Don't load helm-grep, ti is also bad, `use-package' also doesn't play nice
-  ;; with `package.el', since autoload stuff usually is done automatically by
-  ;; the latter.
-  :defer t)
+  :defer t
+  :bind ("M-I" . helm-grep-do-git-grep)
+  :config
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep))
 
 (use-package helm-regexp
   :defer t
@@ -312,6 +312,7 @@
 (bind-key "M-I" #'helm-do-grep)
 
 (use-package helm-ag
+  :disabled t
   :ensure t
   :bind (("C-c S" . helm-do-ag)    ; C-u chooses file type, C-- enter own option
          ("C-c s" . helm-do-ag-project-root)
