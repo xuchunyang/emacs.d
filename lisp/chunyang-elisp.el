@@ -29,12 +29,25 @@
 (defvar chunyang-elisp-debug t
   "If non-nil, write log message into `chunyang-elisp-debug-buffer' buffer.")
 
+(defmacro aif (test-form then-form &rest else-forms)
+  "Anaphoric if."
+  (declare (indent 2))
+  `(let ((it ,test-form))
+     (if it ,then-form ,@else-forms)))
+
+(defmacro awhen (test &rest body)
+  "Anaphoric when."
+  (declare (indent 1))
+  `(let ((it ,test))
+     (when it ,@body)))
+
 
 ;; Utility: logging
-(defun m (&rest args)
-  (message-box "%s"
-               (mapconcat (lambda (elt) (format "%s" elt))
-                          args " - ")))
+(defmacro m (&rest args)
+  `(message-box "%s" (list ,@args)))
+
+(defmacro mm (format-string &rest args)
+  `(message-box ,format-string ,@args))
 
 (defun chunyang-elisp-log (format-string &rest args)
   "Log message if `chunyang-elisp-debug-buffer' is non-nil.
