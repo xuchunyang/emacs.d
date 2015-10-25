@@ -196,23 +196,94 @@ With a prefix argument N, (un)comment that many sexps."
 
 ;;; Ugly hack - Make `&' save recent value during C-x C-e, just like `*' in IELM
 
-(with-eval-after-load "elisp-mode"
-  (defvar & nil
-    "Most recent value evaluated in *scratch*.")
+;; (with-eval-after-load "elisp-mode"
+;;   (defvar & nil
+;;     "Most recent value evaluated in *scratch*.")
 
-  (defun eval-last-sexp (eval-last-sexp-arg-internal)
-    "Re-define version by Chunyang Xu, for save recent value to `&'."
-    (interactive "P")
-    (if (null eval-expression-debug-on-error)
-        (elisp--eval-last-sexp eval-last-sexp-arg-internal)
-      (let ((value
-             (let ((debug-on-error elisp--eval-last-sexp-fake-value))
-               (cons (elisp--eval-last-sexp eval-last-sexp-arg-internal)
-                     debug-on-error))))
-        (unless (eq (cdr value) elisp--eval-last-sexp-fake-value)
-          (setq debug-on-error (cdr value)))
-        (prog1 (car value)
-          (setq & (car value)))))))
+;;   (defun eval-last-sexp (eval-last-sexp-arg-internal)
+;;     "Re-define version by Chunyang Xu, for save recent value to `&'."
+;;     (interactive "P")
+;;     (if (null eval-expression-debug-on-error)
+;;         (elisp--eval-last-sexp eval-last-sexp-arg-internal)
+;;       (let ((value
+;;              (let ((debug-on-error elisp--eval-last-sexp-fake-value))
+;;                (cons (elisp--eval-last-sexp eval-last-sexp-arg-internal)
+;;                      debug-on-error))))
+;;         (unless (eq (cdr value) elisp--eval-last-sexp-fake-value)
+;;           (setq debug-on-error (cdr value)))
+;;         (prog1 (car value)
+;;           (setq & (car value)))))))
+
+
+;;; Another C-j for `lisp-interaction-mode'
+
+;;*    Sample                                                           */
+;;*---------------------------------------------------------------------*/
+;; (setq x 23)
+;;     ⇒ 23
+
+;; (cl-incf x)
+;;     ↦ (setq x (1+ x))
+;;     ⇒ 24
+
+;; (defun hi ()
+;;   (message "hi"))
+;;     ↦ (defalias (quote hi) (function (lambda nil (message hi))))
+;;     ⇒ hi
+;;*---------------------------------------------------------------------*/
+
+(bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map)
+
+(defun chunyang-disable-some-modes-in-scratch ()
+    (dolist (mode '(aggressive-indent-mode ipretty-mode))
+      (when (and (fboundp mode) mode)
+        (funcall mode -1))))
+
+(add-hook 'lisp-interaction-mode-hook #'chunyang-disable-some-modes-in-scratch)
+
+(defun my-eval-print-last-sexp ()       ; FIXME: Or name it `C-j'
+  (interactive)
+  (let* ((exp (pp-last-sexp))           ; FIXME: Reduce code repeating
+         (operator (and (listp exp) (car exp))))
+    (let ((standard-output (current-buffer)))
+      (princ "\n")
+      (let* ((old-point (point))
+             (result
+              (eval (eval-sexp-add-defvars (elisp--preceding-sexp)) lexical-binding))
+             (new-point (point))
+             (need-newline-p (not (= old-point new-point))))
+        ;; Format Print
+        (when need-newline-p
+          (save-excursion
+            (string-rectangle old-point (line-beginning-position) "    ⊣ ")))
+
+        ;; Macro Expansion
+        ;; TODO: Format
+        (when (and operator (macrop operator))
+          (when need-newline-p (terpri))
+          (princ (format "    ↦ %s\n" (macroexpand-1 exp)))
+          (setq need-newline-p nil))
+
+        ;; Result
+        (when need-newline-p (terpri))
+        (princ "    ⇒ ")
+        (prin1 result))
+      (terpri))))
+
+;;; FIXME: Don't know if necessary
+(defun my-pp (sexp)
+  (let ((print-quoted t))
+    (with-current-buffer "foo"
+      (erase-buffer)                    ; TODO REMOVE THIS
+      (macrostep-print-sexp sexp)
+      (pp-buffer)
+      (string-rectangle
+       (point-min)
+       (progn (goto-char (point-max))
+              (line-beginning-position))
+       "      ")
+      (setf (buffer-substring 5 6) "↦")
+      (buffer-string))))
 
 (provide 'chunyang-elisp)
 
