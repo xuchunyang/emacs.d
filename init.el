@@ -477,6 +477,8 @@
   (with-eval-after-load "isearch"
     (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)))
 
+(use-package pin)
+
 (use-package ace-link
   :ensure t
   :init (ace-link-setup-default))
