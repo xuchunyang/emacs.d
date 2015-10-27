@@ -223,67 +223,41 @@ With a prefix argument N, (un)comment that many sexps."
 ;;     ⇒ 23
 
 ;; (cl-incf x)
-;;     ↦ (setq x (1+ x))
 ;;     ⇒ 24
 
 ;; (defun hi ()
 ;;   (message "hi"))
-;;     ↦ (defalias (quote hi) (function (lambda nil (message hi))))
 ;;     ⇒ hi
 ;;*---------------------------------------------------------------------*/
 
 (bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map)
 
 (defun chunyang-disable-some-modes-in-scratch ()
-    (dolist (mode '(aggressive-indent-mode ipretty-mode))
-      (when (and (fboundp mode) mode)
-        (funcall mode -1))))
+  (dolist (mode '(aggressive-indent-mode ipretty-mode))
+    (when (and (fboundp mode) mode)
+      (funcall mode -1))))
 
 (add-hook 'lisp-interaction-mode-hook #'chunyang-disable-some-modes-in-scratch)
 
-(defun my-eval-print-last-sexp ()       ; FIXME: Or name it `C-j'
+(defun current-line-empty-p ()
+  (string= "" (buffer-substring (line-beginning-position)
+                                (line-end-position))))
+
+(defun my-eval-print-last-sexp ()
+  "Like `my-eval-print-last-sexp' but format result value a bit."
   (interactive)
-  (let* ((exp (pp-last-sexp))           ; FIXME: Reduce code repeating
-         (operator (and (listp exp) (car exp))))
-    (let ((standard-output (current-buffer)))
-      (princ "\n")
-      (let* ((old-point (point))
-             (result
-              (eval (eval-sexp-add-defvars (elisp--preceding-sexp)) lexical-binding))
-             (new-point (point))
-             (need-newline-p (not (= old-point new-point))))
-        ;; Format Print
-        (when need-newline-p
-          (save-excursion
-            (string-rectangle old-point (line-beginning-position) "    ⊣ ")))
-
-        ;; Macro Expansion
-        ;; TODO: Format
-        (when (and operator (macrop operator))
-          (when need-newline-p (terpri))
-          (princ (format "    ↦ %s\n" (macroexpand-1 exp)))
-          (setq need-newline-p nil))
-
-        ;; Result
-        (when need-newline-p (terpri))
-        (princ "    ⇒ ")
-        (prin1 result))
-      (terpri))))
-
-;;; FIXME: Don't know if necessary
-(defun my-pp (sexp)
-  (let ((print-quoted t))
-    (with-current-buffer "foo"
-      (erase-buffer)                    ; TODO REMOVE THIS
-      (macrostep-print-sexp sexp)
-      (pp-buffer)
-      (string-rectangle
-       (point-min)
-       (progn (goto-char (point-max))
-              (line-beginning-position))
-       "      ")
-      (setf (buffer-substring 5 6) "↦")
-      (buffer-string))))
+  (require 'elisp-mode)
+  (let ((standard-output (current-buffer)))
+    (terpri)
+    (let ((res
+           (eval
+            (eval-sexp-add-defvars (elisp--preceding-sexp)) lexical-binding)))
+      (unless (current-line-empty-p) (terpri))
+      (princ "    ⇒ ")
+      (princ (with-temp-buffer
+               (elisp--eval-last-sexp-print-value res t)
+               (buffer-string))))
+    (unless (current-line-empty-p) (terpri))))
 
 (provide 'chunyang-elisp)
 
