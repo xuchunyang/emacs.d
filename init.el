@@ -86,6 +86,8 @@
 
 (setq inhibit-startup-screen t)
 
+(setq ring-bell-function #'ignore)      ; Don't ring bell on C-g
+
 (fset 'yes-or-no-p #'y-or-n-p)
 
 ;; Font
@@ -123,6 +125,8 @@
                 mode-line-remote
                 mode-line-frame-identification
                 mode-line-buffer-identification "    " mode-line-position
+                ;; For debug some elisp program
+                ;; (:eval (format "%-5d" (point)))
                 (projectile-mode projectile-mode-line)
                 (vc-mode (:propertize (:eval vc-mode) face italic))
                 ;; Other modes
@@ -130,6 +134,17 @@
 
 (column-number-mode)
 (size-indication-mode)
+
+(use-package spaceline
+  :disabled t
+  :load-path "~/wip/spaceline"
+  :defer t
+  :init
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme)
+  :config
+  (setq powerline-default-separator 'wave)
+  (setq spaceline-workspace-numbers-unicode t))
 
 ;; Echo Area
 (setq echo-keystrokes 0.6)
@@ -148,7 +163,14 @@
               (setq initial-scratch-message
                     (with-current-buffer "*scratch*"
                       (setq initial-scratch-message
-                            (buffer-string)))))))
+                            (buffer-string))))))
+
+  (add-hook 'emacs-startup-hook      ; Assuming it runs after *scratch* is ready
+            (lambda ()
+              "Fix 标点符号 caused by `substitute-command-keys'."
+              (-when-let (buffer (get-buffer "*scratch*"))
+                (goto-char (point-min))
+                (replace-string "’" "'")))))
 
 (use-package savehist                   ; Minibuffer history
   :init (savehist-mode)
@@ -158,6 +180,7 @@
         savehist-additional-variables '(extended-command-history)))
 
 (use-package recentf                    ; Recent files
+  :defer t
   :config
   (setq recentf-max-saved-items 200
         ;; Cleanup recent files only when Emacs is idle
@@ -167,15 +190,15 @@
                               "/itsalltext/"  ; It's all text temp files
                               ".*\\.gz\\'"
                               "TAGS"
-                              ".*-autoloads\\.el\\'"))
-  (recentf-mode))
+                              ".*-autoloads\\.el\\'")))
 
 (use-package bookmark
   :defer t
   :config (setq bookmark-save-flag 1))
 
 (use-package saveplace                  ; Save point position in files
-  :init (save-place-mode))
+  :defer t
+  :init (add-hook #'after-init-hook #'save-place-mode))
 
 
 ;;; Minibuffer with helm
@@ -195,7 +218,32 @@
   :diminish helm-mode
   :config (helm-mode))
 
+;;; key bindings, M-0 to M-9
+(progn
+  (dolist (nth (number-sequence 1 9))
+    (define-key helm-map (kbd (format "M-%d" nth))
+      ;; In case `lexical-binding' is off
+      `(lambda () (interactive) (helm-execute-candidate-action ,nth))))
+
+  ;; Use M-0 for the tenth candidate
+  (define-key helm-map (kbd "M-0")
+    (lambda () (interactive) (helm-execute-candidate-action 10))))
+
+(defun helm-execute-candidate-action (nth)
+  "Move selection to Nth candidate and execute default action."
+  (interactive)
+  (when (<= nth (helm-get-candidate-number 'in-current-source))
+    (let* ((count (- nth (helm-candidate-number-at-point)))
+           (direction (if (> count 0) 'next 'previous)))
+      (dotimes (_i (abs count))
+        (helm-move-selection-common :where 'line
+                                    :direction direction))
+      (helm-maybe-exit-minibuffer))))
+
+;; (setq helm-candidate-number-limit 100)
+
 (use-package helm-adaptive
+  :disabled t
   :config (helm-adaptive-mode))
 
 (use-package helm-command               ; helm-M-x
@@ -208,14 +256,7 @@
   (add-to-list 'helm-boring-buffer-regexp-list "^TAGS$")
   (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff")
 
-  (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window)
-
-  (defun helm-buffer-insert-buffer-name (candidate)
-    (insert (buffer-name candidate)))
-
-  (add-to-list 'helm-type-buffer-actions
-               '("Insert buffer name at point" .
-                 helm-buffer-insert-buffer-name) :append))
+  (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window))
 
 (use-package helm-files
   :defer t
@@ -309,7 +350,6 @@
            ("z"   . helm-complex-command-history)
            ("C-/" . helm-fuzzy-find)
            ("G"   . helm-github-stars))
-(bind-key "M-I" #'helm-do-grep)
 
 (use-package helm-ag
   :disabled t
@@ -368,6 +408,12 @@
          ("M-P" . winner-undo))
   :config (winner-mode))
 
+(use-package shackle
+  :ensure t
+  :disabled t
+  :init (shackle-mode)
+  :config (setq shackle-rules '(("\\‘\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.4))))
+
 ;; Frames
 (setq frame-resize-pixelwise t          ; Resize by pixels
       frame-title-format
@@ -378,7 +424,7 @@
   :bind (("C-c t F" . toggle-frame-fullscreen)
          ("C-c t m" . toggle-frame-maximized))
   :config
-  (add-to-list 'initial-frame-alist '(maximized . fullscreen))
+  ;; (add-to-list 'initial-frame-alist '(maximized . fullscreen))
   (unbind-key "C-x C-z"))
 
 
@@ -471,8 +517,8 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-c SPC" . avy-goto-char)
-         ("M-g f"   . avy-goto-line))
+  :bind (("M-g c" . avy-goto-char)
+         ("M-g l" . avy-goto-line))
   :config
   (with-eval-after-load "isearch"
     (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)))
@@ -484,6 +530,7 @@
   :init (ace-link-setup-default))
 
 (use-package easy-kill                  ; Easy killing and marking on C-w
+  :disabled t
   :ensure t
   :bind (([remap kill-ring-save] . easy-kill) ; M-w
          ([remap mark-sexp]      . easy-mark) ; C-M-SPC
@@ -492,6 +539,7 @@
 (use-package expand-region              ; Expand region by semantic units
   :ensure t
   :bind ("C-=" . er/expand-region))
+
 (use-package align                      ; Align text in buffers
   :bind (("C-c A a" . align)
          ("C-c A c" . align-current)
@@ -511,8 +559,7 @@
 (use-package undo-tree                  ; Branching undo
   :ensure t
   :diminish undo-tree-mode
-  :init
-  (global-undo-tree-mode))
+  :init (global-undo-tree-mode))
 
 (use-package nlinum                     ; Line numbers in display margin
   :ensure t
@@ -543,7 +590,7 @@
 
 (setq scroll-error-top-bottom t         ; Move to beg/end of buffer before
                                         ; signalling an error
-      scroll-conservatively 100         ; Smooth Scrolling
+      scroll-conservatively 10          ; Smooth Scrolling
       )
 
 ;; These settings make trackpad scrolling on OS X much more predictable
@@ -598,6 +645,7 @@
   :ensure t
   :diminish anzu-mode
   :init (global-anzu-mode)
+  :config
   :config
   (setq anzu-replace-to-string-separator " => ")
   (bind-key "M-%" 'anzu-query-replace)
@@ -667,7 +715,7 @@
 
 ;;; Skeletons, completion and expansion
 (use-package hippie-exp                 ; Powerful expansion and completion
-  :bind (([remap dabbrev-expand] . hippie-expand))
+  :bind ("M-/" . hippie-expand)
   :config
   (setq hippie-expand-try-functions-list
         '(
@@ -742,12 +790,13 @@
 
 (use-package flyspell
   :diminish flyspell-mode
-  :init
-  (use-package ispell
-    :config (setq ispell-program-name "aspell"
-                  ispell-extra-args '("--sug-mode=ultra")))
-  (add-hook 'text-mode-hook #'flyspell-mode)
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  :bind ("C-c t s" . flyspell-mode)
+  ;; :init
+  ;; (use-package ispell
+  ;;   :config (setq ispell-program-name "aspell"
+  ;;                 ispell-extra-args '("--sug-mode=ultra")))
+  ;; (add-hook 'text-mode-hook #'flyspell-mode)
+  ;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
   :config
   (unbind-key "C-." flyspell-mode-map)
   (unbind-key "C-M-i" flyspell-mode-map)
@@ -794,6 +843,7 @@
 
 ;;; Programming utilities
 (use-package compile
+  :disabled t
   :bind (("C-c C" . compile))
   :preface
   (defun compilation-ansi-color-process-output ()
@@ -826,6 +876,7 @@
   (unbind-key "M-s" paredit-mode-map) (bind-key "M-S" #'paredit-splice-sexp paredit-mode-map)
   (unbind-key "C-j" paredit-mode-map)
   (unbind-key "M-q" paredit-mode-map)
+  (unbind-key "M-?" paredit-mode-map)
 
   (use-package paredit-menu
     :ensure t
@@ -1021,10 +1072,19 @@ See also `describe-function-or-variable'."
   :ensure t
   :config (which-key-mode))
 
+(use-package fcitx
+  :disabled t
+  :load-path "~/wip/fcitx.el"
+  :commands (fcitx-default-setup fcitx-aggressive-setup)
+  :init
+  ;; (fcitx-default-setup)
+  (fcitx-aggressive-setup))
+
 
 ;;; Project
 (use-package projectile
-  :ensure t
+  :load-path "~/wip/projectile"
+  :commands projectile-global-mode
   :diminish projectile-mode
   :init (projectile-global-mode)
   :config
@@ -1032,11 +1092,9 @@ See also `describe-function-or-variable'."
         projectile-mode-line '(" P["
                                (:propertize (:eval (projectile-project-name))
                                             face bold)
-                               "]")))
-
-(use-package helm-projectile
-  :ensure t
-  :init (helm-projectile-on))
+                               "]"))
+  (use-package helm-projectile
+    :init (helm-projectile-on)))
 
 
 ;;; Web & IRC & Email & RSS
@@ -1329,7 +1387,19 @@ See also `describe-function-or-variable'."
 
 ;;; Emacs Development
 
-(setq tags-table-list '("~/wip/emacs"))
+;; (setq tags-table-list '("~/wip/emacs"))
 
+(use-package helm-init-config
+  :commands (helm-use-package helm-init-all))
+
+
+;;; Common Lisp
+
+(use-package slime
+  :ensure t
+  :defer t
+  :config
+  (setq inferior-lisp-program "sbcl")
+  (setq slime-contribs '(slime-fancy)))
 
 ;;; init.el ends here
