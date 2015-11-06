@@ -1389,9 +1389,6 @@ See also `describe-function-or-variable'."
 
 ;; (setq tags-table-list '("~/wip/emacs"))
 
-(use-package helm-init-config
-  :commands (helm-use-package helm-init-all))
-
 
 ;;; Common Lisp
 
