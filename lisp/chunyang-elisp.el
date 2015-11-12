@@ -258,6 +258,11 @@ With a prefix argument N, (un)comment that many sexps."
                (elisp--eval-last-sexp-print-value res t)
                (buffer-string))))
     (unless (current-line-empty-p) (terpri))))
+
+(define-minor-mode display-pos-mode
+  "Display position in mode line mainly for testing and debugging."
+  :global t
+  :lighter (:eval (format " [%d]" (point))))
 
 (provide 'chunyang-elisp)
 
