@@ -38,6 +38,7 @@ elpa
 
 # projectile
 projectile*
+.projectile
 
 # url
 url

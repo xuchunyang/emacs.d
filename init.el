@@ -651,6 +651,10 @@
   (bind-key "M-%" 'anzu-query-replace)
   (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
+(use-package region-state
+  :load-path "~/wip/region-state.el/"
+  :config (region-state-mode))
+
 (use-package pinyin-search
   :ensure t
   :defer t)
@@ -1058,6 +1062,10 @@ See also `describe-function-or-variable'."
 (use-package helm-open-github  :ensure t :defer t)
 (use-package gh-md             :ensure t :defer t)
 
+(use-package github-notifier
+  :load-path "~/wip/github-notifier.el/"
+  :commands github-notifier-mode)
+
 (use-package helm-github-stars
   :ensure t
   :config
@@ -1209,8 +1217,9 @@ See also `describe-function-or-variable'."
   :load-path "~/wip/youdao-dictionary"
   :bind (("C-c y" . youdao-dictionary-search)
          ("C-c Y" . youdao-dictionary-search-at-point+))
-  :config (setq url-cache-expire-time (* 60 60 24) ; 24 hours
-                url-automatic-caching t))
+  ;; :config (setq url-cache-expire-time (* 60 60 24) ; 24 hours
+  ;;               url-automatic-caching t)
+  )
 
 (use-package translate-shell
   :disabled t
@@ -1387,7 +1396,7 @@ See also `describe-function-or-variable'."
 
 ;;; Emacs Development
 
-;; (setq tags-table-list '("~/wip/emacs"))
+(setq tags-table-list '("~/wip/emacs"))
 
 
 ;;; Common Lisp

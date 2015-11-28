@@ -42,6 +42,7 @@
      (when it ,@body)))
 
 
+;;; TODO: Improve message & logging
 ;; Utility: logging
 (defmacro m (&rest args)
   `(message-box "%s" (list ,@args)))
@@ -58,19 +59,20 @@ Use optional arguments ARGS like in `format'.
 
 Adapted from `helm-log'."
   (when chunyang-elisp-debug
-    (with-current-buffer (get-buffer-create chunyang-elisp-debug-buffer)
-      (outline-mode)
-      (buffer-disable-undo)
-      (setq-local inhibit-read-only t)
-      (goto-char (point-max))
-      (insert (let ((tm (current-time)))
-                (format (concat (if (string-match "Start session" format-string)
-                                    "* " "** ")
-                                "%s.%06d (%s:%d)\n %s\n")
-                        (format-time-string "%H:%M:%S" tm)
-                        (nth 2 tm)
-                        (buffer-name (current-buffer)) (line-number-at-pos)
-                        (apply #'format (cons format-string args))))))))
+    (let ((buffer (current-buffer)))
+      (with-current-buffer (get-buffer-create chunyang-elisp-debug-buffer)
+        (outline-mode)
+        (buffer-disable-undo)
+        (setq-local inhibit-read-only t)
+        (goto-char (point-max))
+        (insert (let ((tm (current-time)))
+                  (format (concat (if (string-match "Start session" format-string)
+                                      "* " "** ")
+                                  "%s.%06d (%s:%d)\n %s\n")
+                          (format-time-string "%H:%M:%S" tm)
+                          (nth 2 tm)
+                          buffer (line-number-at-pos)
+                          (apply #'format (cons format-string args)))))))))
 
 (defun view-debug-log-buffer ()
   "View the `*Debug ELisp Log*' buffer."
@@ -80,6 +82,7 @@ Adapted from `helm-log'."
 (global-set-key (kbd "C-h g") #'view-debug-log-buffer)
 
 (defalias 'my-log #'chunyang-elisp-log)
+(defalias 'l #'chunyang-elisp-log)
 
 (defun uncomment-sexp (&optional n)
   "Uncomment a sexp around point."
