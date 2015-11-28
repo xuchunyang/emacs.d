@@ -158,7 +158,7 @@ With PREFIX, cd to project root."
   (let* ((dir (if prefix (project-root)
                 default-directory))
          ;; if COMMAND is empty, just change directory
-         (cmd (format "cd %s ;%s" dir command)))
+         (cmd (format "cd %s && %s" dir command)))
     (do-applescript
      (format
       "
