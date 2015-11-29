@@ -73,6 +73,7 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell       ; TODO: Try /etc/paths instead
+  :disabled t
   :ensure t
   :if (and (eq system-type 'darwin) (display-graphic-p))
   :init
@@ -98,6 +99,7 @@
 (setq custom-safe-themes t)
 
 (use-package spacemacs-theme
+  :disabled t
   :defer t
   :load-path "~/wip/spacemacs-theme"
   :init
@@ -816,6 +818,7 @@
                 checkdoc-force-docstrings-flag nil))
 
 (use-package flycheck
+  :disabled t
   :ensure t
   :bind (("C-c t f" . global-flycheck-mode)
          ("C-c L e" . list-flycheck-errors))
@@ -1005,6 +1008,7 @@ See also `describe-function-or-variable'."
   (setq magit-revert-buffers t))
 
 (use-package git-gutter
+  :disabled t
   :ensure t
   :diminish git-gutter-mode
   :bind (("C-x C-g" . git-gutter:toggle)
@@ -1091,6 +1095,7 @@ See also `describe-function-or-variable'."
 
 ;;; Project
 (use-package projectile
+  :disabled t
   :load-path "~/wip/projectile"
   :commands projectile-global-mode
   :diminish projectile-mode
