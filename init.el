@@ -73,10 +73,10 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell       ; TODO: Try /etc/paths instead
-  :disabled t
   :ensure t
   :if (and (eq system-type 'darwin) (display-graphic-p))
   :init
+  (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-copy-env "INFOPATH")
   (exec-path-from-shell-initialize))
 
@@ -99,7 +99,6 @@
 (setq custom-safe-themes t)
 
 (use-package spacemacs-theme
-  :disabled t
   :defer t
   :load-path "~/wip/spacemacs-theme"
   :init
@@ -205,7 +204,27 @@
 
 ;;; Minibuffer with helm
 
-;; (require 'chunyang-helm)
+(defvar chunyang-prefer-helm-p t)
+
+(when chunyang-prefer-helm-p
+  (require 'chunyang-helm))
+
+(use-package swiper
+  :if (not chunyang-prefer-helm-p)
+  :ensure t
+  :bind (("C-z"    .  ivy-resume)
+         ("C-s"    .  swiper)
+         ("M-l"    .  ivy-switch-buffer)
+         ("C-x f"  .  ivy-recentf))
+  :config
+  (ivy-mode)
+  (diminish 'ivy-mode)
+  (bind-key "C-o" 'imenu))
+
+(use-package counsel
+  :if (not chunyang-prefer-helm-p)
+  :ensure t
+  :bind ("M-x" . counsel-M-x))
 
 
 ;;; Buffers, Windows and Frames

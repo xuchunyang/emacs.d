@@ -183,3 +183,5 @@
   :ensure helm
   :defer t
   :config (setq helm-org-headings-fontify t))
+
+(provide 'chunyang-helm)
