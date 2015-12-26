@@ -159,12 +159,9 @@
 
   (add-hook 'kill-emacs-hook
             (lambda ()
-              ;; Notes: This function must be placed BEFORE `desktop.el' saving
-              ;; values.
-              (setq initial-scratch-message
-                    (with-current-buffer "*scratch*"
-                      (setq initial-scratch-message
-                            (buffer-string))))))
+              (with-current-buffer "*scratch*"
+                (setq initial-scratch-message
+                      (buffer-string)))))
 
   (add-hook 'emacs-startup-hook      ; Assuming it runs after *scratch* is ready
             (lambda ()
