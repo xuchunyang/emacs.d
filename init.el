@@ -73,6 +73,7 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell       ; TODO: Try /etc/paths instead
+  :disabled t
   :ensure t
   :if (and (eq system-type 'darwin) (display-graphic-p))
   :init
