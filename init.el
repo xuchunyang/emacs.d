@@ -1180,6 +1180,20 @@ See also `describe-function-or-variable'."
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n")))
 
+  ;; Eshell command name completion for tldr man pages <http://tldr-pages.github.io>
+  (defvar tldr-commands nil)
+
+  (defun pcomplete/tldr ()
+    (unless tldr-commands
+      (setq tldr-commands
+            (let* ((json
+                    (json-read-file "~/wip/tldr/pages/index.json"))
+                   (commands
+                    (cl-loop for x in (append (assoc-default 'commands json) nil)
+                             collect (assoc-default 'name x))))
+              commands)))
+    (pcomplete-here* tldr-commands))
+
   (use-package eshell-git-prompt
     :load-path "~/wip/eshell-git-prompt"
     :config (eshell-git-prompt-use-theme 'powerline))
