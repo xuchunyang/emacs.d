@@ -1186,12 +1186,11 @@ See also `describe-function-or-variable'."
   (defun pcomplete/tldr ()
     (unless tldr-commands
       (setq tldr-commands
-            (let* ((json
-                    (json-read-file "~/wip/tldr/pages/index.json"))
-                   (commands
-                    (cl-loop for x in (append (assoc-default 'commands json) nil)
-                             collect (assoc-default 'name x))))
-              commands)))
+            (split-string
+             (nth 1 (split-string
+                     (shell-command-to-string "tldr --list")
+                     "\n" t))
+             ", ")))
     (pcomplete-here* tldr-commands))
 
   (use-package eshell-git-prompt
