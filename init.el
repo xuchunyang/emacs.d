@@ -1237,6 +1237,7 @@ See also `describe-function-or-variable'."
   :if (eq system-type 'darwin)
   :ensure t
   :commands (;; org-mac-firefox-insert-frontmost-url
+             org-mac-safari-insert-frontmost-url
              org-mac-chrome-insert-frontmost-url))
 
 (use-package orglink
