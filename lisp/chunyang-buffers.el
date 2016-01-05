@@ -39,24 +39,5 @@ Add this to `kill-buffer-query-functions'."
     (bury-buffer)
     nil))
 
-
-;; Reopen last closed file
-
-(defvar last-killed-file nil)
-
-(define-advice kill-buffer (:around (orig-fun &rest args) record)
-  (let* ((buffer (or (car args) (current-buffer)))
-         (file (with-current-buffer buffer
-                 buffer-file-name)))
-    (and (apply orig-fun args)
-         file
-         (setq last-killed-file file))))
-
-;;;###autoload
-(defun reopen-last-closed-file ()
-  (interactive)
-  (if last-killed-file
-      (find-file last-killed-file)))
-
 (provide 'chunyang-buffers)
 ;;; chunyang-buffers.el ends here
