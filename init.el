@@ -275,6 +275,10 @@
          ("M-P" . winner-undo))
   :config (winner-mode))
 
+(use-package eyebrowse
+  :ensure t
+  :config (eyebrowse-mode))
+
 (use-package shackle
   :ensure t
   :disabled t
