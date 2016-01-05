@@ -1235,7 +1235,13 @@ See also `describe-function-or-variable'."
   ;; Capture
   (setq org-capture-templates
         '(("t" "Todo" entry (file "~/org/todo.org")
-           "* TODO %?\n  %a\n\n  %i"))))
+           "* TODO %?\n  %a\n\n  %i")))
+
+  ;; Dispaly clocking task on OS X menu bar with BitBar
+  (defun chunyang-clocking-task ()
+    (with-temp-buffer
+      (insert org-mode-line-string)
+      (buffer-substring-no-properties (point-min) (point-max)))))
 
 (use-package org-mac-link
   :if (eq system-type 'darwin)
