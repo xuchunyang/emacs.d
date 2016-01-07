@@ -1239,7 +1239,8 @@ See also `describe-function-or-variable'."
 
   ;; Dispaly clocking task on OS X menu bar with BitBar
   (defun chunyang-clocking-task ()
-    (if (org-clocking-p)
+    (if (and (fboundp 'org-clocking-p)
+             (org-clocking-p))
         (with-temp-buffer
           (insert org-mode-line-string)
           (buffer-substring-no-properties (point-min) (point-max)))
