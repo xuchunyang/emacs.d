@@ -81,6 +81,11 @@
   (exec-path-from-shell-copy-env "INFOPATH")
   (exec-path-from-shell-initialize))
 
+(defun restart-emacs ()
+  (interactive)
+  ;; Make '~/.emacs.d/Restart-Emacs.scpt' as an OSX App firstly
+  (shell-command "open -a Restart-Emacs"))
+
 
 ;;; User Interface
 (tool-bar-mode -1)
