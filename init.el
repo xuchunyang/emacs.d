@@ -875,7 +875,6 @@ See also `describe-function-or-variable'."
   (setq magit-revert-buffers t))
 
 (use-package git-gutter
-  :disabled t
   :ensure t
   :diminish git-gutter-mode
   :bind (("C-x C-g" . git-gutter:toggle)
@@ -952,17 +951,18 @@ See also `describe-function-or-variable'."
 
 ;;; Project
 (use-package projectile
-  :disabled t
   :load-path "~/wip/projectile"
   :commands projectile-global-mode
   :diminish projectile-mode
   :init (projectile-global-mode)
   :config
   (setq projectile-completion-system 'helm
-        projectile-mode-line '(" P["
-                               (:propertize (:eval (projectile-project-name))
-                                            face bold)
-                               "]"))
+        projectile-mode-line
+        '(:eval (if (projectile-project-p)
+                    (format " P[%s]"
+                            (propertize (projectile-project-name)
+                                        'face 'bold))
+                  "")))
   (use-package helm-projectile
     :init (helm-projectile-on)))
 
