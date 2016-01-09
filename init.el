@@ -81,10 +81,8 @@
   (exec-path-from-shell-copy-env "INFOPATH")
   (exec-path-from-shell-initialize))
 
-(defun restart-emacs ()
-  (interactive)
-  ;; Make '~/.emacs.d/Restart-Emacs.scpt' as an OSX App firstly
-  (shell-command "open -a Restart-Emacs"))
+(use-package chunyang-osx
+  :commands (restart-emacs omnifocus-new-entry))
 
 
 ;;; User Interface

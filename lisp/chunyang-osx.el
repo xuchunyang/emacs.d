@@ -29,5 +29,23 @@
   "Trash FILE using the Command-Line program \"trash\"."
   (call-process "trash" nil nil nil file))
 
+(defun restart-emacs ()
+  (interactive)
+  ;; Make '~/.emacs.d/Restart-Emacs.scpt' as an OSX App firstly
+  (shell-command "open -a Restart-Emacs"))
+
+(defun omnifocus-new-entry (item)
+  "Add ITEM to OmniFocus Inbox."
+  (interactive "sItem: ")
+  (do-applescript
+   (format
+    (concat
+     "tell application \"OmniFocus\"\n"
+     "    tell default document\n"
+     "        parse tasks into it with transport text \"%s\"\n"
+     "    end tell\n"
+     "end tell\n")
+    item)))
+
 (provide 'chunyang-osx)
 ;;; chunyang-osx.el ends here
