@@ -34,18 +34,35 @@
   ;; Make '~/.emacs.d/Restart-Emacs.scpt' as an OSX App firstly
   (shell-command "open -a Restart-Emacs"))
 
-(defun omnifocus-new-entry (item)
-  "Add ITEM to OmniFocus Inbox."
-  (interactive "sItem: ")
+(defun omnifocus-new-entry-1 (action-title action-note)
   (do-applescript
    (format
     (concat
      "tell application \"OmniFocus\"\n"
      "    tell default document\n"
-     "        parse tasks into it with transport text \"%s\"\n"
+     "        make new inbox task with properties {name:\"%s\", note:\"%s\"}\n"
      "    end tell\n"
      "end tell\n")
-    item)))
+    action-title action-note)))
+
+(defun omnifocus-new-entry ()
+  (interactive)
+  (if (get-buffer "*OmniFocus*") (kill-buffer "*OmniFocus*"))
+  (get-buffer-create "*OmniFocus*")
+  (switch-to-buffer-other-window "*OmniFocus*")
+  (setq-local header-line-format
+              "Capture buffer.  Finish C-c C-c, abort C-c C-k")
+  (local-set-key "\C-c\C-c"
+                 (lambda () (interactive)
+                   (let* ((lines (split-string (buffer-string) "\n"))
+                          (action-title (or (car lines) ""))
+                          (action-note (or (mapconcat
+                                            #'identity
+                                            (nthcdr 2 lines)
+                                            "\n") "")))
+                     (omnifocus-new-entry-1 action-title action-note)
+                     (kill-this-buffer))))
+  (local-set-key "\C-c\C-k" #'kill-this-buffer))
 
 (provide 'chunyang-osx)
 ;;; chunyang-osx.el ends here
