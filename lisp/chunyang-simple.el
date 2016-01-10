@@ -173,32 +173,6 @@ With PREFIX, cd to project root."
   " cmd))))
 
 
-(defun chunyang-copy-buffer-name-as-kill (buf)
-  "Put name of the current buffer to kill-ring."
-  (interactive "b")
-  (kill-new buf))
-
-
-;;; Restore the *scratch* buffer
-(defvar chunyang-scratch-log-file (expand-file-name
-                                   ".scratch.bak~" user-emacs-directory))
-
-(defun chunyang-save-scratch ()
-  (let ((buf (get-buffer "*scratch*")))
-    (when buf
-      (with-current-buffer buf
-        (widen)
-        (ignore-errors
-          (write-region (point-min) (point-max) chunyang-scratch-log-file))))))
-
-(defun chunyang-restore-scratch ()
-  (interactive)
-  (let ((buf (get-buffer "*scratch*")))
-    (when buf
-      (with-current-buffer buf
-        (erase-buffer)
-        (insert-file-contents chunyang-scratch-log-file)))))
-
 (defun chunyang-switch-scratch ()
   (interactive)
   (switch-to-buffer "*scratch*"))
