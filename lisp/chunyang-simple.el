@@ -177,5 +177,17 @@ With PREFIX, cd to project root."
   (interactive)
   (switch-to-buffer "*scratch*"))
 
+(defun scratch-clear ()
+  "Clear *scratch* buffer."
+  (interactive)
+  (with-current-buffer "*scratch*"
+    (if (string= "*scratch*" (buffer-name))
+        (let ((standard-value
+               (eval (car (get 'initial-scratch-message 'standard-value)))))
+          (erase-buffer)
+          (insert (substitute-command-keys standard-value))))))
+
+(define-key lisp-interaction-mode-map "\C-c\C-l" #'scratch-clear)
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
