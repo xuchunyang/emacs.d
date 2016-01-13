@@ -240,7 +240,9 @@
 (use-package chunyang-simple
   :bind (("C-x 3" . chunyang-split-window-right)
          ("C-x 2" . chunyang-split-window-below)
-         ("C-h t" . chunyang-switch-scratch)))
+         ("C-h t" . chunyang-switch-scratch))
+  :commands scratch-clear
+  :init (define-key lisp-interaction-mode-map "\C-c\C-l" #'scratch-clear))
 
 (use-package chunyang-buffers          ; Personal buffer tools
   :commands (lunaryorn-do-not-kill-important-buffers)

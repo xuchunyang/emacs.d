@@ -187,7 +187,5 @@ With PREFIX, cd to project root."
           (erase-buffer)
           (insert (substitute-command-keys standard-value))))))
 
-(define-key lisp-interaction-mode-map "\C-c\C-l" #'scratch-clear)
-
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
