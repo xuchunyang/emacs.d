@@ -235,6 +235,7 @@
   :config (setq uniquify-buffer-name-style 'forward))
 
 (use-package autorevert                 ; Auto-revert buffers of changed files
+  :diminish auto-revert-mode
   :init (global-auto-revert-mode))
 
 (use-package chunyang-simple
