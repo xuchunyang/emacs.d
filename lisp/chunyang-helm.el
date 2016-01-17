@@ -11,7 +11,10 @@
 
 (use-package helm-mode                  ; Use helm completing everywhere
   :diminish helm-mode
-  :config (helm-mode))
+  :config
+  (helm-mode)
+  (add-to-list 'helm-completing-read-handlers-alist
+               '(where-is . helm-completing-read-symbols)))
 
 ;;; key bindings, M-0 to M-9
 (progn
