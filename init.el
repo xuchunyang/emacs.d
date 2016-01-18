@@ -192,7 +192,14 @@
                               "/itsalltext/"  ; It's all text temp files
                               ".*\\.gz\\'"
                               "TAGS"
-                              ".*-autoloads\\.el\\'")))
+                              ".*-autoloads\\.el\\'"))
+
+  ;; Reopen Last Closed File
+  (defun reopen-last-closed-file ()
+    (interactive)
+    (find-file (car recentf-list)))
+
+  (define-key (current-global-map) "\M-z" #'reopen-last-closed-file))
 
 (use-package bookmark
   :defer t
