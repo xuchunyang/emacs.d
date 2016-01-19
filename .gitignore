@@ -100,3 +100,6 @@ wconf-window-configs.el
 network-security.data
 
 /semanticdb
+
+# tldr.el
+/tldr/
