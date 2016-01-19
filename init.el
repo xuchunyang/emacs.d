@@ -1167,9 +1167,12 @@ See also `describe-function-or-variable'."
         (when last-arg
           (insert last-arg)))))
   (defun eshell/imgcat (img)
-    "Display image."
-    (eshell-print
-     (propertize " " 'display (create-image (expand-file-name img))))
+    "Display image(s)."
+    (cond ((stringp img)
+           (eshell-print
+            (propertize " " 'display (create-image (expand-file-name img)))))
+          ((listp img)
+           (dolist (i img) (eshell/imgcat i))))
     nil)
   :bind  (("C-!"   . eshell-command)
           ("C-x m" . eshell)
