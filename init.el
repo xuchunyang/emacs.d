@@ -460,12 +460,17 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-(defun view-help-buffer ()
-  "View the `*Help*' buffer."
-  (interactive)
-  (display-buffer (help-buffer)))
-
-(bind-key "C-h h" #'view-help-buffer)
+(use-package help-mode
+  :preface
+  (defun view-help-buffer ()
+    "View the `*Help*' buffer."
+    (interactive)
+    (display-buffer (help-buffer)))
+  :bind ("C-h h" . view-help-buffer)
+  :config
+  (bind-keys :map help-mode-map
+             ("b" . help-go-back)
+             ("f" . help-go-forward)))
 
 
 ;;; Navigation and scrolling
