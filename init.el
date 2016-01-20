@@ -1166,13 +1166,13 @@ See also `describe-function-or-variable'."
                     (substring-no-properties (eshell-get-history 0)))))))
         (when last-arg
           (insert last-arg)))))
-  (defun eshell/imgcat (img)
+  (defun eshell/imgcat (&rest args)
     "Display image(s)."
-    (cond ((stringp img)
-           (eshell-print
-            (propertize " " 'display (create-image (expand-file-name img)))))
-          ((listp img)
-           (dolist (i img) (eshell/imgcat i))))
+    (let ((elems (eshell-flatten-list args)))
+      (while elems
+        (eshell-printn
+         (propertize " " 'display (create-image (expand-file-name (car elems)))))
+        (setq elems (cdr elems))))
     nil)
   :bind  (("C-!"   . eshell-command)
           ("C-x m" . eshell)
