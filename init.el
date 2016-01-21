@@ -771,6 +771,7 @@
   (unbind-key "C-j" paredit-mode-map)
   (unbind-key "M-q" paredit-mode-map)
   (unbind-key "M-?" paredit-mode-map)
+  (unbind-key "M-;" paredit-mode-map)
 
   (use-package paredit-menu
     :ensure t
@@ -1224,6 +1225,7 @@ See also `describe-function-or-variable'."
     (pcomplete-here* tldr-commands))
 
   (use-package eshell-git-prompt
+    :disabled t
     :load-path "~/wip/eshell-git-prompt"
     :config (eshell-git-prompt-use-theme 'powerline))
 

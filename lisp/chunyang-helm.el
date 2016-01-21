@@ -69,6 +69,7 @@
     :defer t)
 
   (use-package helm-ls-svn
+    :disabled t
     :load-path "~/wip/chunyang/helm-ls-svn.el"
     :bind ("M-8" . helm-ls-svn-ls))
 
