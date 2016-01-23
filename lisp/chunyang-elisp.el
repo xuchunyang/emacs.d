@@ -196,6 +196,21 @@ With a prefix argument N, (un)comment that many sexps."
     (browse-url (format "http://melpa.org/#/%s"
                         (symbol-name package)))))
 
+;; This macro requires Emacs 25+
+(define-advice describe-package-1 (:around (orig-fun &rest args) add-melpa-link)
+  "Add package's MELPA link section."
+  ;; Assuming all packages are on MELPA for convenience, though it's not true.
+  (apply orig-fun args)
+  (let ((melpa-link
+         (format "http://melpa.org/#/%s" (symbol-name (car args)))))
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "Summary:" nil t)
+        (forward-line 1)
+        (package--print-help-section "MELPA")
+        (help-insert-xref-button melpa-link 'help-url melpa-link)
+        (insert "\n")))))
+
 
 ;;; Ugly hack - Make `&' save recent value during C-x C-e, just like `*' in IELM
 
