@@ -201,8 +201,12 @@ With a prefix argument N, (un)comment that many sexps."
   "Add package's MELPA link section."
   ;; Assuming all packages are on MELPA for convenience, though it's not true.
   (apply orig-fun args)
-  (let ((melpa-link
-         (format "http://melpa.org/#/%s" (symbol-name (car args)))))
+  (let* ((pkg (car args))
+         (name (if (package-desc-p pkg)
+                   (package-desc-name pkg)
+                 (symbol-name pkg)))
+         (melpa-link
+          (format "http://melpa.org/#/%s" name)))
     (save-excursion
       (goto-char (point-min))
       (when (re-search-forward "Summary:" nil t)
