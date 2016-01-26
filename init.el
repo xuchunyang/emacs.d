@@ -682,14 +682,14 @@
 ;;; Spelling and syntax checking
 
 (use-package flyspell
-  :diminish flyspell-mode
+  :init
+  (add-hook 'text-mode-hook #'flyspell-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  (use-package ispell
+    :init
+    (setq ispell-program-name "aspell"
+          ispell-extra-args '("--sug-mode=ultra")))
   :bind ("C-c t s" . flyspell-mode)
-  ;; :init
-  ;; (use-package ispell
-  ;;   :config (setq ispell-program-name "aspell"
-  ;;                 ispell-extra-args '("--sug-mode=ultra")))
-  ;; (add-hook 'text-mode-hook #'flyspell-mode)
-  ;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
   :config
   (unbind-key "C-." flyspell-mode-map)
   (unbind-key "C-M-i" flyspell-mode-map)
@@ -884,21 +884,17 @@ See also `describe-function-or-variable'."
 (use-package magit
   :ensure t
   :bind (("C-x g"   . magit-status)
-         ("C-x M-g" . magit-dispatch-popup))
-  :config
-  (setq magit-revert-buffers t))
+         ("C-x M-g" . magit-dispatch-popup)))
 
 (use-package git-gutter
   :ensure t
-  :diminish git-gutter-mode
-  :bind (("C-x C-g" . git-gutter:toggle)
+  :bind (("C-x C-g" . git-gutter-mode)
          ("C-x v n" . git-gutter:next-hunk)
          ("C-x v p" . git-gutter:previous-hunk)
          ("C-x v s" . git-gutter:stage-hunk)
          ("C-x v r" . git-gutter:revert-hunk))
   :init
-  (setq git-gutter:handled-backends '(git svn))
-  (global-git-gutter-mode))
+  (setq git-gutter:handled-backends '(git svn)))
 
 (use-package diff-hl
   :disabled t
@@ -1301,6 +1297,7 @@ See also `describe-function-or-variable'."
   :ensure t
   :defer t
   :config
+  (load "~/quicklisp/slime-helper.el")
   (setq inferior-lisp-program "sbcl")
   (setq slime-contribs '(slime-fancy)))
 
