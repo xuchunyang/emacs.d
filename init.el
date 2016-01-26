@@ -487,6 +487,10 @@
 (setq mouse-wheel-progressive-speed nil
       mouse-wheel-scroll-amount '(1))
 
+(bind-key* "C-M-p" #'scroll-up-line)
+(bind-key* "C-M-n" #'scroll-down-line)
+;; Use `C-M-l' instead of twice `C-l' for a better view
+
 (use-package page-break-lines           ; Turn page breaks into lines
   :ensure t
   :diminish page-break-lines-mode
