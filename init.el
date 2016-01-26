@@ -72,7 +72,7 @@
         mac-command-modifier 'meta
         mac-option-modifier 'control))
 
-(use-package exec-path-from-shell       ; TODO: Try /etc/paths instead
+(use-package exec-path-from-shell
   :disabled t
   :ensure t
   :if (and (eq system-type 'darwin) (display-graphic-p))
