@@ -1089,7 +1089,7 @@ Called with a prefix arg set search provider (default Google)."
           (if prefix
               (completing-read
                "Set search provider: "
-               (split-string (shell-command-to-string "s -l") "\n" t))))
+               (split-string (shell-command-to-string "s -l") "\n" t) nil t)))
          (initial
           (or (if (region-active-p)
                   (buffer-substring-no-properties
