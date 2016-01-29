@@ -143,13 +143,17 @@
 (use-package spaceline
   :disabled t
   :load-path "~/wip/spaceline"
-  :defer t
+  ;; :defer t
   :init
   (require 'spaceline-config)
-  (spaceline-spacemacs-theme)
+  ;; (spaceline-spacemacs-theme)
+  (spaceline-emacs-theme)
+  (spaceline-helm-mode)
+  (spaceline-info-mode)
   :config
   (setq powerline-default-separator 'wave)
-  (setq spaceline-workspace-numbers-unicode t))
+  (setq spaceline-workspace-numbers-unicode t)
+  (setq anzu-cons-mode-line-p nil))
 
 ;; Echo Area
 (setq echo-keystrokes 0.6)
