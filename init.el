@@ -73,11 +73,11 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell
-  :disabled t
+  :if (eq window-system 'ns)
   :ensure t
-  :if (and (eq system-type 'darwin) (display-graphic-p))
   :init
   (setq exec-path-from-shell-check-startup-files nil)
+  :config
   (exec-path-from-shell-copy-env "INFOPATH")
   (exec-path-from-shell-initialize))
 
