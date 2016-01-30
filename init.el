@@ -103,13 +103,10 @@
 (setq custom-safe-themes t)
 
 (use-package spacemacs-theme
-  :defer t
-  :load-path "~/wip/spacemacs-theme"
+  :ensure t
   :init
-  (add-to-list 'custom-theme-load-path "~/wip/spacemacs-theme")
   (setq spacemacs-theme-comment-bg nil
-        spacemacs-theme-org-height nil
-        spacemacs-theme-org-highlight nil)
+        spacemacs-theme-org-height nil)
   (load-theme 'spacemacs-dark :no-confirm))
 
 ;; Mode line
