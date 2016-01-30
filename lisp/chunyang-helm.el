@@ -188,4 +188,37 @@
   :defer t
   :config (setq helm-org-headings-fontify t))
 
+
+;;; Manage Emacs's hook
+(defun helm-hooks ()
+  ;; Note: It's much better to add a custom action to `helm-apropos', however,
+  ;; its action is not customizable and I'm not sure this function is useful for
+  ;; other helm users.
+  (interactive)
+  (let ((default (thing-at-point 'symbol)))
+    (helm :sources
+          (helm-build-sync-source "Choose hook"
+            :candidates
+            (all-completions "" obarray
+                             (lambda (x)
+                               (and (boundp x) (not (keywordp x))
+                                    (string-match "-hook$" (symbol-name x)))))
+            ;; TODO: This is needed to make sure :preselect is working (which
+            ;; might be a bug of helm)
+            :candidate-number-limit 9999
+            :action
+            (lambda (candidate)
+              (run-at-time 0.01 nil
+                           (lambda (hook)
+                             (helm :sources
+                                   (helm-build-sync-source (format "Manage function(s) from %s" hook)
+                                     :candidates (mapcar #'symbol-name (symbol-value hook))
+                                     :action (helm-make-actions
+                                              "Remove this function from hook"
+                                              (lambda (candidate)
+                                                ;; Warn: I'm not handling the LOCAL argument
+                                                (remove-hook hook (intern-soft candidate)))))))
+                           (intern-soft candidate))))
+          :preselect default)))
+
 (provide 'chunyang-helm)
