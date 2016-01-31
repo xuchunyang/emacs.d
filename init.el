@@ -573,8 +573,7 @@
 (use-package rainbow-delimiters         ; Highlight delimiters by depth
   :ensure t
   :defer t
-  :init (dolist (hook '(text-mode-hook prog-mode-hook))
-          (add-hook hook #'rainbow-delimiters-mode)))
+  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (use-package hl-todo
   :ensure t
