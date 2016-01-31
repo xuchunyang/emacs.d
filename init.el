@@ -164,9 +164,10 @@
 
   (add-hook 'kill-emacs-hook
             (lambda ()
-              (with-current-buffer "*scratch*"
-                (setq initial-scratch-message
-                      (buffer-string)))))
+              (ignore-errors
+                (with-current-buffer "*scratch*"
+                  (setq initial-scratch-message
+                        (buffer-string))))))
 
   (add-hook 'emacs-startup-hook      ; Assuming it runs after *scratch* is ready
             (lambda ()
