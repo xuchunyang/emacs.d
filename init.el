@@ -93,7 +93,20 @@
 
 (setq ring-bell-function #'ignore)      ; Don't ring bell on C-g
 
-(fset 'yes-or-no-p #'y-or-n-p)
+;; This is not safe
+;; (fset 'yes-or-no-p #'y-or-n-p)
+
+(defvar Orig-yes-or-no-p (symbol-function 'yes-or-no-p))
+(define-advice yes-or-no-p (:around (orig-fun prompt) or-just-y-or-n-p)
+  (funcall
+   (if (or
+        ;; refresh in Help buffer
+        (and (string= (buffer-name) "*Help*")
+             (eq this-command 'revert-buffer))
+        (eq this-command 'projectile-kill-buffers)
+        (eq this-command 'git-gutter:stage-hunk))
+       #'y-or-n-p Orig-yes-or-no-p)
+   prompt))
 
 ;; Font
 (set-face-attribute 'default nil
