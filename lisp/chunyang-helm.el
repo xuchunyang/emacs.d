@@ -189,6 +189,42 @@
   :config (setq helm-org-headings-fontify t))
 
 
+;;; Manage advises
+(defun advice--members (symbol)
+  (let ((definition (advice--symbol-function symbol))
+        (fns '()))
+    (while (advice--p definition)
+      (push (advice--car definition) fns)
+      (setq definition (advice--cdr definition)))
+    (nreverse fns)))
+
+(defun helm-manage-nadvice ()
+  (interactive)
+  (helm :sources
+        (helm-build-sync-source "Advices"
+          :candidates
+          (cl-remove-if-not
+           (lambda (func-name)
+             (and (featurep 'nadvice)
+                  (advice--p (advice--symbol-function (intern func-name)))))
+           (all-completions "" obarray #'fboundp))
+          :coerce #'intern
+          :action
+          (lambda (candidate)
+            (run-at-time
+             0.01 nil
+             (lambda (symbol)
+               (message "`%s' is advised by `%s'"
+                        symbol
+                        (advice--members symbol))
+               (helm :sources
+                     (helm-build-sync-source (format "Remove advice(s) from %s" symbol)
+                       :candidates (mapcar #'symbol-name (advice--members symbol))
+                       :coerce #'intern
+                       :action (lambda (ad) (advice-remove symbol ad)))))
+             candidate)))))
+
+
 ;;; Manage Emacs's hook
 (defun helm-manage-hooks ()
   ;; Note: It's much better to add a custom action to `helm-apropos', however,
