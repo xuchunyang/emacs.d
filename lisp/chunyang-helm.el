@@ -190,7 +190,7 @@
 
 
 ;;; Manage Emacs's hook
-(defun helm-hooks ()
+(defun helm-manage-hooks ()
   ;; Note: It's much better to add a custom action to `helm-apropos', however,
   ;; its action is not customizable and I'm not sure this function is useful for
   ;; other helm users.
