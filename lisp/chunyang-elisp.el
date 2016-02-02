@@ -286,6 +286,23 @@ With a prefix argument N, (un)comment that many sexps."
   :global t
   :lighter (:eval (format " [%d]" (point))))
 
+
+;; Display function's short docstring along side with args in eldoc
+(define-advice elisp-get-fnsym-args-string (:around (orig-fun &rest r) append-func-doc)
+  (concat
+   (apply orig-fun r)
+   (let* ((f (car r))
+          (fdoc
+           (and (fboundp f)
+                (documentation f)))
+          (fdoc-short
+           (and (stringp fdoc)
+                (substring fdoc 0 (string-match "\n" fdoc)))))
+     (when (and (stringp fdoc-short)
+                (not (string-blank-p fdoc-short)))
+       ;; TODO: Face
+       (concat "  |  " fdoc-short)))))
+
 (provide 'chunyang-elisp)
 
 ;;; chunyang-elisp.el ends here
