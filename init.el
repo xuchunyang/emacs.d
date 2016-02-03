@@ -480,7 +480,7 @@
   (defun view-help-buffer ()
     "View the `*Help*' buffer."
     (interactive)
-    (display-buffer (help-buffer)))
+    (select-window (display-buffer (help-buffer))))
   :bind ("C-h h" . view-help-buffer)
   :config
   (bind-keys :map help-mode-map
