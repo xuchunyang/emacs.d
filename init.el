@@ -104,7 +104,8 @@
         (and (string= (buffer-name) "*Help*")
              (eq this-command 'revert-buffer))
         (eq this-command 'projectile-kill-buffers)
-        (eq this-command 'git-gutter:stage-hunk))
+        (eq this-command 'git-gutter:stage-hunk)
+        (eq this-command 'git-gutter:revert-hunk))
        #'y-or-n-p Orig-yes-or-no-p)
    prompt))
 
