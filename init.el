@@ -14,7 +14,7 @@
 
 (require 'package)
 ;; FIXME: check this option
-;; (setq package-enable-at-startup nil)
+(setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 (package-initialize)
@@ -440,6 +440,9 @@
   :ensure t
   :bind ("C-=" . er/expand-region))
 
+(use-package drag-stuff
+  :ensure t)
+
 (use-package align                      ; Align text in buffers
   :bind (("C-c A a" . align)
          ("C-c A c" . align-current)
@@ -724,7 +727,6 @@
                 checkdoc-force-docstrings-flag nil))
 
 (use-package flycheck
-  :disabled t
   :ensure t
   :bind (("C-c t f" . global-flycheck-mode)
          ("C-c L e" . list-flycheck-errors))
@@ -993,7 +995,8 @@ See also `describe-function-or-variable'."
                                         'face 'bold))
                   "")))
   (use-package helm-projectile
-    :init (helm-projectile-on)))
+    :load-path "~/wip/helm-projectile"
+    :config (helm-projectile-on)))
 
 
 ;;; Web & IRC & Email & RSS
@@ -1072,20 +1075,20 @@ See also `describe-function-or-variable'."
     :init (mu4e-maildirs-extension)))
 
 (use-package erc
-  :config
-  ;; Join the #emacs channels whenever connecting to Freenode.
-  (setq erc-autojoin-channels-alist '(("freenode.net" "#emacs")))
-
-  ;; Shorten buffer name (e.g., "freenode" instead of "irc.freenode.net:6667")
-  (setq erc-rename-buffers t)
-
+  :preface
   (defun chat ()
     "Chat in IRC with ERC."
     (interactive)
     (erc :server "irc.freenode.net"
          :port "6667"
          :nick erc-nick
-         :password erc-password)))
+         :password erc-password))
+  :init
+  ;; Join the #emacs channels whenever connecting to Freenode.
+  (setq erc-autojoin-channels-alist '(("freenode.net" "#emacs")))
+  ;; Shorten buffer name (e.g., "freenode" instead of "irc.freenode.net:6667")
+  (setq erc-rename-buffers t)
+  :defer t)
 
 (use-package sx                  :ensure t :defer t)
 
