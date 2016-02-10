@@ -124,13 +124,13 @@
   (load-theme 'spacemacs-dark :no-confirm))
 
 ;; Mode line
-(defvar chunyang-mode-line-format mode-line-format
+(defvar Orig-mode-line-format mode-line-format
   "Original value of `mode-line-format'.")
 
 (defun chunyang-revert-modeline ()
   "Revert to the default Emacs mode-line."
   (interactive)
-  (setq-default mode-line-format chunyang-mode-line-format))
+  (setq-default mode-line-format Orig-mode-line-format))
 
 (setq-default mode-line-format
               '("%e" mode-line-front-space
