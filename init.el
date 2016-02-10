@@ -514,7 +514,12 @@
   :ensure t
   :diminish page-break-lines-mode
   :defer t
-  :init (add-hook 'prog-mode-hook #'page-break-lines-mode))
+  :preface
+  (defun add-hook* (hooks funs)
+    (dolist (hook (if (listp hooks) hooks (list hooks)))
+      (dolist (fun (if (listp funs) funs (list funs)))
+        (add-hook hook fun))))
+  :init (add-hook* '(prog-mode-hook help-mode-hook) #'page-break-lines-mode))
 
 (use-package outline                    ; Navigate outlines in buffers
   :disabled t
