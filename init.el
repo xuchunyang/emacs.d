@@ -485,11 +485,16 @@
     "View the `*Help*' buffer."
     (interactive)
     (select-window (display-buffer (help-buffer))))
+  (defun help-info-lookup-symbol ()
+    (interactive)
+    (when-let ((symbol (cadr help-xref-stack-item)))
+      (info-lookup-symbol symbol)))
   :bind ("C-h h" . view-help-buffer)
   :config
   (bind-keys :map help-mode-map
              ("b" . help-go-back)
-             ("f" . help-go-forward)))
+             ("f" . help-go-forward)
+             ("i" . help-info-lookup-symbol)))
 
 
 ;;; Navigation and scrolling
