@@ -808,6 +808,10 @@
     :ensure t
     :commands menubar-paredit))
 
+(use-package adjust-parens              ; TODO: Try it!!!
+  :ensure t
+  :config (add-hook 'emacs-lisp-mode-hook #'adjust-parens-mode))
+
 
 ;;; Emacs Lisp
 (use-package lisp-mode
