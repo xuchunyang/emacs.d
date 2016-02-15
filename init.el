@@ -268,10 +268,9 @@
   :commands scratch-clear
   :init (define-key lisp-interaction-mode-map "\C-c\C-l" #'scratch-clear))
 
-(use-package chunyang-buffers          ; Personal buffer tools
-  :commands (lunaryorn-do-not-kill-important-buffers)
-  :init (add-hook 'kill-buffer-query-functions
-                  #'lunaryorn-do-not-kill-important-buffers))
+(use-package chunyang-buffers           ; Personal buffer tools
+  :config (add-hook 'kill-buffer-query-functions
+                    #'lunaryorn-do-not-kill-important-buffers))
 
 (bind-key "O" #'delete-other-windows  special-mode-map)
 (bind-key "Q" #'kill-this-buffer      special-mode-map)
