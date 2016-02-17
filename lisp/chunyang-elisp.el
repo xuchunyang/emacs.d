@@ -300,8 +300,7 @@ With a prefix argument N, (un)comment that many sexps."
                 (substring fdoc 0 (string-match "\n" fdoc)))))
      (when (and (stringp fdoc-short)
                 (not (string-blank-p fdoc-short)))
-       ;; TODO: Face
-       (concat "  |  " fdoc-short)))))
+       (concat "  |  " (propertize fdoc-short 'face 'italic))))))
 
 (provide 'chunyang-elisp)
 
