@@ -24,147 +24,9 @@
 
 ;;; Code:
 
-(defvar chunyang-elisp-debug-buffer "*Debug ELisp Log*")
-
-(defvar chunyang-elisp-debug t
-  "If non-nil, write log message into `chunyang-elisp-debug-buffer' buffer.")
-
-(defmacro aif (test-form then-form &rest else-forms)
-  "Anaphoric if."
-  (declare (indent 2))
-  `(let ((it ,test-form))
-     (if it ,then-form ,@else-forms)))
-
-(defmacro awhen (test &rest body)
-  "Anaphoric when."
-  (declare (indent 1))
-  `(let ((it ,test))
-     (when it ,@body)))
-
 
-;;; TODO: Improve message & logging
-;; Utility: logging
-(defmacro m (&rest args)
-  `(message-box "%s" (list ,@args)))
+;; TODO: Log
 
-(defmacro mm (format-string &rest args)
-  `(message-box ,format-string ,@args))
-
-(defun chunyang-elisp-log (format-string &rest args)
-  "Log message if `chunyang-elisp-debug-buffer' is non-nil.
-Messages are written to  the `chunyang-elisp-debug-buffer' buffer.
-
-Argument FORMAT-STRING is a string to use with `format'.
-Use optional arguments ARGS like in `format'.
-
-Adapted from `helm-log'."
-  (when chunyang-elisp-debug
-    (let ((buffer (current-buffer)))
-      (with-current-buffer (get-buffer-create chunyang-elisp-debug-buffer)
-        (outline-mode)
-        (buffer-disable-undo)
-        (setq-local inhibit-read-only t)
-        (goto-char (point-max))
-        (insert (let ((tm (current-time)))
-                  (format (concat (if (string-match "Start session" format-string)
-                                      "* " "** ")
-                                  "%s.%06d (%s:%d)\n %s\n")
-                          (format-time-string "%H:%M:%S" tm)
-                          (nth 2 tm)
-                          buffer (line-number-at-pos)
-                          (apply #'format (cons format-string args)))))))))
-
-(defun view-debug-log-buffer ()
-  "View the `*Debug ELisp Log*' buffer."
-  (interactive)
-  (display-buffer "*Debug ELisp Log*"))
-
-(global-set-key (kbd "C-h g") #'view-debug-log-buffer)
-
-(defalias 'my-log #'chunyang-elisp-log)
-(defalias 'l #'chunyang-elisp-log)
-
-(defun uncomment-sexp (&optional n)
-  "Uncomment a sexp around point."
-  (interactive "P")
-  (let* ((initial-point (point-marker))
-         (p)
-         (end (save-excursion
-                (when (elt (syntax-ppss) 4)
-                  (re-search-backward comment-start-skip
-                                      (line-beginning-position)
-                                      t))
-                (setq p (point-marker))
-                (comment-forward (point-max))
-                (point-marker)))
-         (beg (save-excursion
-                (forward-line 0)
-                (while (= end (save-excursion
-                                (comment-forward (point-max))
-                                (point)))
-                  (forward-line -1))
-                (goto-char (line-end-position))
-                (re-search-backward comment-start-skip
-                                    (line-beginning-position)
-                                    t)
-                (while (looking-at-p comment-start-skip)
-                  (forward-char -1))
-                (point-marker))))
-    (unless (= beg end)
-      (uncomment-region beg end)
-      (goto-char p)
-      ;; Indentify the "top-level" sexp inside the comment.
-      (while (and (ignore-errors (backward-up-list) t)
-                  (>= (point) beg))
-        (skip-chars-backward (rx (syntax expression-prefix)))
-        (setq p (point-marker)))
-      ;; Re-comment everything before it.
-      (ignore-errors
-        (comment-region beg p))
-      ;; And everything after it.
-      (goto-char p)
-      (forward-sexp (or n 1))
-      (skip-chars-forward "\r\n[:blank:]")
-      (if (< (point) end)
-          (ignore-errors
-            (comment-region (point) end))
-        ;; If this is a closing delimiter, pull it up.
-        (goto-char end)
-        (skip-chars-forward "\r\n[:blank:]")
-        (when (= 5 (car (syntax-after (point))))
-          (delete-indentation))))
-    ;; Without a prefix, it's more useful to leave point where
-    ;; it was.
-    (unless n
-      (goto-char initial-point))))
-
-(defun comment-sexp--raw ()
-  "Comment the sexp at point or ahead of point."
-  (pcase (or (bounds-of-thing-at-point 'sexp)
-             (save-excursion
-               (skip-chars-forward "\r\n[:blank:]")
-               (bounds-of-thing-at-point 'sexp)))
-    (`(,l . ,r)
-     (goto-char r)
-     (skip-chars-forward "\r\n[:blank:]")
-     (comment-region l r)
-     (skip-chars-forward "\r\n[:blank:]"))))
-
-(defun comment-or-uncomment-sexp (&optional n)
-  "Comment the sexp at point and move past it.
-If already inside (or before) a comment, uncomment instead.
-With a prefix argument N, (un)comment that many sexps."
-  (interactive "P")
-  (if (or (elt (syntax-ppss) 4)
-          (< (save-excursion
-               (skip-chars-forward "\r\n[:blank:]")
-               (point))
-             (save-excursion
-               (comment-forward 1)
-               (point))))
-      (uncomment-sexp n)
-    (dotimes (_ (or n 1))
-      (comment-sexp--raw))))
 
 ;;; package
 (defun open-package-melpa-page (package)
@@ -216,25 +78,27 @@ With a prefix argument N, (un)comment that many sexps."
         (insert "\n")))))
 
 
-;;; Ugly hack - Make `&' save recent value during C-x C-e, just like `*' in IELM
+;;; Upgrade packages without 'M-x package-list-packages'
+(defun package--outdated-packages ()
+  "Return a list of names of packages outdated."
+  (cl-loop for p in (mapcar #'car package-alist)
+           with get-version = (lambda (pkg where)
+                                (let ((desc (cadr (assq pkg where))))
+                                  (and desc (package-desc-version desc))))
+           for v1 = (funcall get-version p package-alist)
+           for v2 = (funcall get-version p package-archive-contents)
+           when (and v1 v2 (version-list-< v1 v2))
+           collect p))
 
-;; (with-eval-after-load "elisp-mode"
-;;   (defvar & nil
-;;     "Most recent value evaluated in *scratch*.")
-
-;;   (defun eval-last-sexp (eval-last-sexp-arg-internal)
-;;     "Re-define version by Chunyang Xu, for save recent value to `&'."
-;;     (interactive "P")
-;;     (if (null eval-expression-debug-on-error)
-;;         (elisp--eval-last-sexp eval-last-sexp-arg-internal)
-;;       (let ((value
-;;              (let ((debug-on-error elisp--eval-last-sexp-fake-value))
-;;                (cons (elisp--eval-last-sexp eval-last-sexp-arg-internal)
-;;                      debug-on-error))))
-;;         (unless (eq (cdr value) elisp--eval-last-sexp-fake-value)
-;;           (setq debug-on-error (cdr value)))
-;;         (prog1 (car value)
-;;           (setq & (car value)))))))
+;; TODO: Finish this
+(defun package-upgrade ()
+  (interactive)
+  (mapc (lambda (p)
+          (let ((mode-line-process '(t (format "Upgrading %s..." p))))
+            (force-mode-line-update)
+            (package-install (cadr (assq p package-archive-contents)))
+            (package-delete (cadr (assq p package-alist)))))
+        (package--outdated-packages)))
 
 
 ;;; Another C-j for `lisp-interaction-mode'
@@ -280,6 +144,7 @@ With a prefix argument N, (un)comment that many sexps."
                (elisp--eval-last-sexp-print-value res t)
                (buffer-string))))
     (unless (current-line-empty-p) (terpri))))
+
 
 (define-minor-mode display-pos-mode
   "Display position in mode line mainly for testing and debugging."
