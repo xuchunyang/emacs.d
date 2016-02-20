@@ -109,7 +109,20 @@
        #'y-or-n-p Orig-yes-or-no-p)
    prompt))
 
-;; Font
+;; Answer yes automatically in some commands
+(defun yes-or-no-bypass (orig-fun &rest args)
+  (cl-letf (((symbol-function 'yes-or-no-p) (lambda (&rest args) t)))
+    (apply orig-fun args)))
+
+(defcustom yes-or-no-bypass-functions '(projectile-kill-buffers)
+  "Functions which bypass `yes-or-no-p'."
+  :type '(repeat (choice function))
+  :set (lambda (var val)
+         (set var val)
+         (dolist (sym yes-or-no-bypass-functions)
+           (advice-add sym :around 'yes-or-no-bypass))))
+
+;; Font#
 (set-face-attribute 'default nil
                     :font "Source Code Pro-13")
 
