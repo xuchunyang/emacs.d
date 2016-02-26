@@ -241,27 +241,29 @@
 
 ;;; Minibuffer with helm
 
-(defvar chunyang-prefer-helm-p t)
+(defcustom chunyang-completion-system 'helm
+  "My preferred completion system."
+  :type '(radio (const default)
+                (const ido)
+                (const ivy)
+                (const helm)))
 
-(when chunyang-prefer-helm-p
-  (require 'chunyang-helm))
+(use-package chunyang-helm
+  :if (eq chunyang-completion-system 'helm))
 
-(use-package swiper
-  :if (not chunyang-prefer-helm-p)
-  :ensure t
+(use-package ivy
+  :if (eq chunyang-completion-system 'ivy)
+  :ensure swiper
   :bind (("C-z"    .  ivy-resume)
          ("C-s"    .  swiper)
          ("M-l"    .  ivy-switch-buffer)
          ("C-x f"  .  ivy-recentf))
   :config
   (ivy-mode)
-  (diminish 'ivy-mode)
-  (bind-key "C-o" 'imenu))
-
-(use-package counsel
-  :if (not chunyang-prefer-helm-p)
-  :ensure t
-  :bind ("M-x" . counsel-M-x))
+  (bind-key "C-o" 'imenu)
+  (use-package counsel
+    :ensure t
+    :bind ("M-x" . counsel-M-x)))
 
 
 ;;; Buffers, Windows and Frames
@@ -287,6 +289,7 @@
 
 (bind-key "O" #'delete-other-windows  special-mode-map)
 (bind-key "Q" #'kill-this-buffer      special-mode-map)
+(bind-key "C-x k" #'kill-this-buffer)
 
 (use-package ace-window
   :ensure t
@@ -634,6 +637,7 @@
   (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 
 (use-package highlight-symbol           ; Highlighting and commands for symbols
+  :disabled t
   :ensure t
   :diminish highlight-symbol-mode
   :init
@@ -821,6 +825,7 @@
     :commands menubar-paredit))
 
 (use-package adjust-parens              ; TODO: Try it!!!
+  :disabled t
   :ensure t
   :config (add-hook 'emacs-lisp-mode-hook #'adjust-parens-mode))
 
@@ -1008,21 +1013,23 @@ See also `describe-function-or-variable'."
 
 ;;; Project
 (use-package projectile
-  :load-path "~/wip/projectile"
-  :commands projectile-global-mode
+  :ensure t
   :diminish projectile-mode
-  :init (projectile-global-mode)
   :config
-  (setq projectile-completion-system 'helm
+  (setq projectile-completion-system chunyang-completion-system
         projectile-mode-line
         '(:eval (if (projectile-project-p)
                     (format " P[%s]"
                             (propertize (projectile-project-name)
                                         'face 'bold))
                   "")))
-  (use-package helm-projectile
-    :load-path "~/wip/helm-projectile"
-    :config (helm-projectile-on)))
+  (projectile-global-mode))
+
+(use-package helm-projectile
+  :if (eq chunyang-completion-system 'helm)
+  :after projectile
+  :ensure t
+  :config (helm-projectile-on))
 
 
 ;;; Web & IRC & Email & RSS
