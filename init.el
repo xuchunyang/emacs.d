@@ -279,9 +279,9 @@
 (use-package chunyang-simple
   :bind (("C-x 3" . chunyang-split-window-right)
          ("C-x 2" . chunyang-split-window-below)
-         ("C-h t" . chunyang-switch-scratch))
-  :commands scratch-clear
-  :init (define-key lisp-interaction-mode-map "\C-c\C-l" #'scratch-clear))
+         ("C-h t" . chunyang-switch-scratch)
+         :map lisp-interaction-mode-map
+         ("C-c C-l" . scratch-clear)))
 
 (use-package chunyang-buffers           ; Personal buffer tools
   :config (add-hook 'kill-buffer-query-functions
@@ -504,12 +504,11 @@
     (interactive)
     (when-let ((symbol (cadr help-xref-stack-item)))
       (info-lookup-symbol symbol)))
-  :bind ("C-h h" . view-help-buffer)
-  :config
-  (bind-keys :map help-mode-map
-             ("b" . help-go-back)
-             ("f" . help-go-forward)
-             ("i" . help-info-lookup-symbol)))
+  :bind (("C-h h" . view-help-buffer)
+         :map help-mode-map
+         ("b" . help-go-back)
+         ("f" . help-go-forward)
+         ("i" . help-info-lookup-symbol)))
 
 
 ;;; Navigation and scrolling
@@ -743,9 +742,10 @@
   (unbind-key "C-M-i" flyspell-mode-map)
   (unbind-key "C-;" flyspell-mode-map)
   (use-package flyspell-popup
-    :load-path "~/wip/flyspell-popup"
+    :ensure t
+    :bind (:map flyspell-mode-map
+                ("C-." . flyspell-popup-correct))
     :config
-    (bind-key "C-." #'flyspell-popup-correct flyspell-mode-map)
     (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
 
 (use-package checkdoc
