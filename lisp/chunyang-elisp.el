@@ -167,6 +167,23 @@
                 (not (string-blank-p fdoc-short)))
        (concat "  |  " (propertize fdoc-short 'face 'italic))))))
 
+
+;; Misc
+(defun describe-command (command)
+  (interactive
+   (let* ((fn (function-called-at-point))
+          (cmd (and (commandp fn) fn))
+          val)
+     (setq val (completing-read (if cmd
+                                    (format "Describe command (default %s): " cmd)
+                                  "Describe command: ")
+                                obarray 'commandp t nil nil
+                                (and cmd (symbol-name cmd))))
+     (list (if (equal val "")
+               cmd (intern val)))))
+  (describe-function command))
+
+
 (provide 'chunyang-elisp)
 
 ;;; chunyang-elisp.el ends here
