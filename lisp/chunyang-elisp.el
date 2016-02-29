@@ -100,6 +100,16 @@
             (package-delete (cadr (assq p package-alist)))))
         (package--outdated-packages)))
 
+(define-advice package-install (:around (orig-fun &rest args) update-pkg-database-if-needed)
+  (condition-case err
+      (apply orig-fun args)
+    (file-error
+     (message "%s" (error-message-string err))
+     (sit-for 1)
+     (message "Refreshing package database...")
+     (package-refresh-contents)
+     (apply orig-fun args))))
+
 
 ;;; Another C-j for `lisp-interaction-mode'
 
