@@ -439,7 +439,7 @@
   (with-eval-after-load "isearch"
     (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)))
 
-(use-package pin)
+(use-package pin :disabled t)
 
 (use-package ace-link
   :ensure t
@@ -579,6 +579,7 @@
   (use-package wgrep :ensure t :defer t))
 
 (use-package anzu                       ; Position/matches count for isearch
+  :disabled t
   :ensure t
   :diminish anzu-mode
   :init (global-anzu-mode)
@@ -730,6 +731,7 @@
 ;;; Spelling and syntax checking
 
 (use-package flyspell
+  :disabled t
   :init
   (add-hook 'text-mode-hook #'flyspell-mode)
   (add-hook 'prog-mode-hook #'flyspell-prog-mode)
@@ -1160,26 +1162,12 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; Dictionary
 (use-package youdao-dictionary
-  :load-path "~/wip/youdao-dictionary"
+  :ensure t
   :bind (("C-c y" . youdao-dictionary-search)
-         ("C-c Y" . youdao-dictionary-search-at-point+))
-  ;; :config (setq url-cache-expire-time (* 60 60 24) ; 24 hours
-  ;;               url-automatic-caching t)
-  )
-
-(use-package translate-shell
-  :disabled t
-  :load-path "~/wip/translate-shell.el"
-  :bind (("C-c s"   . translate-shell-brief)
-         ("C-c S"   . translate-shell))
-  :config
-  ;; <https://translate.google.com> is blocked in China for no apparent
-  ;; reason. No one ever asked my option.
-  (setq translate-shell-command "proxychains4 -q trans -t en %s"
-        translate-shell-brief-command "proxychains4 -q trans -brief -t zh %s"))
+         ("C-c Y" . youdao-dictionary-search-at-point+)))
 
 (use-package osx-dictionary
-  :load-path "~/wip/osx-dictionary.el"
+  :ensure t
   :bind ("C-c d" . osx-dictionary-search-pointer))
 
 (use-package bing-dict
@@ -1257,9 +1245,9 @@ Called with a prefix arg set search provider (default Google)."
          (propertize " " 'display (create-image (expand-file-name (car elems)))))
         (setq elems (cdr elems))))
     nil)
-  :bind  (("C-!"   . eshell-command)
-          ("C-x m" . eshell)
-          ("C-x M" . eshell*))
+  ;; :bind  (("C-!"   . eshell-command)
+  ;;         ("C-x m" . eshell)
+  ;;         ("C-x M" . eshell*))
   :config
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
@@ -1306,20 +1294,19 @@ Called with a prefix arg set search provider (default Google)."
     :load-path "~/wip/eshell-git-prompt"
     :config (eshell-git-prompt-use-theme 'powerline))
 
-  (use-package eshell-z
-    :load-path "~/wip/eshell-z"))
+  (use-package eshell-z :ensure t))
 
 (use-package eshell-did-you-mean
-  :load-path "~/wip/eshell-did-you-mean"
+  :ensure t
   :config (eshell-did-you-mean-setup))
 
 
 ;;; Org mode
 
 ;;; Install org from Git, since I have trouble to access http://orgmode.org/elpa/
-(add-to-list 'load-path "~/wip/org-mode/lisp")
+;; (add-to-list 'load-path "~/wip/org-mode/lisp")
 ;; Various org-mode extensions
-(add-to-list 'load-path "~/wip/org-mode/contrib/lisp" :append)
+;; (add-to-list 'load-path "~/wip/org-mode/contrib/lisp" :append)
 
 (use-package org
   :bind (("C-c a"   . org-agenda)
@@ -1359,6 +1346,7 @@ Called with a prefix arg set search provider (default Google)."
              org-mac-chrome-insert-frontmost-url))
 
 (use-package orglink
+  :ensure t
   :diminish orglink-mode
   :config (global-orglink-mode))
 
@@ -1375,6 +1363,7 @@ Called with a prefix arg set search provider (default Google)."
 ;;; Common Lisp
 
 (use-package slime
+  :disabled t
   :ensure t
   :defer t
   :config
