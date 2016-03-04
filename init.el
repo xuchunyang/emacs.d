@@ -127,10 +127,11 @@
                     :font "Source Code Pro-13")
 
 ;; Theme
-(setq custom-safe-themes t)
+;; (setq custom-safe-themes t)             ; Treat all themes as safe
 
 (use-package spacemacs-theme
   :ensure t
+  :defer t
   :init
   (setq spacemacs-theme-comment-bg nil
         spacemacs-theme-org-height nil)
