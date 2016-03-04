@@ -184,25 +184,26 @@
 (setq echo-keystrokes 0.6)
 
 
+;; Don't use Round quotes (new feature intruduced in Emacs-25), it looks cute
+;; but causes problems.
+(setq text-quoting-style 'grave)
+
 ;;; Emacs session persistence
 (use-package desktop                    ; frame/window/buffer and global vars
   :config
+  ;; Save the content of *scratch* across sessions
   (add-to-list 'desktop-globals-to-save 'initial-scratch-message)
   (desktop-save-mode)
 
   (add-hook 'kill-emacs-hook
             (lambda ()
-              (ignore-errors
-                (with-current-buffer "*scratch*"
+              (when-let ((buf (get-buffer "*scratch*")))
+                (with-current-buffer buf
+                  ;; FIXME: Emacs deals with `initial-scratch-message' with
+                  ;; `substitute-command-keys', which does a lot unwanted
+                  ;; conversions.
                   (setq initial-scratch-message
-                        (buffer-string))))))
-
-  (add-hook 'emacs-startup-hook      ; Assuming it runs after *scratch* is ready
-            (lambda ()
-              "Fix 标点符号 caused by `substitute-command-keys'."
-              (-when-let (buffer (get-buffer "*scratch*"))
-                (goto-char (point-min))
-                (replace-string "’" "'")))))
+                        (buffer-string)))))))
 
 (use-package savehist                   ; Minibuffer history
   :init (savehist-mode)
