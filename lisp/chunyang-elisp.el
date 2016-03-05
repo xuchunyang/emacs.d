@@ -90,7 +90,7 @@
            when (and v1 v2 (version-list-< v1 v2))
            collect p))
 
-;; TODO: Finish this
+;; TODO: Finish this (NOTE: package-utils provides this kind of function)
 (defun package-upgrade ()
   (interactive)
   (mapc (lambda (p)
@@ -101,14 +101,30 @@
         (package--outdated-packages)))
 
 (define-advice package-install (:around (orig-fun &rest args) update-pkg-database-if-needed)
-  (condition-case err
-      (apply orig-fun args)
-    (file-error
-     (message "%s" (error-message-string err))
-     (sit-for 1)
-     (message "Refreshing package database...")
-     (package-refresh-contents)
-     (apply orig-fun args))))
+  (if (called-interactively-p 'any)
+      (condition-case err
+          (apply orig-fun args)
+        (file-error
+         (message "%s" (error-message-string err))
+         (sit-for 1)
+         (message "Refreshing package database...")
+         (package-refresh-contents)
+         (apply orig-fun args)))
+    (apply orig-fun args)))
+
+;; This ugly hack is to reuse the interactive from of `package-install'.
+(eval
+ (macroexpand
+  `(defun package-install-maybe-refresh (pkg &optional dont-select)
+     "Like `package-install' but call `package-refresh-contents' once if PKG is not found."
+     ,(interactive-form 'package-install)
+     (condition-case err
+         (package-install pkg dont-select)
+       (file-error
+        (message "%s" (error-message-string err))
+        (sit-for .5)
+        (package-refresh-contents)
+        (package-install pkg dont-select))))))
 
 
 ;;; Another C-j for `lisp-interaction-mode'
