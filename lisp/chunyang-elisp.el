@@ -114,17 +114,16 @@
 
 ;; This ugly hack is to reuse the interactive from of `package-install'.
 (eval
- (macroexpand
-  `(defun package-install-maybe-refresh (pkg &optional dont-select)
-     "Like `package-install' but call `package-refresh-contents' once if PKG is not found."
-     ,(interactive-form 'package-install)
-     (condition-case err
-         (package-install pkg dont-select)
-       (file-error
-        (message "%s" (error-message-string err))
-        (sit-for .5)
-        (package-refresh-contents)
-        (package-install pkg dont-select))))))
+ `(defun package-install-maybe-refresh (pkg &optional dont-select)
+    "Like `package-install' but call `package-refresh-contents' once if PKG is not found."
+    ,(interactive-form 'package-install)
+    (condition-case err
+        (package-install pkg dont-select)
+      (file-error
+       (message "%s" (error-message-string err))
+       (sit-for .5)
+       (package-refresh-contents)
+       (package-install pkg dont-select)))))
 
 
 ;;; Another C-j for `lisp-interaction-mode'
