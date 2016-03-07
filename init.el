@@ -183,6 +183,10 @@
 ;; Echo Area
 (setq echo-keystrokes 0.6)
 
+;; M-x display-time-world
+(with-eval-after-load 'time
+  (add-to-list 'display-time-world-list '("Asia/Shanghai" "上海")))
+
 
 ;; Don't use Round quotes (new feature intruduced in Emacs-25), it looks cute
 ;; but causes problems.
