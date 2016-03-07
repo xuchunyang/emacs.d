@@ -203,6 +203,7 @@
             (lambda ()
               (when-let ((buf (get-buffer "*scratch*")))
                 (with-current-buffer buf
+                  (widen)
                   ;; FIXME: Emacs deals with `initial-scratch-message' with
                   ;; `substitute-command-keys', which does a lot unwanted
                   ;; conversions.
