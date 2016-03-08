@@ -34,10 +34,13 @@
 
 (require 'subr-x)
 (require 'rx)
-(use-package dash :ensure t)
+(use-package dash
+  :ensure t
+  :config (dash-enable-font-lock))
 
 ;; http://lists.gnu.org/archive/html/help-gnu-emacs/2008-06/msg00087.html
-(defmacro measure-time (&rest body)
+(defmacro measure-time (&rest body)     ; oops, try (info "(elisp) Profiling")
+                                        ; instead
   "Measure the time it takes to evaluate BODY."
   `(let ((time (current-time)))
      ,@body
@@ -86,8 +89,8 @@
 
 
 ;;; User Interface
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
+(when (bound-and-true-p scroll-bar-mode) (scroll-bar-mode -1))
 
 (setq inhibit-startup-screen t)
 
@@ -1363,7 +1366,7 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; Emacs Development
 
-(setq tags-table-list '("~/wip/emacs"))
+(setq tags-table-list '("~/Projects/emacs"))
 
 
 ;;; Common Lisp
