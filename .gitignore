@@ -103,3 +103,6 @@ network-security.data
 
 # tldr.el
 /tldr/
+
+# Emacs tutorial
+/tutorial/
