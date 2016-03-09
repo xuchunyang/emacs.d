@@ -186,6 +186,24 @@ With PREFIX, cd to project root."
                (eval (car (get 'initial-scratch-message 'standard-value)))))
           (erase-buffer)
           (insert (substitute-command-keys standard-value))))))
+
+(defun my-list-setnth (list n new-elt)
+  (setcar (nthcdr n list) new-elt))
+
+
+(defmacro remap-key (from-key-name to-key-name)
+  ;; Assuming `global-map' and ignoring prefix arg for simplicity
+  (let ((cmd `(lambda (&optional arg)
+                (interactive "p")
+                (execute-kbd-macro (read-kbd-macro ,from-key-name)))))
+    `(define-key (current-global-map) (read-kbd-macro ,to-key-name) ,cmd)))
+;; (remap-key "C-e RET" "C-o")
+
+(defmacro define-command-from-key (cmd-name key-name)
+  `(defun ,cmd-name (&optional arg)
+     (interactive "p")
+     (execute-kbd-macro (read-kbd-macro ,key-name))))
+;; (define-command-from-key foo "C-e RET")
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
