@@ -948,7 +948,13 @@ See also `describe-function-or-variable'."
 (use-package magit
   :ensure t
   :bind (("C-x g"   . magit-status)
-         ("C-x M-g" . magit-dispatch-popup)))
+         ("C-x M-g" . magit-dispatch-popup))
+  :config
+  ;; To use colored git output in Eshell, I have color.ui set to always, but
+  ;; this option breaks Magit, so set it to auto on Magit side.
+  (setq magit-git-global-arguments
+        (append magit-git-global-arguments
+                '("-c" "color.ui=auto"))))
 
 (use-package git-gutter
   :ensure t
