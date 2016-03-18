@@ -28,13 +28,20 @@
 
 ;; Define `config' to group package configuration (an alternative to
 ;; `use-package')
-(defmacro config (pkg &rest body)
+(defmacro config (pkg &rest args)
   "Group PKG's configuration in one place."
   ;; TODO: :if
   ;; TODO: :ensure
   ;; TODO: :bind
+  ;; TODO: Handle error (by wrapping `condition-case'?)
   (declare (indent defun))
-  `(progn ,@body))
+  (if (memq :disabled args)
+      (let ((t-or-nil (plist-get args :disabled)))
+        (setq args (delq :disabled args))
+        (setq args (delq t-or-nil args))
+        (unless t-or-nil
+          `(progn ,@args)))
+    `(progn ,@args)))
 
 ;; My private packages
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
