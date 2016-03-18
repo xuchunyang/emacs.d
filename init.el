@@ -26,6 +26,16 @@
 
 (require 'use-package)
 
+;; Define `config' to group package configuration (an alternative to
+;; `use-package')
+(defmacro config (pkg &rest body)
+  "Group PKG's configuration in one place."
+  ;; TODO: :if
+  ;; TODO: :ensure
+  ;; TODO: :bind
+  (declare (indent defun))
+  `(progn ,@body))
+
 ;; My private packages
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
@@ -1031,6 +1041,7 @@ See also `describe-function-or-variable'."
 
 ;;; Project
 (use-package projectile
+  :disabled t
   :ensure t
   :diminish projectile-mode
   :config
@@ -1324,6 +1335,7 @@ Called with a prefix arg set search provider (default Google)."
 ;; (add-to-list 'load-path "~/wip/org-mode/contrib/lisp" :append)
 
 (use-package org
+  :disabled t
   :bind (("C-c a"   . org-agenda)
          ("C-c c"   . org-capture)
          ("C-c l"   . org-store-link)
@@ -1352,6 +1364,21 @@ Called with a prefix arg set search provider (default Google)."
           (insert org-mode-line-string)
           (buffer-substring-no-properties (point-min) (point-max)))
       "[无所事事]")))
+
+(config org
+  ;; Keys
+  (define-key mode-specific-map "l" #'org-store-link)
+  (define-key mode-specific-map "a" #'org-agenda)
+  (define-key mode-specific-map "c" #'org-capture)
+
+  ;; Agenda
+  (setq org-agenda-files '("~/"))
+
+  ;; Capture
+  (setq org-default-notes-file "~/notes.org")
+  (setq org-capture-templates
+        '(("i" "Add to Inbox" entry (file+headline "~/notes.org" "Inbox")
+           "* %?\n  %i\n  %a"))))
 
 (use-package org-mac-link
   :if (eq system-type 'darwin)
