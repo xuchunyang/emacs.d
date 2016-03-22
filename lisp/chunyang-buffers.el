@@ -79,5 +79,28 @@ strip text properties from the line."
         (setq longest line
               longest-linum linum)))))
 
+
+;;; Commands
+
+;; My answer to
+;; http://emacs.stackexchange.com/questions/21149/let-switch-to-buffer-to-already-open-buffer-switch-to-that-window-rather-than-o
+;; I keep it here since it looks like a useful alternative to
+;; `switch-to-buffer', though now I only use `helm-mini'.
+(defun chunyang-switch-to-buffer (buffer)
+  "Display BUFFER in the selected window.
+If BUFFER is displayed in some window, select that window instead."
+  (interactive
+   (list (get-buffer (read-buffer
+                      "Switch to buffer: "
+                      (other-buffer (current-buffer))))))
+  (cond
+   ((eq buffer (window-buffer)))
+   ((catch 'this-is-it
+      (dolist (win (window-list) nil)
+        (when (eq buffer (window-buffer win))
+          (select-window win)
+          (throw 'this-is-it t)))))
+   (t (switch-to-buffer buffer))))
+
 (provide 'chunyang-buffers)
 ;;; chunyang-buffers.el ends here
