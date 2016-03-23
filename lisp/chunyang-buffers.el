@@ -95,12 +95,9 @@ If BUFFER is displayed in some window, select that window instead."
                       (other-buffer (current-buffer))))))
   (cond
    ((eq buffer (window-buffer)))
-   ((catch 'this-is-it
-      (dolist (win (window-list) nil)
-        (when (eq buffer (window-buffer win))
+   (t (if-let ((win (get-buffer-window buffer)))
           (select-window win)
-          (throw 'this-is-it t)))))
-   (t (switch-to-buffer buffer))))
+        (switch-to-buffer buffer)))))
 
 (provide 'chunyang-buffers)
 ;;; chunyang-buffers.el ends here
