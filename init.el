@@ -255,7 +255,8 @@
     (interactive)
     (find-file (car recentf-list)))
 
-  (define-key (current-global-map) "\M-z" #'reopen-last-closed-file))
+  ;; (define-key (current-global-map) "\M-z" #'reopen-last-closed-file)
+  )
 
 (use-package bookmark
   :defer t
@@ -616,7 +617,7 @@
   (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
 (use-package region-state
-  :load-path "~/wip/region-state.el/"
+  :ensure t
   :config (region-state-mode))
 
 (use-package pinyin-search
@@ -806,7 +807,8 @@
 (use-package markdown-mode
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
-  :config (setq markdown-command "kramdown"))
+  :config
+  (setq markdown-command "pandoc -f markdown -t html"))
 
 (use-package yaml-mode :ensure t :defer t)
 
@@ -1048,7 +1050,6 @@ See also `describe-function-or-variable'."
 
 ;;; Project
 (use-package projectile
-  :disabled t
   :ensure t
   :diminish projectile-mode
   :config
@@ -1382,9 +1383,9 @@ Called with a prefix arg set search provider (default Google)."
   (setq org-agenda-files '("~/"))
 
   ;; Capture
-  (setq org-default-notes-file "~/notes.org")
+  (setq org-default-notes-file "~/todo.org")
   (setq org-capture-templates
-        '(("i" "Add to Inbox" entry (file+headline "~/notes.org" "Inbox")
+        '(("i" "Add to Inbox" entry (file+headline "~/todo.org" "Inbox")
            "* %?\n  %i\n  %a"))))
 
 (use-package org-mac-link
