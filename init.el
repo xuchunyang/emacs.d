@@ -324,8 +324,8 @@
   :preface
   (defun chunyang-ace-window (arg)
     "A modified version of `ace-window'.
-     When number of window <= 3, invoke `other-window', otherwise `ace-window'.
-     One C-u, swap window, two C-u, delete window."
+When number of window <= 3, invoke `other-window', otherwise `ace-window'.
+One C-u, swap window, two C-u, delete window."
     (interactive "p")
     (cl-case arg
       (0
