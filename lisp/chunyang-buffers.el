@@ -99,5 +99,13 @@ If BUFFER is displayed in some window, select that window instead."
           (select-window win)
         (switch-to-buffer buffer)))))
 
+;; Another solution (which is more general)
+;;
+;; (define-advice switch-to-buffer (:around (orig-fun &rest args) hack)
+;;   (if-let ((win (get-buffer-window (car args))))
+;;       (select-window win)
+;;     (apply orig-fun args)))
+
+
 (provide 'chunyang-buffers)
 ;;; chunyang-buffers.el ends here
