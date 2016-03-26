@@ -42,5 +42,46 @@
   (local-set-key (kbd "RET") 'widget-button-press)
   (local-set-key [down-mouse-1] 'widget-button-click))
 
+
+;; -----------------------------------------------------------------------------
+;; Run-length
+;;
+
+;; https://en.wikipedia.org/wiki/Run-length_encoding
+
+(defun run-length-encode (str)
+  "Return Run-Length representation of STR as a string."
+  (with-temp-buffer
+    (let ((idx 0)
+          (len (length str))
+          this-char last-char occur)
+      (while (< idx len)
+        (let ((this-char (aref str idx)))
+          (if (eq this-char last-char)
+              (setq occur (+ 1 occur))
+            (if last-char
+                (insert (format "%d%c" occur last-char)))
+            (setq last-char this-char
+                  occur 1))
+          (if (= (+ 1 idx) len)
+              (insert (format "%d%c" occur last-char))))
+        (setq idx (+ 1 idx))))
+    (buffer-string)))
+
+(defun run-length-decode (str)
+  "Decode Run-Length representation."
+  (with-temp-buffer
+    (let ((idx 0)
+          this-char occur char)
+      (while (< idx (length str))
+        (let ((this-char (aref str idx)))
+          (if (< ?0 this-char ?9)
+              (setq occur (concat occur (char-to-string this-char)))
+            (setq char this-char)
+            (insert (make-string (string-to-number occur) char))
+            (setq occur nil)))
+        (setq idx (+ 1 idx))))
+    (buffer-string)))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
