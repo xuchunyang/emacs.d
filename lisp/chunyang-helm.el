@@ -1,6 +1,6 @@
 ;; Install helm from Git
-(add-to-list 'load-path "~/wip/async")
-(add-to-list 'load-path "~/wip/helm")
+(add-to-list 'load-path "~/Projects/emacs-async")
+(add-to-list 'load-path "~/Projects/helm")
 (setq helm-command-prefix-key "C-c h")
 (require 'helm-config)
 
@@ -39,6 +39,9 @@
       (helm-maybe-exit-minibuffer))))
 
 ;; (setq helm-candidate-number-limit 100)
+
+;; Defaults to 15, not working correctly in helm-occur, so disable it :(
+(setq helm-highlight-matches-around-point-max-lines 0)
 
 (use-package helm-adaptive
   :disabled t
@@ -118,31 +121,17 @@
   :bind ("C-c f l" . helm-locate-library))
 
 ;; Set up shorter key bindings
-(bind-keys ("M-x"                            . helm-M-x)
-           ;; File
-           ("C-x C-f"                        . helm-find-files)
-           ("C-x f"                          . helm-recentf)
-           ("C-x C-d"                        . helm-browse-project)
-           ;; Buffer
-           ([remap switch-to-buffer]         . helm-buffers-list)       ; C-x b
-           ("M-l"                            . helm-mini)               ; M-l
-           ;; Kill Ring
-           ([remap yank-pop]                 . helm-show-kill-ring)     ; M-y
-           ("C-z"                            . helm-resume)
-           ;; Register
-           ("C-x r j"                        . helm-register) ; jump-to-register
-           ;; Help
-           ([remap apropos-command]          . helm-apropos)            ; C-h a
-           ;; Bookmark
-           ([remap bookmark-jump]            . helm-filtered-bookmarks) ; C-x r b
-           ;; TAGS
-           ;; ([remap xref-find-definitions] . helm-etags-select)
-           ;;  Mark Ring
-           ;; ("C-c <SPC>"                      . helm-all-mark-rings)
-           ;; Occur
-           ("M-i"                            . helm-occur)
-           ;; Imenu
-           ("C-o"                            . helm-semantic-or-imenu))
+(bind-keys ("M-x"     . helm-M-x)
+           ("C-x C-f" . helm-find-files)
+           ("C-x f"   . helm-recentf)
+           ("C-x C-d" . helm-browse-project)
+           ("M-l"     . helm-mini)
+           ("M-y"     . helm-show-kill-ring)
+           ("C-z"     . helm-resume)
+           ("C-x r j" . helm-register)
+           ("C-h a"   . helm-apropos)
+           ("M-i"     . helm-occur)
+           ("C-o"     . helm-semantic-or-imenu))
 
 (bind-keys :map helm-command-map
            ("g"   . helm-chrome-bookmarks)
@@ -256,5 +245,21 @@
                                                 (remove-hook hook (intern-soft candidate)))))))
                            (intern-soft candidate))))
           :preselect default)))
+
+
+;; Utilities
+(defmacro helm-string (string)
+  `(helm :sources (helm-build-in-buffer-source "Helm String"
+                    :data ,string)))
+
+(defmacro helm-list (list)
+  (let ((tempvar (make-symbol "stringify-list")))
+    `(let ((,tempvar (mapcar (lambda (obj) (format "%s" obj)) ,list)))
+       (helm :sources (helm-build-sync-source "Helm List"
+                        :candidates ,tempvar)))))
+
+(defun helm-shell-command (command)
+  (interactive (list (read-shell-command "Shell command: ")))
+  (helm-string (shell-command-to-string command)))
 
 (provide 'chunyang-helm)
