@@ -1386,7 +1386,7 @@ Called with a prefix arg set search provider (default Google)."
   (setq org-default-notes-file "~/todo.org")
   (setq org-capture-templates
         '(("i" "Add to Inbox" entry (file+headline "~/todo.org" "Inbox")
-           "* %?\n  %i\n  %a"))))
+           "* %?\n%i\n%a" :empty-lines 1))))
 
 (use-package org-mac-link
   :if (eq system-type 'darwin)
