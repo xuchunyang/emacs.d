@@ -83,5 +83,30 @@
         (setq idx (+ 1 idx))))
     (buffer-string)))
 
+;; -----------------------------------------------------------------------------
+;; Fibonacci number
+;;
+
+;; 1 1 2 3 5 8 13 21 34 55 89 144 ...
+
+(defun fib (n)
+  (if (memq n '(1 2))
+      1
+    (+ (fib (- n 1))
+       (fib (- n 2)))))
+
+(defun fib-list (n)
+  (let (last last-last this res)
+    (dolist (i (number-sequence 1 n))
+      (if (memq i '(1 2))
+          (setq res (cons 1 res)
+                last 1
+                last-last 1)
+        (let ((this (+ last last-last)))
+          (setq res (cons this res)
+                last-last last
+                last this))))
+    (nreverse res)))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
