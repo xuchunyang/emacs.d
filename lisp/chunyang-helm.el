@@ -73,11 +73,12 @@
 
   (use-package helm-ls-svn
     :disabled t
-    :load-path "~/wip/chunyang/helm-ls-svn.el"
+    :ensure t
     :bind ("M-8" . helm-ls-svn-ls))
 
   (use-package helm-fuzzy-find
-    :load-path "~/wip/helm-fuzzy-find/"
+    :disabled t
+    :ensure t
     :commands helm-fuzzy-find))
 
 (use-package helm-color                 ; Input colors with Helm
@@ -147,8 +148,8 @@
          ("C-c C-s" . helm-do-ag-project-root)))
 
 (use-package helm-descbinds
-  ;; :ensure t
-  :load-path "~/wip/helm-descbinds/"
+  :disabled t
+  :ensure t
   :config
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
