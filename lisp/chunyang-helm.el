@@ -100,7 +100,16 @@
 
 (use-package helm-regexp
   :defer t
-  :init (bind-key "M-i" #'helm-occur-from-isearch isearch-mode-map))
+  :init (bind-key "M-i" #'helm-occur-from-isearch isearch-mode-map)
+  :config
+  (defun isearch-from-helm-occur ()
+    (interactive)
+    (helm-run-after-exit
+     (lambda (initial)
+       (isearch-forward nil t)
+       (isearch-yank-string initial))
+     helm-pattern))
+  (define-key helm-moccur-map "\C-s" #'isearch-from-helm-occur))
 
 (use-package helm-ring
   :defer t
