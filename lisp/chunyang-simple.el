@@ -208,15 +208,14 @@ With PREFIX, cd to project root."
 
 ;; Swapping two regions of text
 
-;; TODO: Accross two buffers
+;; TODO: Replace region A with region B
 
-(defvar my-region-histroy nil "Two recent regions history list.")
+(defvar my-region-histroy '(nil . nil) "Two recent regions history as a cons cell.")
 
 (defun my-track-region ()
-  (setq my-region-histroy
-        (list (cons (current-buffer)
-                    (cons (region-beginning) (region-end)))
-              (car my-region-histroy))))
+  (setcdr my-region-histroy (car my-region-histroy))
+  (setcar my-region-histroy (cons (current-buffer)
+                                  (cons (region-beginning) (region-end)))))
 
 (add-hook 'deactivate-mark-hook #'my-track-region)
 
@@ -224,10 +223,25 @@ With PREFIX, cd to project root."
   "Swap two recent regions."
   (interactive "*")
   (when (use-region-p) (my-track-region))
-  (unless (cadr my-region-histroy)
+  (unless (cdr my-region-histroy)
     (user-error "Need two regions to swap"))
-  (transpose-subr-1 (cdr (car my-region-histroy))
-                    (cdr (cadr my-region-histroy))))
+  (let ((buf1 (caar my-region-histroy))
+        (pos1 (cdar my-region-histroy))
+        (buf2 (cadr my-region-histroy))
+        (pos2 (cddr my-region-histroy)))
+    (if (eq buf1 buf2)
+        (transpose-subr-1 pos1 pos2)
+      ;; Oops, the region in `buf2' (the older) must be deactivated
+      (let ((text1 (with-current-buffer buf1
+                     (buffer-substring (car pos1) (cdr pos1))))
+            (text2 (with-current-buffer buf2
+                     (buffer-substring (car pos2) (cdr pos2)))))
+        (with-current-buffer buf1
+          (delete-region (car pos1) (cdr pos1))
+          (insert text2))
+        (with-current-buffer buf2
+          (delete-region (car pos2) (cdr pos2))
+          (insert text1))))))
 
 (define-key global-map "\C-c\C-t" #'swap-regions)
 
