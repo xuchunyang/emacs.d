@@ -221,7 +221,7 @@ With PREFIX, cd to project root."
 
 (defun swap-regions ()
   "Swap two recent regions."
-  (interactive)
+  (interactive "*")
   (if (use-region-p)
       (progn
         (unless (car my-region-histroy)
