@@ -214,7 +214,8 @@ With PREFIX, cd to project root."
 
 (defun my-track-region ()
   (setq my-region-histroy
-        (list (cons (region-beginning) (region-end))
+        (list (cons (current-buffer)
+                    (cons (region-beginning) (region-end)))
               (car my-region-histroy))))
 
 (add-hook 'deactivate-mark-hook #'my-track-region)
@@ -222,16 +223,11 @@ With PREFIX, cd to project root."
 (defun swap-regions ()
   "Swap two recent regions."
   (interactive "*")
-  (if (use-region-p)
-      (progn
-        (unless (car my-region-histroy)
-          (user-error "Need two regions to swap"))
-        (transpose-subr-1 (car my-region-histroy)
-                          (cons (region-beginning) (region-end))))
-    (unless (cadr my-region-histroy)
-      (user-error "Need two regions to swap"))
-    (transpose-subr-1 (car my-region-histroy)
-                      (cadr my-region-histroy))))
+  (when (use-region-p) (my-track-region))
+  (unless (cadr my-region-histroy)
+    (user-error "Need two regions to swap"))
+  (transpose-subr-1 (cdr (car my-region-histroy))
+                    (cdr (cadr my-region-histroy))))
 
 (define-key global-map "\C-c\C-t" #'swap-regions)
 
