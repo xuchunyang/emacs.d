@@ -205,5 +205,29 @@ With PREFIX, cd to project root."
      (execute-kbd-macro (read-kbd-macro ,key-name))))
 ;; (define-command-from-key foo "C-e RET")
 
+
+;; Swapping two regions of text
+
+;; TODO: Accross two buffers
+
+(defvar my-region-histroy nil "Two recent regions history list.")
+
+(defun my-track-region ()
+  (setq my-region-histroy
+        (list (cons (region-beginning) (region-end))
+              (car my-region-histroy))))
+
+(add-hook 'deactivate-mark-hook #'my-track-region)
+
+(defun swap-regions ()
+  "Swap two recent regions."
+  (interactive)
+  (unless (cadr my-region-histroy)
+    (user-error "Select two regions to swap"))
+  (transpose-subr-1 (car my-region-histroy)
+                    (cadr my-region-histroy)))
+
+(define-key global-map "\C-c\C-t" #'swap-regions)
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
