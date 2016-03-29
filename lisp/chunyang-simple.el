@@ -222,10 +222,16 @@ With PREFIX, cd to project root."
 (defun swap-regions ()
   "Swap two recent regions."
   (interactive)
-  (unless (cadr my-region-histroy)
-    (user-error "Select two regions to swap"))
-  (transpose-subr-1 (car my-region-histroy)
-                    (cadr my-region-histroy)))
+  (if (use-region-p)
+      (progn
+        (unless (car my-region-histroy)
+          (user-error "Need two regions to swap"))
+        (transpose-subr-1 (car my-region-histroy)
+                          (cons (region-beginning) (region-end))))
+    (unless (cadr my-region-histroy)
+      (user-error "Need two regions to swap"))
+    (transpose-subr-1 (car my-region-histroy)
+                      (cadr my-region-histroy))))
 
 (define-key global-map "\C-c\C-t" #'swap-regions)
 
