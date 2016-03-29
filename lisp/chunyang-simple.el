@@ -231,7 +231,10 @@ With PREFIX, cd to project root."
         (pos2 (cddr my-region-histroy)))
     (if (eq buf1 buf2)
         (transpose-subr-1 pos1 pos2)
-      ;; Oops, the region in `buf2' (the older) must be deactivated
+      ;; Oops, the region in `buf2' (the older) must be deactivated.
+      ;; This can be solved by tracking buffer change with `pre-command-hook',
+      ;; `post-command.' etc (for real examples, refer to beacon.el and
+      ;; region-state.el)
       (let ((text1 (with-current-buffer buf1
                      (buffer-substring (car pos1) (cdr pos1))))
             (text2 (with-current-buffer buf2
