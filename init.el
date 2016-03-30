@@ -538,6 +538,9 @@ One C-u, swap window, two C-u, delete window."
          ("f" . help-go-forward)
          ("i" . help-info-lookup-symbol)))
 
+(use-package command-log-mode
+  :ensure t)
+
 
 ;;; Navigation and scrolling
 
@@ -619,6 +622,14 @@ One C-u, swap window, two C-u, delete window."
 (use-package region-state
   :ensure t
   :config (region-state-mode))
+
+(use-package swap-regions
+  :load-path "~/Projects/swap-regions.el"
+  :config
+  (define-key global-map "\C-c\C-t" #'swap-regions))
+
+(use-package abolish
+  :load-path "~/Projects/emacs-abolish")
 
 (use-package pinyin-search
   :ensure t
