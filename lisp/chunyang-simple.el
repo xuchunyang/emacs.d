@@ -205,48 +205,5 @@ With PREFIX, cd to project root."
      (execute-kbd-macro (read-kbd-macro ,key-name))))
 ;; (define-command-from-key foo "C-e RET")
 
-
-;; Swapping two regions of text
-
-;; TODO: Replace region A with region B
-
-(defvar my-region-histroy '(nil . nil) "Two recent regions history as a cons cell.")
-
-(defun my-track-region ()
-  (setcdr my-region-histroy (car my-region-histroy))
-  (setcar my-region-histroy (cons (current-buffer)
-                                  (cons (region-beginning) (region-end)))))
-
-(add-hook 'deactivate-mark-hook #'my-track-region)
-
-(defun swap-regions ()
-  "Swap two recent regions."
-  (interactive "*")
-  (when (use-region-p) (my-track-region))
-  (unless (cdr my-region-histroy)
-    (user-error "Need two regions to swap"))
-  (let ((buf1 (caar my-region-histroy))
-        (pos1 (cdar my-region-histroy))
-        (buf2 (cadr my-region-histroy))
-        (pos2 (cddr my-region-histroy)))
-    (if (eq buf1 buf2)
-        (transpose-subr-1 pos1 pos2)
-      ;; Oops, the region in `buf2' (the older) must be deactivated.
-      ;; This can be solved by tracking buffer change with `pre-command-hook',
-      ;; `post-command.' etc (for real examples, refer to beacon.el and
-      ;; region-state.el)
-      (let ((text1 (with-current-buffer buf1
-                     (buffer-substring (car pos1) (cdr pos1))))
-            (text2 (with-current-buffer buf2
-                     (buffer-substring (car pos2) (cdr pos2)))))
-        (with-current-buffer buf1
-          (delete-region (car pos1) (cdr pos1))
-          (insert text2))
-        (with-current-buffer buf2
-          (delete-region (car pos2) (cdr pos2))
-          (insert text1))))))
-
-(define-key global-map "\C-c\C-t" #'swap-regions)
-
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
