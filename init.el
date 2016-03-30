@@ -125,7 +125,9 @@
              (eq this-command 'revert-buffer))
         (eq this-command 'projectile-kill-buffers)
         (eq this-command 'git-gutter:stage-hunk)
-        (eq this-command 'git-gutter:revert-hunk))
+        (eq this-command 'git-gutter:revert-hunk)
+        (eq this-command 'org-ctrl-c-ctrl-c)
+        (eq this-command 'org-open-at-point))
        #'y-or-n-p Orig-yes-or-no-p)
    prompt))
 
@@ -1385,6 +1387,10 @@ Called with a prefix arg set search provider (default Google)."
       "[无所事事]")))
 
 (config org
+  ;; Use org from git repo
+  (add-to-list 'load-path "~/Projects/org-mode/lisp")
+  (add-to-list 'load-path "~/Projects/org-mode/contrib/lisp" t)
+
   ;; Keys
   (define-key mode-specific-map "l" #'org-store-link)
   (define-key mode-specific-map "a" #'org-agenda)
@@ -1397,7 +1403,11 @@ Called with a prefix arg set search provider (default Google)."
   (setq org-default-notes-file "~/todo.org")
   (setq org-capture-templates
         '(("i" "Add to Inbox" entry (file+headline "~/todo.org" "Inbox")
-           "* %?\n%i\n%a" :empty-lines 1))))
+           "* %?\n%i\n%a" :empty-lines 1)))
+
+  ;; In case this option has been loaded, otherwise `setq' is sufficient
+  (custom-set-variables
+   '(org-babel-load-languages '((shell . t) (emacs-lisp . t)))))
 
 (use-package org-mac-link
   :if (eq system-type 'darwin)
