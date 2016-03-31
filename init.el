@@ -1079,7 +1079,18 @@ See also `describe-function-or-variable'."
   :if (eq chunyang-completion-system 'helm)
   :after projectile
   :ensure t
-  :config (helm-projectile-on))
+  :config
+  (helm-projectile-on)
+  (helm-delete-action-from-source
+   "Grep in projects `C-s'"
+   helm-source-projectile-projects)
+  (helm-add-action-to-source
+   "Ag in project C-s'"
+   'helm-do-ag helm-source-projectile-projects)
+  (bind-key "C-s" (defun helm-projectile-do-ag ()
+                    (interactive)
+                    (helm-exit-and-execute-action #'helm-do-ag))
+            helm-projectile-projects-map))
 
 
 ;;; Web & IRC & Email & RSS
