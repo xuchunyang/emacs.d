@@ -96,7 +96,9 @@
   :defer t
   :bind ("M-I" . helm-grep-do-git-grep)
   :config
-  (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep))
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep)
+  (setq helm-grep-ag-command
+        "ag --smart-case --line-numbers --nogroup --color-match='0;32' %s %s %s"))
 
 (use-package helm-regexp
   :defer t
