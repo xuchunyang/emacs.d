@@ -13,8 +13,6 @@
 (setq ad-redefinition-action 'accept)
 
 (require 'package)
-;; FIXME: check this option
-(setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
 (package-initialize)
@@ -223,8 +221,8 @@
 
   (add-hook 'kill-emacs-hook
             (lambda ()
-              (when-let ((buf (get-buffer "*scratch*")))
-                (with-current-buffer buf
+              (when (get-buffer "*scratch*")
+                (with-current-buffer "*scratch*"
                   (widen)
                   ;; FIXME: Emacs deals with `initial-scratch-message' with
                   ;; `substitute-command-keys', which does a lot unwanted
@@ -350,6 +348,7 @@ One C-u, swap window, two C-u, delete window."
   :config (winner-mode))
 
 (use-package eyebrowse
+  :disabled t
   :ensure t
   :config (eyebrowse-mode))
 
@@ -627,8 +626,8 @@ One C-u, swap window, two C-u, delete window."
 
 (use-package swap-regions
   :load-path "~/Projects/swap-regions.el"
-  :config
-  (define-key global-map "\C-c\C-t" #'swap-regions))
+  :bind ("C-c C-t" . swap-regions)
+  :demand t)
 
 (use-package abolish
   :load-path "~/Projects/emacs-abolish")
@@ -1417,8 +1416,7 @@ Called with a prefix arg set search provider (default Google)."
            "* %?\n%i\n%a" :empty-lines 1)))
 
   ;; In case this option has been loaded, otherwise `setq' is sufficient
-  (custom-set-variables
-   '(org-babel-load-languages '((shell . t) (emacs-lisp . t)))))
+  (customize-set-variable 'org-babel-load-languages '((shell . t) (emacs-lisp . t))))
 
 (use-package org-mac-link
   :if (eq system-type 'darwin)
