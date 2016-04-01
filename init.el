@@ -72,15 +72,6 @@
 (load "~/.private.el" :no-error)
 
 
-;;; Customization
-
-(use-package cus-edit
-  :defer t
-  :init
-  (setq custom-file (locate-user-emacs-file "custom.el"))
-  (load custom-file :no-error :no-message))
-
-
 ;;; OS X support
 (use-package ns-win                     ; OS X window support
   :defer t
@@ -1450,5 +1441,16 @@ Called with a prefix arg set search provider (default Google)."
   (load "~/quicklisp/slime-helper.el")
   (setq inferior-lisp-program "sbcl")
   (setq slime-contribs '(slime-fancy)))
+
+
+;;; Customization
+
+;; Load custom-file in the end to prevent it loads some package.
+
+(use-package cus-edit
+  :defer t
+  :init
+  (setq custom-file (locate-user-emacs-file "custom.el"))
+  (load custom-file :no-error :no-message))
 
 ;;; init.el ends here
