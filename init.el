@@ -1443,6 +1443,24 @@ Called with a prefix arg set search provider (default Google)."
   (setq slime-contribs '(slime-fancy)))
 
 
+;;; Ruby
+
+(use-package inf-ruby
+  :ensure t
+  ;; `package.el' does the setup via autoload
+  :defer t)
+
+(use-package robe
+  :ensure t
+  :config
+  (add-hook 'ruby-mode-hook 'robe-mode)
+  (use-package helm-robe
+    :ensure t
+    :config (setq robe-completing-read-func #'helm-robe-completing-read))
+  ;; I do not like this
+  :defer t)
+
+
 ;;; Customization
 
 ;; Load custom-file in the end to prevent it loads some package.
