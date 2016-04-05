@@ -116,7 +116,8 @@
         (eq this-command 'git-gutter:stage-hunk)
         (eq this-command 'git-gutter:revert-hunk)
         (eq this-command 'org-ctrl-c-ctrl-c)
-        (eq this-command 'org-open-at-point))
+        (eq this-command 'org-open-at-point)
+        (eq this-command 'kill-this-buffer))
        #'y-or-n-p Orig-yes-or-no-p)
    prompt))
 
@@ -530,7 +531,10 @@ One C-u, swap window, two C-u, delete window."
          ("f" . help-go-forward)
          ("i" . help-info-lookup-symbol)))
 
-(use-package command-log-mode
+(use-package command-log-mode           ; BUG: Create a new empty buffer and
+                                        ; insert some text, should blame
+                                        ; function added to post-self-insert-hook
+  :disabled t
   :ensure t)
 
 
@@ -548,8 +552,8 @@ One C-u, swap window, two C-u, delete window."
 (setq mouse-wheel-progressive-speed nil
       mouse-wheel-scroll-amount '(1))
 
-(bind-key* "C-M-p" #'scroll-up-line)
-(bind-key* "C-M-n" #'scroll-down-line)
+;; (bind-key* "C-M-p" #'scroll-up-line)
+;; (bind-key* "C-M-n" #'scroll-down-line)
 ;; Use `C-M-l' instead of twice `C-l' for a better view
 
 (use-package page-break-lines           ; Turn page breaks into lines
@@ -618,7 +622,8 @@ One C-u, swap window, two C-u, delete window."
 (use-package swap-regions
   :load-path "~/Projects/swap-regions.el"
   :bind ("C-c C-t" . swap-regions)
-  :demand t)
+  :commands swap-regions-mode
+  :init (swap-regions-mode))
 
 (use-package abolish
   :load-path "~/Projects/emacs-abolish")
@@ -776,9 +781,8 @@ One C-u, swap window, two C-u, delete window."
   (unbind-key "C-;" flyspell-mode-map)
   (use-package flyspell-popup
     :ensure t
-    :bind (:map flyspell-mode-map
-                ("C-." . flyspell-popup-correct))
     :config
+    (define-key flyspell-mode-map [?\C-.] #'flyspell-popup-correct)
     (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
 
 (use-package checkdoc
@@ -793,6 +797,7 @@ One C-u, swap window, two C-u, delete window."
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
   (use-package flycheck-pos-tip           ; Show Flycheck messages in popups
+    :disabled t
     :ensure t
     :config (setq flycheck-display-errors-function
                   #'flycheck-pos-tip-error-messages))
@@ -1012,6 +1017,7 @@ See also `describe-function-or-variable'."
 
 ;;; Tools and utilities
 (use-package edit-server
+  :disabled t
   :ensure t
   :defer 10
   :config
@@ -1157,6 +1163,20 @@ See also `describe-function-or-variable'."
     :disabled t
     :ensure t
     :init (mu4e-maildirs-extension)))
+
+(use-package notmuch
+  :ensure t
+  :config
+
+  (add-hook 'notmuch-hello-refresh-hook
+            (lambda () (shell-command "notmuch new")))
+
+  (setq message-send-mail-function 'message-send-mail-with-sendmail)
+  (setq sendmail-program "msmtp")
+  (setq message-sendmail-extra-arguments (list "-a" "default"))
+
+  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+  (setq mu4e-sent-messages-behavior 'delete))
 
 (use-package erc
   :preface
@@ -1403,11 +1423,23 @@ Called with a prefix arg set search provider (default Google)."
   ;; Capture
   (setq org-default-notes-file "~/todo.org")
   (setq org-capture-templates
-        '(("i" "Add to Inbox" entry (file+headline "~/todo.org" "Inbox")
-           "* %?\n%i\n%a" :empty-lines 1)))
+        '(("t" "Todo" entry (file+headline "~/todo.org" "Inbox")
+           "* %?\n%i\n%a" :empty-lines 1)
+          ("l" "Today I Learned" entry (file "~/Notes/TIL.org")
+           "* %?\n%u\n%i" :empty-lines 1)
+          ("n" "Quote" entry (file+datetree "~/Notes/quote.org")
+           "* %?\nEntered on %U\n")
+          ("j" "Journal" entry (file+datetree "~/Notes/journal.org")
+           "* %?\nEntered on %U\n%i\n%a")))
 
   ;; In case this option has been loaded, otherwise `setq' is sufficient
-  (customize-set-variable 'org-babel-load-languages '((shell . t) (emacs-lisp . t))))
+  (customize-set-variable 'org-babel-load-languages '((shell . t) (emacs-lisp . t)))
+
+  (customize-set-variable 'org-export-backends '(html texinfo))
+
+  ;; For Texinfo export
+  ;; (setenv "LANG" "en_US.UTF-8")
+  )
 
 (use-package org-mac-link
   :if (eq system-type 'darwin)
