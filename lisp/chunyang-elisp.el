@@ -184,13 +184,13 @@
    (let* ((f (car r))
           (fdoc
            (and (fboundp f)
-                (documentation f)))
-          (fdoc-short
-           (and (stringp fdoc)
+                (documentation f 'raw)))
+          (fdoc-one-line
+           (and fdoc
                 (substring fdoc 0 (string-match "\n" fdoc)))))
-     (when (and (stringp fdoc-short)
-                (not (string-blank-p fdoc-short)))
-       (concat "  |  " (propertize fdoc-short 'face 'italic))))))
+     (when (and fdoc-one-line
+                (not (string= "" fdoc-one-line)))
+       (concat "  |  " (propertize fdoc-one-line 'face 'italic))))))
 
 
 ;; Misc
