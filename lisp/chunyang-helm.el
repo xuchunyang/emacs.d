@@ -92,11 +92,18 @@
 (use-package helm-grep
   ;; Must make sure `wgrep-helm' is available first and do NOT load it
   ;; since it is soft loaded in `helm-grep'
-  :preface (use-package wgrep-helm :ensure t :defer t)
+  :preface
+  (use-package wgrep-helm :ensure t :defer t)
+  (defun chunyang/helm-do-grep-ag (arg)
+    (interactive "P")
+    (let ((dir (or (ignore-errors (projectile-project-root))
+                   default-directory)))
+      (helm-grep-ag dir arg)))
   :defer t
-  :bind ("M-I" . helm-grep-do-git-grep)
+  :bind ("M-I" . chunyang/helm-do-grep-ag)
   :config
   (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep)
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep-ag)
   (setq helm-grep-ag-command
         "ag --smart-case --line-numbers --nogroup --color-match='0;32' %s %s %s"))
 
