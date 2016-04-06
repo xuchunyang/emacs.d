@@ -204,6 +204,10 @@
 ;; but causes problems.
 (setq text-quoting-style 'grave)
 
+;; WARNING: 每当我试图保存有中文文件的时候，Emacs 每次都要我选编码方式（默认推荐
+;; 也是中文的），我也不太了解编码，暂时这样吧
+(setq coding-system-for-write 'utf-8)
+
 ;;; Emacs session persistence
 (use-package desktop                    ; frame/window/buffer and global vars
   :config
