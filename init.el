@@ -980,6 +980,7 @@ See also `describe-function-or-variable'."
   :ensure t
   :bind (("C-x g"   . magit-status)
          ("C-x M-g" . magit-dispatch-popup))
+  :init (global-git-commit-mode)
   :config
   ;; To use colored git output in Eshell, I have color.ui set to always, but
   ;; this option breaks Magit, so set it to auto on Magit side.
