@@ -535,6 +535,16 @@ One C-u, swap window, two C-u, delete window."
          ("f" . help-go-forward)
          ("i" . help-info-lookup-symbol)))
 
+(use-package cus-edit
+  :preface
+  (defun chunyang/custom-mode-describe-symbol-at-point ()
+    (interactive)
+    (require 'info-look)
+    (let ((symbol (intern (downcase (info-lookup-guess-custom-symbol)))))
+      (describe-symbol symbol)))
+  :bind (:map custom-mode-map
+              ("C-h ." . chunyang/custom-mode-describe-symbol-at-point)))
+
 (use-package command-log-mode           ; BUG: Create a new empty buffer and
                                         ; insert some text, should blame
                                         ; function added to post-self-insert-hook
@@ -959,6 +969,7 @@ See also `describe-function-or-variable'."
 (use-package elisp-slime-nav
   :ensure t
   :diminish elisp-slime-nav-mode
+  ;; Or just (bind-key "C-h ." #'describe-symbol)
   :bind ("C-h ." . elisp-slime-nav-describe-elisp-thing-at-point))
 
 (use-package ipretty             :ensure t :defer t)
