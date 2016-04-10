@@ -998,6 +998,8 @@ See also `describe-function-or-variable'."
   (setq magit-git-global-arguments
         (append magit-git-global-arguments
                 '("-c" "color.ui=auto")))
+  ;; Hide popup by default, type `C-t' to display if need
+  (setq magit-popup-show-common-commands nil)
   :preface
   (defun Info-goto-node--gitman-for-magit (orig-fun &rest r)
     "Handle gitman info link for Magit info.
