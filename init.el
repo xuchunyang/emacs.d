@@ -997,7 +997,18 @@ See also `describe-function-or-variable'."
   ;; this option breaks Magit, so set it to auto on Magit side.
   (setq magit-git-global-arguments
         (append magit-git-global-arguments
-                '("-c" "color.ui=auto"))))
+                '("-c" "color.ui=auto")))
+  :preface
+  (defun Info-goto-node--gitman-for-magit (orig-fun &rest r)
+    "Handle gitman info link for Magit info.
+
+I don't want to install git info page, because it doesn't worth.
+See Info node `(magit) How to install the gitman info manual?'."
+    (if (string-prefix-p "(gitman)" (car r))
+        (man (substring (car r) (length "(gitman)")))
+      (apply orig-fun r)))
+
+  (advice-add 'Info-goto-node :around #'Info-goto-node--gitman-for-magit))
 
 (use-package git-gutter
   :ensure t
