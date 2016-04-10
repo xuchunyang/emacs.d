@@ -1196,16 +1196,19 @@ See Info node `(magit) How to install the gitman info manual?'."
 (use-package notmuch
   :ensure t
   :config
-
   (add-hook 'notmuch-hello-refresh-hook
             (lambda () (shell-command "notmuch new")))
-
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
   (setq sendmail-program "msmtp")
   (setq message-sendmail-extra-arguments (list "-a" "default"))
 
-  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (setq mu4e-sent-messages-behavior 'delete))
+  ;; Oh man, '=' is really hard to type
+  (bind-key "g" #'notmuch-refresh-this-buffer notmuch-hello-mode-map)
+  (bind-key "g" #'notmuch-refresh-this-buffer notmuch-search-mode-map))
+
+(use-package helm-notmuch
+  :load-path "~/Projects/helm-notmuch"
+  :commands helm-notmuch)
 
 (use-package erc
   :preface
