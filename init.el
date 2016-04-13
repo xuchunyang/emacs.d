@@ -1194,17 +1194,22 @@ See Info node `(magit) How to install the gitman info manual?'."
     :init (mu4e-maildirs-extension)))
 
 (use-package notmuch
-  :ensure t
+  ;; :load-path "~/opt/share/emacs/site-lisp"
+  :load-path "~/Projects/notmuch/emacs"
+  :bind ([remap compose-mail] . notmuch)
   :config
-  (add-hook 'notmuch-hello-refresh-hook
-            (lambda () (shell-command "notmuch new")))
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
   (setq sendmail-program "msmtp")
   (setq message-sendmail-extra-arguments (list "-a" "default"))
 
+  (setq notmuch-search-oldest-first nil)
+
   ;; Oh man, '=' is really hard to type
   (bind-key "g" #'notmuch-refresh-this-buffer notmuch-hello-mode-map)
-  (bind-key "g" #'notmuch-refresh-this-buffer notmuch-search-mode-map))
+  (bind-key "g" #'notmuch-refresh-this-buffer notmuch-search-mode-map)
+
+  ;; org link support
+  (require 'org-notmuch))
 
 (use-package helm-notmuch
   :load-path "~/Projects/helm-notmuch"
