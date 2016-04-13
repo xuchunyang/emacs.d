@@ -535,6 +535,35 @@ One C-u, swap window, two C-u, delete window."
          ("f" . help-go-forward)
          ("i" . help-info-lookup-symbol)))
 
+(use-package info-look
+  :defer t
+  :config
+  (info-lookup-add-help
+   :mode 'emacs-lisp-mode
+   :regexp "[^][()`'‘’,\" \t\n]+"
+   :doc-spec '(;; Commands with key sequences appear in nodes as `foo' and
+               ;; those without as `M-x foo'.
+               ("(emacs)Command Index"  nil "['`‘]\\(M-x[ \t\n]+\\)?" "['’]")
+               ;; Variables normally appear in nodes as just `foo'.
+               ("(emacs)Variable Index" nil "['`‘]" "['’]")
+               ;; Almost all functions, variables, etc appear in nodes as
+               ;; " -- Function: foo" etc.  A small number of aliases and
+               ;; symbols appear only as `foo', and will miss out on exact
+               ;; positions.  Allowing `foo' would hit too many false matches
+               ;; for things that should go to Function: etc, and those latter
+               ;; are much more important.  Perhaps this could change if some
+               ;; sort of fallback match scheme existed.
+               ("(elisp)Index"          nil "^ -+ .*: " "\\( \\|$\\)")
+               ;; `org-use-speed-commands'
+               ("(org)Variable Index"   nil "['`‘]" "['’]")
+               ;; (org-agenda-archive) and  `org-store-link'
+               ("(org)Command and Function Index" nil "['`‘(]" "['’)]")
+               ;; Same as (elisp)Index
+               ("(cl)Function Index" nil "^ -+ .*: " "\\( \\|$\\)")
+               ;; (‘git-rebase-undo’)
+               ("(magit) Command Index" nil "(['`‘]" "['’])")
+               ("(magit) Variable Index" nil "^ -+ .*: " "\\( \\|$\\)"))))
+
 (use-package cus-edit
   :preface
   (defun chunyang/custom-mode-describe-symbol-at-point ()
