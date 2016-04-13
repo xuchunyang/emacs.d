@@ -382,8 +382,8 @@ One C-u, swap window, two C-u, delete window."
   :config
   ;; Prefer GNU variants
   (setq insert-directory-program "gls"
-        find-program "gfind"
-        grep-program "grep"))
+        grep-find-program "gfind"
+        grep-program "ggrep"))
 
 (use-package dired                      ; Edit directories
   :defer t
