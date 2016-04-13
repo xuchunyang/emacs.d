@@ -1499,7 +1499,14 @@ Called with a prefix arg set search provider (default Google)."
            "* %?\nEntered on %U\n%i\n%a")))
 
   ;; In case this option has been loaded, otherwise `setq' is sufficient
-  (customize-set-variable 'org-babel-load-languages '((shell . t) (emacs-lisp . t)))
+  (customize-set-variable 'org-babel-load-languages
+                          '((emacs-lisp . t)
+                            (shell . t)
+                            (ruby . t)
+                            (maxima . t)))
+
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-src-tab-acts-natively t)
 
   (customize-set-variable 'org-export-backends '(html texinfo))
 
@@ -1557,6 +1564,19 @@ Called with a prefix arg set search provider (default Google)."
     :config (setq robe-completing-read-func #'helm-robe-completing-read))
   ;; I do not like this
   :defer t)
+
+
+;;; Math
+
+(use-package Maxima
+  :load-path "/usr/local/Cellar/maxima/5.37.2/share/maxima/5.37.2/emacs"
+  :mode ("\\.ma[cx]" . maxima-mode)
+  :init
+  (autoload 'maxima-mode "maxima" "Maxima mode" t)
+  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
+  (autoload 'maxima "maxima" "Maxima interaction" t)
+  (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
+  (setq imaxima-use-maxima-mode-flag t))
 
 
 ;;; Customization
