@@ -1238,7 +1238,12 @@ See Info node `(magit) How to install the gitman info manual?'."
   (bind-key "g" #'notmuch-refresh-this-buffer notmuch-search-mode-map)
 
   ;; org link support
-  (require 'org-notmuch))
+  (require 'org-notmuch)
+
+  ;; ace link support
+  (require 'ace-link-notmuch)
+  ;; Skip first image
+  (add-hook 'notmuch-hello-refresh-hook #'forward-line))
 
 (use-package helm-notmuch
   :load-path "~/Projects/helm-notmuch"
