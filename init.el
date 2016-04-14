@@ -734,6 +734,15 @@ One C-u, swap window, two C-u, delete window."
 
 
 ;;; Skeletons, completion and expansion
+
+(use-package abbrev                     ; For fixing typo only for now
+  :defer t
+  :init
+  (setq only-global-abbrevs t)
+  ;; Enable this mode globally
+  (setq-default abbrev-mode t)
+  :diminish abbrev-mode)
+
 (use-package hippie-exp                 ; Powerful expansion and completion
   :bind ("M-/" . hippie-expand)
   :config
