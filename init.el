@@ -1565,6 +1565,11 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; Ruby
 
+(use-package ruby-mode
+  :ensure t
+  :init
+  (add-hook 'ruby-mode 'superword-mode))
+
 (use-package inf-ruby
   :ensure t
   ;; `package.el' does the setup via autoload
@@ -1572,13 +1577,15 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package robe
   :ensure t
+  :after ruby-mode
   :config
-  (add-hook 'ruby-mode-hook 'robe-mode)
-  (use-package helm-robe
-    :ensure t
-    :config (setq robe-completing-read-func #'helm-robe-completing-read))
-  ;; I do not like this
-  :defer t)
+  (add-hook 'ruby-mode-hook 'robe-mode))
+
+(use-package ruby-tools
+  :ensure t
+  :init
+  (add-hook 'ruby-mode-hook 'ruby-tools-mode)
+  :diminish ruby-tools-mode)
 
 
 ;;; Math
