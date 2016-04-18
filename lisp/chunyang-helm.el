@@ -166,7 +166,6 @@
          ("C-c C-s" . helm-do-ag-project-root)))
 
 (use-package helm-descbinds
-  :disabled t
   :ensure t
   :config
   (setq helm-descbinds-window-style 'split-window)

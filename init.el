@@ -477,6 +477,7 @@ One C-u, swap window, two C-u, delete window."
          ))
 
 (use-package expand-region              ; Expand region by semantic units
+  :disabled t
   :ensure t
   :bind ("C-=" . er/expand-region))
 
