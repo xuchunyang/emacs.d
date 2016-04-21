@@ -1127,6 +1127,7 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 ;;; Project
 (use-package projectile
+  :disabled t
   :ensure t
   :diminish projectile-mode
   :config
@@ -1140,6 +1141,7 @@ See Info node `(magit) How to install the gitman info manual?'."
   (projectile-global-mode))
 
 (use-package helm-projectile
+  :disabled t
   :if (eq chunyang-completion-system 'helm)
   :after projectile
   :ensure t
@@ -1155,6 +1157,78 @@ See Info node `(magit) How to install the gitman info manual?'."
                     (interactive)
                     (helm-exit-and-execute-action #'helm-do-ag))
             helm-projectile-projects-map))
+
+(use-package chunyang-browse-projects
+  :defer t
+  :init
+  (defvar chunyang-project-list nil)
+
+  (defun chunyang-find-file-hook ()
+    (let ((root (locate-dominating-file default-directory ".git")))
+      (when root
+        (push root chunyang-project-list)
+        (delete-dups chunyang-project-list))))
+
+  (add-hook 'find-file-hook #'chunyang-find-file-hook t)
+
+  ;; Assuming desktop-save-mode has been enabled
+  (add-to-list 'desktop-globals-to-save 'chunyang-project-list)
+  (add-hook 'kill-emacs-hook
+            ;; This should run BEFORE desktop saves `chunyang-project-list'
+            (defun chunyang-project-clear-non-exist ()
+              (cl-delete-if-not #'file-exists-p chunyang-project-list)))
+
+  (setq chunyang-browse-projects-actions
+        (helm-make-actions
+         "Browse"
+         (lambda (root)
+           (let ((default-directory root))
+             (helm-browse-project nil)))
+         "Search `C-s'"
+         #'helm-grep-git-1
+         "Magit `M-g'"
+         #'magit-status
+         "cd with Terminal.app `C-d'"
+         #'chunyang-cd-in-Terminal.app))
+
+  (setq chunyang-browse-projects-map
+        (let ((map (make-sparse-keymap)))
+          (set-keymap-parent map helm-map)
+          (define-key map "\C-s"
+            (defun chunyang-run-git-grep ()
+              (interactive)
+              (with-helm-alive-p
+                (helm-exit-and-execute-action 'helm-grep-git-1))))
+          (define-key map "\M-g"
+            (defun chunyang-run-magit ()
+              (interactive)
+              (with-helm-alive-p
+                (helm-exit-and-execute-action 'magit-status))))
+          (define-key map "\C-d"
+            (defun chunyang-run-cd-in-Terminal.app ()
+              (interactive)
+              (with-helm-alive-p
+                (helm-exit-and-execute-action 'chunyang-cd-in-Terminal.app))))
+          map))
+
+  (setq chunyang-browse-projects-source
+        (helm-build-sync-source "helm projects"
+          :candidates 'chunyang-project-list
+          :keymap chunyang-browse-projects-map
+          :action chunyang-browse-projects-actions))
+
+  (setq helm-mini-default-sources
+        '(helm-source-buffers-list
+          helm-source-recentf
+          chunyang-browse-projects-source
+          helm-source-buffer-not-found))
+
+  (defun chunyang-browse-projects ()
+    (interactive)
+    (helm :sources chunyang-browse-projects-source
+          :buffer "*Helm Projects*"))
+
+  (define-key global-map "\C-cp" #'chunyang-browse-projects))
 
 
 ;;; Web & IRC & Email & RSS

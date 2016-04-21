@@ -172,6 +172,15 @@ With PREFIX, cd to project root."
   end tell
   " cmd))))
 
+(defun chunyang-cd-in-Terminal.app (dir)
+  (interactive "D")
+  (do-applescript
+   (format "
+tell application \"Terminal\"
+     activate
+     do script \"cd %s\" in window 1
+end tell" dir)))
+
 
 (defun chunyang-switch-scratch ()
   (interactive)
