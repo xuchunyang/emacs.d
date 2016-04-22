@@ -1408,6 +1408,38 @@ Called with a prefix arg set search provider (default Google)."
 
 (bind-key "M-s M-s" #'web-search)
 
+(use-package emms
+  :load-path "~/Projects/emms/lisp"
+  :init
+  (add-to-list 'Info-directory-list "~/Projects/emms/doc")
+
+  (setq emms-mode-line-icon-color "purple")
+
+  (require 'emms-setup)
+  (emms-all)
+  (emms-playing-time -1)
+  (setq emms-player-list '(emms-player-mplayer)
+        emms-source-file-default-directory "~/Music/网易云音乐"
+        emms-source-file-gnu-find "gfind")
+
+  (require 'emms-info-libtag)
+  (setq emms-info-functions '(emms-info-libtag))
+
+  (defun chunyang-emms-indicate-seek (_sec)
+    (let* ((total-playing-time (emms-track-get
+                                (emms-playlist-current-selected-track)
+                                'info-playing-time))
+           (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
+      (with-temp-message (format "[%-100s] %2d%%"
+                                 (make-string elapsed/total ?=)
+                                 elapsed/total)
+        (sit-for 2))))
+
+  (add-hook 'emms-player-seeked-functions #'chunyang-emms-indicate-seek 'append))
+
+(use-package bongo
+  :ensure t
+  :defer t)
 
 ;;; Dictionary
 (use-package youdao-dictionary
