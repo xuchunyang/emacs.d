@@ -106,3 +106,12 @@ network-security.data
 
 # Emacs tutorial
 /tutorial/
+
+# Emms
+/emms
+
+# epkg
+/epkgs
+
+# temp
+/tmp
