@@ -1058,8 +1058,33 @@ See Info node `(magit) How to install the gitman info manual?'."
          ("C-x v p" . git-gutter:previous-hunk)
          ("C-x v s" . git-gutter:stage-hunk)
          ("C-x v r" . git-gutter:revert-hunk))
-  :init
-  (setq git-gutter:handled-backends '(git svn)))
+  :config
+  (setq git-gutter:handled-backends '(git svn))
+
+  (defun chunyang-git-gutter-do-action-on-region (beg end revert-or-stage)
+    (let ((git-gutter:ask-p nil)
+          (number-of-hunks 0))
+      (save-excursion
+        (goto-char beg)
+        (while (progn (git-gutter:next-hunk 1)
+                      (< beg (point) end))
+          (cl-incf number-of-hunks))
+        (goto-char beg))
+      (ignore-errors (funcall revert-or-stage))
+      (dotimes (_ number-of-hunks)
+        (git-gutter:next-hunk 1)
+        (funcall revert-or-stage)
+        (sit-for .3))
+      (deactivate-mark)
+      (git-gutter:update-all-windows)))
+
+  (defun chunyang-git-gutter-revert-region (beg end)
+    (interactive "r")
+    (chunyang-git-gutter-do-action-on-region beg end 'git-gutter:revert-hunk))
+
+  (defun chunyang-git-gutter-stage-region (beg end)
+    (interactive "r")
+    (chunyang-git-gutter-do-action-on-region beg end 'git-gutter:stage-hunk)))
 
 (use-package diff-hl
   :disabled t
