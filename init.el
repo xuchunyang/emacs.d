@@ -150,14 +150,6 @@
   (load-theme 'spacemacs-dark :no-confirm))
 
 ;; Mode line
-(defvar Orig-mode-line-format mode-line-format
-  "Original value of `mode-line-format'.")
-
-(defun chunyang-revert-modeline ()
-  "Revert to the default Emacs mode-line."
-  (interactive)
-  (setq-default mode-line-format Orig-mode-line-format))
-
 (setq-default mode-line-format
               '("%e" mode-line-front-space
                 ;; Standard info about the current buffer
@@ -255,10 +247,10 @@
   )
 
 (use-package bookmark
-  :defer t
-  :config (setq bookmark-save-flag 1))
+  :defer t)
 
 (use-package saveplace                  ; Save point position in files
+  :if (version< "25" emacs-version)
   :defer t
   :init (add-hook #'after-init-hook #'save-place-mode))
 
@@ -274,6 +266,13 @@
 
 (use-package chunyang-helm
   :if (eq chunyang-completion-system 'helm))
+
+(use-package ido
+  :if (eq chunyang-completion-system 'ido)
+  :config
+  (setq ido-everywhere t
+        ido-enable-flex-matching t)
+  (ido-mode))
 
 (use-package ivy
   :if (eq chunyang-completion-system 'ivy)
@@ -301,6 +300,7 @@
   :init (global-auto-revert-mode))
 
 (use-package chunyang-simple
+  :demand t
   :bind (("C-x 3" . chunyang-split-window-right)
          ("C-x 2" . chunyang-split-window-below)
          ("C-h t" . chunyang-switch-scratch)
@@ -542,28 +542,18 @@ One C-u, swap window, two C-u, delete window."
   (info-lookup-add-help
    :mode 'emacs-lisp-mode
    :regexp "[^][()`'‘’,\" \t\n]+"
-   :doc-spec '(;; Commands with key sequences appear in nodes as `foo' and
-               ;; those without as `M-x foo'.
-               ("(emacs)Command Index"  nil "['`‘]\\(M-x[ \t\n]+\\)?" "['’]")
-               ;; Variables normally appear in nodes as just `foo'.
-               ("(emacs)Variable Index" nil "['`‘]" "['’]")
-               ;; Almost all functions, variables, etc appear in nodes as
-               ;; " -- Function: foo" etc.  A small number of aliases and
-               ;; symbols appear only as `foo', and will miss out on exact
-               ;; positions.  Allowing `foo' would hit too many false matches
-               ;; for things that should go to Function: etc, and those latter
-               ;; are much more important.  Perhaps this could change if some
-               ;; sort of fallback match scheme existed.
-               ("(elisp)Index"          nil "^ -+ .*: " "\\( \\|$\\)")
-               ;; `org-use-speed-commands'
-               ("(org)Variable Index"   nil "['`‘]" "['’]")
-               ;; (org-agenda-archive) and  `org-store-link'
-               ("(org)Command and Function Index" nil "['`‘(]" "['’)]")
-               ;; Same as (elisp)Index
-               ("(cl)Function Index" nil "^ -+ .*: " "\\( \\|$\\)")
-               ;; (‘git-rebase-undo’)
-               ("(magit) Command Index" nil "(['`‘]" "['’])")
-               ("(magit) Variable Index" nil "^ -+ .*: " "\\( \\|$\\)"))))
+   :doc-spec '(("(emacs)Command Index"             nil "['`‘]\\(M-x[ \t\n]+\\)?" "['’]") ;
+               ("(emacs)Variable Index"            nil "['`‘]" "['’]")
+               ("(elisp)Index"                     nil "^ -+ .*: " "\\( \\|$\\)")
+               ;; cl-lib
+               ("(cl) Function Index"              nil "^ -+ .*: " "\\( \\|$\\)")
+               ("(cl) Variable Index"              nil "^ -+ .*: " "\\( \\|$\\)")
+               ;; Org
+               ("(org) Variable Index"             nil "['`‘]" "['’]")
+               ("(org) Command and Function Index" nil "['`‘(]" "['’)]")
+               ;; Magit
+               ("(magit) Command Index"            nil "(['`‘]" "['’])")
+               ("(magit) Variable Index"           nil "^ -+ .*: " "\\( \\|$\\)"))))
 
 (use-package cus-edit
   :preface
@@ -669,6 +659,10 @@ One C-u, swap window, two C-u, delete window."
   :commands swap-regions-mode
   :init (swap-regions-mode))
 
+(use-package clear-text
+  :load-path "~/Projects/clear-text.el"
+  :commands (clear-text-mode global-clear-text-mode))
+
 (use-package abolish
   :load-path "~/Projects/emacs-abolish")
 
@@ -745,7 +739,7 @@ One C-u, swap window, two C-u, delete window."
   :diminish abbrev-mode)
 
 (use-package hippie-exp                 ; Powerful expansion and completion
-  :bind ("M-/" . hippie-expand)
+  :bind ([remap dabbrev-expand]  . hippie-expand)
   :config
   (setq hippie-expand-try-functions-list
         '(
@@ -819,7 +813,6 @@ One C-u, swap window, two C-u, delete window."
 ;;; Spelling and syntax checking
 
 (use-package flyspell
-  :disabled t
   :init
   (add-hook 'text-mode-hook #'flyspell-mode)
   (add-hook 'prog-mode-hook #'flyspell-prog-mode)
@@ -1014,7 +1007,6 @@ See also `describe-function-or-variable'."
 (use-package ipretty             :ensure t :defer t)
 (use-package pcache              :ensure t :defer t)
 (use-package persistent-soft     :ensure t :defer t)
-(use-package command-log-mode    :ensure t :defer t)
 (use-package log4e               :ensure t :defer t)
 (use-package alert               :ensure t :defer t)
 (use-package bug-hunter          :ensure t :defer t)
@@ -1112,7 +1104,6 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 ;;; Tools and utilities
 (use-package edit-server
-  :disabled t
   :ensure t
   :defer 10
   :config
@@ -1135,7 +1126,7 @@ See Info node `(magit) How to install the gitman info manual?'."
 (use-package gh-md             :ensure t :defer t)
 
 (use-package github-notifier
-  :load-path "~/wip/github-notifier.el/"
+  :ensure t
   :commands github-notifier-mode)
 
 (use-package which-key
@@ -1252,14 +1243,16 @@ See Info node `(magit) How to install the gitman info manual?'."
 
   (defun chunyang-browse-projects ()
     (interactive)
-    (helm :sources chunyang-browse-projects-source
+    (helm :sources 'chunyang-browse-projects-source
           :buffer "*Helm Projects*"))
 
+  (define-key global-map "\C-xp" #'chunyang-browse-projects)
   (define-key global-map "\C-cp" #'chunyang-browse-projects))
 
 
 ;;; Web & IRC & Email & RSS
 (use-package mu4e
+  :disabled t
   :load-path "/opt/local/share/emacs/site-lisp/mu4e"
   :commands mu4e
   :config
@@ -1337,9 +1330,15 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; :load-path "~/opt/share/emacs/site-lisp"
   :load-path "~/Projects/notmuch/emacs"
   :bind ([remap compose-mail] . notmuch)
-  :preface (defun notmuch-update ()
-             (interactive)
-             (shell-command "proxychains4 offlineimap &"))
+  :preface
+  (defun notmuch-update ()
+    (interactive)
+    (shell-command "proxychains4 offlineimap &"))
+
+  (defun notmuch-mark-all-as-read ()
+    (interactive)
+    (shell-command "notmuch tag -unread -- tag:unread"))
+
   :config
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
   (setq sendmail-program "msmtp")
@@ -1390,6 +1389,10 @@ See Info node `(magit) How to install the gitman info manual?'."
   :diminish google-this-mode
   :preface (defvar google-this-keybind (kbd "C-c G"))
   :init (google-this-mode))
+
+(use-package devdocs
+  :load-path "~/Projects/devdocs.el"
+  :commands devdocs-search)
 
 (defun web-search (prefix)
   "Web search with s (see URL `https://github.com/zquestz/s').
@@ -1630,7 +1633,8 @@ Called with a prefix arg set search provider (default Google)."
 (config org
   ;; Use org from git repo
   (add-to-list 'load-path "~/Projects/org-mode/lisp")
-  (add-to-list 'load-path "~/Projects/org-mode/contrib/lisp" t)
+  (add-to-list 'load-path "~/Projects/org-mode/contrib/lisp")
+  (add-to-list 'Info-directory-list "~/Projects/org-mode/doc")
 
   ;; Keys
   (define-key mode-specific-map "l" #'org-store-link)
@@ -1638,12 +1642,15 @@ Called with a prefix arg set search provider (default Google)."
   (define-key mode-specific-map "c" #'org-capture)
 
   ;; Agenda
-  (setq org-agenda-files '("~/"))
+  (setq org-agenda-files '("~/Notes/"))
+  (setq org-agenda-restore-windows-after-quit t)
+  (setq org-agenda-custom-commands
+        '(("i" "Today's TODO" ((tags-todo "+CATEGORY=\"today\"")))))
 
   ;; Capture
-  (setq org-default-notes-file "~/todo.org")
+  (setq org-default-notes-file "~/Notes/todo.org")
   (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline "~/todo.org" "Inbox")
+        '(("t" "Todo" entry (file+headline "~/Notes/todo.org" "Inbox")
            "* %?\n%i\n%a" :empty-lines 1)
           ("l" "Today I Learned" entry (file "~/Notes/TIL.org")
            "* %?\n%u\n%i" :empty-lines 1)
