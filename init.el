@@ -1066,8 +1066,10 @@ See Info node `(magit) How to install the gitman info manual?'."
           (number-of-hunks 0))
       (save-excursion
         (goto-char beg)
-        (while (progn (git-gutter:next-hunk 1)
-                      (< beg (point) end))
+        (while (progn (let ((old-pt (point)))
+                        (git-gutter:next-hunk 1)
+                        (and (< beg (point) end)
+                             (/= old-pt (point)))))
           (cl-incf number-of-hunks))
         (goto-char beg))
       (ignore-errors (funcall revert-or-stage))
