@@ -1337,6 +1337,9 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; :load-path "~/opt/share/emacs/site-lisp"
   :load-path "~/Projects/notmuch/emacs"
   :bind ([remap compose-mail] . notmuch)
+  :preface (defun notmuch-update ()
+             (interactive)
+             (shell-command "proxychains4 offlineimap &"))
   :config
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
   (setq sendmail-program "msmtp")
@@ -1347,6 +1350,8 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; Oh man, '=' is really hard to type
   (bind-key "g" #'notmuch-refresh-this-buffer notmuch-hello-mode-map)
   (bind-key "g" #'notmuch-refresh-this-buffer notmuch-search-mode-map)
+
+  (bind-key "U" #'notmuch-update notmuch-hello-mode-map)
 
   ;; Don't display notmuch logo, it's invisible in dark theme
   (setq notmuch-show-logo nil)
