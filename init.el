@@ -1645,7 +1645,8 @@ Called with a prefix arg set search provider (default Google)."
   (setq org-use-speed-commands t
         org-special-ctrl-a/e   t)
 
-  (bind-key "C-o" #'helm-org-in-buffer-headings org-mode-map)
+  (with-eval-after-load 'org
+    (bind-key "C-o" #'helm-org-in-buffer-headings org-mode-map))
 
   ;; Agenda
   (setq org-agenda-files '("~/Notes/"))
