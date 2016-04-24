@@ -1641,6 +1641,12 @@ Called with a prefix arg set search provider (default Google)."
   (define-key mode-specific-map "a" #'org-agenda)
   (define-key mode-specific-map "c" #'org-capture)
 
+  ;; Easy navigation
+  (setq org-use-speed-commands t
+        org-special-ctrl-a/e   t)
+
+  (bind-key "C-o" #'helm-org-in-buffer-headings org-mode-map)
+
   ;; Agenda
   (setq org-agenda-files '("~/Notes/"))
   (setq org-agenda-restore-windows-after-quit t)
@@ -1662,9 +1668,9 @@ Called with a prefix arg set search provider (default Google)."
   ;; In case this option has been loaded, otherwise `setq' is sufficient
   (customize-set-variable 'org-babel-load-languages
                           '((emacs-lisp . t)
-                            (shell . t)
-                            (ruby . t)
-                            (maxima . t)))
+                            (shell      . t)
+                            (ruby       . t)
+                            (maxima     . t)))
 
   (setq org-confirm-babel-evaluate nil)
   (setq org-src-tab-acts-natively t)
@@ -1740,10 +1746,10 @@ Called with a prefix arg set search provider (default Google)."
   :load-path "/usr/local/Cellar/maxima/5.37.2/share/maxima/5.37.2/emacs"
   :mode ("\\.ma[cx]" . maxima-mode)
   :init
-  (autoload 'maxima-mode "maxima" "Maxima mode" t)
-  (autoload 'imaxima "imaxima" "Frontend for maxima with Image support" t)
-  (autoload 'maxima "maxima" "Maxima interaction" t)
-  (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
+  (autoload 'maxima-mode "maxima"  "Maxima mode"                            t)
+  (autoload 'imaxima     "imaxima" "Frontend for maxima with Image support" t)
+  (autoload 'maxima      "maxima"  "Maxima interaction"                     t)
+  (autoload 'imath-mode  "imath"   "Imath mode for math formula input"      t)
   (setq imaxima-use-maxima-mode-flag t))
 
 
