@@ -69,7 +69,10 @@
 
   (use-package helm-ls-git
     :ensure t
-    :defer t)
+    :defer t
+    :config
+    (setq helm-ls-git-default-sources
+          (delq 'helm-source-ls-git-status helm-ls-git-default-sources)))
 
   (use-package helm-ls-svn
     :disabled t
