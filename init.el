@@ -142,12 +142,19 @@
 ;; (setq custom-safe-themes t)             ; Treat all themes as safe
 
 (use-package spacemacs-theme
+  :disabled t
   :ensure t
   :defer t
   :init
   (setq spacemacs-theme-comment-bg nil
         spacemacs-theme-org-height nil)
   (load-theme 'spacemacs-dark :no-confirm))
+
+(use-package tomorrow-theme
+  :ensure color-theme-sanityinc-tomorrow
+  :defer t
+  :init
+  (load-theme 'sanityinc-tomorrow-eighties :no-confirm))
 
 ;; Mode line
 (setq-default mode-line-format
@@ -419,6 +426,9 @@ One C-u, swap window, two C-u, delete window."
 (use-package elec-pair                  ; Electric pairs
   :init (electric-pair-mode))
 
+;; I have used 'M-l' to run `helm-mini' for a long time
+(define-key global-map "\M-L" #'downcase-dwim)
+
 ;; Configure a reasonable fill column, indicate it in the buffer and enable
 ;; automatic filling
 (setq-default fill-column 80)
@@ -456,6 +466,7 @@ One C-u, swap window, two C-u, delete window."
   :init (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 
 (use-package avy
+  :disabled t
   :ensure t
   :bind (("M-g c" . avy-goto-char)
          ("M-g l" . avy-goto-line))
@@ -629,6 +640,12 @@ One C-u, swap window, two C-u, delete window."
 ;;; Search
 (setq isearch-allow-scroll t)
 
+(use-package re-builder
+  :defer t
+  :config
+  ;; Escape 的工作就交给 Emacs 了
+  (setq reb-re-syntax 'string))
+
 (use-package grep
   :defer t
   :config
@@ -649,6 +666,11 @@ One C-u, swap window, two C-u, delete window."
   (bind-key "M-%" 'anzu-query-replace)
   (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
+(use-package plur
+  :load-path "~/Projects/plur"
+  :bind ("C-c M-%" . plur-query-replace)
+  :demand t)
+
 (use-package region-state
   :ensure t
   :config (region-state-mode))
@@ -662,9 +684,6 @@ One C-u, swap window, two C-u, delete window."
 (use-package clear-text
   :load-path "~/Projects/clear-text.el"
   :commands (clear-text-mode global-clear-text-mode))
-
-(use-package abolish
-  :load-path "~/Projects/emacs-abolish")
 
 (use-package pinyin-search
   :ensure t
@@ -822,9 +841,9 @@ One C-u, swap window, two C-u, delete window."
           ispell-extra-args '("--sug-mode=ultra")))
   :bind ("C-c t s" . flyspell-mode)
   :config
-  (unbind-key "C-." flyspell-mode-map)
+  (unbind-key "C-."   flyspell-mode-map)
   (unbind-key "C-M-i" flyspell-mode-map)
-  (unbind-key "C-;" flyspell-mode-map)
+  (unbind-key "C-;"   flyspell-mode-map)
   (use-package flyspell-popup
     :ensure t
     :config
@@ -837,8 +856,7 @@ One C-u, swap window, two C-u, delete window."
 
 (use-package flycheck
   :ensure t
-  :bind (("C-c t f" . global-flycheck-mode)
-         ("C-c L e" . list-flycheck-errors))
+  :bind (("C-c t f" . global-flycheck-mode))
   :config
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
@@ -1043,6 +1061,11 @@ See Info node `(magit) How to install the gitman info manual?'."
 
   (advice-add 'Info-goto-node :around #'Info-goto-node--gitman-for-magit))
 
+(use-package vc
+  :config
+  ;; Don't ask me again
+  (setq vc-follow-symlinks t))
+
 (use-package git-gutter
   :ensure t
   :bind (("C-x C-g" . git-gutter-mode)
@@ -1114,6 +1137,7 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 ;;; Tools and utilities
 (use-package edit-server
+  :disabled t                           ; Doesn't work for me any more
   :ensure t
   :defer 10
   :config
@@ -1350,9 +1374,12 @@ See Info node `(magit) How to install the gitman info manual?'."
     (shell-command "notmuch tag -unread -- tag:unread"))
 
   :config
+  ;; Send
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
   (setq sendmail-program "msmtp")
   (setq message-sendmail-extra-arguments (list "-a" "default"))
+  (setq notmuch-fcc-dirs nil) ; Gmail saves sent mails by itself
+  (setq message-directory "[Gmail].Drafts") ; stores postponed messages to the specified directory
 
   (setq notmuch-search-oldest-first nil)
 
@@ -1690,6 +1717,7 @@ Called with a prefix arg set search provider (default Google)."
                           '((emacs-lisp . t)
                             (shell      . t)
                             (ruby       . t)
+                            (python     . t)
                             (maxima     . t)))
 
   (setq org-confirm-babel-evaluate nil)
