@@ -1363,7 +1363,7 @@ See Info node `(magit) How to install the gitman info manual?'."
 (use-package notmuch
   ;; :load-path "~/opt/share/emacs/site-lisp"
   :load-path "~/Projects/notmuch/emacs"
-  :bind ([remap compose-mail] . notmuch)
+  :bind ("C-x M" . notmuch)
   :preface
   (defun notmuch-update ()
     (interactive)
@@ -1542,10 +1542,6 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package eshell
   :preface
-  (defun eshell* ()
-    "Start a new eshell even if one is active."
-    (interactive)
-    (eshell t))
   (defun eshell-clear-buffer ()
     "Clear terminal"
     (let ((inhibit-read-only t))
@@ -1573,9 +1569,8 @@ Called with a prefix arg set search provider (default Google)."
          (propertize " " 'display (create-image (expand-file-name (car elems)))))
         (setq elems (cdr elems))))
     nil)
-  ;; :bind  (("C-!"   . eshell-command)
-  ;;         ("C-x m" . eshell)
-  ;;         ("C-x M" . eshell*))
+  :bind  (("C-!"   . eshell-command)
+          ("C-x m" . eshell))
   :config
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
