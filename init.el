@@ -1053,18 +1053,28 @@ See Info node `(magit) How to install the gitman info manual?'."
   :config
   (setq git-gutter:handled-backends '(git svn))
 
-  (defun chunyang-git-gutter-do-action-on-region (beg end revert-or-stage)
-    (let ((git-gutter:ask-p nil)
-          (number-of-hunks 0))
+  (defun chunyang-git-gutter-count-hunks (beg end)
+    (let ((number-of-hunks 0))
       (save-excursion
         (goto-char beg)
-        (while (progn (let ((old-pt (point)))
-                        (git-gutter:next-hunk 1)
-                        (and (< beg (point) end)
-                             (/= old-pt (point)))))
-          (cl-incf number-of-hunks))
-        (goto-char beg))
-      (ignore-errors (funcall revert-or-stage))
+        (when (ignore-errors (git-gutter:search-here-diffinfo git-gutter:diffinfos))
+          (setq number-of-hunks 1))
+        (while (let ((old-pt (point)))
+                 (git-gutter:next-hunk 1)
+                 (and (> (point) old-pt)
+                      (<= (point) end)))
+          (setq number-of-hunks (+ 1 number-of-hunks))))
+      ;; (message "You have %d changes in the region" number-of-hunks)
+      number-of-hunks))
+
+  (defun chunyang-git-gutter-apply-on-region (beg end revert-or-stage)
+    (let ((git-gutter:ask-p nil)
+          (number-of-hunks (chunyang-git-gutter-count-hunks beg end)))
+      (goto-char beg)
+      (when (ignore-errors (git-gutter:search-here-diffinfo git-gutter:diffinfos))
+        (funcall revert-or-stage)
+        (sit-for .3)
+        (setq number-of-hunks (- number-of-hunks 1)))
       (dotimes (_ number-of-hunks)
         (git-gutter:next-hunk 1)
         (funcall revert-or-stage)
@@ -1074,11 +1084,11 @@ See Info node `(magit) How to install the gitman info manual?'."
 
   (defun chunyang-git-gutter-revert-region (beg end)
     (interactive "r")
-    (chunyang-git-gutter-do-action-on-region beg end 'git-gutter:revert-hunk))
+    (chunyang-git-gutter-apply-on-region beg end 'git-gutter:revert-hunk))
 
   (defun chunyang-git-gutter-stage-region (beg end)
     (interactive "r")
-    (chunyang-git-gutter-do-action-on-region beg end 'git-gutter:stage-hunk)))
+    (chunyang-git-gutter-apply-on-region beg end 'git-gutter:stage-hunk)))
 
 (use-package diff-hl
   :disabled t
