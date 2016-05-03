@@ -1636,10 +1636,16 @@ Called with a prefix arg set search provider (default Google)."
   (add-to-list 'load-path "~/Projects/org-mode/contrib/lisp")
   (add-to-list 'Info-directory-list "~/Projects/org-mode/doc")
 
-  ;; Keys
-  (define-key mode-specific-map "l" #'org-store-link)
-  (define-key mode-specific-map "a" #'org-agenda)
-  (define-key mode-specific-map "c" #'org-capture)
+  ;; Prevent demoting heading also shifting text inside sections
+  (setq org-adapt-indentation nil)
+
+  ;; Global keys
+  (bind-keys :map mode-specific-map
+             ("l" . org-store-link)
+             ("L" . org-insert-link-global)
+             ("o" . org-open-at-point-global)
+             ("a" . org-agenda)
+             ("c" . org-capture))
 
   ;; Easy navigation
   (setq org-use-speed-commands t
@@ -1649,15 +1655,15 @@ Called with a prefix arg set search provider (default Google)."
     (bind-key "C-o" #'helm-org-in-buffer-headings org-mode-map))
 
   ;; Agenda
-  (setq org-agenda-files '("~/Notes/"))
+  (setq org-agenda-files '("~/Notes/todo"))
   (setq org-agenda-restore-windows-after-quit t)
   (setq org-agenda-custom-commands
         '(("i" "Today's TODO" ((tags-todo "+CATEGORY=\"today\"")))))
 
   ;; Capture
-  (setq org-default-notes-file "~/Notes/todo.org")
+  (setq org-default-notes-file "~/Notes/todo")
   (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline "~/Notes/todo.org" "Inbox")
+        '(("t" "Todo" entry (file+headline "~/Notes/todo" "Inbox")
            "* %?\n%i\n%a" :empty-lines 1)
           ("l" "Today I Learned" entry (file "~/Notes/TIL.org")
            "* %?\n%u\n%i" :empty-lines 1)
@@ -1665,6 +1671,9 @@ Called with a prefix arg set search provider (default Google)."
            "* %?\nEntered on %U\n")
           ("j" "Journal" entry (file+datetree "~/Notes/journal.org")
            "* %?\nEntered on %U\n%i\n%a")))
+
+  ;; Refile
+  (setq org-refile-targets (list (cons nil (cons :maxlevel 2))))
 
   ;; In case this option has been loaded, otherwise `setq' is sufficient
   (customize-set-variable 'org-babel-load-languages
@@ -1684,10 +1693,18 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package org-mac-link
   :if (eq system-type 'darwin)
-  :ensure t
-  :commands (;; org-mac-firefox-insert-frontmost-url
-             org-mac-safari-insert-frontmost-url
-             org-mac-chrome-insert-frontmost-url))
+  :commands (org-mac-grab-link org-mac-chrome-insert-frontmost-url))
+
+(use-package ox-html
+  :defer t
+  :config
+  (setq org-html-text-markup-alist
+        '((bold . "<b>%s</b>")
+          (code . "<code>%s</code>")
+          (italic . "<i>%s</i>")
+          (strike-through . "<del>%s</del>")
+          (underline . "<span class=\"underline\">%s</span>")
+          (verbatim . "<kbd>%s</kbd>"))))
 
 (use-package orglink
   :ensure t
