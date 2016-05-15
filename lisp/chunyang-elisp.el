@@ -58,24 +58,23 @@
     (browse-url (format "http://melpa.org/#/%s"
                         (symbol-name package)))))
 
-;; This macro requires Emacs 25+
-(define-advice describe-package-1 (:around (orig-fun &rest args) add-melpa-link)
-  "Add package's MELPA link section."
-  ;; Assuming all packages are on MELPA for convenience, though it's not true.
-  (apply orig-fun args)
-  (let* ((pkg (car args))
-         (name (if (package-desc-p pkg)
-                   (package-desc-name pkg)
-                 (symbol-name pkg)))
-         (melpa-link
-          (format "http://melpa.org/#/%s" name)))
-    (save-excursion
-      (goto-char (point-min))
-      (when (re-search-forward "Summary:" nil t)
-        (forward-line 1)
-        (package--print-help-section "MELPA")
-        (help-insert-xref-button melpa-link 'help-url melpa-link)
-        (insert "\n")))))
+(defun describe-package--add-melpa-link (pkg)
+  (let* ((desc (if (package-desc-p pkg)
+                   pkg
+                 (cadr (assq pkg package-archive-contents))))
+         (name (if desc (package-desc-name desc) pkg))
+         (archive (if desc (package-desc-archive desc)))
+         (melpa-link (format "http://melpa.org/#/%s" name)))
+    (when (equal archive "melpa")
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "Summary:" nil t)
+          (forward-line 1)
+          (package--print-help-section "MELPA")
+          (help-insert-xref-button melpa-link 'help-url melpa-link)
+          (insert "\n"))))))
+
+(advice-add 'describe-package-1 :after #'describe-package--add-melpa-link)
 
 
 ;;; Upgrade packages without 'M-x package-list-packages'
