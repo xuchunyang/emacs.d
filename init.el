@@ -13,7 +13,10 @@
 (setq ad-redefinition-action 'accept)
 
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+
+(setq package-archives '(("gnu"   . "http://elpa.zilongshanren.com/gnu/")
+                         ("melpa" . "http://elpa.zilongshanren.com/melpa/")
+                         ("org"   . "http://elpa.zilongshanren.com/org/")))
 
 (package-initialize)
 
