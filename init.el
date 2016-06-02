@@ -203,13 +203,11 @@
   (add-to-list 'display-time-world-list '("Asia/Shanghai" "上海")))
 
 
-;; Don't use Round quotes (new feature intruduced in Emacs-25), it looks cute
-;; but causes problems.
+;; 设置引号的样式，默认 curve 样式会把「`like this'」显示成「‘like
+;; this’」，虽然美观，但给我造成了问题
+;;
+;; @Emacs-25 @unstable @new-feature
 (setq text-quoting-style 'grave)
-
-;; WARNING: 每当我试图保存有中文文件的时候，Emacs 每次都要我选编码方式（默认推荐
-;; 也是中文的），我也不太了解编码，暂时这样吧
-(setq coding-system-for-write 'utf-8)
 
 ;;; Emacs session persistence
 (use-package desktop                    ; frame/window/buffer and global vars
