@@ -146,22 +146,19 @@
                     :font "Source Code Pro-13")
 
 ;; Theme
-;; (setq custom-safe-themes t)             ; Treat all themes as safe
+
+;; I change theme periodically so I don't want hard-code it here,
+;; instead, I use the Custom via 'M-x customize-themes'.
 
 (use-package spacemacs-theme
-  :disabled t
   :ensure t
   :defer t
-  :init
-  (setq spacemacs-theme-comment-bg nil
-        spacemacs-theme-org-height nil)
-  (load-theme 'spacemacs-dark :no-confirm))
+  :init (setq spacemacs-theme-comment-bg nil
+              spacemacs-theme-org-height nil))
 
 (use-package tomorrow-theme
   :ensure color-theme-sanityinc-tomorrow
-  :defer t
-  :init
-  (load-theme 'sanityinc-tomorrow-eighties :no-confirm))
+  :defer t)
 
 ;; Mode line
 (setq-default mode-line-format
