@@ -58,6 +58,12 @@
 
   ;; For Texinfo export
   ;; (setenv "LANG" "en_US.UTF-8")
+
+  ;; For Travis-CI SVG badge in HTML exporting
+  (with-eval-after-load 'ox-html
+    (seq-doseq (scheme ["file" "http" "https"])
+      (add-to-list 'org-html-inline-image-rules
+                   (cons scheme "\\.svg\\?branch=master\\'"))))
   )
 
 (use-package org
