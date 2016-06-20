@@ -1689,10 +1689,17 @@ Called with a prefix arg set search provider (default Google)."
   (add-hook 'ruby-mode-hook 'robe-mode))
 
 (use-package ruby-tools
+  :disabled t
   :ensure t
-  :init
-  (add-hook 'ruby-mode-hook 'ruby-tools-mode)
-  :diminish ruby-tools-mode)
+  :defer t
+  :init (add-hook 'ruby-mode-hook 'ruby-tools-mode))
+
+
+;; AppleScript
+(use-package applescript-mode
+  :if (eq 'darwin system-type)
+  :ensure t
+  :mode ("\\.applescript\\'" "\\.scpt\\'"))
 
 
 ;;; Math
