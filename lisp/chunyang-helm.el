@@ -2,10 +2,22 @@
 (add-to-list 'load-path "~/Projects/emacs-async")
 (add-to-list 'load-path "~/Projects/helm")
 (setq helm-command-prefix-key "C-c h")
-(require 'helm-config)
 
 ;; FIXME but also install helm from elpa
 (use-package helm :ensure t :defer t)
+
+(require 'helm-config)
+
+(use-package helm
+  :defer t
+  :init
+  ;; Display helm's buffer in one bottom widnow
+  ;; NOTE: This will make, C-h m, C-t and full-frame etc, not working!
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*helm.*\\*\\'"
+                 (display-buffer-in-side-window)
+                 (window-height . 0.4)))
+  (setq helm-display-function #'display-buffer))
 
 ;;; Setup of Helm's Sub-packages
 
