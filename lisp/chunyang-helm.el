@@ -98,8 +98,14 @@
   :preface
   (use-package wgrep-helm :ensure t :defer t)
   (defun chunyang/helm-do-grep-ag (arg)
+    "Search current project with ag.
+If with prefix argument, search current directory."
     (interactive "P")
-    (let ((dir (or (ignore-errors (projectile-project-root))
+    (let ((dir (or (unless arg
+                     (when-let ((bf buffer-file-name)
+                                (root (vc-git-root bf))
+                                (root (expand-file-name root)))
+                       root))
                    default-directory)))
       (helm-grep-ag dir arg)))
   :defer t
