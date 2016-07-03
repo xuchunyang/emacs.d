@@ -50,7 +50,10 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(require 'use-package)
+(use-package use-package
+  :config
+  (setq use-package-verbose t
+        use-package-minimum-reported-time 0.03))
 
 ;; Define `config' to group package configuration (an alternative to
 ;; `use-package')
@@ -76,8 +79,14 @@
 ;;; Require helper libraries
 
 (require 'subr-x)
+
+;; Make sure `seq.el' is installed for Emacs 24
+(unless (version< emacs-version "25")
+  (use-package seq :ensure t :defer t))
+
 (require 'rx)
 (use-package dash
+  :defer t
   :ensure t
   :config (dash-enable-font-lock))
 
@@ -104,6 +113,10 @@
 (load "~/.private.el" :no-error)
 
 
+(use-package no-littering
+  :load-path "~/Projects/no-littering/")
+
+
 ;;; OS X support
 (use-package ns-win                     ; OS X window support
   :defer t
@@ -116,19 +129,29 @@
 (use-package exec-path-from-shell
   :if (eq window-system 'ns)
   :ensure t
+  :defer t
   :init
-  (setq exec-path-from-shell-check-startup-files nil)
-  :config
+  (setq exec-path-from-shell-arguments (list "-l"))
   (exec-path-from-shell-copy-env "INFOPATH")
   (exec-path-from-shell-initialize))
 
 (use-package chunyang-osx
-  :commands (restart-emacs omnifocus-new-entry))
+  :commands (restart-emacs omnifocus-new-entry)
+  :bind (
+         ;; ("<wheel-left>"         . chunyang-next-buffer)
+         ;; ("<double-wheel-left>"  . chunyang-next-buffer)
+         ("<triple-wheel-left>"  . chunyang-next-buffer)
+         ;; ("<wheel-right>"        . chunyang-previous-buffer)
+         ;; ("<double-wheel-right>" . chunyang-previous-buffer)
+         ("<triple-wheel-right>" . chunyang-next-buffer)))
 
 
 ;;; User Interface
 (when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
 (when (bound-and-true-p scroll-bar-mode) (scroll-bar-mode -1))
+
+(unless (and (eq system-type 'darwin) (display-graphic-p))
+  (menu-bar-mode -1))
 
 (setq inhibit-startup-screen t)
 
@@ -138,7 +161,8 @@
 ;; (fset 'yes-or-no-p #'y-or-n-p)
 
 (defvar Orig-yes-or-no-p (symbol-function 'yes-or-no-p))
-(define-advice yes-or-no-p (:around (orig-fun prompt) or-just-y-or-n-p)
+
+(defun yes-or-no-p@or-just-y-or-n-p (orig-fun prompt)
   (funcall
    (if (or
         ;; refresh in Help buffer
@@ -152,6 +176,7 @@
         (eq this-command 'kill-this-buffer))
        #'y-or-n-p Orig-yes-or-no-p)
    prompt))
+(advice-add 'yes-or-no-p :around #'yes-or-no-p@or-just-y-or-n-p)
 
 ;; Answer yes automatically in some commands
 (defun yes-or-no-bypass (orig-fun &rest args)
@@ -166,10 +191,21 @@
          (dolist (sym yes-or-no-bypass-functions)
            (advice-add sym :around 'yes-or-no-bypass))))
 
+
 ;; Font#
-(set-face-attribute 'default nil
-                    :font "Source Code Pro-13")
+;; Setting English Font
 
+(when (display-graphic-p)
+  ;; English
+  (set-face-attribute 'default nil :font "Source Code Pro-13")
+
+  ;; Chinese Font 配制中文字体
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font)
+                      charset
+                      (font-spec :family "PingFang SC" :size 14))))
+
+
 ;; Theme
 
 ;; I change theme periodically so I don't want hard-code it here,
@@ -199,6 +235,9 @@
                 ;; (:eval (format "%-5d" (point)))
                 (projectile-mode projectile-mode-line)
                 (vc-mode (:propertize (:eval vc-mode) face italic))
+                (helm-alive-p
+                 (:eval (when (eq (current-buffer) helm-current-buffer)
+                          (propertize " Helm-current " 'face 'bold))))
                 ;; Other modes
                 " " mode-line-modes mode-line-misc-info mode-line-end-spaces))
 
@@ -253,8 +292,9 @@
                         (buffer-string)))))))
 
 (use-package savehist                   ; Minibuffer history
-  :init (savehist-mode)
+  ;; :disabled t
   :config
+  (savehist-mode)
   (setq history-length 1000
         history-delete-duplicates t
         savehist-additional-variables '(extended-command-history)))
@@ -312,11 +352,13 @@
 
 (use-package ivy
   :if (eq chunyang-completion-system 'ivy)
+  ;; FIXME: Why :if doesn't take over :ensure
+  :disabled (eq chunyang-completion-system 'ivy)
   :ensure swiper
-  :bind (("C-z"    .  ivy-resume)
-         ("C-s"    .  swiper)
-         ("M-l"    .  ivy-switch-buffer)
-         ("C-x f"  .  ivy-recentf))
+  :bind (("C-z"    . ivy-resume)
+         ("C-s"    . swiper)
+         ("M-l"    . ivy-switch-buffer)
+         ("C-x f"  . ivy-recentf))
   :config
   (ivy-mode)
   (bind-key "C-o" 'imenu)
@@ -350,9 +392,11 @@
 (bind-key "O" #'delete-other-windows  special-mode-map)
 (bind-key "Q" #'kill-this-buffer      special-mode-map)
 (bind-key "C-x k" #'kill-this-buffer)
+(bind-key "C-x K" #'kill-buffer)
 
 (use-package ace-window
   :ensure t
+  :defer t
   :preface
   (defun chunyang-ace-window (arg)
     "A modified version of `ace-window'.
@@ -369,8 +413,8 @@ One C-u, swap window, two C-u, delete window."
       (t (if (<= (length (window-list)) 3)
              (other-window 1)
            (ace-select-window)))))
+  :bind ("M-o" . chunyang-ace-window)
   :config
-  (bind-key "M-o" #'chunyang-ace-window)
   (setq aw-ignore-current t)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
@@ -406,8 +450,9 @@ One C-u, swap window, two C-u, delete window."
 
 ;;; File handle
 ;; Keep backup and auto save files out of the way
-(setq backup-directory-alist `((".*" . ,(locate-user-emacs-file ".backup")))
-      auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+;; NOTE: Commenting this out because `no-littering.el' is doing this for me
+;; (setq backup-directory-alist `((".*" . ,(locate-user-emacs-file ".backup")))
+;;       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 ;; Delete files to trash
 (setq delete-by-moving-to-trash t)
@@ -417,14 +462,15 @@ One C-u, swap window, two C-u, delete window."
          ("C-c f n" . normal-mode))
   :config
   ;; Prefer GNU variants
-  (setq insert-directory-program "gls"
-        grep-find-program "gfind"
-        grep-program "ggrep"))
+  (when (eq 'darwin system-type)
+    (setq insert-directory-program  "gls"
+          find-program              "gfind"
+          grep-program              "ggrep")))
 
 (use-package dired                      ; Edit directories
   :defer t
   :config
-  (setq dired-listing-switches "-alh")
+  (setq dired-listing-switches "-alh --no-group")
   (use-package dired-x
     :commands dired-omit-mode
     :init (add-hook 'dired-mode-hook #'dired-omit-mode)))
@@ -463,36 +509,54 @@ One C-u, swap window, two C-u, delete window."
 (setq-default fill-column 80)
 
 ;; I prefer indent long-line code myself
-(setq comment-auto-fill-only-comments t)
+;; (setq comment-auto-fill-only-comments t)
 
-(add-hook 'text-mode-hook #'auto-fill-mode)
-(add-hook 'prog-mode-hook #'auto-fill-mode)
+;; (add-hook 'text-mode-hook #'auto-fill-mode)
+;; (add-hook 'prog-mode-hook #'auto-fill-mode)
 
-(diminish 'auto-fill-function)          ; Not `auto-fill-mode' as usual
+;; (diminish 'auto-fill-function)          ; Not `auto-fill-mode' as usual
+
+;; (global-visual-line-mode)
+
+(use-package visual-fill-column
+  ;; TODO: use-package: 自定义关键词
+  ;; :description "定制 Emacs 自带 visual-line-mode 的宽度"
+  ;; :url "foobar"
+  :ensure t
+  :defer t
+  :init
+  (setq visual-fill-column-width fill-column)
+  ;; (setq visual-fill-column-fringes-outside-margins nil)
+  (add-hook 'visual-line-mode-hook
+            (defun visual-fill-column-toggle ()
+              (visual-fill-column-mode (or visual-line-mode -1)))))
+
+;; NOTE: `visual-line-mode' 似乎假定了字与字之间使用空格隔开的！？所以处理中文应该有问题吧！
+;;       好像有没问题！我不是 100% 确定到底有没有问题，至少目前没发现问题。
+(with-eval-after-load 'org
+  ;; (add-hook 'org-mode-hook 'visual-line-mode)
+  )
 
 (use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
+  :disabled t
   :ensure t
   :bind (("C-c t c" . whitespace-cleanup-mode)
          ("C-c x w" . whitespace-cleanup))
   :init (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
           (add-hook hook #'whitespace-cleanup-mode))
-  :diminish whitespace-cleanup-mode)
+  ;; :diminish whitespace-cleanup-mode
+  )
 
 (use-package subword                    ; Subword/superword editing
   :defer t
-  :diminish subword-mode)
+  ;; :diminish subword-mode
+  )
 
 (use-package adaptive-wrap              ; Choose wrap prefix automatically
   :disabled t
   :ensure t
   :defer t
   :init (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode))
-
-(use-package visual-fill-column
-  :disabled t
-  :ensure t
-  :defer t
-  :init (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 
 (use-package avy
   :disabled t
@@ -522,6 +586,8 @@ One C-u, swap window, two C-u, delete window."
   :bind ("C-=" . er/expand-region))
 
 (use-package drag-stuff
+  :disabled t
+  :defer t
   :ensure t)
 
 (use-package align                      ; Align text in buffers
@@ -530,6 +596,7 @@ One C-u, swap window, two C-u, delete window."
          ("C-c A r" . align-regexp)))
 
 (use-package multiple-cursors           ; Edit text with multiple cursors
+  :disabled t
   :ensure t
   :bind (("C-c o e"     . mc/mark-more-like-this-extended)
          ("C-c o n"     . mc/mark-next-like-this)
@@ -559,6 +626,8 @@ One C-u, swap window, two C-u, delete window."
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+
+(put 'timer-list 'disabled nil)
 
 (use-package help-mode
   :preface
@@ -648,6 +717,7 @@ One C-u, swap window, two C-u, delete window."
             (add-hook hook #'outline-minor-mode)))
 
 (use-package imenu
+  :defer t
   :init
   ;; Helper function
   (defun my-imenu--build-expression (name)
@@ -698,11 +768,13 @@ One C-u, swap window, two C-u, delete window."
 (use-package plur
   :load-path "~/Projects/plur"
   :bind ("C-c M-%" . plur-query-replace)
-  :demand t)
+  :config (define-key isearch-mode-map "\M-{" #'plur-isearch-query-replace)
+  ;; :defer t
+  )
 
 (use-package region-state
   :ensure t
-  :config (region-state-mode))
+  :init (region-state-mode))
 
 (use-package swap-regions
   :load-path "~/Projects/swap-regions.el"
@@ -720,13 +792,14 @@ One C-u, swap window, two C-u, delete window."
 
 
 ;;; Highlight
-(use-package whitespace                 ; Highlight bad whitespace (tab)
+(use-package whitespace               ; Highlight bad whitespace (tab)
   :bind ("C-c t w" . whitespace-mode)
   :config
   (setq whitespace-style '(face indentation space-after-tab space-before-tab
                                 tab-mark empty trailing lines-tail)
         whitespace-line-column nil)
-  :diminish whitespace-mode)
+  ;; :diminish whitespace-mode
+  )
 
 (use-package hl-line
   :bind ("C-c t L" . hl-line-mode))
@@ -737,7 +810,7 @@ One C-u, swap window, two C-u, delete window."
 (use-package rainbow-delimiters         ; Highlight delimiters by depth
   :ensure t
   :defer t
-  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :init (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
 
 (use-package hl-todo
   :ensure t
@@ -773,7 +846,8 @@ One C-u, swap window, two C-u, delete window."
 (use-package rainbow-mode               ; Fontify color values in code
   :ensure t
   :diminish rainbow-mode
-  :config (add-hook 'css-mode-hook #'rainbow-mode))
+  :defer t
+  :init (add-hook 'css-mode-hook #'rainbow-mode))
 
 
 ;;; Skeletons, completion and expansion
@@ -819,15 +893,12 @@ One C-u, swap window, two C-u, delete window."
   :commands company-complete
   :init (global-company-mode)
   :config
-  ;; Use Company for completion
+  ;; Use Company for completion C-M-i
   (bind-key [remap completion-at-point] #'company-complete company-mode-map)
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 2
         ;; Easy navigation to candidates with M-<n>
-        company-show-numbers t)
-  (dolist (hook '(git-commit-mode-hook mail-mode-hook))
-    (add-hook hook (lambda ()
-                     (setq-local company-backends '(company-ispell))))))
+        company-show-numbers t))
 
 (use-package auto-complete
   :disabled t
@@ -862,9 +933,10 @@ One C-u, swap window, two C-u, delete window."
 
 (use-package flyspell
   :init
-  (add-hook 'text-mode-hook #'flyspell-mode)
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  ;; (add-hook 'text-mode-hook #'flyspell-mode)
+  ;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
   (use-package ispell
+    :defer t
     :init
     (setq ispell-program-name "aspell"
           ispell-extra-args '("--sug-mode=ultra")))
@@ -880,6 +952,7 @@ One C-u, swap window, two C-u, delete window."
     (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
 
 (use-package checkdoc
+  :disabled t                           ; Not working anyway
   :config (setq checkdoc-arguments-in-order-flag nil
                 checkdoc-force-docstrings-flag nil))
 
@@ -1023,23 +1096,32 @@ See also `describe-function-or-variable'."
 
   ;; TODO make my own hook func
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook #'ipretty-mode)
+  (use-package ipretty
+    :disabled t                         ; Turn off for some time
+    :ensure t
+    :defer t
+    :init (add-hook 'emacs-lisp-mode-hook #'ipretty-mode))
+
   ;; (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
   ;;   (add-hook hook 'turn-on-elisp-slime-nav-mode))
-  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
+  (use-package aggressive-indent
+    :ensure t
+    :defer t
+    :diminish aggressive-indent-mode
+    :init
+    (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
+
+  (when (version< emacs-version "25")
+    (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
 
 (use-package chunyang-elisp
   :config
   (bind-key "C-M-;" #'comment-or-uncomment-sexp emacs-lisp-mode-map))
 
 (use-package ielm
+  :defer t
   :config
   (add-hook 'ielm-mode-hook #'enable-paredit-mode))
-
-(use-package aggressive-indent
-  :ensure t
-  :defer t
-  :diminish aggressive-indent-mode)
 
 (use-package macrostep
   :ensure t
@@ -1051,12 +1133,13 @@ See also `describe-function-or-variable'."
   ;; Or just (bind-key "C-h ." #'describe-symbol)
   :bind ("C-h ." . elisp-slime-nav-describe-elisp-thing-at-point))
 
-(use-package ipretty             :ensure t :defer t)
 (use-package pcache              :ensure t :defer t)
 (use-package persistent-soft     :ensure t :defer t)
 (use-package log4e               :ensure t :defer t)
 (use-package alert               :ensure t :defer t)
-(use-package bug-hunter          :ensure t :defer t)
+(use-package bug-hunter
+  :disabled t
+  :ensure t :defer t)
 
 
 ;;; Help
@@ -1091,13 +1174,14 @@ See Info node `(magit) How to install the gitman info manual?'."
   (advice-add 'Info-goto-node :around #'Info-goto-node--gitman-for-magit))
 
 (use-package vc
-  :config
+  :defer t
+  :init
   ;; Don't ask me again
   (setq vc-follow-symlinks t))
 
 (use-package git-gutter
   :ensure t
-  :bind (("C-x C-g" . git-gutter-mode)
+  :bind (("C-x G"   . git-gutter-mode)
          ("C-x v n" . git-gutter:next-hunk)
          ("C-x v p" . git-gutter:previous-hunk)
          ("C-x v s" . git-gutter:stage-hunk)
@@ -1176,10 +1260,11 @@ See Info node `(magit) How to install the gitman info manual?'."
 (use-package ediff
   :defer t
   :config
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain
-        ediff-split-window-function 'split-window-horizontally)
-  (setq ediff-custom-diff-program "diff"
-        ediff-custom-diff-options "-u"))
+  ;; (setq ediff-window-setup-function 'ediff-setup-windows-plain
+  ;;       ediff-split-window-function 'split-window-horizontally)
+  ;; (setq ediff-custom-diff-program "diff"
+  ;;       ediff-custom-diff-options "-u")
+  )
 
 (use-package server
   :defer 7
@@ -1189,8 +1274,8 @@ See Info node `(magit) How to install the gitman info manual?'."
 (use-package gh-md             :ensure t :defer t)
 
 (use-package github-notifier
-  :ensure t
-  :commands github-notifier-mode)
+  :load-path "~/Projects/github-notifier.el"
+  :commands github-notifier)
 
 (use-package which-key
   :disabled t
@@ -1208,7 +1293,6 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 ;;; Project
 (use-package projectile
-  :disabled t
   :ensure t
   :diminish projectile-mode
   :config
@@ -1222,7 +1306,6 @@ See Info node `(magit) How to install the gitman info manual?'."
   (projectile-global-mode))
 
 (use-package helm-projectile
-  :disabled t
   :if (eq chunyang-completion-system 'helm)
   :after projectile
   :ensure t
@@ -1240,6 +1323,7 @@ See Info node `(magit) How to install the gitman info manual?'."
             helm-projectile-projects-map))
 
 (use-package chunyang-browse-projects
+  :disabled t
   :defer t
   :init
   (defvar chunyang-project-list nil)
@@ -1447,7 +1531,21 @@ See Info node `(magit) How to install the gitman info manual?'."
   (setq erc-rename-buffers t)
   :defer t)
 
-(use-package sx                  :ensure t :defer t)
+
+(use-package newsticker
+  :defer t
+  :init
+  ;; 必须在 (require 'newsticker) 之前
+  (setq newsticker-retrieval-interval 0)  ; 不在后台自动更新
+
+  (setq newsticker-url-list-defaults nil
+        newsticker-url-list '(("Topic" "https://emacs-china.org/latest.rss")
+                              ("Post"  "https://emacs-china.org/posts.rss")
+                              ("HN"    "https://news.ycombinator.com/rss")
+                              ("blog"  "https://xuchunyang.me/rss.xml"))))
+
+(use-package sx
+  :ensure t :defer t)
 
 (use-package google-this
   :disabled t
@@ -1485,8 +1583,9 @@ Called with a prefix arg set search provider (default Google)."
 (bind-key "M-s M-s" #'web-search)
 
 (use-package emms
-  :load-path "~/Projects/emms/lisp"
-  :init
+  :ensure t
+  :defer t
+  :config
   (add-to-list 'Info-directory-list "~/Projects/emms/doc")
 
   (setq emms-mode-line-icon-color "purple")
@@ -1524,33 +1623,12 @@ Called with a prefix arg set search provider (default Google)."
          ("C-c Y" . youdao-dictionary-search-at-point+)))
 
 (use-package osx-dictionary
-  :ensure t
+  :load-path "~/Projects/osx-dictionary.el"
   :bind ("C-c d" . osx-dictionary-search-pointer))
 
 (use-package bing-dict
   :ensure t
-  :preface
-  (defun say ()
-    (interactive)
-    (let ((text (if (use-region-p)
-                    (buffer-substring (region-beginning) (region-end))
-                  (thing-at-point 'word))))
-      (when text
-        (start-process "say" nil "say" text))))
-  :config
-  ;; (defvar bing-dict-query-word-at-point-timer
-  ;;   (run-with-idle-timer 2.1 t
-  ;;                        (lambda ()
-  ;;                          (let ((word (thing-at-point 'word)))
-  ;;                            (when (and word (> (length word) 3) (< (length word) 21)
-  ;;                                       (not (minibufferp)))
-  ;;                              ;; (my-log "%s" word)
-  ;;                              (bing-dict-brief word))))))
-  ;; (defun bing-dict-stop-timer ()
-  ;;   (interactive)
-  ;;   (cancel-timer bing-dict-query-word-at-point-timer)
-  ;;   (message "bing-dict-query-word-at-point-timer canceled"))
-  )
+  :defer t)
 
 (defvar google-translate-history nil)
 
@@ -1642,13 +1720,14 @@ Called with a prefix arg set search provider (default Google)."
     (pcomplete-here* tldr-commands))
 
   (use-package eshell-git-prompt
-    :disabled t
-    :load-path "~/wip/eshell-git-prompt"
+    :ensure t
     :config (eshell-git-prompt-use-theme 'powerline))
 
   (use-package eshell-z :ensure t))
 
 (use-package eshell-did-you-mean
+  ;; :disabled t
+  :after eshell
   :ensure t
   :config (eshell-did-you-mean-setup))
 
@@ -1722,6 +1801,17 @@ Called with a prefix arg set search provider (default Google)."
 (setq tags-table-list '("~/Projects/emacs"))
 
 
+;;; Guile Scheme
+
+(use-package geiser
+  :ensure t
+  :defer t
+  :init
+  (setq geiser-default-implementation 'guile))
+
+(add-hook 'scheme-mode-hook #'paredit-mode)
+
+
 ;;; Common Lisp
 
 (use-package slime
@@ -1738,6 +1828,7 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package ruby-mode
   :ensure t
+  :defer t
   :init
   (add-hook 'ruby-mode 'superword-mode))
 
@@ -1777,6 +1868,28 @@ Called with a prefix arg set search provider (default Google)."
   (autoload 'maxima      "maxima"  "Maxima interaction"                     t)
   (autoload 'imath-mode  "imath"   "Imath mode for math formula input"      t)
   (setq imaxima-use-maxima-mode-flag t))
+
+
+;;; Misc
+
+;; Socks5 proxy setting of `url.el'
+;; (setq url-gateway-method 'socks
+;;       socks-server '("Default server" "127.0.0.1" 1080 5))
+
+(use-package opencc                     ; WIP
+  :load-path "~/Projects/emacs-opencc"
+  :commands (opencc-use-api opencc-use-cli opencc)
+  :defer t)
+
+(use-package chunyang-blog
+  :load-path "~/Projects/blog"
+  :commands chunyang-blog-publish)
+
+(use-package number-to-word             ; WIP
+  :defer t
+  :load-path "~/Projects/number-to-word")
+
+;; (use-package nginx-mode :ensure t :defer t)
 
 
 ;;; Customization
