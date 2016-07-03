@@ -1655,28 +1655,65 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; Org mode
 
+;; (require 'chunyang-org)
+
+(use-package org
+  ;; Install org included in org-plus-contrib from Org ELPA
+  :ensure org-plus-contrib
+  :defer t
+  :init
+  ;; 修复中文 markup
+  (setq org-emphasis-regexp-components
+        ;; markup 记号前后允许中文
+        (list (concat " \t('\"{"            "[:nonascii:]")
+              (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
+              " \t\r\n,\"'"
+              "."
+              1))
+  ;; 导出时不使用上下标 - 1）中文有问题；2）我暂时用不到它
+  (setq org-export-with-sub-superscripts nil)
+
+  (bind-keys :map mode-specific-map
+             ("l" . org-store-link)
+             ;; ("L" . org-insert-link-global)
+             ("o" . org-open-at-point-global)
+             ("a" . org-agenda)
+             ("c" . org-capture))
+
+  ;; This will loads org.el but I need it from the begining
+  (require 'org-protocol)
+
+  :config
+  (bind-key "C-o" #'helm-org-in-buffer-headings org-mode-map)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (maxima     . t)
+     (python     . t)
+     (ruby       . t)
+     (sh         . t))))
+
 (use-package org-mac-link
+  :disabled t                           ; Included in org-plus-contrib
   :if (eq system-type 'darwin)
   :commands (org-mac-grab-link org-mac-chrome-insert-frontmost-url))
 
-(use-package ox-html
-  :defer t
-  :config
-  (setq org-html-text-markup-alist
-        '((bold . "<b>%s</b>")
-          (code . "<code>%s</code>")
-          (italic . "<i>%s</i>")
-          (strike-through . "<del>%s</del>")
-          (underline . "<span class=\"underline\">%s</span>")
-          (verbatim . "<kbd>%s</kbd>"))))
+(use-package grab-mac-link
+  :load-path "~/Projects/grab-mac-link"
+  :if (eq system-type 'darwin)
+  :bind ("C-c L" . grab-mac-link))
 
 (use-package orglink
+  ;; :disabled t
   :ensure t
-  :diminish orglink-mode
-  :config (global-orglink-mode))
+  ;; :diminish orglink-mode
+  ;; NOTE The problem is: it will slow down Emacs startup
+  ;; :init (global-orglink-mode)
+  :defer t)
 
 (use-package org-bullets
-  :disabled t
+  :disabled t                           ; Looks cute but I don't really need it now
   :config (add-hook 'org-mode-hook #'org-bullets-mode))
 
 
