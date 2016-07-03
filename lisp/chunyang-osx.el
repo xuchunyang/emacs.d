@@ -64,5 +64,51 @@
                      (kill-this-buffer))))
   (local-set-key "\C-c\C-k" #'kill-this-buffer))
 
+
+;;; Use Trackpad to switch to next/previous buffer
+(use-package chunyang-osx-trackpad
+  :disabled t                           ; Not work well
+  :defer t
+  :preface
+  (require 'helm)
+  (require 'dash)
+
+  (defun chunyang-next-buffer-1 (&optional n)
+    (let ((buffers
+           (helm-skip-boring-buffers
+            (mapcar #'buffer-name (buffer-list))
+            nil)))
+      (switch-to-buffer (car (-rotate (or n -1) buffers)) t)))
+
+  (defun chunyang-previous-buffer-1 ()
+    (chunyang-next-buffer-1 1))
+
+  (defvar chunyang-next-buffer-timer nil)
+  (defvar chunyang-previous-buffer-timer nil)
+
+  (defun chunyang-next-buffer ()
+    (interactive)
+    (unless chunyang-next-buffer-timer
+      (setq chunyang-next-buffer-timer
+            (run-at-time 1 nil
+                         (lambda ()
+                           (cancel-timer chunyang-next-buffer-timer)
+                           (setq chunyang-next-buffer-timer nil))))
+      (message "=> NEXT buffer (%S)..."
+               (key-description (this-command-keys)))
+      (chunyang-next-buffer-1)))
+
+  (defun chunyang-previous-buffer ()
+    (interactive)
+    (unless chunyang-previous-buffer-timer
+      (setq chunyang-previous-buffer-timer
+            (run-at-time 1 nil
+                         (lambda ()
+                           (cancel-timer chunyang-previous-buffer-timer)
+                           (setq chunyang-previous-buffer-timer nil))))
+      (message "=> PREV buffer (%S) ..."
+               (key-description (this-command-keys)))
+      (chunyang-previous-buffer-1))))
+
 (provide 'chunyang-osx)
 ;;; chunyang-osx.el ends here
