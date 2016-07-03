@@ -17,27 +17,35 @@
                '("\\`\\*helm.*\\*\\'"
                  (display-buffer-in-side-window)
                  (window-height . 0.4)))
-  (setq helm-display-function #'display-buffer))
+  (setq helm-display-function #'display-buffer)
+
+  ;; This is for sanityinc-tomorrow-eighties theme
+  ;; (face-spec-set 'helm-visible-mark
+  ;;                '((t (:background "#494949"))))
+  )
 
 ;;; Setup of Helm's Sub-packages
 
 (use-package helm-mode                  ; Use helm completing everywhere
   :diminish helm-mode
-  :config
+  :init
   (helm-mode)
+  :config
   (add-to-list 'helm-completing-read-handlers-alist
-               '(where-is . helm-completing-read-symbols)))
+               '(where-is . helm-completing-read-symbols))
+  (add-to-list 'helm-completing-read-handlers-alist
+               '(org-insert-link . nil)))
 
 ;;; key bindings, M-0 to M-9
-(progn
-  (dolist (nth (number-sequence 1 9))
-    (define-key helm-map (kbd (format "M-%d" nth))
-      ;; In case `lexical-binding' is off
-      `(lambda () (interactive) (helm-execute-candidate-action ,nth))))
+;; (progn
+;;   (dolist (nth (number-sequence 1 9))
+;;     (define-key helm-map (kbd (format "M-%d" nth))
+;;       ;; In case `lexical-binding' is off
+;;       `(lambda () (interactive) (helm-execute-candidate-action ,nth))))
 
-  ;; Use M-0 for the tenth candidate
-  (define-key helm-map (kbd "M-0")
-    (lambda () (interactive) (helm-execute-candidate-action 10))))
+;;   ;; Use M-0 for the tenth candidate
+;;   (define-key helm-map (kbd "M-0")
+;;     (lambda () (interactive) (helm-execute-candidate-action 10))))
 
 (defun helm-execute-candidate-action (nth)
   "Move selection to Nth candidate and execute default action."
@@ -56,8 +64,7 @@
 (setq helm-highlight-matches-around-point-max-lines 0)
 
 (use-package helm-adaptive
-  :disabled t
-  :config (helm-adaptive-mode))
+  :init (helm-adaptive-mode))
 
 (use-package helm-command               ; helm-M-x
   :defer t
@@ -119,7 +126,7 @@ If with prefix argument, search current directory."
                                 (root (expand-file-name root)))
                        root))
                    default-directory)))
-      (helm-grep-ag dir arg)))
+      (helm-grep-ag dir nil)))
   :defer t
   :bind ("M-I" . chunyang/helm-do-grep-ag)
   :config
@@ -187,8 +194,9 @@ If with prefix argument, search current directory."
          ("C-c C-s" . helm-do-ag-project-root)))
 
 (use-package helm-descbinds
+  :defer t
   :ensure t
-  :config
+  :init
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
 
@@ -196,6 +204,7 @@ If with prefix argument, search current directory."
 
 (use-package helm-github-stars
   :ensure t
+  :defer t
   :config
   (add-hook 'helm-github-stars-clone-done-hook #'dired)
   (setq helm-github-stars-refetch-time (/ 6.0 24)
