@@ -1,16 +1,35 @@
+(setq org-emphasis-regexp-components
+      ;; markup 记号前后允许中文
+      (list (concat " \t('\"{"            "[:nonascii:]")
+            (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
+            " \t\r\n,\"'"
+            "."
+            1))
+
+;; (with-eval-after-load 'org
+;;   (setq org-match-substring-regexp
+;;         (concat
+;;          ;; 限制上标和下标的匹配范围，org 中对其的介绍见：(org) Subscripts and superscripts
+;;          "\\([0-9a-zA-Zα-γΑ-Ω]\\)\\([_^]\\)\\("
+;;          "\\(?:" (org-create-multibrace-regexp "{" "}" org-match-sexp-depth) "\\)"
+;;          "\\|"
+;;          "\\(?:" (org-create-multibrace-regexp "(" ")" org-match-sexp-depth) "\\)"
+;;          "\\|"
+;;          "\\(?:\\*\\|[+-]?[[:alnum:].,\\]*[[:alnum:]]\\)\\)")))
+
 (config org
   ;; Use org from git repo
-  (add-to-list 'load-path "~/Projects/org-mode/lisp")
-  (add-to-list 'load-path "~/Projects/org-mode/contrib/lisp")
-  (add-to-list 'Info-directory-list "~/Projects/org-mode/doc")
+  ;; (add-to-list 'load-path "~/Projects/org-mode/lisp")
+  ;; (add-to-list 'load-path "~/Projects/org-mode/contrib/lisp")
+  ;; (add-to-list 'Info-directory-list "~/Projects/org-mode/doc")
 
   ;; Prevent demoting heading also shifting text inside sections
-  (setq org-adapt-indentation nil)
+  ;; (setq org-adapt-indentation nil)
 
   ;; Global keys
   (bind-keys :map mode-specific-map
              ("l" . org-store-link)
-             ("L" . org-insert-link-global)
+             ;; ("L" . org-insert-link-global)
              ("o" . org-open-at-point-global)
              ("a" . org-agenda)
              ("c" . org-capture))
@@ -54,7 +73,7 @@
   (setq org-confirm-babel-evaluate nil)
   (setq org-src-tab-acts-natively t)
 
-  (customize-set-variable 'org-export-backends '(html texinfo))
+  ;; (customize-set-variable 'org-export-backends '(html texinfo))
 
   ;; For Texinfo export
   ;; (setenv "LANG" "en_US.UTF-8")
@@ -65,6 +84,8 @@
       (add-to-list 'org-html-inline-image-rules
                    (cons scheme "\\.svg\\?branch=master\\'"))))
   )
+
+(require 'org-protocol)
 
 (use-package org
   :disabled t
