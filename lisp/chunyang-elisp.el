@@ -64,7 +64,7 @@
                  (cadr (assq pkg package-archive-contents))))
          (name (if desc (package-desc-name desc) pkg))
          (archive (if desc (package-desc-archive desc)))
-         (melpa-link (format "http://melpa.org/#/%s" name)))
+         (melpa-link (format "https://melpa.org/#/%s" name)))
     (when (equal archive "melpa")
       (save-excursion
         (goto-char (point-min))
@@ -74,7 +74,8 @@
           (help-insert-xref-button melpa-link 'help-url melpa-link)
           (insert "\n"))))))
 
-(advice-add 'describe-package-1 :after #'describe-package--add-melpa-link)
+(when (>= emacs-major-version 25)
+  (advice-add 'describe-package-1 :after #'describe-package--add-melpa-link))
 
 
 ;;; Upgrade packages without 'M-x package-list-packages'
@@ -99,30 +100,31 @@
             (package-delete (cadr (assq p package-alist)))))
         (package--outdated-packages)))
 
-(define-advice package-install (:around (orig-fun &rest args) update-pkg-database-if-needed)
-  (if (called-interactively-p 'any)
-      (condition-case err
-          (apply orig-fun args)
-        (file-error
-         (message "%s" (error-message-string err))
-         (sit-for 1)
-         (message "Refreshing package database...")
-         (package-refresh-contents)
-         (apply orig-fun args)))
-    (apply orig-fun args)))
+;; (when (>= emacs-major-version 25)
+;;   (define-advice package-install (:around (orig-fun &rest args) update-pkg-database-if-needed)
+;;     (if (called-interactively-p 'any)
+;;         (condition-case err
+;;             (apply orig-fun args)
+;;           (file-error
+;;            (message "%s" (error-message-string err))
+;;            (sit-for 1)
+;;            (message "Refreshing package database...")
+;;            (package-refresh-contents)
+;;            (apply orig-fun args)))
+;;       (apply orig-fun args))))
 
 ;; This ugly hack is to reuse the interactive from of `package-install'.
-(eval
- `(defun package-install-maybe-refresh (pkg &optional dont-select)
-    "Like `package-install' but call `package-refresh-contents' once if PKG is not found."
-    ,(interactive-form 'package-install)
-    (condition-case err
-        (package-install pkg dont-select)
-      (file-error
-       (message "%s" (error-message-string err))
-       (sit-for .5)
-       (package-refresh-contents)
-       (package-install pkg dont-select)))))
+;; (eval
+;;  `(defun package-install-maybe-refresh (pkg &optional dont-select)
+;;     "Like `package-install' but call `package-refresh-contents' once if PKG is not found."
+;;     ,(interactive-form 'package-install)
+;;     (condition-case err
+;;         (package-install pkg dont-select)
+;;       (file-error
+;;        (message "%s" (error-message-string err))
+;;        (sit-for .5)
+;;        (package-refresh-contents)
+;;        (package-install pkg dont-select)))))
 
 
 ;;; Another C-j for `lisp-interaction-mode'
@@ -140,7 +142,8 @@
 ;;     ⇒ hi
 ;;*---------------------------------------------------------------------*/
 
-(bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map)
+(unless (version< emacs-version "25")
+  (bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map))
 
 (defun chunyang-disable-some-modes-in-scratch ()
   (dolist (mode '(aggressive-indent-mode ipretty-mode))
@@ -177,19 +180,20 @@
 
 
 ;; Display function's short docstring along side with args in eldoc
-(define-advice elisp-get-fnsym-args-string (:around (orig-fun &rest r) append-func-doc)
-  (concat
-   (apply orig-fun r)
-   (let* ((f (car r))
-          (fdoc
-           (and (fboundp f)
-                (documentation f 'raw)))
-          (fdoc-one-line
-           (and fdoc
-                (substring fdoc 0 (string-match "\n" fdoc)))))
-     (when (and fdoc-one-line
-                (not (string= "" fdoc-one-line)))
-       (concat "  |  " (propertize fdoc-one-line 'face 'italic))))))
+(when (>= emacs-major-version 25)
+  (define-advice elisp-get-fnsym-args-string (:around (orig-fun &rest r) append-func-doc)
+    (concat
+     (apply orig-fun r)
+     (let* ((f (car r))
+            (fdoc
+             (and (fboundp f)
+                  (documentation f 'raw)))
+            (fdoc-one-line
+             (and fdoc
+                  (substring fdoc 0 (string-match "\n" fdoc)))))
+       (when (and fdoc-one-line
+                  (not (string= "" fdoc-one-line)))
+         (concat "  |  " (propertize fdoc-one-line 'face 'italic)))))))
 
 
 ;; Misc
