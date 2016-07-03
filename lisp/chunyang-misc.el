@@ -108,5 +108,49 @@
                 last this))))
     (nreverse res)))
 
+
+;;; Format Emacs Lisp
+(defun chunyang-one-space (beg end &optional query-p)
+  "Keep only one blank space."
+  (interactive "r\nP")
+  (perform-replace "\\([^ \n] \\)\\( +\\)\\([^ \n]\\)"
+                   (cons (lambda (_data _count)
+                           (concat (match-string 1)
+                                   (match-string 3)))
+                         nil)
+                   query-p 'regexp nil nil nil beg end))
+
+(defun chunyang-zero-space (beg end &optional query-p)
+  "Delete blank space after (."
+  (interactive "r\nP")
+  (perform-replace "(\\( +\\)" "(" query-p 'regexp nil nil nil beg end))
+
+;; Also note C-u C-M-q
+
+
+;;; Download and eval
+(defun download-and-eval (url)
+  (let ((f (expand-file-name (file-name-nondirectory url)
+                             temporary-file-directory)))
+    (url-copy-file url f)
+    (load-file f)))
+
+
+;; http://emacs.stackexchange.com/questions/20171/how-to-preserve-color-in-messages-buffer
+(defun my-message (format &rest args)
+  "Acts like `message' but preserves string properties in the *Messages* buffer."
+  (let ((message-log-max nil))
+    (apply 'message format args))
+  (with-current-buffer (get-buffer "*Messages*")
+    (save-excursion
+      (goto-char (point-max))
+      (let ((inhibit-read-only t))
+        (unless (zerop (current-column)) (insert "\n"))
+        (insert (apply 'format format args))
+        (insert "\n")))))
+
+;; Oops, the following *breaks* Emacs
+;; (advice-add 'message :override #'my-message)
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
