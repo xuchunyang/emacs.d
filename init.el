@@ -275,6 +275,7 @@
 
 ;;; Emacs session persistence
 (use-package desktop                    ; frame/window/buffer and global vars
+  :if (display-graphic-p)
   :config
   ;; Save the content of *scratch* across sessions
   (add-to-list 'desktop-globals-to-save 'initial-scratch-message)
