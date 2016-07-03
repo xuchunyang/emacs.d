@@ -278,11 +278,12 @@
 ;;; Emacs session persistence
 (use-package desktop                    ; frame/window/buffer and global vars
   :if (display-graphic-p)
+  :init
+  (desktop-save-mode)
   :config
+  (setq desktop-restore-frames nil)
   ;; Save the content of *scratch* across sessions
   (add-to-list 'desktop-globals-to-save 'initial-scratch-message)
-  (desktop-save-mode)
-
   (add-hook 'kill-emacs-hook
             (lambda ()
               (when (get-buffer "*scratch*")
@@ -293,6 +294,9 @@
                   ;; conversions.
                   (setq initial-scratch-message
                         (buffer-string)))))))
+
+;; Maximize Emacs frame on start-up
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (use-package savehist                   ; Minibuffer history
   ;; :disabled t
