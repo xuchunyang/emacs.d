@@ -1164,6 +1164,9 @@ See also `describe-function-or-variable'."
                 '("-c" "color.ui=auto")))
   ;; Hide popup by default, type `C-t' to display if need
   (setq magit-popup-show-common-commands nil)
+  ;; Save files before executing git command for me
+  (setq magit-save-repository-buffers 'dontask)
+
   :preface
   (defun Info-goto-node--gitman-for-magit (orig-fun &rest r)
     "Handle gitman info link for Magit info.
