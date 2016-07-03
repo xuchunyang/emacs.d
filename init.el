@@ -1852,7 +1852,8 @@ Called with a prefix arg set search provider (default Google)."
 
 ;; AppleScript
 (use-package applescript-mode
-  :if (eq 'darwin system-type)
+  ;; Needs build with ns (cocoa) support
+  :if (and (eq 'darwin system-type) (eq 'ns window-system))
   :ensure t
   :mode ("\\.applescript\\'" "\\.scpt\\'"))
 
