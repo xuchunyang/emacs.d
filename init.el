@@ -1736,7 +1736,7 @@ Called with a prefix arg set search provider (default Google)."
   (use-package eshell-z :ensure t))
 
 (use-package eshell-did-you-mean
-  ;; :disabled t
+  :disabled t                           ; My package is Buggy
   :after eshell
   :ensure t
   :config (eshell-did-you-mean-setup))
