@@ -142,10 +142,11 @@
   :bind (
          ;; ("<wheel-left>"         . chunyang-next-buffer)
          ;; ("<double-wheel-left>"  . chunyang-next-buffer)
-         ("<triple-wheel-left>"  . chunyang-next-buffer)
+         ;; ("<triple-wheel-left>"  . chunyang-next-buffer)
          ;; ("<wheel-right>"        . chunyang-previous-buffer)
          ;; ("<double-wheel-right>" . chunyang-previous-buffer)
-         ("<triple-wheel-right>" . chunyang-next-buffer)))
+         ;; ("<triple-wheel-right>" . chunyang-next-buffer)
+         ))
 
 
 ;;; User Interface
