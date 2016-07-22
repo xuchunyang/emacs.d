@@ -1145,9 +1145,13 @@ See also `describe-function-or-variable'."
 (use-package persistent-soft     :ensure t :defer t)
 (use-package log4e               :ensure t :defer t)
 (use-package alert               :ensure t :defer t)
-(use-package bug-hunter
+
+(use-package bug-hunter                 ; This is good
   :disabled t
   :ensure t :defer t)
+
+(use-package debbugs                    ; Interface to GNU Bugs
+  :ensure t)
 
 
 ;;; Help
@@ -1902,6 +1906,8 @@ Called with a prefix arg set search provider (default Google)."
   :load-path "~/Projects/number-to-word")
 
 ;; (use-package nginx-mode :ensure t :defer t)
+
+(use-package ascii-art-to-unicode :ensure t)
 
 
 ;;; Customization
