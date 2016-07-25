@@ -315,6 +315,7 @@
         recentf-auto-cleanup 300
         recentf-exclude (list "/\\.git/.*\\'" ; Git contents
                               "/elpa/.*\\'"   ; Package files
+                              "/elpa-[0-9]+-[0-9]+/.*\\'" ; Package files
                               "/etc/.*\\'"    ; Package configuration
                               "/var/.*\\'"    ; Package data
                               "/itsalltext/"  ; It's all text temp files
