@@ -862,6 +862,7 @@ One C-u, swap window, two C-u, delete window."
 ;;; Skeletons, completion and expansion
 
 (use-package abbrev                     ; For fixing typo only for now
+  :disabled t
   :defer t
   :init
   (setq only-global-abbrevs t)
@@ -1864,6 +1865,12 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t
   :init (add-hook 'ruby-mode-hook 'ruby-tools-mode))
+
+
+;; For the Programming Languages course
+(use-package sml-mode
+  :ensure t
+  :defer t)
 
 
 ;; AppleScript
