@@ -1153,7 +1153,8 @@ See also `describe-function-or-variable'."
   :ensure t :defer t)
 
 (use-package debbugs                    ; Interface to GNU Bugs
-  :ensure t)
+  :ensure t
+  :defer t)
 
 
 ;;; Help
@@ -1872,6 +1873,12 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t)
 
+(use-package ob-sml
+  :ensure t
+  :defer t
+  :init (with-eval-after-load 'org
+          (require 'ob-sml)))
+
 
 ;; AppleScript
 (use-package applescript-mode
@@ -1915,7 +1922,13 @@ Called with a prefix arg set search provider (default Google)."
 
 ;; (use-package nginx-mode :ensure t :defer t)
 
-(use-package ascii-art-to-unicode :ensure t)
+(use-package ascii-art-to-unicode
+  :ensure t
+  :defer t)
+
+(use-package sl
+  :load-path "/Users/xcy/Projects/sl.el/"
+  :commands sl)
 
 
 ;;; Customization
