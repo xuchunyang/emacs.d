@@ -1930,6 +1930,10 @@ Called with a prefix arg set search provider (default Google)."
   :load-path "/Users/xcy/Projects/sl.el/"
   :commands sl)
 
+(use-package time-stamp                 ; Built-in
+  :defer t
+  :init (add-hook 'before-save-hook 'time-stamp))
+
 
 ;;; Customization
 
