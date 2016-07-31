@@ -1592,7 +1592,7 @@ Called with a prefix arg set search provider (default Google)."
                    (region-end)))
               (thing-at-point 'symbol)
               (thing-at-point 'word)))
-         (query (read-string "Web Search: " initial)))
+         (query (shell-quote-argument (read-string "Web Search: " initial))))
     (call-process-shell-command
      (if provider
          (format "s -p %s %s" provider query)
