@@ -152,5 +152,23 @@
 ;; Oops, the following *breaks* Emacs
 ;; (advice-add 'message :override #'my-message)
 
+
+(defun increase-number-at-point (prefix)
+  "增加光标下数字以 prefix argument (默认为 1)."
+  (interactive "p")
+  (when (thing-at-point-looking-at "[0-9]+")
+    (let* ((beg (match-beginning 0))
+           (end (match-end 0))
+           (number (string-to-number (buffer-substring beg end)))
+           (pos (point)))
+      (delete-region beg end)
+      (goto-char beg)
+      (insert (number-to-string (+ number prefix)))
+      (goto-char pos))))
+
+(defun insert-key-name ()
+  (interactive)
+  (insert (key-description (read-key-sequence "Type the key: "))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
