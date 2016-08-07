@@ -5,14 +5,6 @@
 (setq debug-on-error t)
 (add-hook 'after-init-hook (lambda () (setq debug-on-error nil)))
 
-;; Workaround for [[notmuch:id:CAM-tV-9b9Qwh5sKddyXQ4ep4oooE==xqefCZ2dLyXOxtgvgKqA@mail.gmail.com][Email from Noam Postavsky: bug#23225: 25.1.50; url-retrie]]
-(when (and (eq system-type 'darwin)
-           (version< "25" emacs-version))
-  (advice-add 'gnutls-available-p :around #'ignore)
-  (setq gnutls-verify-error t)
-  (setq gnutls-trustfiles
-        (list "/usr/local/etc/openssl/cert.pem")))
-
 
 ;;; Start up
 
