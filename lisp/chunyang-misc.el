@@ -170,5 +170,18 @@
   (interactive)
   (insert (key-description (read-key-sequence "Type the key: "))))
 
+
+(defun random-word ()
+  "Pick a randome English word."
+  (interactive)
+  (let ((word
+         (string-trim-right
+          (shell-command-to-string
+           ;; NOTE: jot(1) is avaiable on BSD (such as Mac OS X). An alternative is shuf(1) from GNU coreuilts.
+           "LINE=$( wc -l /usr/share/dict/words | awk '{print $1}' | xargs -I {} jot -r 1 1 {} ) && tail -n $LINE /usr/share/dict/words | head -n 1"))))
+    (prog1 word
+      (kill-new word)
+      (message "Saved to kill-ring: %s" word))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
