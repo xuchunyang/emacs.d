@@ -211,6 +211,17 @@
                cmd (intern val)))))
   (describe-function command))
 
+
+;; Byte-code, disassemble
+
+(define-advice disassemble (:after (object &rest _) revert-buffer)
+  "Make `g' (`revert-buffer') works for *Disassemble* buffer."
+  (with-current-buffer "*Disassemble*"
+    (unless (eq revert-buffer-function 'disassemble--revert-buffer)
+      (setq-local revert-buffer-function
+                  (defun disassemble--revert-buffer (_ignore-auto _noconfirm)
+                    (disassemble object))))))
+
 
 (provide 'chunyang-elisp)
 
