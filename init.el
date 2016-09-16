@@ -16,20 +16,20 @@
 
 (require 'package)
 
-;; (setq package-archives
-;;       '(("gnu"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-;;         ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-;;         ("org"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+(setq package-archives
+      '(("gnu"   . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")
+        ("org"   . "http://orgmode.org/elpa/")))
+
+(setq package-archives
+      '(("gnu"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ("org"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
 
 (setq package-archives
       '(("gnu"   . "https://elpa.zilongshanren.com/gnu/")
         ("melpa" . "https://elpa.zilongshanren.com/melpa/")
         ("org"   . "https://elpa.zilongshanren.com/org/")))
-
-;; (setq package-archives
-;;       '(("gnu"   . "http://elpa.gnu.org/packages/")
-;;         ("melpa" . "http://melpa.org/packages/")
-;;         ("org"   . "http://orgmode.org/elpa/")))
 
 ;; Different Emacs versions can't share the same elpa folder
 (setq package-user-dir (locate-user-emacs-file
