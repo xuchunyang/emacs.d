@@ -194,11 +194,15 @@
   ;; English
   (set-face-attribute 'default nil :font "Source Code Pro-13")
 
+  ;; TODO Pick up another font (or setting) because changing line
+  ;; height is very annoying.
+  ;;
   ;; Chinese Font 配制中文字体
-  (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font (frame-parameter nil 'font)
-                      charset
-                      (font-spec :family "PingFang SC" :size 14))))
+  ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
+  ;;   (set-fontset-font (frame-parameter nil 'font)
+  ;;                     charset
+  ;;                     (font-spec :family "PingFang SC" :size 14)))
+  )
 
 
 ;; Theme
