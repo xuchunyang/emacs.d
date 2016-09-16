@@ -797,14 +797,24 @@ One C-u, swap window, two C-u, delete window."
 
 
 ;;; Highlight
-(use-package whitespace               ; Highlight bad whitespace (tab)
+(use-package whitespace                 ; Highlight bad whitespace (tab)
   :bind ("C-c t w" . whitespace-mode)
+  :init (add-hook 'prog-mode-hook 'whitespace-mode)
   :config
-  (setq whitespace-style '(face indentation space-after-tab space-before-tab
-                                tab-mark empty trailing lines-tail)
-        whitespace-line-column nil)
-  ;; :diminish whitespace-mode
-  )
+  (setq whitespace-style
+        '(face
+          trailing
+          ;; empty lines at beginning and/or end of buffer
+          empty
+          ;; line is longer `fill-column'
+          lines-tail
+          ;; If `indent-tabs-mode' on, visualize spaces at the beginning of the
+          ;; line, otherwise, visualize tabs.
+          indentation
+          ;; Visualize TAB
+          tab-mark))
+  (setq whitespace-line-column nil)
+  :diminish " Whitespace")
 
 (use-package hl-line
   :bind ("C-c t L" . hl-line-mode))
