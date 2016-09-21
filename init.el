@@ -127,7 +127,11 @@
   :init
   (setq exec-path-from-shell-arguments (list "-l"))
   (exec-path-from-shell-copy-env "INFOPATH")
+  (exec-path-from-shell-copy-env "PONYO_ROOT")
   (exec-path-from-shell-initialize))
+
+;; For passing aliases
+;; (setq shell-command-switch "-ic")
 
 (use-package chunyang-osx
   :commands (restart-emacs omnifocus-new-entry)
@@ -328,7 +332,10 @@
   )
 
 (use-package bookmark
-  :defer t)
+  :defer t
+  :config
+  ;; Save immediately when make or delete a bookmark
+  (setq bookmark-save-flag 1))
 
 (use-package saveplace                  ; Save point position in files
   :if (version< "25" emacs-version)
@@ -390,6 +397,8 @@
          :map lisp-interaction-mode-map
          ("C-c C-l" . scratch-clear)))
 
+(use-package chunyang-misc)
+
 (use-package chunyang-buffers           ; Personal buffer tools
   :config (add-hook 'kill-buffer-query-functions
                     #'lunaryorn-do-not-kill-important-buffers))
@@ -446,8 +455,27 @@ One C-u, swap window, two C-u, delete window."
                   (abbreviate-file-name (buffer-file-name)) "%b")))
 
 (use-package frame
+  :preface
+  (defun chunyang-frame-left-half ()
+    (interactive)
+    (set-frame-width (selected-frame) (/ 177 2))
+    (set-frame-position (selected-frame) 0 23))
+  (defun chunyang-frame-right-half ()
+    (interactive)
+    (set-frame-width (selected-frame) (/ 177 2))
+    (set-frame-position (selected-frame) 720 23))
+  (defun chunyang-frame-center ()
+    (interactive)
+    (let ((frame (selected-frame)))
+      (set-frame-width frame 93)
+      (set-frame-height frame 36)
+      (set-frame-position frame 337 104)))
   :bind (("C-c t F" . toggle-frame-fullscreen)
-         ("C-c t m" . toggle-frame-maximized))
+         ("C-c t m" . toggle-frame-maximized)
+         ("C-c w f" . toggle-frame-maximized)
+         ("C-c w l" . chunyang-frame-left-half)
+         ("C-c w r" . chunyang-frame-right-half)
+         ("C-c w c" . chunyang-frame-center))
   :config
   ;; (add-to-list 'initial-frame-alist '(maximized . fullscreen))
   (unbind-key "C-x C-z"))
@@ -778,7 +806,8 @@ One C-u, swap window, two C-u, delete window."
   )
 
 (use-package region-state
-  :ensure t
+  :load-path "~/Projects/region-state.el"
+  :commands region-state-mode
   :init (region-state-mode))
 
 (use-package swap-regions
@@ -805,7 +834,7 @@ One C-u, swap window, two C-u, delete window."
         '(face
           trailing
           ;; empty lines at beginning and/or end of buffer
-          empty
+          ;; empty
           ;; line is longer `fill-column'
           lines-tail
           ;; If `indent-tabs-mode' on, visualize spaces at the beginning of the
@@ -911,6 +940,8 @@ One C-u, swap window, two C-u, delete window."
   :config
   ;; Use Company for completion C-M-i
   (bind-key [remap completion-at-point] #'company-complete company-mode-map)
+  ;; M-h/c-h/F1 to display doc in help buffer, C-w to show location
+  (define-key company-active-map "\M-h" #'company-show-doc-buffer)
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 2
         ;; Easy navigation to candidates with M-<n>
@@ -949,8 +980,8 @@ One C-u, swap window, two C-u, delete window."
 
 (use-package flyspell
   :init
-  ;; (add-hook 'text-mode-hook #'flyspell-mode)
-  ;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  (add-hook 'text-mode-hook #'flyspell-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
   (use-package ispell
     :defer t
     :init
@@ -976,7 +1007,18 @@ One C-u, swap window, two C-u, delete window."
   :ensure t
   :bind (("C-c t f" . global-flycheck-mode))
   :config
+
   (setq flycheck-emacs-lisp-load-path 'inherit)
+
+  (defun chunyang-flycheck-toggle-checkdoc ()
+    (interactive)
+    (setq-local flycheck-disabled-checkers
+                (if (memq 'emacs-lisp-checkdoc flycheck-disabled-checkers)
+                    (delq 'emacs-lisp-checkdoc flycheck-disabled-checkers)
+                  (cons 'emacs-lisp-checkdoc flycheck-disabled-checkers)))
+    (when flycheck-mode
+      (flycheck-mode 'toggle)
+      (flycheck-mode 'toggle)))
 
   (use-package flycheck-pos-tip           ; Show Flycheck messages in popups
     :disabled t
@@ -998,12 +1040,18 @@ One C-u, swap window, two C-u, delete window."
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :config
-  (setq markdown-command "pandoc -f markdown -t html"))
+  (setq markdown-command "pandoc -s -f markdown -t html"))
 
 (use-package yaml-mode :ensure t :defer t)
 
 
 ;;; Programming utilities
+
+;; `glasses-mode' -- 把 areYouReady 显示成 are_You_Ready
+;; `subword-mode' -- 把 StudlyCapsIdentifiers 当作一个 word
+;; `superword-mode' -- 把 this_is_a_symbol 当作一个 word
+;; `hs-minor-mode' -- Hideshow / 折叠、隐藏
+
 (use-package compile
   :disabled t
   :bind (("C-c C" . compile))
@@ -1025,7 +1073,9 @@ One C-u, swap window, two C-u, delete window."
 
 (use-package prog-mode
   :bind ("C-c t p" . prettify-symbols-mode)
-  :init (global-prettify-symbols-mode))
+  ;; :init (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
+  :init (global-prettify-symbols-mode)
+  )
 
 
 ;;; Generic Lisp
@@ -1130,9 +1180,28 @@ See also `describe-function-or-variable'."
   (when (version< emacs-version "25")
     (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
 
+(use-package el-search
+  :if (version< "25" emacs-version)
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'elisp-mode
+    (define-key emacs-lisp-mode-map [(control ?S)] #'el-search-pattern)
+    (define-key emacs-lisp-mode-map [(control ?%)] #'el-search-query-replace)
+    (define-key lisp-interaction-mode-map [(control ?S)] #'el-search-pattern)
+    (define-key lisp-interaction-mode-map [(control ?%)] #'el-search-query-replace))
+
+  (with-eval-after-load 'isearch
+    (define-key isearch-mode-map [(control ?S)] #'el-search-search-from-isearch)
+    (define-key isearch-mode-map [(control ?%)] #'el-search-replace-from-isearch))
+  (with-eval-after-load 'el-search
+    (define-key el-search-read-expression-map [(control ?S)] #'exit-minibuffer)))
+
 (use-package chunyang-elisp
   :config
-  (bind-key "C-M-;" #'comment-or-uncomment-sexp emacs-lisp-mode-map))
+  (bind-key "C-M-;" #'comment-or-uncomment-sexp emacs-lisp-mode-map)
+  (bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map)
+  (bind-key "C-," #'my-eval-print-last-sexp emacs-lisp-mode-map))
 
 (use-package ielm
   :defer t
@@ -1147,6 +1216,9 @@ See also `describe-function-or-variable'."
   :ensure t
   :diminish elisp-slime-nav-mode
   ;; Or just (bind-key "C-h ." #'describe-symbol)
+  ;; :init
+  ;; FIXME only in a few major modes
+  ;; (bind-key "C-h ." #'elisp-slime-nav-describe-elisp-thing-at-point)
   :bind ("C-h ." . elisp-slime-nav-describe-elisp-thing-at-point))
 
 (use-package pcache              :ensure t :defer t)
@@ -1161,6 +1233,21 @@ See also `describe-function-or-variable'."
 (use-package debbugs                    ; Interface to GNU Bugs
   :ensure t
   :defer t)
+
+(use-package hydra :ensure t :defer t)
+
+(use-package debug
+  :defer t
+  :config
+  (defhydra hydra-debugger-menu ()
+    "Debug"
+    ("c" debugger-continue "Continue")
+    ("e" debugger-eval-expression "Eval")
+    ("v" debugger-toggle-locals "Display local Variable"))
+
+  (define-key debugger-mode-map "." 'hydra-debugger-menu/body))
+
+;; TODO Add (info "(elisp) Edebug")
 
 
 ;;; Help
@@ -1529,6 +1616,9 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; Don't display notmuch logo, it's invisible in dark theme
   (setq notmuch-show-logo nil)
 
+  ;; Turn off wrapping
+  (setq notmuch-show-hook nil)
+
   ;; org link support
   (require 'org-notmuch)
 
@@ -1752,8 +1842,17 @@ Called with a prefix arg set search provider (default Google)."
 (use-package eshell-did-you-mean
   :disabled t                           ; My package is Buggy
   :after eshell
-  :ensure t
+  ;; :ensure t
+  :load-path "~/Projects/eshell-did-you-mean"
   :config (eshell-did-you-mean-setup))
+
+(use-package eshell-did-you-mean
+  :load-path "~/Projects/eshell-did-you-mean"
+  :defer t
+  :init
+  (autoload 'eshell-did-you-mean-setup "eshell-did-you-mean")
+  (with-eval-after-load 'eshell
+    (eshell-did-you-mean-setup)))
 
 
 ;;; Org mode
@@ -1761,6 +1860,17 @@ Called with a prefix arg set search provider (default Google)."
 ;; (require 'chunyang-org)
 
 (use-package org
+  :defer t
+  :init
+  (setq org-agenda-files (list "~/INBOX"))
+  (setq org-default-notes-file "~/INBOX")
+  (define-key global-map "\C-ca" #'org-agenda)
+
+  ;; This will loads org.el but I need it from the begining
+  (require 'org-protocol))
+
+(use-package org
+  :disabled t          ; 从头开始
   ;; Install org included in org-plus-contrib from Org ELPA
   :ensure org-plus-contrib
   :defer t
@@ -1795,7 +1905,21 @@ Called with a prefix arg set search provider (default Google)."
      (maxima     . t)
      (python     . t)
      (ruby       . t)
-     (sh         . t))))
+     (sh         . t)))
+
+  (setq org-edit-src-content-indentation 0)
+
+  ;; Task managment
+  (setq org-agenda-files (list "~/todo.org"))
+  (setq org-default-notes-file "~/todo.org")
+
+  ;; Use DEADLINE as the end of repeat task
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown
+        'repeated-after-deadline)
+
+  (setq org-capture-templates
+        '(("i" "Inbox" entry (file+headline "" "Inbox")
+           "* TODO %?\n  %u\n  %a"))))
 
 (use-package org-mac-link
   :disabled t                           ; Included in org-plus-contrib
@@ -1820,20 +1944,34 @@ Called with a prefix arg set search provider (default Google)."
   :config (add-hook 'org-mode-hook #'org-bullets-mode))
 
 
+(use-package habitica
+  :ensure t
+  :defer t)
+
+
 ;;; Emacs Development
 
 (setq tags-table-list '("~/Projects/emacs"))
 
 
-;;; Guile Scheme
+;;; C
 
-(use-package geiser
+(use-package irony
+  :ensure t
+  :defer t)
+
+(use-package company-irony
   :ensure t
   :defer t
-  :init
-  (setq geiser-default-implementation 'guile))
+  ;; :init (with-eval-after-load 'company
+  ;;         (add-to-list 'company-backends 'company-irony))
+  )
 
-(add-hook 'scheme-mode-hook #'paredit-mode)
+(use-package irony-eldoc
+  :ensure t
+  :defer t
+  ;; :init (add-hook 'irony-mode-hook 'irony-eldoc)
+  )
 
 
 ;;; Common Lisp
@@ -1879,11 +2017,118 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t)
 
+(use-package sml-eldoc
+  :commands sml-eldoc-turn-on
+  :init (add-hook 'sml-mode-hook 'sml-eldoc-turn-on))
+
+;; mlton's Emacs tools (including mlb-mode, background build mode and def-use-mode)
+(use-package mlton
+  :load-path "~/Downloads/mlton-master/ide/emacs"
+  :defer t
+  :init
+  (autoload 'esml-mlb-mode "esml-mlb-mode")
+  (add-to-list 'auto-mode-alist '("\\.mlb\\'" . esml-mlb-mode))
+  (autoload 'def-use-mode "def-use-mode" "Highlighting and navigating definitions and uses")
+  (autoload 'bg-build-mode "bg-build-mode" "Build on the background")
+  (with-eval-after-load 'compile
+    (add-to-list
+     'compilation-error-regexp-alist
+     '("^\\(Warning\\|Error\\): \\(.+\\) \\([0-9]+\\)\\.\\([0-9]+\\)\\.$"
+       2 3 4))))
+
 (use-package ob-sml
   :ensure t
   :defer t
   :init (with-eval-after-load 'org
           (require 'ob-sml)))
+
+(use-package skalpel
+  :disabled t
+  :load-path "~/skalpel/front-ends/emacs/"
+  :init
+  (defvar skalpel-emacs-directory "~/skalpel/front-ends/emacs/")
+  (defvar skalpel-bin-directory "~/skalpel/analysis-engines/standard-ml/bin/")
+  (defvar skalpel-lib-directory "~/skalpel/lib/")
+  (defvar skalpel-sources-directory "~/skalpel/analysis-engines/standard-ml/")
+  (with-eval-after-load 'sml-mode
+    (load "skalpel-config.el")))
+
+;; [Don't copy-paste on the Extra Practice Problems page](https://www.coursera.org/learn/programming-languages/discussions/weeks/2/threads/_k7m9FTgEeaslgpY-vgBqw
+(defun convert-MathJax-Unicode-to-ASCII (beg end)
+  "Convert [0-9a-zA-Z] in Unicode to their ASCII in the region."
+  (interactive "r")
+  (insert (mapconcat (lambda (c)
+                       (char-to-string
+                        (cond
+                         ((<= ?𝟶 c ?𝟿) (+ ?0 (- c ?𝟶)))
+                         ((<= ?𝚊 c ?𝚣) (+ ?a (- c ?𝚊)))
+                         ((<= ?𝙰 c ?𝚉) (+ ?A (- c ?𝙰)))
+                         (t c))))
+                     (delete-and-extract-region beg end) "")))
+;; Testing
+;;
+;; Before:
+;; EXAMPLE: 𝚞𝚗𝚏𝚘𝚕𝚍 (𝚏𝚗 𝚡 => 𝚒𝚏 𝚡 > 𝟹 𝚝𝚑𝚎𝚗 𝙽𝙾𝙽𝙴 𝚎𝚕𝚜𝚎 𝚂𝙾𝙼𝙴 (𝚡 + 𝟷, 𝚡)) 𝟶 = [𝟶, 𝟷, 𝟸, 𝟹]
+;; After:
+;; EXAMPLE: unfold (fn x => if x > 3 then NONE else SOME (x + 1, x)) 0 = [0, 1, 2, 3]
+
+(use-package geiser
+  :ensure t
+  :defer t
+  :init
+  (setq geiser-default-implementation 'racket)
+  (setq geiser-active-implementations '(racket))
+
+  ;; Important keys:
+  ;; C-c C-z - Switch between source and REPL
+  ;; C-z C-a - Switch to REPL with current module
+  (defun chunyang-geiser-setup ()
+    (bind-keys :map geiser-mode-map
+               ("C-h ." . geiser-doc-symbol-at-point)
+               ("C-h C-." . geiser-doc-look-up-manual)))
+  (add-hook 'geiser-mode-hook #'chunyang-geiser-setup)
+
+  ;; Yes, use ParEdit in the REPL too
+  (add-hook 'geiser-repl-mode-hook #'paredit-mode))
+
+(add-hook 'scheme-mode-hook #'paredit-mode)
+
+(use-package racket-mode
+  :disabled t
+  :ensure t
+  :defer t
+  :init
+  ;; Doing this is because geiser sets *.rkt as scheme mode and overrides
+  ;; racket-mode
+  (push '("\\.rkt[dl]?\\'" . racket-mode) auto-mode-alist))
+
+
+;;; Python
+
+(use-package python
+  :defer t
+  :init
+  (setq python-shell-interpreter "python3"
+        python-shell-completion-native-enable nil))
+
+
+;; OCaml
+(use-package OCaml
+  :ensure tuareg
+  :preface
+  ;; 官方的 Manual （竟然）提供了 Info 格式 <http://caml.inria.fr/pub/docs/manual-ocaml/>
+  (add-to-list 'Info-directory-list "~/Documents/ocaml-4.03-info-manual")
+  :defer t)
+
+
+;; shen <http://shenlanguage.org/>
+(use-package shen-mode
+  :ensure t
+  :defer t)
+
+(use-package shen-elisp
+  :ensure t
+  :defer t)
 
 
 ;; AppleScript
@@ -1939,6 +2184,23 @@ Called with a prefix arg set search provider (default Google)."
 (use-package time-stamp                 ; Built-in
   :defer t
   :init (add-hook 'before-save-hook 'time-stamp))
+
+(use-package autoinsert
+  :disabled t
+  :defer t
+  :config
+  (add-to-list 'auto-insert-alist "TODO Add some Python if it is really useful"))
+
+
+;; IM
+
+(use-package gitter
+  :load-path "~/Projects/gitter.el"
+  ;; :ensure t
+  :defer t
+  :commands gitter
+  :init
+  (setq gitter--debug t))
 
 
 ;;; Customization
