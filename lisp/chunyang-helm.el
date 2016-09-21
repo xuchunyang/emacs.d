@@ -131,7 +131,8 @@ If with prefix argument, search current directory."
                    default-directory)))
       (helm-grep-ag dir nil)))
   :defer t
-  :bind ("M-I" . chunyang/helm-do-grep-ag)
+  :bind (;; ("M-I" . chunyang/helm-do-grep-ag)
+         ("M-I" . helm-do-grep-ag))
   :config
   (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep)
   (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep-ag)
@@ -203,7 +204,8 @@ If with prefix argument, search current directory."
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
 
-(use-package helm-open-github  :ensure t :defer t)
+(use-package helm-open-github
+  :ensure t :defer t)
 
 (use-package helm-github-stars
   :ensure t
