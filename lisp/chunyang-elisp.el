@@ -1,4 +1,4 @@
-;;; chunyang-elisp.el --- Utilities for Emacs Lisp
+;;; chunyang-elisp.el --- Utilities for Emacs Lisp  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2015  Chunyang Xu
 
