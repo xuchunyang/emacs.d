@@ -311,8 +311,6 @@
   :defer t
   :config
   (setq recentf-max-saved-items 200
-        ;; Cleanup recent files only when Emacs is idle
-        recentf-auto-cleanup 300
         recentf-exclude (list "/\\.git/.*\\'" ; Git contents
                               "/elpa/.*\\'"   ; Package files
                               "/elpa-[0-9]+-[0-9]+/.*\\'" ; Package files
