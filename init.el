@@ -2,8 +2,6 @@
 
 ;;; Debugging
 (setq message-log-max 10000)
-(setq debug-on-error t)
-(add-hook 'after-init-hook (lambda () (setq debug-on-error nil)))
 
 
 ;;; Start up
