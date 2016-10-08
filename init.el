@@ -96,7 +96,7 @@
 
 
 (use-package no-littering
-  :load-path "~/Projects/no-littering/")
+  :ensure t)
 
 
 ;;; OS X support
@@ -1234,6 +1234,10 @@ See also `describe-function-or-variable'."
   (define-key debugger-mode-map "." 'hydra-debugger-menu/body))
 
 ;; TODO Add (info "(elisp) Edebug")
+
+(use-package nameless
+  :ensure t
+  :defer t)
 
 
 ;;; Help
