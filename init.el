@@ -133,6 +133,14 @@
          ))
 
 
+;;; GNU/Linux
+(when (eq system-type 'gnu/linux)
+  (defun insert-x11-primary-selection ()
+    (interactive)
+    (insert (gui-get-primary-selection)))
+  (bind-key "<S-insert>" #'insert-x11-primary-selection))
+
+
 ;;; User Interface
 (when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
 (when (bound-and-true-p scroll-bar-mode) (scroll-bar-mode -1))
