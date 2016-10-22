@@ -184,7 +184,7 @@
 
 (when (display-graphic-p)
   ;; English
-  (set-face-attribute 'default nil :font "Source Code Pro-13")
+  ;; (set-face-attribute 'default nil :font "Source Code Pro-13")
 
   ;; TODO Pick up another font (or setting) because changing line
   ;; height is very annoying.
@@ -792,12 +792,12 @@ One C-u, swap window, two C-u, delete window."
   )
 
 (use-package region-state
-  :load-path "~/Projects/region-state.el"
+  :ensure t
   :commands region-state-mode
   :init (region-state-mode))
 
 (use-package swap-regions
-  :load-path "~/Projects/swap-regions.el"
+  :ensure t
   :bind ("C-c C-t" . swap-regions)
   :commands swap-regions-mode
   :init (swap-regions-mode))
@@ -814,7 +814,7 @@ One C-u, swap window, two C-u, delete window."
 ;;; Highlight
 (use-package whitespace                 ; Highlight bad whitespace (tab)
   :bind ("C-c t w" . whitespace-mode)
-  :init (add-hook 'prog-mode-hook 'whitespace-mode)
+  ;; :init (add-hook 'prog-mode-hook 'whitespace-mode)
   :config
   (setq whitespace-style
         '(face
@@ -966,8 +966,8 @@ One C-u, swap window, two C-u, delete window."
 
 (use-package flyspell
   :init
-  (add-hook 'text-mode-hook #'flyspell-mode)
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  ;; (add-hook 'text-mode-hook #'flyspell-mode)
+  ;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
   (use-package ispell
     :defer t
     :init
@@ -1575,6 +1575,7 @@ See Info node `(magit) How to install the gitman info manual?'."
     :init (mu4e-maildirs-extension)))
 
 (use-package notmuch
+  :disabled t
   ;; :load-path "~/opt/share/emacs/site-lisp"
   :load-path "~/Projects/notmuch/emacs"
   :bind ("C-x M" . notmuch)
@@ -1830,13 +1831,7 @@ Called with a prefix arg set search provider (default Google)."
   (use-package eshell-z :ensure t))
 
 (use-package eshell-did-you-mean
-  :disabled t                           ; My package is Buggy
-  :after eshell
-  ;; :ensure t
-  :load-path "~/Projects/eshell-did-you-mean"
-  :config (eshell-did-you-mean-setup))
-
-(use-package eshell-did-you-mean
+  :disabled t
   :load-path "~/Projects/eshell-did-you-mean"
   :defer t
   :init
