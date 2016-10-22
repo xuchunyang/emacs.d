@@ -1966,6 +1966,20 @@ Called with a prefix arg set search provider (default Google)."
   ;; :init (add-hook 'irony-mode-hook 'irony-eldoc)
   )
 
+;; GTK+
+(use-package cc-mode
+  :if (eq system-type 'gnu/linux)
+  :preface
+  (defun devhelp (symbol)
+    (interactive (list (current-word)))
+    (and symbol
+         (start-process "devhelp" nil "devhelp" "-s" symbol)))
+
+  (add-hook 'c-mode-hook
+            (defun chunyang-c-mode-setup-gtk ()
+              (define-key c-mode-map "\C-h." 'devhelp))))
+
+
 
 ;;; Common Lisp
 
