@@ -17,7 +17,9 @@
 (setq package-archives
       '(("gnu"   . "https://elpa.zilongshanren.com/gnu/")
         ("melpa" . "https://elpa.zilongshanren.com/melpa/")
-        ("org"   . "https://elpa.zilongshanren.com/org/")))
+        ("org"   . "https://elpa.zilongshanren.com/org/")
+        ;; `gtk-look'
+        ("user42" . "http://download.tuxfamily.org/user42/elpa/packages/")))
 
 ;; Different Emacs versions can't share the same elpa folder
 (setq package-user-dir (locate-user-emacs-file
@@ -1944,29 +1946,65 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; Emacs Development
 
-(setq tags-table-list '("~/Projects/emacs"))
+(when (eq system-type 'darwin)
+  ;; I have this on Mac for some reason, but don't rember the reason, simply
+  ;; keep it for now
+  (setq tags-table-list '("~/Projects/emacs")))
 
 
 ;;; C
 
 (use-package irony
   :ensure t
-  :defer t)
+  :defer t
+  :init
+  (add-hook 'c-mode-hook 'irony-mode)
+
+  ;; replace the `completion-at-point' and `complete-symbol' bindings in
+  ;; irony-mode's buffers by irony-mode's function
+  (defun my-irony-mode-hook ()
+    (define-key irony-mode-map [remap completion-at-point]
+      'irony-completion-at-point-async)
+    (define-key irony-mode-map [remap complete-symbol]
+      'irony-completion-at-point-async))
+  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
 (use-package company-irony
   :ensure t
   :defer t
-  ;; :init (with-eval-after-load 'company
-  ;;         (add-to-list 'company-backends 'company-irony))
-  )
+  :init (with-eval-after-load 'company
+          (add-to-list 'company-backends 'company-irony))
+  :config
+  (define-advice company-irony--post-completion (:override (candidate) prefer-gnu-c-style)
+    "WARNING: This is a bad idea!  Hacking 20160826.56 from MELPA."
+    (when candidate
+      (let ((point-before-post-complete (point)))
+        (if (irony-snippet-available-p)
+            (irony-completion-post-complete candidate)
+          (let ((str (irony-completion-post-comp-str candidate)))
+            ;; Prefer GNU C style by adding one space after function name (2016-10-24 by xcy)
+            (unless (string-empty-p str)
+              (insert " "))
+            (insert str)
+            (company-template-c-like-templatify str)))
+        (unless (eq (point) point-before-post-complete)
+          (setq this-command 'self-insert-command))))))
 
-(use-package irony-eldoc
+(use-package irony-eldoc                ; Note: this does not work very well
   :ensure t
   :defer t
-  ;; :init (add-hook 'irony-mode-hook 'irony-eldoc)
-  )
+  :init (add-hook 'irony-mode-hook 'irony-eldoc))
+
+(use-package flycheck-irony
+  :ensure t
+  :defer t
+  :init
+  (eval-after-load 'flycheck
+    '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
 
 ;; GTK+
+
 (use-package cc-mode
   :if (eq system-type 'gnu/linux)
   :preface
@@ -1974,11 +2012,36 @@ Called with a prefix arg set search provider (default Google)."
     (interactive (list (current-word)))
     (and symbol
          (start-process "devhelp" nil "devhelp" "-s" symbol)))
-
-  (add-hook 'c-mode-hook
-            (defun chunyang-c-mode-setup-gtk ()
-              (define-key c-mode-map "\C-h." 'devhelp))))
-
+  (use-package gtk-look
+    :ensure t
+    :defer t
+    :init
+    (defvar helm-gtk-lookup-symbol-input-history nil)
+    (defun helm-gtk-lookup-symbol ()
+      (interactive)
+      (helm :sources
+            (helm-build-sync-source "gtk-doc"
+              :candidates (gtk-lookup-cache-init)
+              :action
+              '(("View gtk-doc in eww" .
+                 (lambda (entry)
+                   (eww-browse-url
+                    (concat "file://" (nth 1 entry) (nth 0 entry)))))))
+            :input (when (memq major-mode '(c-mode))
+                     (current-word))
+            :buffer "*helm gtk-doc*"
+            :history 'helm-gtk-lookup-symbol-input-history))
+    :config
+    ;; Prefer EWW (`browse-url' prefers system's default browser)
+    (setq browse-url-browser-function
+          '(("file:///usr/share" . eww-browse-url)
+            ("." . browse-url-default-browser))))
+  (defun chunyang-c-mode-setup-gtk ()
+    (define-key c-mode-map "\C-h." 'gtk-lookup-symbol)
+    (define-key c-mode-map "\C-c\C-c" 'recompile))
+  :defer t
+  :init
+  (add-hook 'c-mode-hook 'chunyang-c-mode-setup-gtk))
 
 
 ;;; Common Lisp
