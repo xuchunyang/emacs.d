@@ -2006,6 +2006,11 @@ Called with a prefix arg set search provider (default Google)."
 ;; GTK+
 
 (use-package cc-mode
+  ;; Tips:
+  ;;
+  ;; - (info "ccmode") has some practical tips
+  ;; - C-M-a/e and M-a/e understands functions and statements, it's cool
+
   :if (eq system-type 'gnu/linux)
   :preface
   (defun devhelp (symbol)
@@ -2041,7 +2046,12 @@ Called with a prefix arg set search provider (default Google)."
     (define-key c-mode-map "\C-c\C-c" 'recompile))
   :defer t
   :init
-  (add-hook 'c-mode-hook 'chunyang-c-mode-setup-gtk))
+  (add-hook 'c-mode-hook 'chunyang-c-mode-setup-gtk)
+  ;; Turn on Auto-newline and hungry-delete-key, they are adviced by cc-mode
+  ;; manual, let me try them for a while. BTW, 'a' and 'h' will be indicated in
+  ;; the mode-line, such as C/lah.  BTW, 'l' stands for electric keys, use C-c
+  ;; C-l to toggle it.
+  (add-hook 'c-mode-common-hook 'c-toggle-auto-hungry-state))
 
 
 ;;; Common Lisp
