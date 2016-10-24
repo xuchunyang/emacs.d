@@ -1518,6 +1518,21 @@ See Info node `(magit) How to install the gitman info manual?'."
       smtpmail-smtp-server "smtp.exmail.qq.com"
       send-mail-function   'smtpmail-send-it)
 
+(use-package mu4e
+  :commands mu4e
+  :config
+  (setq
+   mu4e-maildir       "~/Maildir"         ;; top-level Maildir
+   mu4e-sent-folder   "/Sent Messages"    ;; folder for sent messages
+   mu4e-drafts-folder "/Drafts"           ;; unfinished messages
+   mu4e-trash-folder  "/Deleted Messages" ;; trashed messages
+   mu4e-refile-folder "/Archives")
+  (setq mu4e-sent-messages-behavior 'delete)
+
+  (setq mu4e-get-mail-command "offlineimap"
+        ;; mu4e-update-interval 300
+        ))
+
 (use-package erc
   :preface
   (defun chat ()
