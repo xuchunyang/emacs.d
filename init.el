@@ -1509,126 +1509,14 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 
 ;;; Web & IRC & Email & RSS
-(use-package mu4e
-  :disabled t
-  :load-path "/opt/local/share/emacs/site-lisp/mu4e"
-  :commands mu4e
-  :config
-  ;; Setup
-  (setq mu4e-drafts-folder "/[Gmail].Drafts"
-        mu4e-sent-folder   "/[Gmail].Sent Mail"
-        mu4e-trash-folder  "/[Gmail].Trash"
-        mu4e-refile-folder "/[Gmail].All Mail")
 
-  (setq mu4e-headers-skip-duplicates t)
-
-  (setq mu4e-attachment-dir (expand-file-name "~/Downloads"))
-
-  ;; Fetch - Read new mail when I'm ready.
-  ;; updating mail using 'U' in the main view:
-  (setq mu4e-get-mail-command "proxychains4 offlineimap")
-
-  ;; Read
-  (setq mu4e-bookmarks
-        '(("flag:unread AND NOT flag:trashed" "Unread messages"      ?u)
-          ("date:today..now"                  "Today's messages"     ?t)
-          ("date:7d..now"                     "Last 7 days"          ?w))
-        mu4e-maildir-shortcuts
-        '( ("/INBOX"               . ?i)
-           ("/[Gmail].Sent Mail"   . ?s)
-           ("/[Gmail].Trash"       . ?t)
-           ("/[Gmail].All Mail"    . ?a)))
-
-  ;; show images
-  (setq mu4e-view-show-images t)
-
-  ;; use imagemagick, if available
-  (when (fboundp 'imagemagick-register-types)
-    (imagemagick-register-types))
-
-  ;; convert html emails properly
-  ;; Possible options:
-  ;;   - html2text -utf8 -width 72
-  ;;   - textutil -stdin -format html -convert txt -stdout
-  ;;   - html2markdown | grep -v '&nbsp_place_holder;' (Requires html2text pypi)
-  ;;   - w3m -dump -cols 80 -T text/html
-  ;;   - view in browser (provided below)
-  (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
-
-  ;; Write
-  ;; spell check
-  (add-hook 'mu4e-compose-mode-hook
-            (defun my-do-compose-stuff ()
-              "My settings for message composition."
-              (set-fill-column 72)
-              (flyspell-mode)))
-
-  (setq mu4e-compose-signature "Chunyang Xu")
-
-  ;; Send via msmtp (for socks proxy support)
-  (setq message-sendmail-f-is-evil 't)
-  (setq message-send-mail-function 'message-send-mail-with-sendmail)
-  (setq sendmail-program "msmtp")
-  (setq message-sendmail-extra-arguments (list "-a" "default"))
-
-  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (setq mu4e-sent-messages-behavior 'delete)
-
-  ;; don't keep message buffers around
-  (setq message-kill-buffer-on-exit t)
-
-  ;; org-mode support
-  (require 'org-mu4e)
-  (use-package mu4e-maildirs-extension  ; Show maildirs summary in mu4e-main-view
-    :disabled t
-    :ensure t
-    :init (mu4e-maildirs-extension)))
-
-(use-package notmuch
-  :disabled t
-  ;; :load-path "~/opt/share/emacs/site-lisp"
-  :load-path "~/Projects/notmuch/emacs"
-  :bind ("C-x M" . notmuch)
-  :preface
-  (defun notmuch-update ()
-    (interactive)
-    (shell-command "proxychains4 offlineimap &"))
-
-  (defun notmuch-mark-all-as-read ()
-    (interactive)
-    (shell-command "notmuch tag -unread -- tag:unread"))
-
-  :config
-  ;; Send
-  (setq message-send-mail-function 'message-send-mail-with-sendmail)
-  (setq sendmail-program "msmtp")
-  (setq message-sendmail-extra-arguments (list "-a" "default"))
-  (setq notmuch-fcc-dirs nil) ; Gmail saves sent mails by itself
-  (setq message-directory "[Gmail].Drafts") ; stores postponed messages to the specified directory
-
-  (setq notmuch-search-oldest-first nil)
-
-  ;; Oh man, '=' is really hard to type
-  (bind-key "g" #'notmuch-refresh-this-buffer notmuch-hello-mode-map)
-  (bind-key "g" #'notmuch-refresh-this-buffer notmuch-search-mode-map)
-
-  (bind-key "U" #'notmuch-update notmuch-hello-mode-map)
-
-  ;; Don't display notmuch logo, it's invisible in dark theme
-  (setq notmuch-show-logo nil)
-
-  ;; Turn off wrapping
-  (setq notmuch-show-hook nil)
-
-  ;; org link support
-  (require 'org-notmuch)
-
-  ;; ace link support
-  (require 'ace-link-notmuch))
-
-(use-package helm-notmuch
-  :load-path "~/Projects/helm-notmuch"
-  :commands helm-notmuch)
+;; I could not download mails from QQMail with offlineimap and mbsync
+;; successfully, so I give up reading mails from Emacs.  But I still can and
+;; need to write and send from Emacs.
+(setq user-full-name       "Chunyang Xu"
+      user-mail-address    "mail@xuchunyang.me"
+      smtpmail-smtp-server "smtp.exmail.qq.com"
+      send-mail-function   'smtpmail-send-it)
 
 (use-package erc
   :preface
@@ -1791,8 +1679,8 @@ Called with a prefix arg set search provider (default Google)."
          (propertize " " 'display (create-image (expand-file-name (car elems)))))
         (setq elems (cdr elems))))
     nil)
-  :bind  (("C-!"   . eshell-command)
-          ("C-x m" . eshell))
+  ;; :bind  (("C-!"   . eshell-command)
+  ;;         ("C-x m" . eshell))
   :config
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
