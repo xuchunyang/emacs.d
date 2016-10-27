@@ -1549,8 +1549,8 @@ See Info node `(magit) How to install the gitman info manual?'."
   (setq erc-rename-buffers t)
   :defer t)
 
-
 (use-package newsticker
+  :disabled t                           ; Only for reference
   :defer t
   :init
   ;; 必须在 (require 'newsticker) 之前
@@ -1573,7 +1573,7 @@ See Info node `(magit) How to install the gitman info manual?'."
   :init (google-this-mode))
 
 (use-package devdocs
-  :load-path "~/Projects/devdocs.el"
+  :ensure t
   :commands devdocs-search)
 
 (defun web-search (prefix)
@@ -1601,6 +1601,7 @@ Called with a prefix arg set search provider (default Google)."
 (bind-key "M-s M-s" #'web-search)
 
 (use-package emms
+  :disabled t
   :ensure t
   :defer t
   :config
