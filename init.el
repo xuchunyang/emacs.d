@@ -142,6 +142,9 @@
     (insert (gui-get-primary-selection)))
   (bind-key "<S-insert>" #'insert-x11-primary-selection))
 
+(use-package chunyang-linux
+  :commands (chunyang-open-gnome-terminal))
+
 
 ;;; User Interface
 (when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
