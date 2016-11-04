@@ -1277,6 +1277,8 @@ See also `describe-function-or-variable'."
   (setq magit-popup-show-common-commands nil)
   ;; Save files before executing git command for me
   (setq magit-save-repository-buffers 'dontask)
+  ;; Show word-granularity differences within diff hunks
+  (setq magit-diff-refine-hunk 'all)
 
   :preface
   (defun Info-goto-node--gitman-for-magit (orig-fun &rest r)
