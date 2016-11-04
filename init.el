@@ -145,6 +145,9 @@
 (use-package chunyang-linux
   :commands (chunyang-open-gnome-terminal))
 
+(use-package grab-x11-link
+  :load-path "/home/xcy/Projects/grab-x11-link")
+
 
 ;;; User Interface
 (when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
@@ -2165,7 +2168,7 @@ Called with a prefix arg set search provider (default Google)."
   :defer t)
 
 (use-package sl
-  :load-path "/Users/xcy/Projects/sl.el/"
+  :ensure t
   :commands sl)
 
 (use-package time-stamp                 ; Built-in
@@ -2182,6 +2185,7 @@ Called with a prefix arg set search provider (default Google)."
 ;; IM
 
 (use-package gitter
+  :disabled t
   :load-path "~/Projects/gitter.el"
   ;; :ensure t
   :defer t
