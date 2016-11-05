@@ -2151,15 +2151,18 @@ Called with a prefix arg set search provider (default Google)."
 ;;       socks-server '("Default server" "127.0.0.1" 1080 5))
 
 (use-package opencc                     ; WIP
+  :disabled t
   :load-path "~/Projects/emacs-opencc"
   :commands (opencc-use-api opencc-use-cli opencc)
   :defer t)
 
 (use-package chunyang-blog
+  :disabled t
   :load-path "~/Projects/blog"
   :commands chunyang-blog-publish)
 
 (use-package number-to-word             ; WIP
+  :disabled t
   :defer t
   :load-path "~/Projects/number-to-word")
 
