@@ -15,11 +15,15 @@
 (require 'package)
 
 (setq package-archives
-      '(("gnu"   . "https://elpa.zilongshanren.com/gnu/")
+      '(
+        ("gnu"   . "https://elpa.zilongshanren.com/gnu/")
         ("melpa" . "https://elpa.zilongshanren.com/melpa/")
-        ("org"   . "https://elpa.zilongshanren.com/org/")
+        ;; Using org from Git
+        ;; ("org"   . "https://elpa.zilongshanren.com/org/")
         ;; `gtk-look'
-        ("user42" . "http://download.tuxfamily.org/user42/elpa/packages/")))
+        ("user42" . "http://download.tuxfamily.org/user42/elpa/packages/")
+        ;; ("SC"     . "http://joseito.republika.pl/sunrise-commander/")
+        ))
 
 ;; Different Emacs versions can't share the same elpa folder
 (setq package-user-dir (locate-user-emacs-file
@@ -1766,9 +1770,23 @@ Called with a prefix arg set search provider (default Google)."
 
 ;; (require 'chunyang-org)
 
+;; How to install Org 9.0 from Git?
+;; - git clone ...
+;; - git checkout -b v9.0 release_9.0
+;; - make
+;; - setup `load-path' and `Info-directory-list'
+;; - load the autoload file `org-loaddefs.el'
+
 (use-package org
   :defer t
+  ;; Install Org 9.0 from Git
+  :load-path "~/src/org-mode/lisp"
+  :load-path "~/src/org-mode/contrib/lisp"
   :init
+  ;; Yes, since I am installing Org from Git, not package.el or built-in
+  (require 'org-loaddefs)
+  (add-to-list 'Info-directory-list "~/src/org-mode/doc/")
+
   (setq org-agenda-files (list "~/INBOX"))
   (setq org-default-notes-file "~/INBOX")
   (define-key global-map "\C-ca" #'org-agenda)
@@ -1839,7 +1857,7 @@ Called with a prefix arg set search provider (default Google)."
   :bind ("C-c L" . grab-mac-link))
 
 (use-package orglink
-  ;; :disabled t
+  :disabled t
   :ensure t
   ;; :diminish orglink-mode
   ;; NOTE The problem is: it will slow down Emacs startup
@@ -1852,6 +1870,7 @@ Called with a prefix arg set search provider (default Google)."
 
 
 (use-package habitica
+  :disabled t
   :ensure t
   :defer t)
 
