@@ -1238,7 +1238,20 @@ See also `describe-function-or-variable'."
 
 (use-package debbugs                    ; Interface to GNU Bugs
   :ensure t
-  :defer t)
+  :defer t
+  :preface
+  ;; TODO: Fontify #1234 (make it clickable) in certain modes
+  (defun open-debbug-gnu-bug (id)
+    (interactive (list
+                  (or (number-at-point)
+                      (and (looking-at "#\\([0-9]*\\)")
+                           (string-to-number (match-string 1)))
+                      (read-number "Bug Id: "))))
+    (let ((url
+           (format "https://debbugs.gnu.org/cgi/bugreport.cgi?bug=%s"
+                   id)))
+      (message "Opening %s ..." (propertize url 'face 'link))
+      (browse-url url))))
 
 (use-package hydra :ensure t :defer t)
 
