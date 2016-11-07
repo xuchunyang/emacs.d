@@ -156,21 +156,33 @@
   (string= "" (buffer-substring (line-beginning-position)
                                 (line-end-position))))
 
-(defun my-eval-print-last-sexp ()
-  "Like `my-eval-print-last-sexp' but format result value a bit."
-  (interactive)
-  (require 'elisp-mode)
+(defun my-eval-print-last-sexp-1 ()
   (let ((standard-output (current-buffer)))
     (terpri)
     (let ((res
            (eval
             (eval-sexp-add-defvars (elisp--preceding-sexp)) lexical-binding)))
       (unless (current-line-empty-p) (terpri))
-      (princ "     ⇒ ")
+      (princ "     => ")                ; or ⇒
       (princ (with-temp-buffer
                (elisp--eval-last-sexp-print-value res t)
                (buffer-string))))
     (unless (current-line-empty-p) (terpri))))
+
+(defun my-eval-print-last-sexp (&optional error->)
+  "Like `my-eval-print-last-sexp' but format result value a bit."
+  (interactive "P")
+  (require 'elisp-mode)
+  (if error->
+      ;; Handle error by myself
+      (let ((eval-expression-debug-on-error nil))
+        (condition-case err
+            (my-eval-print-last-sexp-1)
+          (error
+           (let ((standard-output (current-buffer)))
+             (princ "error→ ")        ; or error->
+             (princ (error-message-string err))))))
+    (my-eval-print-last-sexp-1)))
 
 
 (define-minor-mode display-pos-mode
