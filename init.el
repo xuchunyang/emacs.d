@@ -1542,6 +1542,8 @@ See Info node `(magit) How to install the gitman info manual?'."
       user-mail-address    "mail@xuchunyang.me"
       smtpmail-smtp-server "smtp.exmail.qq.com"
       send-mail-function   'smtpmail-send-it)
+;; don't keep message buffers around
+(setq message-kill-buffer-on-exit t)
 
 (use-package mu4e
   :commands mu4e
@@ -1556,7 +1558,11 @@ See Info node `(magit) How to install the gitman info manual?'."
 
   (setq mu4e-get-mail-command "offlineimap"
         ;; mu4e-update-interval 300
-        ))
+        )
+
+  ;; By default, mu4e use `ido-completing-read'
+  (when (bound-and-true-p helm-mode)
+    (setq mu4e-completing-read-function 'completing-read)))
 
 (use-package erc
   :preface
