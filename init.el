@@ -1042,11 +1042,15 @@ One C-u, swap window, two C-u, delete window."
 
 ;;; Markup languages
 
+;; TODO: Fontify markdown link like org, see `org-descriptive-links',
+;; `orglink', and (elisp) Font Lock Mode.
 (use-package markdown-mode
   :ensure t
-  :mode ("README\\.md\\'" . gfm-mode)
-  :config
-  (setq markdown-command "pandoc -s -f markdown -t html"))
+  :defer t
+  ;; :mode ("README\\.md\\'" . gfm-mode)
+  ;; :config
+  ;; (setq markdown-command "pandoc -s -f markdown -t html")
+  )
 
 (use-package yaml-mode :ensure t :defer t)
 
