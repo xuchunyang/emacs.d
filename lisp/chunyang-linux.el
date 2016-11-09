@@ -24,19 +24,32 @@
 
 ;;; Code:
 
-(defun chunyang-open-gnome-terminal ()
-  (interactive)
-  (let ((dir default-directory)
-        (cmd
-         "xdotool windowactivate --sync $(xdotool search --class 'Gnome-terminal' | tail -1) key c d space %s Return"))
-    (shell-command (format cmd (mapconcat
-                                (lambda (c)
-                                  (cl-case c
-                                    ;; Note: use xev(1) to find key name
-                                    (?/ "slash")
-                                    (?. "period")
-                                    (t (char-to-string c))))
-                                (string-to-list dir) " ")))))
+(require 'subr-x)                       ; `string-empty-p'
+(require 'cl-lib)                       ; `cl-case'
+
+(defun chunyang-linux-gnome-terminal-cd (&optional directory)
+  "Invoke 'cd DIRECTORY' in a running GNOME Terminal, or open one if none."
+  (interactive (list default-directory))
+  (let* ((dir (expand-file-name (or directory default-directory)))
+         (out (shell-command-to-string
+               "xdotool search --class 'Gnome-terminal' | tail -1"))
+         (win (unless (string-empty-p out)
+                ;; Remove trailing newline
+                (substring out 0 -1))))
+    (if win
+        (let* ((keys (mapconcat
+                      (lambda (c)
+                        (cl-case c
+                          ;; Note: use xev(1) to find key name
+                          (?/ "slash")
+                          (?. "period")
+                          (?- "minus")
+                          (t (char-to-string c))))
+                      (string-to-list dir) " "))
+               (cmd (format "xdotool windowactivate --sync %s key c d space %s Return" win keys)))
+          (shell-command cmd))
+      (let ((default-directory dir))
+        (shell-command "gnome-terminal")))))
 
 (provide 'chunyang-linux)
 ;;; chunyang-linux.el ends here
