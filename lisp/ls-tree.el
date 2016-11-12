@@ -43,28 +43,28 @@
         prefix)
     (dolist (file files)
       (setq idx (1+ idx))
-      (setq prefix (format
-                    ;; FIXME: make it work for all levels
-                    (cond ((= level 0) "%s-- ")
-                          ((= level 1) "|   %s-- ")
-                          ((= level 2) "|       %s-- ")
-                          ((= level 3) "|           %s-- ")
-                          (t (error "TODO xxx")))
-                    (if (= idx len) "`" "|")))
-      ;; FIXME: Return it as string
-      (message "%s"
-               (concat prefix
-                       (file-relative-name
-                        (if (listp file)
-                            ;; Remove ending '/'
-                            (substring (car file) 0 -1)
-                          file)
-                        dir)))
+      (setq prefix
+            (format
+             (if (= level 0)
+                 "%s-- "
+               (format "|%s%%s-- "
+                       (make-string (1- (* 4 level)) ?\s)))
+             (if (= idx len) "`" "|")))
+      (insert (concat prefix
+                      (file-relative-name
+                       (if (listp file)
+                           ;; Remove ending '/'
+                           (substring (car file) 0 -1)
+                         file)
+                       dir))
+              "\n")
       (if (listp file)
           (ls-tree--intern (1+ level) (car file) (cdr file))))))
 
 (defun ls-tree (dir)
-  (ls-tree--intern 0 dir (ls-tree--dir-files dir)))
+  (with-temp-buffer
+    (ls-tree--intern 0 dir (ls-tree--dir-files dir))
+    (buffer-string)))
 
 (provide 'ls-tree)
 ;;; ls-tree.el ends here
