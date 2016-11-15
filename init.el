@@ -140,16 +140,20 @@
 
 
 ;;; GNU/Linux
-(when (eq system-type 'gnu/linux)
+(defconst *is-gnu-linux* (eq system-type 'gnu/linux))
+
+(when *is-gnu-linux*
   (defun insert-x11-primary-selection ()
     (interactive)
     (insert (gui-get-primary-selection)))
   (bind-key "<S-insert>" #'insert-x11-primary-selection))
 
 (use-package chunyang-linux
+  :if *is-gnu-linux*
   :commands (chunyang-open-gnome-terminal))
 
 (use-package grab-x11-link
+  :if *is-gnu-linux*
   :load-path "/home/xcy/Projects/grab-x11-link")
 
 
