@@ -220,6 +220,9 @@
   ;;                     (font-spec :family "PingFang SC" :size 14)))
   )
 
+(when (eq window-system 'ns)
+  (set-face-attribute 'default nil :font "Source Code Pro-13"))
+
 
 ;; Theme
 
