@@ -1706,6 +1706,7 @@ Called with a prefix arg set search provider (default Google)."
 ;;; Eshell
 
 (use-package eshell
+  :defer t
   :preface
   (defun eshell-clear-buffer ()
     "Clear terminal"
