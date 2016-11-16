@@ -106,9 +106,12 @@
 
 
 ;;; OS X support
+
+(defconst *is-mac* (eq system-type 'darwin))
+
 (use-package ns-win                     ; OS X window support
   :defer t
-  :if (eq system-type 'darwin)
+  :if *is-mac*
   :config
   (setq ns-pop-up-frames nil ; Don't pop up new frames from the workspace
         mac-command-modifier 'meta
@@ -140,6 +143,7 @@
 
 
 ;;; GNU/Linux
+
 (defconst *is-gnu-linux* (eq system-type 'gnu/linux))
 
 (when *is-gnu-linux*
@@ -150,7 +154,7 @@
 
 (use-package chunyang-linux
   :if *is-gnu-linux*
-  :commands (chunyang-open-gnome-terminal))
+  :commands chunyang-linux-gnome-terminal-cd)
 
 (use-package grab-x11-link
   :if *is-gnu-linux*
@@ -158,18 +162,21 @@
 
 
 ;;; User Interface
+
+;; It's possible that Emacs is not built with Tool Bar and Scroll Bar support,
+;; so we need to test firstly
 (when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
 (when (bound-and-true-p scroll-bar-mode) (scroll-bar-mode -1))
 
-(unless (and (eq system-type 'darwin) (display-graphic-p))
-  (menu-bar-mode -1))
+;; Turn off `menu-bar-mode' unless on MacOS
+(unless *is-mac* (menu-bar-mode -1))
 
 (setq inhibit-startup-screen t)
 
 (setq ring-bell-function #'ignore)      ; Don't ring bell on C-g
 
-;; This is not safe
-;; (fset 'yes-or-no-p #'y-or-n-p)
+
+;;; Yes Or No
 
 (defvar Orig-yes-or-no-p (symbol-function 'yes-or-no-p))
 
@@ -202,26 +209,20 @@
          (dolist (sym yes-or-no-bypass-functions)
            (advice-add sym :around 'yes-or-no-bypass))))
 
+;; This is not safe
+(fset 'yes-or-no-p #'y-or-n-p)
+
 
-;; Font#
-;; Setting English Font
+;;; Font
 
-(when (display-graphic-p)
-  ;; English
-  ;; (set-face-attribute 'default nil :font "Source Code Pro-13")
+;; TODO: I have trouble setting English and Chinese fonts
+(cl-case window-system
+  ('ns (set-face-attribute 'default nil :font "Source Code Pro-13"))
+  ('x (dolist (charset '(kana han symbol cjk-misc bopomofo))
+        (set-fontset-font (frame-parameter nil 'font)
+                          charset
+                          (font-spec :family "Noto Sans Mono CJK SC" :size 14)))))
 
-  ;; TODO Pick up another font (or setting) because changing line
-  ;; height is very annoying.
-  ;;
-  ;; Chinese Font 配制中文字体
-  ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
-  ;;   (set-fontset-font (frame-parameter nil 'font)
-  ;;                     charset
-  ;;                     (font-spec :family "PingFang SC" :size 14)))
-  )
-
-(when (eq window-system 'ns)
-  (set-face-attribute 'default nil :font "Source Code Pro-13"))
 
 
 ;; Theme
@@ -513,13 +514,18 @@ One C-u, swap window, two C-u, delete window."
           find-program              "gfind"
           grep-program              "ggrep")))
 
-(use-package dired                      ; Edit directories
+(use-package dired                      ; Directory Editor
   :defer t
   :config
-  (setq dired-listing-switches "-alh --no-group")
+  ;; --ignore=.git*
+  (setq dired-listing-switches "-alh --no-group --ignore=.git*")
   (use-package dired-x
     :commands dired-omit-mode
     :init (add-hook 'dired-mode-hook #'dired-omit-mode)))
+
+(use-package direx                      ; Alternative to Dired
+  :ensure t
+  :defer t)
 
 (use-package launch                     ; Open files in external programs
   :ensure t
@@ -906,6 +912,10 @@ One C-u, swap window, two C-u, delete window."
   :defer t
   :init (add-hook 'css-mode-hook #'rainbow-mode))
 
+(use-package hl-issue-id
+  :load-path "~/Projects/emacs-hl-issue-id"
+  :config (global-hl-issue-id-mode))
+
 
 ;;; Skeletons, completion and expansion
 
@@ -1090,8 +1100,9 @@ One C-u, swap window, two C-u, delete window."
 
 (use-package prog-mode
   :bind ("C-c t p" . prettify-symbols-mode)
+  ;; TODO: I have some font issue, so disalbe it for now
   ;; :init (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
-  :init (global-prettify-symbols-mode)
+  ;; :init (global-prettify-symbols-mode)
   )
 
 
@@ -1165,6 +1176,7 @@ See also `describe-function-or-variable'."
   (bind-key "M-:"     #'pp-eval-expression)
   (bind-key "C-c t d" #'toggle-debug-on-error)
 
+
   (use-package rebox2
     :disabled t
     :ensure t
@@ -1219,6 +1231,8 @@ See also `describe-function-or-variable'."
   (bind-key "C-M-;" #'comment-or-uncomment-sexp emacs-lisp-mode-map)
   (bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map)
   (bind-key "C-," #'my-eval-print-last-sexp emacs-lisp-mode-map))
+
+(use-package chunyang-package)
 
 (use-package ielm
   :defer t
@@ -1307,6 +1321,19 @@ See also `describe-function-or-variable'."
   (setq magit-save-repository-buffers 'dontask)
   ;; Show word-granularity differences within diff hunks
   (setq magit-diff-refine-hunk 'all)
+
+  ;; My answer to https://emacs.stackexchange.com/questions/28502/magit-show-ignored-files
+  ;; Command to list ignored files:
+  ;; $ git ls-files --others --ignored --exclude-standard --directory
+  (defun magit-ignored-files ()
+    (magit-git-items "ls-files" "--others" "--ignored" "--exclude-standard" "-z" "--directory"))
+
+  (defun magit-insert-ignored-files ()
+    (-when-let (files (magit-ignored-files))
+      (magit-insert-section (ignored)
+        (magit-insert-heading "Ignored files:")
+        (magit-insert-un/tracked-files-1 files nil)
+        (insert ?\n))))
 
   :preface
   (defun Info-goto-node--gitman-for-magit (orig-fun &rest r)
@@ -1574,6 +1601,17 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; By default, mu4e use `ido-completing-read'
   (when (bound-and-true-p helm-mode)
     (setq mu4e-completing-read-function 'completing-read)))
+
+(use-package gnus
+  :init
+  (setq gnus-select-method
+        '(nnmaildir "Mail"
+                    (directory "~/Maildir")
+                    (directory-files nnheader-directory-files-safe)
+                    (get-new-mail nil)))
+  (with-eval-after-load "ace-link"
+    (with-eval-after-load "gnus-art"
+      (bind-key "o" 'ace-link-gnus gnus-article-mode-map))))
 
 (use-package erc
   :preface
