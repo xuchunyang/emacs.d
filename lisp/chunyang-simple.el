@@ -141,22 +141,13 @@ With ARG, put *scratch* buffer right."
 
 ;;; Opening iTerm
 
-(defun project-root ()
-  "Return the project root for current buffer."
-  (let ((directory default-directory))
-    (or (locate-dominating-file directory ".git")
-        (locate-dominating-file directory ".svn")
-        (locate-dominating-file directory ".hg"))))
-
 ;; with args, go to project root
-(defun iterm-shell-command (command &optional prefix)
-  "cd to `default-directory' then run COMMAND in iTerm.
-With PREFIX, cd to project root."
+(defun iterm-shell-command (command)
+  "cd to `default-directory' then run COMMAND in iTerm."
   (interactive (list (read-shell-command
                       "iTerm Shell Command: ")
                      current-prefix-arg))
-  (let* ((dir (if prefix (project-root)
-                default-directory))
+  (let* ((dir default-directory)
          ;; if COMMAND is empty, just change directory
          (cmd (format "cd %s && %s" dir command)))
     (do-applescript
