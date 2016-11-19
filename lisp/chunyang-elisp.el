@@ -234,6 +234,24 @@
                   (defun disassemble--revert-buffer (_ignore-auto _noconfirm)
                     (disassemble object))))))
 
+
+;;; Eval
+
+(defun chunyang-eval-region-as-key (beg end)
+  "Eval region as Emacs key."
+  ;; The region can be Emacs key:
+  ;;
+  ;; [?\C-u ?\C-n]
+  ;; "\C-u \C-n"
+  ;; C-u M-x emacs-version RET
+  (interactive "r")
+  (let* ((sel (buffer-substring-no-properties beg end))
+         (key (if (member (string-to-char sel) '(?\" ?\[) )
+                  (read sel)
+                (kbd sel))))
+    (deactivate-mark)
+    (command-execute key)))
+
 
 (provide 'chunyang-elisp)
 
