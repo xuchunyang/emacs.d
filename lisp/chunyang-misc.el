@@ -267,5 +267,14 @@
       (kill-new word)
       (message "Saved to kill-ring: %s" word))))
 
+
+(defun chunyang-insert-date ()
+  "Insert the date using the ISO 8601 format, '%Y-%m-%d'.
+BTW, 'C-u M-! date -I RET' does the same thing."
+  (interactive)
+  (insert (substring
+           (shell-command-to-string "date +'%Y-%m-%d'")
+           0 -1)))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
