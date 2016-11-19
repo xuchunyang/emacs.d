@@ -1744,6 +1744,13 @@ Called with a prefix arg set search provider (default Google)."
                       (url-hexify-string query))))
 
 
+;;; Shell
+
+(use-package shell-pop
+  :ensure t
+  :commands shell-pop)
+
+
 ;;; Eshell
 
 (use-package eshell
@@ -2183,6 +2190,18 @@ Called with a prefix arg set search provider (default Google)."
   (push '("\\.rkt[dl]?\\'" . racket-mode) auto-mode-alist))
 
 
+;;; Web
+
+(use-package css-mode
+  :defer t
+  :init
+  (add-hook 'css-mode-hook
+            (defun chunyang-css-setup ()
+              ;; FIXME Not working?
+              ;; (setq indent-tabs-mode t)
+              (setq css-indent-offset 2))))
+
+
 ;;; Python
 
 (use-package python
@@ -2273,6 +2292,8 @@ Called with a prefix arg set search provider (default Google)."
   :defer t
   :config
   (add-to-list 'auto-insert-alist "TODO Add some Python if it is really useful"))
+
+(use-package restart-emacs :ensure t :defer t)
 
 
 ;; IM
