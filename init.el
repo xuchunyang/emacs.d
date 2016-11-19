@@ -2241,6 +2241,7 @@ Called with a prefix arg set search provider (default Google)."
 ;;; Math
 
 (use-package Maxima
+  :disabled t
   :load-path "/usr/local/Cellar/maxima/5.37.2/share/maxima/5.37.2/emacs"
   :mode ("\\.ma[cx]" . maxima-mode)
   :init
@@ -2296,7 +2297,7 @@ Called with a prefix arg set search provider (default Google)."
 (use-package restart-emacs :ensure t :defer t)
 
 
-;; IM
+;;; IM
 
 (use-package gitter
   :disabled t
@@ -2306,6 +2307,14 @@ Called with a prefix arg set search provider (default Google)."
   :commands gitter
   :init
   (setq gitter--debug t))
+
+
+;;; TODO
+
+(use-package language-detection
+  :ensure t
+  ;; TODO Try this package
+  :defer t)
 
 
 ;;; Customization
