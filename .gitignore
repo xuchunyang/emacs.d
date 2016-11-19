@@ -1,5 +1,18 @@
 *.elc
-custom.el
-elpa*/
-etc/
-var/
+
+# Custom
+/custom.el
+
+# ELPA
+/elpa*/
+
+# Configuration files and Variable files for various packages
+# This is done via package 'no-littering'
+/etc/
+/var/
+
+# X Session Files
+# Emacs generates the file when X Window Manager is shutdowning but Emacs is
+# still running, see function 'emacs-session-save'
+# Ref: http://emacs.stackexchange.com/a/12773/3889
+/session.*
