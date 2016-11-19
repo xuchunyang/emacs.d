@@ -246,7 +246,7 @@
   ;; C-u M-x emacs-version RET
   (interactive "r")
   (let* ((sel (buffer-substring-no-properties beg end))
-         (key (if (member (string-to-char sel) '(?\" ?\[) )
+         (key (if (member (aref sel 0) '(?\" ?\[) )
                   (read sel)
                 (kbd sel))))
     (deactivate-mark)
