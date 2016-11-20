@@ -96,12 +96,13 @@
 ;; Emacs 处理这个变量的方式挺有意思的，如果你的配置要还给其他人用，最好不去动这个变量
 (setq inhibit-startup-echo-area-message "xcy")
 
-
 ;; Load personal information
 (load "~/.private.el" :no-error)
 
-
+;; Make ~/.emacs.d/ clean by putting package files into var/ and etc/
 (use-package no-littering
+  ;; Prefer local version if the directory exists
+  :load-path "~/src/no-littering"
   :ensure t)
 
 
@@ -131,6 +132,7 @@
 ;; (setq shell-command-switch "-ic")
 
 (use-package chunyang-osx
+  :if *is-mac*
   :commands (restart-emacs omnifocus-new-entry)
   :bind (
          ;; ("<wheel-left>"         . chunyang-next-buffer)
@@ -156,7 +158,7 @@
   :if *is-gnu-linux*
   :commands chunyang-linux-gnome-terminal-cd)
 
-(use-package grab-x11-link
+(use-package grab-x-link
   :if *is-gnu-linux*
   :load-path "/home/xcy/src/grab-x-link")
 
@@ -1266,7 +1268,7 @@ See also `describe-function-or-variable'."
   :defer t
   :preface
   ;; TODO: Fontify #1234 (make it clickable) in certain modes
-  (defun open-debbug-gnu-bug (id)
+  (defun chunyang-open-debbug-gnu-bug-by-id (id)
     (interactive (list
                   (or (number-at-point)
                       (and (looking-at "#\\([0-9]*\\)")
@@ -1320,7 +1322,7 @@ See also `describe-function-or-variable'."
   ;; Save files before executing git command for me
   (setq magit-save-repository-buffers 'dontask)
   ;; Show word-granularity differences within diff hunks
-  (setq magit-diff-refine-hunk 'all)
+  ;; (setq magit-diff-refine-hunk 'all)
 
   ;; My answer to https://emacs.stackexchange.com/questions/28502/magit-show-ignored-files
   ;; Command to list ignored files:
@@ -1722,6 +1724,7 @@ Called with a prefix arg set search provider (default Google)."
          ("C-c Y" . youdao-dictionary-search-at-point+)))
 
 (use-package osx-dictionary
+  :if *is-mac*
   :load-path "~/src/osx-dictionary.el"
   :bind ("C-c d" . osx-dictionary-search-pointer))
 
@@ -1923,11 +1926,12 @@ Called with a prefix arg set search provider (default Google)."
            "* TODO %?\n  %u\n  %a"))))
 
 (use-package org-mac-link
+  :if *is-mac*
   :disabled t                           ; Included in org-plus-contrib
-  :if (eq system-type 'darwin)
   :commands (org-mac-grab-link org-mac-chrome-insert-frontmost-url))
 
 (use-package grab-mac-link
+  :if *is-mac*
   :load-path "~/src/grab-mac-link"
   :bind ("C-c L" . grab-mac-link))
 
@@ -1951,11 +1955,6 @@ Called with a prefix arg set search provider (default Google)."
 
 
 ;;; Emacs Development
-
-(when (eq system-type 'darwin)
-  ;; I have this on Mac for some reason, but don't rember the reason, simply
-  ;; keep it for now
-  (setq tags-table-list '("~/Projects/emacs")))
 
 
 ;;; C
