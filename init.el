@@ -1590,6 +1590,8 @@ See Info node `(magit) How to install the gitman info manual?'."
 ;; don't keep message buffers around
 (setq message-kill-buffer-on-exit t)
 
+(setq message-directory (locate-user-emacs-file "var/Mail"))
+
 (use-package mu4e
   :commands mu4e
   :config
