@@ -158,7 +158,7 @@
 
 (use-package grab-x11-link
   :if *is-gnu-linux*
-  :load-path "/home/xcy/Projects/grab-x11-link")
+  :load-path "/home/xcy/src/grab-x-link")
 
 
 ;;; User Interface
@@ -818,7 +818,7 @@ One C-u, swap window, two C-u, delete window."
   (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
 (use-package plur
-  :load-path "~/Projects/plur"
+  :load-path "~/src/plur"
   :bind ("C-c M-%" . plur-query-replace)
   :config (define-key isearch-mode-map "\M-{" #'plur-isearch-query-replace)
   ;; :defer t
@@ -836,7 +836,7 @@ One C-u, swap window, two C-u, delete window."
   :init (swap-regions-mode))
 
 (use-package clear-text
-  :load-path "~/Projects/clear-text.el"
+  :load-path "~/src/clear-text.el"
   :commands (clear-text-mode global-clear-text-mode))
 
 (use-package pinyin-search
@@ -913,7 +913,7 @@ One C-u, swap window, two C-u, delete window."
   :init (add-hook 'css-mode-hook #'rainbow-mode))
 
 (use-package hl-issue-id
-  :load-path "~/Projects/emacs-hl-issue-id"
+  :load-path "~/src/emacs-hl-issue-id"
   :config (global-hl-issue-id-mode))
 
 
@@ -1448,7 +1448,7 @@ See Info node `(magit) How to install the gitman info manual?'."
 (use-package gh-md             :ensure t :defer t)
 
 (use-package github-notifier
-  :load-path "~/Projects/github-notifier.el"
+  :load-path "~/src/github-notifier.el"
   :commands github-notifier)
 
 (use-package which-key
@@ -1685,7 +1685,7 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t
   :config
-  (add-to-list 'Info-directory-list "~/Projects/emms/doc")
+  (add-to-list 'Info-directory-list "~/src/emms/doc")
 
   (setq emms-mode-line-icon-color "purple")
 
@@ -1722,7 +1722,7 @@ Called with a prefix arg set search provider (default Google)."
          ("C-c Y" . youdao-dictionary-search-at-point+)))
 
 (use-package osx-dictionary
-  :load-path "~/Projects/osx-dictionary.el"
+  :load-path "~/src/osx-dictionary.el"
   :bind ("C-c d" . osx-dictionary-search-pointer))
 
 (use-package bing-dict
@@ -1834,7 +1834,7 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package eshell-did-you-mean
   :disabled t
-  :load-path "~/Projects/eshell-did-you-mean"
+  :load-path "~/src/eshell-did-you-mean"
   :defer t
   :init
   (autoload 'eshell-did-you-mean-setup "eshell-did-you-mean")
@@ -1928,8 +1928,7 @@ Called with a prefix arg set search provider (default Google)."
   :commands (org-mac-grab-link org-mac-chrome-insert-frontmost-url))
 
 (use-package grab-mac-link
-  :load-path "~/Projects/grab-mac-link"
-  :if (eq system-type 'darwin)
+  :load-path "~/src/grab-mac-link"
   :bind ("C-c L" . grab-mac-link))
 
 (use-package orglink
@@ -2260,19 +2259,19 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package opencc                     ; WIP
   :disabled t
-  :load-path "~/Projects/emacs-opencc"
+  :load-path "~/src/emacs-opencc"
   :commands (opencc-use-api opencc-use-cli opencc)
   :defer t)
 
 (use-package chunyang-blog
   :disabled t
-  :load-path "~/Projects/blog"
+  :load-path "~/src/blog"
   :commands chunyang-blog-publish)
 
 (use-package number-to-word             ; WIP
   :disabled t
   :defer t
-  :load-path "~/Projects/number-to-word")
+  :load-path "~/src/number-to-word")
 
 ;; (use-package nginx-mode :ensure t :defer t)
 
@@ -2301,7 +2300,7 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package gitter
   :disabled t
-  :load-path "~/Projects/gitter.el"
+  :load-path "~/src/gitter.el"
   ;; :ensure t
   :defer t
   :commands gitter
