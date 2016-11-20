@@ -1132,6 +1132,7 @@ One C-u, swap window, two C-u, delete window."
 
 
 ;;; Emacs Lisp
+
 (use-package lisp-mode
   :defer t
   :preface
@@ -1296,6 +1297,10 @@ See also `describe-function-or-variable'."
 ;; TODO Add (info "(elisp) Edebug")
 
 (use-package nameless
+  :ensure t
+  :defer t)
+
+(use-package package-lint               ; Check Compatibility
   :ensure t
   :defer t)
 
@@ -1910,8 +1915,6 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t)
 
-
-;;; Emacs Development
 
 
 ;;; C
