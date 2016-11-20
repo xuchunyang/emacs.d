@@ -1871,81 +1871,38 @@ Called with a prefix arg set search provider (default Google)."
   (define-key global-map "\C-ca" #'org-agenda)
 
   ;; This will loads org.el but I need it from the begining
-  (require 'org-protocol))
+  ;; (require 'org-protocol)
 
-(use-package org
-  :disabled t          ; 从头开始
-  ;; Install org included in org-plus-contrib from Org ELPA
-  :ensure org-plus-contrib
-  :defer t
-  :init
-  ;; 修复中文 markup
-  (setq org-emphasis-regexp-components
-        ;; markup 记号前后允许中文
-        (list (concat " \t('\"{"            "[:nonascii:]")
-              (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
-              " \t\r\n,\"'"
-              "."
-              1))
-  ;; 导出时不使用上下标 - 1）中文有问题；2）我暂时用不到它
-  (setq org-export-with-sub-superscripts nil)
-
-  (bind-keys :map mode-specific-map
-             ("l" . org-store-link)
-             ;; ("L" . org-insert-link-global)
-             ("o" . org-open-at-point-global)
-             ("a" . org-agenda)
-             ("c" . org-capture))
-
-  ;; This will loads org.el but I need it from the begining
-  (require 'org-protocol)
+  ;; TODO: Create and load autoloads file for contrib/lisp
+  (when *is-mac*
+    (autoload 'org-mac-grab-link "org-mac-link"))
 
   :config
-  (bind-key "C-o" #'helm-org-in-buffer-headings org-mode-map)
-
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (maxima     . t)
-     (python     . t)
-     (ruby       . t)
-     (sh         . t)))
-
-  (setq org-edit-src-content-indentation 0)
-
-  ;; Task managment
-  (setq org-agenda-files (list "~/todo.org"))
-  (setq org-default-notes-file "~/todo.org")
-
-  ;; Use DEADLINE as the end of repeat task
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown
-        'repeated-after-deadline)
-
-  (setq org-capture-templates
-        '(("i" "Inbox" entry (file+headline "" "Inbox")
-           "* TODO %?\n  %u\n  %a"))))
-
-(use-package org-mac-link
-  :if *is-mac*
-  :disabled t                           ; Included in org-plus-contrib
-  :commands (org-mac-grab-link org-mac-chrome-insert-frontmost-url))
+     (shell      . t))))
 
 (use-package grab-mac-link
   :if *is-mac*
   :load-path "~/src/grab-mac-link"
+  :ensure t
   :bind ("C-c L" . grab-mac-link))
 
 (use-package orglink
-  :disabled t
+  :disabled t                           ; I like this package, but it requires
+                                        ; org-8.3, while I am installing org
+                                        ; manuallly and in Emacs-25 the built-in
+                                        ; version of org is org-8.2, so If I
+                                        ; install this package via ELPA, org
+                                        ; will also be install as dependency,
+                                        ; this should be OK in fact, but I just
+                                        ; don't want this.
   :ensure t
   ;; :diminish orglink-mode
   ;; NOTE The problem is: it will slow down Emacs startup
   ;; :init (global-orglink-mode)
   :defer t)
-
-(use-package org-bullets
-  :disabled t                           ; Looks cute but I don't really need it now
-  :config (add-hook 'org-mode-hook #'org-bullets-mode))
 
 
 (use-package habitica
