@@ -1611,6 +1611,7 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 (use-package gnus
   :init
+  (setq gnus-directory (locate-user-emacs-file "var/gnus/"))
   (setq gnus-select-method
         '(nnmaildir "Mail"
                     (directory "~/Maildir")
