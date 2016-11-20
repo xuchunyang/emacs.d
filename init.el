@@ -1872,8 +1872,8 @@ Called with a prefix arg set search provider (default Google)."
   (require 'org-loaddefs)
   (add-to-list 'Info-directory-list "~/src/org-mode/doc/")
 
-  (setq org-agenda-files (list "~/INBOX"))
-  (setq org-default-notes-file "~/INBOX")
+  (setq org-agenda-files (list "~/Sync/chunyang.org"))
+  (setq org-default-notes-file "~/Sync/chunyang.org")
   (define-key global-map "\C-ca" #'org-agenda)
 
   ;; This will loads org.el but I need it from the begining
