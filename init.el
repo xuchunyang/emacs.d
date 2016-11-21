@@ -1845,6 +1845,8 @@ Called with a prefix arg set search provider (default Google)."
   (when *is-mac*
     (autoload 'org-mac-grab-link "org-mac-link"))
 
+  (setq org-edit-src-content-indentation 0)
+
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
