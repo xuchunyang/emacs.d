@@ -1767,15 +1767,6 @@ Called with a prefix arg set search provider (default Google)."
 (use-package eshell
   :defer t
   :preface
-  (defun eshell-clear-buffer ()
-    "Clear terminal"
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (eshell-send-input)))
-  (defun eshell/mcd (dir)
-    "make a directory and cd into it"
-    (eshell/mkdir "-p" dir)
-    (eshell/cd dir))
   (defun eshell-insert-last-arg ()
     "Insert the last arg of the last command, like ESC-. in shell."
     (interactive)
@@ -1786,56 +1777,25 @@ Called with a prefix arg set search provider (default Google)."
                     (substring-no-properties (eshell-get-history 0)))))))
         (when last-arg
           (insert last-arg)))))
-  (defun eshell/imgcat (&rest args)
-    "Display image(s)."
-    (let ((elems (eshell-flatten-list args)))
-      (while elems
-        (eshell-printn
-         (propertize " " 'display (create-image (expand-file-name (car elems)))))
-        (setq elems (cdr elems))))
-    nil)
-  ;; :bind  (("C-!"   . eshell-command)
-  ;;         ("C-x m" . eshell))
+  :bind ("C-x S" . eshell)
   :config
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
-  (setq eshell-banner-message
-        '(concat (shell-command-to-string "fortune") "\n"))
-  ;; needed at least for `eshell-git-prompt'
+  ;; (setq eshell-banner-message
+  ;;       '(concat (shell-command-to-string "fortune") "\n"))
+  ;; Needed at least for `eshell-git-prompt'?
   (setq eshell-highlight-prompt nil)
 
-  (defun eshell/x ()
-    (insert "exit")
-    (eshell-send-input)
-    (delete-window))
-                                        ; (I don't know what this means)
   (add-hook 'eshell-mode-hook
-            (lambda ()
-              ;; Setup smart shell
+            (defun chunyang-eshell-mode-setup ()
+              ;; Setup Plan9 smart shell
               ;; (require 'em-smart)
               ;; (eshell-smart-initialize)
               (bind-keys :map eshell-mode-map
-                         ;; ("TAB"     . helm-esh-pcomplete)
-                         ;; ("M-p"     . helm-eshell-history)
-                         ;; ("C-l"     . eshell-clear-buffer)
-                         ("C-c C-k" . compile)
                          ("C-c C-q" . eshell-kill-process)
                          ("C-c ."   . eshell-insert-last-arg))
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n")))
-
-  ;; Eshell command name completion for tldr man pages <http://tldr-pages.github.io>
-  (defvar tldr-commands nil)
-
-  (defun pcomplete/tldr ()
-    (unless tldr-commands
-      (setq tldr-commands
-            (split-string
-             (nth 1 (split-string
-                     (shell-command-to-string "tldr --list")
-                     "\n" t))
-             ", ")))
-    (pcomplete-here* tldr-commands))
 
   (use-package eshell-git-prompt
     :ensure t
