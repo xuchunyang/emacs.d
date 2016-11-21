@@ -1,8 +1,8 @@
 ;; Install helm from Git
 
 (when (version< "25" emacs-version)     ; Only use helm-from-git for Emacs 25
-  (add-to-list 'load-path "~/Projects/emacs-async")
-  (add-to-list 'load-path "~/Projects/helm"))
+  (add-to-list 'load-path "~/src/emacs-async")
+  (add-to-list 'load-path "~/src/helm"))
 
 (setq helm-command-prefix-key "C-c h")
 
