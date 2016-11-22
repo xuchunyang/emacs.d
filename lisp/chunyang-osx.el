@@ -110,5 +110,40 @@
                (key-description (this-command-keys)))
       (chunyang-previous-buffer-1))))
 
+
+;;; iTerm & Terminal
+
+;; with args, go to project root
+(defun iterm-shell-command (command)
+  "cd to `default-directory' then run COMMAND in iTerm."
+  (interactive (list (read-shell-command
+                      "iTerm Shell Command: ")
+                     current-prefix-arg))
+  (let* ((dir default-directory)
+         ;; if COMMAND is empty, just change directory
+         (cmd (format "cd %s && %s" dir command)))
+    (do-applescript
+     (format
+      "
+  tell application \"iTerm\"
+       activate
+       set _session to current session of current terminal
+       tell _session
+            set command to get the clipboard
+            write text \"%s\"
+       end tell
+  end tell
+  " cmd))))
+
+(defun chunyang-cd-in-Terminal.app (dir)
+  (interactive "D")
+  (do-applescript
+   (format "
+tell application \"Terminal\"
+     activate
+     do script \"cd %s\" in window 1
+end tell" dir)))
+
+
 (provide 'chunyang-osx)
 ;;; chunyang-osx.el ends here
