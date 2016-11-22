@@ -1330,11 +1330,6 @@ See also `describe-function-or-variable'."
          ("C-x M-g" . magit-dispatch-popup))
   :init (global-git-commit-mode)
   :config
-  ;; To use colored git output in Eshell, I have color.ui set to always, but
-  ;; this option breaks Magit, so set it to auto on Magit side.
-  (setq magit-git-global-arguments
-        (append magit-git-global-arguments
-                '("-c" "color.ui=auto")))
   ;; Hide popup by default, type `C-t' to display if need
   (setq magit-popup-show-common-commands nil)
   ;; Save files before executing git command for me
@@ -1365,7 +1360,21 @@ See Info node `(magit) How to install the gitman info manual?'."
         (man (substring (car r) (length "(gitman)")))
       (apply orig-fun r)))
 
-  (advice-add 'Info-goto-node :around #'Info-goto-node--gitman-for-magit))
+  (advice-add 'Info-goto-node :around #'Info-goto-node--gitman-for-magit)
+
+  ;; Work with ~/.dotfiles (a bare Git repository)
+  (define-advice magit-process-git-arguments (:around (orig-fun &rest r) dotfiles-hack)
+    "Temporarily add --git-dir=$HOME/.dotfiles and --work-tree=$HOME for the ~/.dotfiles bare Git repository."
+    ;; NOTE Slow down Magit?
+    (if (member (expand-file-name default-directory)
+                (list (expand-file-name "~/.dotfiles/")
+                      (expand-file-name "~/")))
+        (let ((magit-git-global-arguments
+               (append magit-git-global-arguments
+                       (list (format "--work-tree=%s" (expand-file-name "~/"))
+                             (format "--git-dir=%s"   (expand-file-name "~/.dotfiles/"))))))
+          (apply orig-fun r))
+      (apply orig-fun r))))
 
 (use-package vc
   :defer t
