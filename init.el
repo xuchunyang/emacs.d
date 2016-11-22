@@ -718,6 +718,18 @@ One C-u, swap window, two C-u, delete window."
                ("(magit) Command Index"            nil "(['`‘]" "['’])")
                ("(magit) Variable Index"           nil "^ -+ .*: " "\\( \\|$\\)"))))
 
+(use-package info
+  :defer t
+  :config
+  (defvar chunyang-Info-visited-nodes nil)
+
+  (defun chunyang-Info-track-history ()
+    (list (file-name-nondirectory Info-current-file)
+          Info-current-node)
+    (message "todo..."))
+
+  (add-hook 'Info-selection-hook 'chunyang-Info-track-history))
+
 (use-package cus-edit
   :preface
   (defun chunyang/custom-mode-describe-symbol-at-point ()
