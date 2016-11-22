@@ -298,6 +298,7 @@
 (use-package desktop                    ; frame/window/buffer and global vars
   :if (display-graphic-p)
   :init
+  (setq desktop-load-locked-desktop nil)
   (desktop-save-mode)
   :config
   (setq desktop-restore-frames nil)
