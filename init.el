@@ -1777,7 +1777,7 @@ Called with a prefix arg set search provider (default Google)."
                     (substring-no-properties (eshell-get-history 0)))))))
         (when last-arg
           (insert last-arg)))))
-  :bind ("C-x S" . eshell)
+  :bind ("C-x m" . eshell)              ; 'C-x m' runs `compose-mail' by default
   :config
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
@@ -1795,7 +1795,11 @@ Called with a prefix arg set search provider (default Google)."
                          ("C-c C-q" . eshell-kill-process)
                          ("C-c ."   . eshell-insert-last-arg))
               (eshell/export "EDITOR=emacsclient -n")
-              (eshell/export "VISUAL=emacsclient -n")))
+              (eshell/export "VISUAL=emacsclient -n")
+              ;; Disable scroll, see
+              ;; https://emacs.stackexchange.com/questions/28819/eshell-goes-to-the-bottom-of-the-page-after-executing-a-command
+              (remove-hook 'eshell-output-filter-functions
+                           'eshell-postoutput-scroll-to-bottom)))
 
   (use-package eshell-git-prompt
     :ensure t
