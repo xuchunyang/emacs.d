@@ -1140,6 +1140,7 @@ One C-u, swap window, two C-u, delete window."
   :ensure t
   :diminish paredit-mode
   :commands paredit-mode
+  :init (add-hook 'lisp-mode-hook 'paredit-mode)
   :config
   (unbind-key "M-r" paredit-mode-map) (bind-key "M-R" #'paredit-raise-sexp  paredit-mode-map)
   (unbind-key "M-s" paredit-mode-map) (bind-key "M-S" #'paredit-splice-sexp paredit-mode-map)
@@ -2027,13 +2028,9 @@ Called with a prefix arg set search provider (default Google)."
 ;;; Common Lisp
 
 (use-package slime
-  :disabled t
   :ensure t
   :defer t
-  :config
-  (load "~/quicklisp/slime-helper.el")
-  (setq inferior-lisp-program "sbcl")
-  (setq slime-contribs '(slime-fancy)))
+  :init (setq inferior-lisp-program "sbcl"))
 
 
 ;;; Ruby
