@@ -1094,21 +1094,35 @@ One C-u, swap window, two C-u, delete window."
 ;; `superword-mode' -- 把 this_is_a_symbol 当作一个 word
 ;; `hs-minor-mode' -- Hideshow / 折叠、隐藏
 
+(cl-defun chunyang-project-root (&optional (dir default-directory))
+  "Return project root in DIR, if no project is found, return DIR."
+  (or (cdr (project-current nil dir))
+      dir))
+
 (use-package compile
-  :disabled t
-  :bind (("C-c C" . compile))
+  :bind (("C-x c" . compile))
   :preface
-  (defun compilation-ansi-color-process-output ()
-    (ansi-color-process-output nil)
-    (set (make-local-variable 'comint-last-output-start)
-         (point-marker)))
+
+  (defun chunyang-ansi-color-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point))))
+
+  (defvar chunyang-compilation-root nil)
+  (defun chunyang-compilation-setup ()
+    (setq chunyang-compilation-root (chunyang-project-root)))
+  (defun chunyang-compilation-save-buffers-predicate ()
+    (file-in-directory-p (buffer-file-name) chunyang-compilation-root))
 
   :config
-  (setq compilation-ask-about-save nil         ; Just save before compiling
-        compilation-always-kill t
-        compilation-scroll-output 'first-error ; Automatically scroll to first error
-        )
-  (add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output))
+  ;; Colorize ansi escape color code
+  (add-hook 'compilation-filter-hook 'chunyang-ansi-color-compilation-buffer)
+
+  ;; Only ask for saving files under current project
+  (setq compilation-process-setup-function 'chunyang-compilation-setup)
+  (setq compilation-save-buffers-predicate 'chunyang-compilation-save-buffers-predicate)
+
+  (setq compilation-always-kill t
+        compilation-scroll-output 'first-error))
 
 (use-package quickrun
   :ensure t :defer t)
