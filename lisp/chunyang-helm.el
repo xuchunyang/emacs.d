@@ -232,8 +232,12 @@ If with prefix argument, search current directory."
 (use-package helm-mu
   :ensure t
   :defer t
-  :config (setq helm-mu-gnu-sed-program "gsed"
-                helm-mu-skip-duplicates t))
+  :config
+  (setq helm-mu-gnu-sed-program
+        ;; Note that BSD Sed doesn't work
+        (or (executable-find "gsed")
+            (executable-find "sed"))
+        helm-mu-skip-duplicates t))
 
 (use-package helm-zhihu-daily    :ensure t :defer t)
 
