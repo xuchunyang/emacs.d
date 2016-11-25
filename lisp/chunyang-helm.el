@@ -13,7 +13,7 @@
 
 (use-package helm
   :defer t
-  :init
+  :config
   (define-minor-mode chunyang-helm-window-hack-mode
     "Hack helm window display."
     :global t
@@ -33,6 +33,7 @@
                       (window-height . 0.4)) display-buffer-alist))
       (let ((standard-value (eval (car (get 'helm-display-function 'standard-value)))))
         (setq helm-display-function standard-value))))
+  (chunyang-helm-window-hack-mode)
 
   ;; This is for sanityinc-tomorrow-eighties theme
   ;; (face-spec-set 'helm-visible-mark
