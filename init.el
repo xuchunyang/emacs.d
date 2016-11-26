@@ -1648,6 +1648,7 @@ See Info node `(magit) How to install the gitman info manual?'."
     (setq mu4e-completing-read-function 'completing-read)))
 
 (use-package gnus
+  :defer t
   :init
   (setq gnus-directory (locate-user-emacs-file "var/gnus/"))
   (setq gnus-select-method
