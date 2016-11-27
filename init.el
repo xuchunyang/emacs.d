@@ -1792,7 +1792,7 @@ Called with a prefix arg set search provider (default Google)."
                       (url-hexify-string query))))
 
 
-;;; Shell
+;;; Shell (including shell-command, shell, term and Eshell)
 
 (use-package term
   :commands term
@@ -1813,9 +1813,6 @@ Called with a prefix arg set search provider (default Google)."
 (use-package shell-pop
   :ensure t
   :commands shell-pop)
-
-
-;;; Eshell
 
 (use-package eshell
   :defer t
