@@ -1820,8 +1820,13 @@ Called with a prefix arg set search provider (default Google)."
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
   ;; (setq eshell-banner-message
   ;;       '(concat (shell-command-to-string "fortune") "\n"))
-  ;; Needed at least for `eshell-git-prompt'?
-  (setq eshell-highlight-prompt nil)
+
+  ;; Visual commands like top(1) and vi(1)
+  (setq eshell-visual-subcommands '(("git" "log" "diff" "show")))
+  (setq eshell-destroy-buffer-when-process-dies t)
+
+  ;; If t, it will make `term' use C-x as escape key, instead of the default C-c
+  (setq eshell-escape-control-x nil)
 
   (add-hook 'eshell-mode-hook
             (defun chunyang-eshell-mode-setup ()
@@ -1837,6 +1842,9 @@ Called with a prefix arg set search provider (default Google)."
               ;; https://emacs.stackexchange.com/questions/28819/eshell-goes-to-the-bottom-of-the-page-after-executing-a-command
               (remove-hook 'eshell-output-filter-functions
                            'eshell-postoutput-scroll-to-bottom)))
+
+  ;; Needed at least for `eshell-git-prompt'?
+  (setq eshell-highlight-prompt nil)
 
   (use-package eshell-git-prompt
     :ensure t
