@@ -1794,6 +1794,22 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; Shell
 
+(use-package term
+  :commands term
+  :config
+  ;; Allow more lines before truncating
+  (setq term-buffer-maximum-size 10240)
+
+  ;; Respect my own M-x
+  (define-key term-raw-escape-map [?\M-x] (lookup-key global-map [?\M-x]))
+
+  ;; C-c C-j   term-line-mode
+  ;; C-c C-k   term-char-mode
+  ;;
+  ;; However, It's hard to remember and distinguish them, so just use C-c C-j to
+  ;; toggle these two modes.
+  (define-key term-mode-map [?\C-c ?\C-j] 'term-char-mode))
+
 (use-package shell-pop
   :ensure t
   :commands shell-pop)
