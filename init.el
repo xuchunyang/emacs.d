@@ -1916,7 +1916,9 @@ Called with a prefix arg set search provider (default Google)."
      (shell      . t))))
 
 (use-package grab-mac-link
-  :if *is-mac*
+  ;; Notice that `:ensure' has a higher priority than `:if'
+  ;; :if *is-mac*
+  :disabled (not *is-mac*)
   :load-path "~/src/grab-mac-link"
   :ensure t
   :bind ("C-c L" . grab-mac-link))
