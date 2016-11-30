@@ -38,9 +38,9 @@
   (package-install 'use-package))
 
 (use-package use-package
+  :disabled t
   :config
-  (setq use-package-verbose t
-        use-package-minimum-reported-time 0.03))
+  (setq use-package-verbose t))
 
 ;; Define `config' to group package configuration (an alternative to
 ;; `use-package')
@@ -118,6 +118,7 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell
+  :disabled t
   :if (eq window-system 'ns)
   :ensure t
   :defer t
@@ -224,7 +225,6 @@
                           charset
                           (font-spec :family "Noto Sans Mono CJK SC" :size 14)))))
 
-
 
 ;; Theme
 
@@ -295,6 +295,7 @@
 
 ;;; Emacs session persistence
 (use-package desktop                    ; frame/window/buffer and global vars
+  :disabled t
   :if (display-graphic-p)
   :init
   (setq desktop-load-locked-desktop nil)
@@ -315,11 +316,13 @@
                         (buffer-string)))))))
 
 ;; Maximize Emacs frame on start-up
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 
 (use-package savehist                   ; Minibuffer history
   ;; :disabled t
-  :config
+  :defer t
+  :init
   (savehist-mode)
   (setq history-length 1000
         history-delete-duplicates t
@@ -927,6 +930,7 @@ One C-u, swap window, two C-u, delete window."
   :init (add-hook 'css-mode-hook #'rainbow-mode))
 
 (use-package hl-issue-id
+  :disabled t
   :load-path "~/src/emacs-hl-issue-id"
   :config (global-hl-issue-id-mode))
 
@@ -1262,7 +1266,8 @@ See also `describe-function-or-variable'."
   (bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map)
   (bind-key "C-," #'my-eval-print-last-sexp emacs-lisp-mode-map))
 
-(use-package chunyang-package)
+(use-package chunyang-package
+  :commands chunyang-package-homepage)
 
 (use-package ielm
   :defer t
@@ -1510,6 +1515,7 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 ;;; Project
 (use-package projectile
+  :disabled t
   :ensure t
   :diminish projectile-mode
   :config
@@ -1523,6 +1529,7 @@ See Info node `(magit) How to install the gitman info manual?'."
   (projectile-global-mode))
 
 (use-package helm-projectile
+  :disabled t
   :if (eq chunyang-completion-system 'helm)
   :after projectile
   :ensure t

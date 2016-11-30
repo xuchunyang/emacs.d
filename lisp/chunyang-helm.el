@@ -44,8 +44,7 @@
 
 (use-package helm-mode                  ; Use helm completing everywhere
   :diminish helm-mode
-  :init
-  (helm-mode)
+  :defer t
   :config
   (add-to-list 'helm-completing-read-handlers-alist
                '(where-is . helm-completing-read-symbols))
@@ -80,6 +79,7 @@
 (setq helm-highlight-matches-around-point-max-lines 0)
 
 (use-package helm-adaptive
+  :disabled t
   :init (helm-adaptive-mode))
 
 (use-package helm-command               ; helm-M-x
