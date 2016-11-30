@@ -23,13 +23,12 @@
              (homepage (cdr (assoc :url extras))))
     homepage))
 
-;; Reuse interactive form of `describe-package'. However, I don't really understand it.
-(eval
- `(defun chunyang-package-open-homepage (pkg)
-    ,(interactive-form 'describe-package)
-    (when-let ((homepage (chunyang-package-homepage pkg)))
-      (browse-url homepage))))
-;; (put 'package-open-homepage 'interactive-form (interactive-form 'describe-package))
+;; For other way to reuse interactive-form, see
+;; [[https://emacs.stackexchange.com/questions/28518/reuse-other-commands-interactive-form][elisp - Reuse other command's "interactive" form - Emacs Stack Exchange]]
+(defun package-open-homepage (pkg)
+  (when-let ((homepage (chunyang-package-homepage pkg)))
+    (browse-url homepage)))
+(put 'package-open-homepage 'interactive-form (interactive-form 'describe-package))
 
 (defun chunyang-package-issue (pkg)
   "Return issue package of package PKG (a symbol), or nil if none.
