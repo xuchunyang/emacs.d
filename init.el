@@ -15,13 +15,13 @@
 (require 'package)
 
 (setq package-archives
-      '(("gnu"   . "https://elpa.zilongshanren.com/gnu/")
-        ("melpa" . "https://elpa.zilongshanren.com/melpa/")
+      '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+        ("melpa" . "http://elpa.emacs-china.org/melpa/")
         ;; Using org from Git
-        ;; ("org"   . "https://elpa.zilongshanren.com/org/")
+        ;; ("org"   . "https://elpa.emacs-china.org/org/")
         ;; `gtk-look'
-        ("user42" . "https://elpa.zilongshanren.com/user42/")
-        ;; ("SC"     . "https://elpa.zilongshanren.com/sunrise-commander/")
+        ("user42" . "http://elpa.emacs-china.org/user42/")
+        ;; ("SC"     . "https://elpa.emacs-china.org/sunrise-commander/")
         ))
 
 ;; Different Emacs versions can't share the same elpa folder
