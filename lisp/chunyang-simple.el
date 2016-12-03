@@ -170,5 +170,29 @@ With ARG, put *scratch* buffer right."
      (execute-kbd-macro (read-kbd-macro ,key-name))))
 ;; (define-command-from-key foo "C-e RET")
 
+
+
+(defun chunyang-show-number-as-char (undo)
+  "Show number in the region as character, for example, C-x for 24.
+If no usable region, the whole current buffer will be used.
+
+I find the output of 'C-h v help-map' is hard to read."
+  (interactive "P")
+  (if undo
+      (remove-overlays nil nil 'chunyang-show-number-as-char t)
+    (seq-let (beg end) (if (use-region-p)
+                           (list (region-beginning) (region-end))
+                         (list (point-min) (point-max)))
+      (save-excursion
+        (goto-char beg)
+        (let ((count 0)
+              ov)
+          (while (re-search-forward "[0-9]+" end :no-error)
+            (setq ov (make-overlay (match-beginning 0) (match-end 0)))
+            (overlay-put ov 'display (single-key-description
+                                      (string-to-number (match-string 0))))
+            (overlay-put ov 'chunyang-show-number-as-char t)))))))
+
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
