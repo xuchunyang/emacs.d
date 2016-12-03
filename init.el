@@ -2290,9 +2290,8 @@ Called with a prefix arg set search provider (default Google)."
 ;;; IM
 
 (use-package gitter
-  :disabled t
   :load-path "~/src/gitter.el"
-  ;; :ensure t
+  :ensure t
   :defer t
   :commands gitter
   :init
