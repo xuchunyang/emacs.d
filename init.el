@@ -331,13 +331,11 @@
 (use-package recentf                    ; Recent files
   :defer t
   :config
-  (setq recentf-max-saved-items 200
-        recentf-exclude (list "/\\.git/.*\\'" ; Git contents
-                              "/elpa/.*\\'"   ; Package files
-                              "/elpa-[0-9]+-[0-9]+/.*\\'" ; Package files
-                              "/etc/.*\\'"    ; Package configuration
-                              "/var/.*\\'"    ; Package data
-                              "/itsalltext/"  ; It's all text temp files
+  (setq recentf-max-saved-items 512
+        recentf-exclude (list "/\\.git/.*\\'"      ; Git contents
+                              "/\\.emacs\\.d/elpa" ; ELPA
+                              "/etc/.*\\'"         ; Package configuration
+                              "/var/.*\\'"         ; Package data
                               ".*\\.gz\\'"
                               "TAGS"
                               ".*-autoloads\\.el\\'"))
