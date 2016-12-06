@@ -67,6 +67,11 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 
+;;; Emacs Compatibility
+
+(use-package chunyang-emacs-compatibility)
+
+
 ;;; Require helper libraries
 
 (require 'subr-x)
