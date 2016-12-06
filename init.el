@@ -1891,6 +1891,15 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package chunyang-shell)
 
+;; Suppress the output of emacsclient(1)
+;; NOTE: It's OK since I usually don't care about the output since the command
+;;       should just works, however, if bad thing happens, this hides very
+;;       important information.
+
+;; http://emacs.stackexchange.com/a/29010/3889
+(define-advice server-eval-and-print (:filter-args (args) suppress)
+  "Change the argument to suppress this function."
+  (list (car args) nil))
 
 
 ;;; Org mode
