@@ -1,4 +1,4 @@
-;;; chunyang-compatibility.el --- Emacs version compatibility  -*- lexical-binding: t; -*-
+;;; chunyang-emacs-compatibility.el --- Emacs version compatibility  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -31,5 +31,5 @@ otherwise it is named `SYMBOL@NAME'.
       `(prog1 ,@(and (symbolp advice) `((defun ,advice ,lambda-list ,@body)))
          (advice-add ',symbol ,where #',advice ,@(and props `(',props)))))))
 
-(provide 'chunyang-compatibility)
+(provide 'chunyang-emacs-compatibility)
 ;;; chunyang-emacs-compatibility.el ends here
