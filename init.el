@@ -1884,6 +1884,15 @@ Called with a prefix arg set search provider (default Google)."
     (eshell-did-you-mean-setup)))
 
 
+;;; Emacs + Shell
+
+;; 1) Emacs should load `chunyang-shell.el'
+;; 2) Shell in external Terminal should load misc/linux.sh or misc/mac.sh
+
+(use-package chunyang-shell)
+
+
+
 ;;; Org mode
 
 ;; (require 'chunyang-org)

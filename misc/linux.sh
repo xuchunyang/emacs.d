@@ -22,3 +22,10 @@ _open_emacs_window ()
     # Activate Emacs GUI Window
     xdotool windowactivate --sync $( xdotool search --class Emacs | tail -1 )
 }
+
+info ()
+{
+    local node=$1
+    emacsclient --eval "(shell/info \"$node\")"
+    _open_emacs_window
+}
