@@ -38,9 +38,13 @@
   (package-install 'use-package))
 
 (use-package use-package
-  :disabled t
+  :if (version<= "25" emacs-version)
   :config
-  (setq use-package-verbose t))
+  (define-advice use-package-ensure-elpa (:before (&rest r) fill-selected)
+    "Make sure :ensure fill `package-selected-packages'."
+    (add-to-list 'package-selected-packages (car r))))
+
+(use-package use-package :ensure t)
 
 ;; Define `config' to group package configuration (an alternative to
 ;; `use-package')
