@@ -14,6 +14,7 @@ magit ()
     _open_emacs_window
 }
 
+# Note: Use find-file instead, which supports both file & directory
 dired ()
 {
     local arg1=$1
@@ -26,5 +27,12 @@ info ()
 {
     local node=$1
     emacsclient --eval "(shell/info \"$node\")"
+    _open_emacs_window
+}
+
+find-file ()
+{
+    local file=$1
+    emacsclient --eval "(find-file \"$file\")"
     _open_emacs_window
 }
