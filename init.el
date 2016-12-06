@@ -1930,7 +1930,8 @@ Called with a prefix arg set search provider (default Google)."
 
   (setq org-agenda-files (list "~/Sync/chunyang.org"))
   (setq org-default-notes-file "~/Sync/chunyang.org")
-  (define-key global-map "\C-ca" #'org-agenda)
+  (define-key global-map [?\C-c ?c] #'org-capture)
+  (define-key global-map [?\C-c ?a] #'org-agenda)
 
   ;; This will loads org.el but I need it from the begining
   ;; (require 'org-protocol)
