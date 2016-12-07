@@ -1828,6 +1828,10 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :commands shell-pop)
 
+(use-package eshell-z
+  :commands eshell-z
+  :load-path "~/src/eshell-z")
+
 (use-package eshell
   :defer t
   :preface
@@ -1868,16 +1872,18 @@ Called with a prefix arg set search provider (default Google)."
               ;; Disable scroll, see
               ;; https://emacs.stackexchange.com/questions/28819/eshell-goes-to-the-bottom-of-the-page-after-executing-a-command
               (remove-hook 'eshell-output-filter-functions
-                           'eshell-postoutput-scroll-to-bottom)))
+                           'eshell-postoutput-scroll-to-bottom)
+
+              (require 'eshell-z)))
 
   ;; Needed at least for `eshell-git-prompt'?
   (setq eshell-highlight-prompt nil)
 
   (use-package eshell-git-prompt
     :ensure t
-    :config (eshell-git-prompt-use-theme 'powerline))
+    :config (eshell-git-prompt-use-theme 'powerline)))
 
-  (use-package eshell-z :ensure t))
+
 
 (use-package eshell-did-you-mean
   :disabled t
