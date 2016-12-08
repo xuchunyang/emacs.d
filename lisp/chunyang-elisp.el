@@ -261,13 +261,7 @@
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward "^:[-a-z]* advice: .\\(.*\\).$" nil t)
-        (let* ((fun (let ((s (buffer-string)))
-                      (with-temp-buffer
-                        (insert s)
-                        (delay-mode-hooks (emacs-lisp-mode))
-                        (goto-char 1)
-                        (save-match-data
-                          (symbol-at-point)))))
+        (let* ((fun (nth 1 help-xref-stack-item))
                (advice (intern (match-string 1)))
                (button-fun (lambda (_)
                              (message "Removing %s from %s" advice fun)
