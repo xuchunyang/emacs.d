@@ -1941,8 +1941,7 @@ Called with a prefix arg set search provider (default Google)."
              (require 'e2ansi)
              (server-reply-print
               (server-quote-arg
-               (let ((e2ansi-background-mode 'dark))
-                 (e2ansi-string-to-ansi (buffer-string))))
+               (e2ansi-string-to-ansi (buffer-string)))
               proc)))
           (_
            (when proc
@@ -2363,7 +2362,13 @@ Called with a prefix arg set search provider (default Google)."
                                         ; Emacs.  This is very cool.
   :ensure t
   :load-path "~/src/e2ansi"
-  :defer t)
+  :defer t
+  :config
+  ;; On my Ubuntu Box, I use Gnome-terminal with its default profile/theme, I
+  ;; can't see the output of `e2ansi' clearly without changing
+  ;; `e2ansi-background-mode' to `dark'.
+  (when *is-gnu-linux*
+    (setq e2ansi-background-mode 'dark)))
 
 
 ;;; IM
