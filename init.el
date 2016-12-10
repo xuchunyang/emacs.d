@@ -1912,15 +1912,44 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package chunyang-shell)
 
-;; Suppress the output of emacsclient(1)
-;; NOTE: It's OK since I usually don't care about the output since the command
-;;       should just works, however, if bad thing happens, this hides very
-;;       important information.
+;; For "emacsclient --eval EXPR". In EXPR, one has to use `setq' to modify this
+;; variable temporarily, for example,
+;;
+;; emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda-list))"
+;;
+;; `let' will not work.
+(defcustom server-eval-and-how-to-print 'supress
+  "Custom how to print in `server-eval-and-print'."
+  :type '(choice
+          (const :tag "Default (that is, print result of evaluation)" nil)
+          (const :tag "Supress everything" 'supress)
+          (const :tag "Print the current buffer" 'buffer)))
 
-;; http://emacs.stackexchange.com/a/29010/3889
-(define-advice server-eval-and-print (:filter-args (args) suppress)
-  "Change the argument to suppress this function."
-  (list (car args) nil))
+(define-advice server-eval-and-print (:around (&rest r) how-to-print)
+  "Decide how to print in `server-eval-and-print', according to `server-eval-and-how-to-print'."
+  (let ((server-eval-and-how-to-print
+         server-eval-and-how-to-print))
+    (seq-let (orig-fun expr proc) r
+      (let ((v (with-local-quit (eval (car (read-from-string expr))))))
+        (pcase server-eval-and-how-to-print
+          ('supress
+           nil)
+          ('buffer
+           (when proc
+             (require 'e2ansi)
+             (server-reply-print
+              (server-quote-arg
+               (let ((e2ansi-background-mode 'dark))
+                 (e2ansi-string-to-ansi (buffer-string))))
+              proc)))
+          (_
+           (when proc
+             (with-temp-buffer
+               (let ((standard-output (current-buffer)))
+                 (pp v)
+                 (let ((text (buffer-substring-no-properties
+                              (point-min) (point-max))))
+                   (server-reply-print (server-quote-arg text) proc)))))))))))
 
 
 ;;; Org mode

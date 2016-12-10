@@ -42,3 +42,8 @@ find-file ()
     emacsclient --eval "(find-file \"$file\")"
     _open_emacs_window
 }
+
+t ()
+{
+    emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda-list))"
+}
