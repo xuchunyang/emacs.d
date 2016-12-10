@@ -703,7 +703,26 @@ One C-u, swap window, two C-u, delete window."
     (interactive)
     (when-let ((symbol (cadr help-xref-stack-item)))
       (info-lookup-symbol symbol)))
-  :bind (("C-h h" . view-help-buffer)
+  (defun chunyang-describe-symbol-at-point ()
+    "Like `describe-symbol' but doesn't query always."
+    (interactive)
+    (require 'help-mode)
+    (let* ((is-symbol-p
+            (lambda (vv)
+              (cl-some (lambda (x) (funcall (nth 1 x) vv))
+                       describe-symbol-backends)))
+           (sym
+            (or (let ((it (intern (current-word))))
+                  (when (funcall is-symbol-p it)
+                    it))
+                (completing-read
+                 "Describe symbol: "
+                 obarray
+                 is-symbol-p
+                 t))))
+      (describe-symbol sym)))
+  :bind (("C-h ." . chunyang-describe-symbol-at-point)
+         ("C-h h" . view-help-buffer)
          :map help-mode-map
          ("b" . help-go-back)
          ("f" . help-go-forward)
@@ -1284,15 +1303,6 @@ See also `describe-function-or-variable'."
 (use-package macrostep
   :ensure t
   :bind ("C-c e" . macrostep-expand))
-
-(use-package elisp-slime-nav
-  :ensure t
-  :diminish elisp-slime-nav-mode
-  ;; Or just (bind-key "C-h ." #'describe-symbol)
-  ;; :init
-  ;; FIXME only in a few major modes
-  ;; (bind-key "C-h ." #'elisp-slime-nav-describe-elisp-thing-at-point)
-  :bind ("C-h ." . elisp-slime-nav-describe-elisp-thing-at-point))
 
 (use-package pcache              :ensure t :defer t)
 (use-package persistent-soft     :ensure t :defer t)
