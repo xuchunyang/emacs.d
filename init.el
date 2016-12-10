@@ -1669,7 +1669,9 @@ See Info node `(magit) How to install the gitman info manual?'."
 
   ;; By default, mu4e use `ido-completing-read'
   (when (bound-and-true-p helm-mode)
-    (setq mu4e-completing-read-function 'completing-read)))
+    (setq mu4e-completing-read-function 'completing-read))
+
+  (require 'org-mu4e))
 
 (use-package gnus
   :defer t
