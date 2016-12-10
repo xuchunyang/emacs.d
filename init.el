@@ -1979,6 +1979,8 @@ Called with a prefix arg set search provider (default Google)."
   (define-key global-map [?\C-c ?c] #'org-capture)
   (define-key global-map [?\C-c ?a] #'org-agenda)
 
+  (setq org-agenda-span 'day)
+
   ;; This will loads org.el but I need it from the begining
   ;; (require 'org-protocol)
 
