@@ -2359,6 +2359,12 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package restart-emacs :ensure t :defer t)
 
+(use-package e2ansi                     ; Provide Syntax Highlight for shell by
+                                        ; Emacs.  This is very cool.
+  :ensure t
+  :load-path "~/src/e2ansi"
+  :defer t)
+
 
 ;;; IM
 
