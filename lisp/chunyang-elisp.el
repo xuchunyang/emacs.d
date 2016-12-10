@@ -272,7 +272,8 @@
           (insert-text-button "Remove" 'action button-fun 'follow-link t))))))
 
 (advice-add 'describe-function :after #'describe-function@advice-remove-button)
-(advice-add 'describe-symbol   :after #'describe-function@advice-remove-button)
+;; The following is not needed since it calls `describe-function' (I guess)
+;; (advice-add 'describe-symbol   :after #'describe-function@advice-remove-button)
 (advice-add 'describe-key      :after #'describe-function@advice-remove-button)
 
 (provide 'chunyang-elisp)
