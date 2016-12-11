@@ -1653,6 +1653,11 @@ See Info node `(magit) How to install the gitman info manual?'."
 (setq message-directory (locate-user-emacs-file "var/Mail"))
 
 (use-package mu4e
+  :preface
+  ;; On Mac OS, I installed mu manually since MacPorts failed for some reason
+  ;; thus I have to setup `load-path' for mu4e
+  (when *is-mac*
+    (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e"))
   :commands mu4e
   :config
   (setq
