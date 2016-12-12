@@ -2270,6 +2270,11 @@ Called with a prefix arg set search provider (default Google)."
               ;; (setq indent-tabs-mode t)
               (setq css-indent-offset 2))))
 
+;; TODO Try this package (examples, documentation)
+(use-package web-server
+  :ensure t
+  :defer t)
+
 
 ;;; Python
 
