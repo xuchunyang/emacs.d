@@ -142,8 +142,8 @@
 ;;     ⇒ hi
 ;;*---------------------------------------------------------------------*/
 
-(unless (version< emacs-version "25")
-  (bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map))
+;; (unless (version< emacs-version "25")
+;;   (bind-key "C-j" #'my-eval-print-last-sexp lisp-interaction-mode-map))
 
 (defun chunyang-disable-some-modes-in-scratch ()
   (dolist (mode '(aggressive-indent-mode ipretty-mode))
@@ -163,7 +163,7 @@
            (eval
             (eval-sexp-add-defvars (elisp--preceding-sexp)) lexical-binding)))
       (unless (current-line-empty-p) (terpri))
-      (princ "     => ")                ; or ⇒
+      (princ "     ⇒ ")                ; or =>
       (princ (with-temp-buffer
                (elisp--eval-last-sexp-print-value res t)
                (buffer-string))))
@@ -183,6 +183,19 @@
              (princ "error→ ")        ; or error->
              (princ (error-message-string err))))))
     (my-eval-print-last-sexp-1)))
+
+(defun her-eval-print-last-sexp ()
+  (interactive)
+  (let ((standard-output (current-buffer)))
+    (terpri)
+    (let ((res (eval (eval-sexp-add-defvars (elisp--preceding-sexp))
+                     lexical-binding)))
+      (unless (current-line-empty-p) (terpri))
+      (princ "     ⇒ ")
+      (princ (with-temp-buffer
+               (elisp--eval-last-sexp-print-value res t)
+               (buffer-string))))
+    (unless (current-line-empty-p) (terpri))))
 
 
 (define-minor-mode display-pos-mode
