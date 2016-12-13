@@ -698,7 +698,7 @@ One C-u, swap window, two C-u, delete window."
   (defun view-help-buffer ()
     "View the `*Help*' buffer."
     (interactive)
-    (select-window (display-buffer (help-buffer))))
+    (pop-to-buffer (help-buffer)))
   (defun help-info-lookup-symbol ()
     (interactive)
     (when-let ((symbol (cadr help-xref-stack-item)))
