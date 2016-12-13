@@ -127,14 +127,9 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell
-  :disabled t
   :if (eq window-system 'ns)
   :ensure t
-  :defer t
-  :init
-  (setq exec-path-from-shell-arguments (list "-l"))
-  (exec-path-from-shell-copy-env "INFOPATH")
-  (exec-path-from-shell-copy-env "PONYO_ROOT")
+  :config
   (exec-path-from-shell-initialize))
 
 ;; For passing aliases
