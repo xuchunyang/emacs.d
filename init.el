@@ -1492,6 +1492,17 @@ See Info node `(magit) How to install the gitman info manual?'."
   (setq edit-server-new-frame nil)
   (edit-server-start))
 
+;; TODO Find a better (than "It'a All Text!") alternative for Firefox since now
+;;      I am moving to Firefox.
+(use-package atomic-chrome
+  :ensure t                             ; To install its dependencies
+  :load-path "~/src/atomic-chrome"
+  :config
+  (setq atomic-chrome-url-major-mode-alist
+        '(("github\\.com"      . gfm-mode)
+          ("emacs-china\\.org" . gfm-mode)))
+  (atomic-chrome-start-server))
+
 (use-package ediff
   :defer t
   :config
