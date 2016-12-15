@@ -758,7 +758,8 @@ One C-u, swap window, two C-u, delete window."
           Info-current-node)
     (message "todo..."))
 
-  (add-hook 'Info-selection-hook 'chunyang-Info-track-history))
+  ;; (add-hook 'Info-selection-hook 'chunyang-Info-track-history)
+  )
 
 (use-package cus-edit
   :preface
