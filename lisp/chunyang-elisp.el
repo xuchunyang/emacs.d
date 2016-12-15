@@ -270,19 +270,20 @@
 
 (defun describe-function@advice-remove-button (&rest r)
   "Add a button to remove advice."
-  (with-current-buffer "*Help*"
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "^:[-a-z]* advice: .\\(.*\\).$" nil t)
-        (let* ((fun (nth 1 help-xref-stack-item))
-               (advice (intern (match-string 1)))
-               (button-fun (lambda (_)
-                             (message "Removing %s from %s" advice fun)
-                             (advice-remove fun advice)
-                             (save-excursion (revert-buffer nil t))))
-               (inhibit-read-only t))
-          (insert " » ")
-          (insert-text-button "Remove" 'action button-fun 'follow-link t))))))
+  (when-let ((buf (get-buffer "*Help*")))
+    (with-current-buffer buf
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward "^:[-a-z]* advice: .\\(.*\\).$" nil t)
+          (let* ((fun (nth 1 help-xref-stack-item))
+                 (advice (intern (match-string 1)))
+                 (button-fun (lambda (_)
+                               (message "Removing %s from %s" advice fun)
+                               (advice-remove fun advice)
+                               (save-excursion (revert-buffer nil t))))
+                 (inhibit-read-only t))
+            (insert " » ")
+            (insert-text-button "Remove" 'action button-fun 'follow-link t)))))))
 
 (advice-add 'describe-function :after #'describe-function@advice-remove-button)
 ;; The following is not needed since it calls `describe-function' (I guess)
