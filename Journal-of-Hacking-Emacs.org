@@ -1,0 +1,5 @@
+#+TITLE: Hacking Emacs——作为一种生活方式
+#+AUTHOR: Chunyang Xu
+#+EMAIL: mail@xuchunyang.me
+
+不知不觉我的 Emacs 配置已经两岁了，总共六百多次 Commit，平均下来每天都有修改，折腾 Emacs 与打飞机一道已然成了我的日常。
