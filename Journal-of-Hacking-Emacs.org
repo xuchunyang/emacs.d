@@ -3,3 +3,92 @@
 #+EMAIL: mail@xuchunyang.me
 
 不知不觉我的 Emacs 配置已经两岁了，总共六百多次 Commit，平均下来每天都有修改，折腾 Emacs 与打飞机一道已然成了我的日常。
+
+* <2016-12-15 Thu> 获取自己的和 Star 了的仓库
+  最近我有两个需求：
+  1. =git-clone= 自己的仓库时，不知道地址；
+  2. 需要打开某个 Star 了的仓库是，不知道地址。
+
+  虽然 helm-github-stars.el 能解决这个需求，但我还是打算自己实现一个最小化的，不必和 Helm 捆绑在一块儿。我打算用 Jonas Bernoulli（目前 Magit 的维护者）所开发的 =ghub= ——一个很简单的 GitHub API 客户端。
+
+** 为 =ghub= 设置 GitHub 用户名和 API Token
+   #+BEGIN_SRC sh
+   $ git config --global github.user xuchunyang
+   $ cat ~/.authinfo
+   machine api.github.com login xuchunyang password 0d4de538064g3f962d3f5g988db29fce1g55bg41
+   #+END_SRC
+
+** 测试 API
+   GitHub API 文档中的相关部分：
+   - [[https://developer.github.com/v3/repos/#list-your-repositories][Repositories | List your repositories]]
+   - [[https://developer.github.com/v3/activity/starring/#list-repositories-being-starred][Starring | List repositories being starred]]
+
+   #+BEGIN_SRC elisp
+   (setq chunyang-github-repos
+         (--keep (cdr (assq 'full_name it))
+                 (let ((ghub-unpaginate t))
+                   (ghub-get "/user/repos"))))
+
+   (setq chunyang-github-stars
+         (--keep (cdr (assq 'full_name it))
+                 (let ((ghub-unpaginate t))
+                   (ghub-get "/user/starred"))))
+   #+END_SRC
+
+   虽然速度不快，但 GitHub 还能访问。
+
+** 写用户命令
+
+   #+BEGIN_SRC elisp :tangle lisp/chunyang-github.el
+   (require 'ghub)
+   (require 'dash)
+
+   ;;; Internal Helpers
+
+   (defvar chunyang-github-repos nil)
+   (defvar chunyang-github-stars nil)
+
+   (defun chunyang-github-get-repos ()
+     (unless chunyang-github-repos
+       (setq chunyang-github-repos
+             (--keep (cdr (assq 'full_name it))
+                     (let ((ghub-unpaginate t))
+                       (ghub-get "/user/repos")))))
+     chunyang-github-repos)
+
+   (defun chunyang-github-get-stars ()
+     (unless chunyang-github-stars
+       (setq chunyang-github-stars
+             (--keep (cdr (assq 'full_name it))
+                     (let ((ghub-unpaginate t))
+                       (ghub-get "/user/starred")))))
+     chunyang-github-stars)
+
+   ;;; User Commands
+
+   (defun chunyang-github-stars/repos-browse-url ()
+     (interactive)
+     (let ((repo (completing-read "GitHub Stars or Repos: "
+                                  (append (chunyang-github-get-repos)
+                                          (chunyang-github-get-stars))
+                                  nil t)))
+       (browse-url (concat "https://github.com/" repo))))
+
+   (defun chunyang-github-stars/repos-copy-clone-url ()
+     (interactive)
+     (let* ((repo (completing-read "GitHub Stars or Repos: "
+                                   (append (chunyang-github-get-repos)
+                                           (chunyang-github-get-stars))
+                                   nil t))
+            (clone-url (concat "git@github.com:" repo ".git")))
+       (kill-new clone-url)
+       (message "Killed: %s" clone-url)))
+   #+END_SRC
+
+** 用 =use-package= 完成配置
+
+   #+BEGIN_SRC elisp
+   (use-package chunyang-github
+     :commands (chunyang-github-stars/repos-browse-url
+                chunyang-github-stars/repos-copy-clone-url))
+   #+END_SRC

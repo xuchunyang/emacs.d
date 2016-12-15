@@ -1530,6 +1530,10 @@ See Info node `(magit) How to install the gitman info manual?'."
   :load-path "~/src/github-notifier.el"
   :commands github-notifier)
 
+(use-package chunyang-github
+  :commands (chunyang-github-stars/repos-browse-url
+             chunyang-github-stars/repos-copy-clone-url))
+
 (use-package which-key
   :disabled t
   :ensure t
