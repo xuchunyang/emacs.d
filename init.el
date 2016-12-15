@@ -694,6 +694,12 @@ One C-u, swap window, two C-u, delete window."
     "View the `*Help*' buffer."
     (interactive)
     (pop-to-buffer (help-buffer)))
+  (defun chunyang-clear-messages-buffer ()
+    "Delete the contents of the *Messages* buffer."
+    (interactive)
+    (with-current-buffer "*Messages*"
+      (let ((inhibit-read-only t))
+        (erase-buffer))))
   (defun help-info-lookup-symbol ()
     (interactive)
     (when-let ((symbol (cadr help-xref-stack-item)))
