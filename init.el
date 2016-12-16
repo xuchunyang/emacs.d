@@ -1826,6 +1826,9 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t)
 
+(use-package echo
+  :commands echo-mode)
+
 (defvar google-translate-history nil)
 
 (defun google-translate (query)
