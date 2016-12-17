@@ -2377,7 +2377,8 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package sl
   :ensure t
-  :commands sl)
+  :load-path "~/src/sl.el"
+  :commands (sl sl-little sl-forever sl-little-forever sl-screen-saver))
 
 (use-package time-stamp                 ; Built-in
   :defer t
