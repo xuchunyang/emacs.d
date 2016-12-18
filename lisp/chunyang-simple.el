@@ -140,7 +140,7 @@ With ARG, put *scratch* buffer right."
 
 (defun chunyang-switch-scratch ()
   (interactive)
-  (pop-to-buffer "*scratch*"))
+  (switch-to-buffer "*scratch*"))
 
 (defun scratch-clear ()
   "Clear *scratch* buffer."
