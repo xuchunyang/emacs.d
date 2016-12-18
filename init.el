@@ -1531,8 +1531,9 @@ See Info node `(magit) How to install the gitman info manual?'."
   :commands github-notifier)
 
 (use-package chunyang-github
-  :commands (chunyang-github-stars/repos-browse-url
-             chunyang-github-stars/repos-copy-clone-url))
+  :ensure ghub                          ; Dependency
+  :commands (helm-chunyang-github-stars
+             helm-chunyang-github-repos))
 
 (use-package which-key
   :disabled t
