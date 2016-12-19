@@ -862,12 +862,14 @@ One C-u, swap window, two C-u, delete window."
   (bind-key "M-%" 'anzu-query-replace)
   (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
+;; TODO: Consider adding `:todo' keyword to `use-package', just for some fun,
+;;       it's ok that it's not necessary and useful
+;; TODO: Errors on {her,his} -> chunyang
 (use-package plur
+  :ensure t
   :load-path "~/src/plur"
   :bind ("C-c M-%" . plur-query-replace)
-  :config (define-key isearch-mode-map "\M-{" #'plur-isearch-query-replace)
-  ;; :defer t
-  )
+  :config (define-key isearch-mode-map "\M-{" #'plur-isearch-query-replace))
 
 (use-package region-state
   :ensure t
