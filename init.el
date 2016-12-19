@@ -1291,9 +1291,12 @@ See also `describe-function-or-variable'."
 (use-package chunyang-elisp
   :config
   (bind-key "C-M-;" #'comment-or-uncomment-sexp emacs-lisp-mode-map)
-  ;; (bind-key "C-j" #'her-eval-print-last-sexp emacs-lisp-mode-map)
-  (bind-key "C-," #'her-eval-print-last-sexp emacs-lisp-mode-map)
-  (bind-key "C-j" #'her-eval-print-last-sexp lisp-interaction-mode-map))
+  (bind-keys :map emacs-lisp-mode-map
+             ("C-j" . chunyang-eval-print-last-sexp)
+             ("C-," . chunyang-macroexpand-print-last-sexp)
+             :map lisp-interaction-mode-map
+             ("C-j" . chunyang-eval-print-last-sexp)
+             ("C-," . chunyang-macroexpand-print-last-sexp)))
 
 (use-package chunyang-package
   :commands chunyang-package-homepage)

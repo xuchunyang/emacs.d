@@ -184,7 +184,7 @@
              (princ (error-message-string err))))))
     (my-eval-print-last-sexp-1)))
 
-(defun her-eval-print-last-sexp ()
+(defun chunyang-eval-print-last-sexp ()
   (interactive)
   (let ((standard-output (current-buffer)))
     (terpri)
@@ -196,6 +196,15 @@
                (elisp--eval-last-sexp-print-value res t)
                (buffer-string))))
     (unless (current-line-empty-p) (terpri))))
+
+(defun chunyang-macroexpand-print-last-sexp ()
+  (interactive)
+  (let ((standard-output (current-buffer)))
+    (terpri)
+    (let ((res (macroexpand (elisp--preceding-sexp))))
+      (princ "     ≡ ")
+      (princ res)
+      (unless (current-line-empty-p) (terpri)))))
 
 
 (define-minor-mode display-pos-mode
