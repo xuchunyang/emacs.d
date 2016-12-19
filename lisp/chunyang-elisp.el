@@ -278,7 +278,7 @@
 ;;; Key
 (defun chunyang-insert-command-name-by-key ()
   (interactive)
-  (insert (key-binding (read-key-sequence "Key: "))))
+  (insert (format "%s" (key-binding (read-key-sequence "Key: ")))))
 
 (defun chunyang-insert-key-by-key (&optional ask-for-kind)
   (interactive "P")
