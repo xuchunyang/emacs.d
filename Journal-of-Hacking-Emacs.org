@@ -42,10 +42,11 @@
    #+BEGIN_SRC elisp :tangle lisp/chunyang-github.el
    ;;; chunyang-github.el --- Access GitHub user repos and starred repos  -*- lexical-binding: t; -*-
 
-   ;; Package-Requires: ((ghub "0") (dash "0"))
+   ;; Package-Requires: ((ghub "0") (dash "0") (helm "0")
 
    (require 'ghub)
    (require 'dash)
+   (require 'helm)
 
    ;;; Internal Helpers
 
@@ -98,19 +99,17 @@
 
    (defun helm-chunyang-github-stars ()
      (interactive)
-     (assert (require 'helm))
      (helm :sources (helm-build-sync-source "GitHub Stars"
                       :candidates 'chunyang-github-get-stars
                       :action 'helm-chunyang-github-actions)
-           :buffer "*helm github stars*"))
+           :buffer "*helm GitHub Stars*"))
 
    (defun helm-chunyang-github-repos ()
      (interactive)
-     (assert (require 'helm))
-     (helm :sources (helm-build-sync-source "GitHub Stars"
+     (helm :sources (helm-build-sync-source "GitHub Repos"
                       :candidates 'chunyang-github-get-repos
                       :action 'helm-chunyang-github-actions)
-           :buffer "*helm github stars*"))
+           :buffer "*helm GitHub Repos*"))
 
    (provide 'chunyang-github)
    ;;; chunyang-github.el ends here
@@ -129,7 +128,7 @@
 
   实现一个 Minor Mode，当我把光标停留在一个单词上一段时间，自动显示其释义。
 
-  #+BEGIN_SRC elisp :tangle lisp/echo-mode.el
+  #+BEGIN_SRC elisp :tangle lisp/echo.el
   ;;; echo.el --- Echo something about thing at point
 
   ;;;###autoload
