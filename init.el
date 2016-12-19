@@ -2430,6 +2430,13 @@ Called with a prefix arg set search provider (default Google)."
   :defer t)
 
 
+;;; Emacs
+
+;; FIXME: In case Emacs can't find the source (for example, installing Emacs via
+;;        MacPorts). Remove it someday
+(setq source-directory "~/src/emacs/")
+
+
 ;;; Customization
 
 ;; Load custom-file in the end to prevent it loads some package.
