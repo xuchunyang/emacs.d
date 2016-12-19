@@ -275,6 +275,27 @@
     (command-execute key)))
 
 
+;;; Key
+(defun chunyang-insert-command-name-by-key ()
+  (interactive)
+  (insert (key-binding (read-key-sequence "Key: "))))
+
+(defun chunyang-insert-key-by-key (&optional ask-for-kind)
+  (interactive "P")
+  (let ((kind (if ask-for-kind
+                  (let ((choices '(("Human-readable String" . human)
+                                   ("Emacs Lisp String"     . string)
+                                   ("Emacs Lisp Vector"     . vector))))
+                    (cdr (assoc (completing-read "Insert key as: " choices nil t)
+                                choices)))
+                'human))
+        (key (read-key-sequence "Key: ")))
+    (cl-case kind
+      (human  (insert (key-description key)))
+      (string (insert key))
+      (vector (insert (format "%s" (read-kbd-macro key t)))))))
+
+
 ;;; Remove advice in the Help buffer
 
 (defun describe-function@advice-remove-button (&rest r)
