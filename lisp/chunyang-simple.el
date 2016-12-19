@@ -155,6 +155,27 @@ With ARG, put *scratch* buffer right."
 (defun my-list-setnth (list n new-elt)
   (setcar (nthcdr n list) new-elt))
 
+(defun chunyang-list-equals (list pred)
+  "Return t if all elements in LIST is equal, test using PRED.
+If LIST is empty or has only one element, return t."
+  (cl-loop for x on list
+           for a = (car x)
+           when (cdr x)
+           unless (funcall pred a (car it)) return nil
+           finally return t))
+
+(defun key-equal-p (key1 key2)
+  (when (stringp key1)
+    (setq key1 (read-kbd-macro key1 t)))
+  (when (stringp key2)
+    (setq key2 (read-kbd-macro key2 t)))
+  (cl-assert (vectorp key1))
+  (cl-assert (vectorp key2))
+  (equal key1 key2))
+
+(defun keys-equal-p (&rest keys)
+  (chunyang-list-equals keys 'key-equal-p))
+
 
 (defmacro remap-key (from-key-name to-key-name)
   ;; Assuming `global-map' and ignoring prefix arg for simplicity
