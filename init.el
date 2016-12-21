@@ -1298,7 +1298,12 @@ See also `describe-function-or-variable'."
              ("C-," . chunyang-macroexpand-print-last-sexp)
              :map lisp-interaction-mode-map
              ("C-j" . chunyang-eval-print-last-sexp)
-             ("C-," . chunyang-macroexpand-print-last-sexp)))
+             ("C-," . chunyang-macroexpand-print-last-sexp))
+  (with-eval-after-load 'aggressive-indent
+    (push 'chunyang-eval-print-last-sexp
+          aggressive-indent-protected-commands)
+    (push 'chunyang-macroexpand-print-last-sexp
+          aggressive-indent-protected-commands)))
 
 (use-package chunyang-package
   :commands chunyang-package-homepage)
