@@ -11,6 +11,7 @@
 ;; - aif/awhen
 ;; - if-let/when-let
 ;; - list-let
+;; - swap
 
 ;;; Code:
 
@@ -126,6 +127,14 @@
        ,@body)))
 
 ;; (list-let (a b) (1 2 3) (msg a b))
+
+(defmacro swap (x y)
+  `(setq ,x (prog1 ,y (setq ,y ,x))))
+
+;; (let ((x 1) (y 2))
+;;   (swap x y)
+;;   (list x y))
+;;      ⇒ (2 1)
 
 (provide 'chunyang-macros)
 ;;; chunyang-macros.el ends here
