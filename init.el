@@ -15,6 +15,15 @@
 (require 'package)
 
 (setq package-archives
+      '(("gnu"          . "https://elpa.emacs-china.org/gnu/")
+        ("melpa"        . "https://elpa.emacs-china.org/melpa/")
+        ("melpa-stable" . "https://elpa.emacs-china.org/melpa-stable/")
+        ("marmalade"    . "https://elpa.emacs-china.org/marmalade/")
+        ("org"          . "https://elpa.emacs-china.org/org/")
+        ("user42"       . "https://elpa.emacs-china.org/user42/")
+        ("SC"           . "https://elpa.emacs-china.org/sunrise-commander/")))
+
+(setq package-archives
       '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
         ("melpa" . "http://elpa.emacs-china.org/melpa/")
         ;; Using org from Git
