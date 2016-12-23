@@ -768,7 +768,26 @@ One C-u, swap window, two C-u, delete window."
     (message "todo..."))
 
   ;; (add-hook 'Info-selection-hook 'chunyang-Info-track-history)
-  )
+
+  ;; Get HTML link
+  ;; (emacs) Echo Area
+  ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Echo-Area.html
+  ;;
+  ;; (elisp) The Echo Area
+  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Echo-Area.html
+  ;; IDEA Support not only Emacs Info manuals
+  (defun Info-browse-and-copy-html-url ()
+    (interactive)
+    (cl-assert (eq major-mode 'Info-mode))
+    (let ((file (file-name-nondirectory Info-current-file))
+          (node Info-current-node))
+      (let ((url (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%s.html"
+                         file
+                         (replace-regexp-in-string " " "-" node))))
+        (browse-url url)
+        (kill-new url)
+        (message "Copied: %s" url))))
+  (bind-key "C" 'Info-browse-and-copy-html-url Info-mode-map))
 
 (use-package cus-edit
   :preface
