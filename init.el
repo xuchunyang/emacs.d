@@ -2387,6 +2387,49 @@ Called with a prefix arg set search provider (default Google)."
   (setq imaxima-use-maxima-mode-flag t))
 
 
+;;; Fun
+(use-package fun
+  :defer t
+  :init
+  (defvar 2017年春节倒计时-timer nil)
+  (defun 2017年春节倒计时-1 ()
+    (let ((buf (get-buffer "*2017年春节倒计时*")))
+      (if buf
+          (with-current-buffer buf
+            (let* ((seconds (truncate
+                             (- (time-to-seconds (date-to-time "2017-01-28T00:00:00+0800"))
+                                (time-to-seconds))))
+                   (days    (/ seconds (* 24 60 60)))
+                   (hours   (progn (decf seconds (* days (* 24 60 60)))
+                                   (/ seconds (* 60 60))))
+                   (minutes (progn (decf seconds (* hours (* 60 60)))
+                                   (/ seconds 60)))
+                   (seconds (decf seconds (* minutes 60))))
+              (erase-buffer)
+              (insert "2017年春节时间：2017年1月28日 星期六 农历正月初一\n")
+              (insert "        目前距离2017年春节过年还有\n")
+              (insert (propertize (format "  %s 天 %s 时 %s 分 %s 秒"
+                                          days hours minutes seconds)
+                                  'face '(:height 2.0))))
+            (unless 2017年春节倒计时-timer
+              (setq 2017年春节倒计时-timer
+                    (run-at-time t 1 '2017年春节倒计时-1))))
+        (when 2017年春节倒计时-timer
+          (cancel-timer 2017年春节倒计时-timer)
+          (setq 2017年春节倒计时-timer nil)))))
+
+  (defun 2017年春节倒计时 ()
+    "目前距离2017年春节过年还有？
+
+2017年春节时间：2017年1月28日 星期六 农历正月初一"
+    (interactive)
+    (with-current-buffer (get-buffer-create "*2017年春节倒计时*")
+      (buffer-disable-undo)
+      (setq cursor-type nil)
+      (2017年春节倒计时-1)
+      (display-buffer (current-buffer)))))
+
+
 ;;; Misc
 
 ;; Socks5 proxy setting of `url.el'
