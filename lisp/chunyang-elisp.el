@@ -197,6 +197,16 @@
                (buffer-string))))
     (unless (current-line-empty-p) (terpri))))
 
+(defun chunyang-eval-print-last-sexp-use-comment ()
+  (interactive)
+  (let ((standard-output (current-buffer)))
+    (let ((res (eval (eval-sexp-add-defvars (elisp--preceding-sexp))
+                     lexical-binding)))
+      (princ ";=> ")
+      (princ res)
+      ;; Indent comment
+      (comment-dwim nil))))
+
 (defun chunyang-macroexpand-print-last-sexp ()
   (interactive)
   (let ((standard-output (current-buffer)))
