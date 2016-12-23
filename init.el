@@ -952,7 +952,9 @@ One C-u, swap window, two C-u, delete window."
 (use-package hl-todo
   :ensure t
   :defer t
-  :init (add-hook 'prog-mode-hook #'hl-todo-mode))
+  :init (add-hook 'prog-mode-hook #'hl-todo-mode)
+  :config
+  (add-to-list 'hl-todo-keyword-faces '("IDEA" . "#d0bf8f")))
 
 (use-package color-identifiers-mode
   :ensure t
