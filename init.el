@@ -2464,7 +2464,10 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package ascii-art-to-unicode
   :ensure t
-  :defer t)
+  :defer t
+  :init
+  ;; `aa2u' is hard to recall
+  (defalias 'ascii-art-to-unicode 'aa2u))
 
 (use-package sl
   :ensure t
