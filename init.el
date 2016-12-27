@@ -1781,6 +1781,14 @@ See Info node `(magit) How to install the gitman info manual?'."
 (use-package sx
   :ensure t :defer t)
 
+(use-package eww
+  :defer t
+  :config
+  (use-package shr
+    :config
+    ;; Don't use proportional fonts for text
+    (setq shr-use-fonts nil)))
+
 (use-package google-this
   :disabled t
   :ensure t
