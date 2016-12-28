@@ -520,6 +520,9 @@ One C-u, swap window, two C-u, delete window."
 ;; Delete files to trash
 (setq delete-by-moving-to-trash t)
 
+;; Exit Emacs without confirm kill processes (Emacs-26.1)
+(setq confirm-kill-processes nil)
+
 (use-package files
   :bind (("C-c f u" . revert-buffer)
          ("C-c f n" . normal-mode))
