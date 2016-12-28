@@ -1530,6 +1530,13 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 
 ;;; Tools and utilities
+
+(use-package comint
+  :defer t
+  :config
+  ;; Disable auto scroll on RET (like Eshell)
+  (setq comint-scroll-show-maximum-output nil))
+
 (use-package edit-server
   :disabled t                           ; Doesn't work for me any more
   :ensure t
