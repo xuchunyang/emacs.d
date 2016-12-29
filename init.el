@@ -2242,6 +2242,8 @@ Called with a prefix arg set search provider (default Google)."
   :defer t)
 
 (use-package robe
+  ;; NOTE: Some gems have to be installed before using, see
+  ;;       https://github.com/dgutov/robe
   :ensure t
   :after ruby-mode
   :config
