@@ -763,6 +763,13 @@ One C-u, swap window, two C-u, delete window."
 (use-package info
   :defer t
   :config
+  ;; NOTE:
+  ;; - MacPorts doesn't look like taking care of info documentation, it's too
+  ;;   bad. I have to create/update info dir myself (via install-info(1)),
+  ;;   sometimes I even have to fix info file such as
+  ;;   /opt/local/share/info/gfind.info
+  (when *is-mac*
+    (add-to-list 'Info-directory-list "/opt/local/share/info/" 'append))
   ;; IDEA Track info browse history
   ;; (defvar chunyang-Info-visited-nodes nil)
   ;; (defun chunyang-Info-track-history ()
