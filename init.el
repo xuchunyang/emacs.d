@@ -1417,12 +1417,10 @@ See also `describe-function-or-variable'."
          ("C-x M-g" . magit-dispatch-popup))
   :init (global-git-commit-mode)
   :config
-  ;; Hide popup by default, type `C-t' to display if need
-  (setq magit-popup-show-common-commands nil)
   ;; Save files before executing git command for me
   (setq magit-save-repository-buffers 'dontask)
-  ;; Show word-granularity differences within diff hunks
-  ;; (setq magit-diff-refine-hunk 'all)
+  ;; Show word-granularity differences for the current diff hunk
+  (setq magit-diff-refine-hunk t)
 
   ;; My answer to https://emacs.stackexchange.com/questions/28502/magit-show-ignored-files
   ;; Command to list ignored files:
