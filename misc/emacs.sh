@@ -7,7 +7,10 @@ OS=$( uname -s )
 if [ "$OS" == "Darwin" ]; then
     _open_emacs_window ()
     {
-        open -a Emacs
+        # Multiple Emacs.app are installed on my Mac, and a running one is prefered.
+        EMACS=Emacs
+        PID=$( pgrep Emacs ) && EMACS=$( ps -p $PID | grep --only-match '/.*/Emacs.app' )
+        open -a $EMACS
     }
 elif [ "$OS" == "Linux" ]; then
     _open_emacs_window ()
