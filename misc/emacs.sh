@@ -9,7 +9,9 @@ if [ "$OS" == "Darwin" ]; then
     {
         # Multiple Emacs.app are installed on my Mac, and a running one is prefered.
         EMACS=Emacs
-        PID=$( pgrep Emacs ) && EMACS=$( ps -p $PID | grep --only-match '/.*/Emacs.app' )
+        PID=$( pgrep Emacs ) &&
+            # Note that both GNU grep and BSD grep works
+            EMACS=$( ps -p $PID | grep --extended-regexp --only-matching '/.*/Emacs(Mac)?.app' )
         open -a $EMACS
     }
 elif [ "$OS" == "Linux" ]; then
