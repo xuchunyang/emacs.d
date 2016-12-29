@@ -123,16 +123,15 @@
   :ensure t)
 
 
-;;; OS X support
+;;; macOS
 
 (defconst *is-mac* (eq system-type 'darwin))
 
-(use-package ns-win                     ; OS X window support
+(use-package mac-keys
   :defer t
   :if *is-mac*
-  :config
-  (setq ns-pop-up-frames nil ; Don't pop up new frames from the workspace
-        mac-command-modifier 'meta
+  :init
+  (setq mac-command-modifier 'meta
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell
