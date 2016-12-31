@@ -2451,7 +2451,41 @@ Called with a prefix arg set search provider (default Google)."
       (buffer-disable-undo)
       (setq cursor-type nil)
       (2017年春节倒计时-1)
-      (display-buffer (current-buffer)))))
+      (display-buffer (current-buffer))))
+
+  (defun 2017-新年快乐 ()
+    (interactive)
+    (let ((buf (get-buffer-create "*2017*")))
+      (switch-to-buffer buf)
+      (buffer-disable-undo)
+      (let* ((cursor-type nil)
+             (s
+              ;; Made with figlet(1) and http://www.kammerl.de/ascii/AsciiSignature.php
+              "            ___      __      _      ____     新  
+    a c s  |_  )    /  \\    / |    |__  |    年  
+   m        / /    | () |   | |      / /     快  
+  (E__[O]  /___|   _\\__/   _|_|_   _/_/_   __乐__
+ {======|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|
+./o--000'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'")
+             (lines (split-string s "\n"))
+             (win-width (window-width))
+             (end-height (1- (/ (- (window-height) (length lines)) 2)))
+             (padded (mapconcat (lambda (line)
+                                  (concat (make-string win-width ?\s)
+                                          line
+                                          (make-string win-width ?\s)))
+                                lines "\n")))
+        (loop for i from 0 to win-width
+              do (progn (erase-buffer)
+                        (insert (make-string end-height ?\n))
+                        (insert (loop for line in (split-string padded "\n")
+                                      concat (concat (substring line i (1- (+ i win-width))) "\n")))
+                        (sleep-for 0 30)
+                        (discard-input)
+                        (redisplay))
+              finally do (progn (whitespace-cleanup)
+                                (let ((zone-programs [zone-pgm-putz-with-case]))
+                                  (zone))))))))
 
 
 ;;; Misc
