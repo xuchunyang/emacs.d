@@ -1,5 +1,12 @@
 ;;; init.el --- Chunyang Xu's Emacs Configuration  -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2015-2017  Chunyang Xu
+
+;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; URL: https://github.com/xuchunyang/emacs.d
+
+;;; Code:
+
 ;;; Debugging
 (setq message-log-max 10000)
 
