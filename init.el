@@ -2095,7 +2095,13 @@ Called with a prefix arg set search provider (default Google)."
       (shell      . t)
       (ruby       . t)))
   ;; This is not safe
-  (setq org-confirm-babel-evaluate nil))
+  (setq org-confirm-babel-evaluate nil)
+
+  ;; (org) Easy templates
+  (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC")
+                    ("S" "#+BEGIN_SRC shell\n?\n#+END_SRC")
+                    ("r" "#+BEGIN_SRC ruby\n?\n#+END_SRC"))
+        do (add-to-list 'org-structure-template-alist al 'append)))
 
 (use-package grab-mac-link
   ;; Notice that `:ensure' has a higher priority than `:if'
