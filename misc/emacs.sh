@@ -48,6 +48,8 @@ find-file ()
     _open_emacs_window
 }
 
+alias ff=find-file
+
 t ()
 {
     emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda-list))"
