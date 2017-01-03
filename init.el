@@ -2058,6 +2058,7 @@ Called with a prefix arg set search provider (default Google)."
   ;; Install Org 9.0 from Git
   :load-path "~/src/org-mode/lisp"
   :load-path "~/src/org-mode/contrib/lisp"
+  :bind ("C-c l" . org-store-link)
   :init
   ;; Yes, since I am installing Org from Git, not package.el or built-in
   (require 'org-loaddefs)
