@@ -2091,8 +2091,11 @@ Called with a prefix arg set search provider (default Google)."
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((emacs-lisp . t)
-     (shell      . t))))
+   ' ((emacs-lisp . t)
+      (shell      . t)
+      (ruby       . t)))
+  ;; This is not safe
+  (setq org-confirm-babel-evaluate nil))
 
 (use-package grab-mac-link
   ;; Notice that `:ensure' has a higher priority than `:if'
