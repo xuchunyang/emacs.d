@@ -238,6 +238,9 @@
 
 ;; TODO: I have trouble setting English and Chinese fonts
 (cl-case window-system
+  ;; EmacsMac.app Carbon
+  ('mac (set-face-attribute 'default nil :font "Source Code Pro-13"))
+  ;; Emacs.app Cocoa
   ('ns (set-face-attribute 'default nil :font "Source Code Pro-13"))
   ('x (dolist (charset '(kana han symbol cjk-misc bopomofo))
         (set-fontset-font (frame-parameter nil 'font)
