@@ -26,16 +26,31 @@
 
 ;;; Working with Terminal.app
 
-(defun chunyang-mac-cd-Terminal.app (dir)
-  "Open Terminal.app and cd to DIR in it."
-  (interactive "D")
+(defun chunyang-mac-escape-quote (s)
+  "Convert \" in S into \\\"."
+  (replace-regexp-in-string "\"" "\\\\\"" s))
+
+(defun chunyang-mac-Terminal-send-string (s)
+  "Run STR in Terminal.app."
   (do-applescript
    (format (concat
             "tell application \"Terminal\"\n"
             "activate\n"
-            "do script \"cd '%s'\" in window 1\n"
+            "do script \"%s\" in window 1\n"
             "end tell")
-           dir)))
+           (chunyang-mac-escape-quote s))))
+
+(defun chunyang-mac-Terminal-send-region (start end)
+  "Send the current region to Terminal.app."
+  (interactive "r")
+  (chunyang-mac-Terminal-send-string (buffer-substring start end)))
+
+(defun chunyang-mac-Terminal-cd (dir)
+  "Open Terminal.app and cd to DIR in it."
+  (interactive (list (if current-prefix-arg
+                         (read-directory-name "cd to: ")
+                       default-directory)))
+  (chunyang-mac-Terminal-send-string (format "cd '%s'" dir)))
 
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
