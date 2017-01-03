@@ -150,17 +150,8 @@
 ;; For passing aliases
 ;; (setq shell-command-switch "-ic")
 
-(use-package chunyang-osx
-  :if *is-mac*
-  :commands (restart-emacs omnifocus-new-entry)
-  :bind (
-         ;; ("<wheel-left>"         . chunyang-next-buffer)
-         ;; ("<double-wheel-left>"  . chunyang-next-buffer)
-         ;; ("<triple-wheel-left>"  . chunyang-next-buffer)
-         ;; ("<wheel-right>"        . chunyang-previous-buffer)
-         ;; ("<double-wheel-right>" . chunyang-previous-buffer)
-         ;; ("<triple-wheel-right>" . chunyang-next-buffer)
-         ))
+(use-package chunyang-mac
+  :if *is-mac*)
 
 
 ;;; GNU/Linux
