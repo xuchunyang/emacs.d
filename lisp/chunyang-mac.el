@@ -33,7 +33,7 @@
    (format (concat
             "tell application \"Terminal\"\n"
             "activate\n"
-            "do script \"cd %s\" in window 1\n"
+            "do script \"cd '%s'\" in window 1\n"
             "end tell")
            dir)))
 
