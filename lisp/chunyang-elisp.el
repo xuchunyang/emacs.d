@@ -330,6 +330,48 @@
 ;; (advice-add 'describe-symbol   :after #'describe-function@advice-remove-button)
 (advice-add 'describe-key      :after #'describe-function@advice-remove-button)
 
+
+;;; Hash Table
+
+(defun chunyang-hash-table-to-alist (hash-table)
+  (let ((alist '()))
+    (maphash (lambda (k v) (push (cons k v) alist)) hash-table)
+    (nreverse alist)))
+
+;; (let ((ht (make-hash-table :test 'equal)))
+;;   (puthash :one 1 ht)
+;;   (puthash :two 2 ht)
+;;   (chunyang-hash-table-to-alist ht))
+;;      ⇒ ((:one . 1) (:two . 2))
+
+(defun chunyang-make-hash-table-from-alist (alist &rest keyword-args)
+  "Create and return a new hash table from ALIST.
+
+KEYWORD-ARGS is same as `make-hash-table'."
+  (loop with hash-table = (apply 'make-hash-table keyword-args)
+        for (k . v) in alist
+        do (puthash k v hash-table)
+        finally return hash-table))
+
+;; (chunyang-hash-table-to-alist
+;;  (chunyang-make-hash-table-from-alist
+;;   '(("one" . 1) ("two" . 2)) :test 'equal))
+;;      ⇒ (("one" . 1) ("two" . 2))
+
+(defun chunyang-plist-to-alist (plist)
+  (loop for x on plist by #'cddr
+        collect (cons (car x) (cadr x))))
+
+;; (chunyang-plist-to-alist '(:one 1 :two 2))
+;;      ⇒ ((:one . 1) (:two . 2))
+
+(defun chunyang-alist-to-plist (alist)
+  (loop for (k . v) in alist
+        append (list k v)))
+
+;; (chunyang-alist-to-plist '((:one . 1) (:two . 2)))
+;;      ⇒ (:one 1 :two 2)
+
 (provide 'chunyang-elisp)
 
 ;;; chunyang-elisp.el ends here
