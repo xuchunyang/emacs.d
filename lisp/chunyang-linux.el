@@ -27,11 +27,13 @@
 (require 'subr-x)                       ; `string-empty-p'
 (require 'cl-lib)                       ; `cl-case'
 
-(defun chunyang-linux-gnome-terminal-cd (&optional directory)
+(defun chunyang-linux-gnome-terminal-cd (dir)
   "Invoke 'cd DIRECTORY' in a running GNOME Terminal, or open one if none."
-  (interactive (list default-directory))
-  (let* ((dir (expand-file-name (or directory default-directory)))
-         (out (shell-command-to-string
+  (interactive (list (expand-file-name
+                      (if current-prefix-arg
+                          (read-directory-name "cd to: ")
+                        default-directory))))
+  (let* ((out (shell-command-to-string
                "xdotool search --class 'Gnome-terminal' | tail -1"))
          (win (unless (string-empty-p out)
                 ;; Remove trailing newline
