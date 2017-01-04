@@ -1,8 +1,8 @@
 ;;; chunyang-elisp.el --- Utilities for Emacs Lisp  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015  Chunyang Xu
+;; Copyright (C) 2015, 2017  Chunyang Xu
 
-;; Author: Chunyang Xu <xuchunyang56@gmail.com>
+;; Author: Chunyang Xu <mail@xuchunyang.me>
 ;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
