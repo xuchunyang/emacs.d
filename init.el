@@ -784,19 +784,45 @@ One C-u, swap window, two C-u, delete window."
   ;;
   ;; (elisp) The Echo Area
   ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Echo-Area.html
-  ;; IDEA Support not only Emacs Info manuals
-  (defun Info-browse-and-copy-html-url ()
-    (interactive)
+  ;; IDEA Support more Info manuals (currently only Emacs and Org)
+  (defun chunyang-Info-get-current-node-html ()
     (cl-assert (eq major-mode 'Info-mode))
-    (let ((file (file-name-nondirectory Info-current-file))
-          (node Info-current-node))
-      (let ((url (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%s.html"
-                         file
-                         (replace-regexp-in-string " " "-" node))))
-        (browse-url url)
-        (kill-new url)
-        (message "Copied: %s" url))))
-  (bind-key "C" 'Info-browse-and-copy-html-url Info-mode-map))
+    (let* ((file (file-name-nondirectory Info-current-file))
+           (node Info-current-node)
+           (html (concat (replace-regexp-in-string " " "-" node) ".html")))
+      (if (string= file "org")
+          (concat "http://orgmode.org/manual/" html)
+        (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%s"
+                file html))))
+
+  (defun chunyang-Info-copy-current-node-html ()
+    (interactive)
+    (let ((url (chunyang-Info-get-current-node-html)))
+      (kill-new url)
+      (message "Copied: %s" url)))
+
+  (defun chunyang-Info-browse-current-node-html ()
+    (interactive)
+    (let ((url (chunyang-Info-get-current-node-html)))
+      (browse-url url)))
+
+  (defun chunyang-Info-markdown-current-node-html ()
+    (interactive)
+    (let ((description (Info-copy-current-node-name 0))
+          (link (chunyang-Info-get-current-node-html)))
+      (let ((markdown (format "[%s](%s)" description link)))
+        (kill-new markdown)
+        (message "Copied: %s" markdown))))
+
+  (defun chunyang-Info-org-current-node-html ()
+    (interactive)
+    (let ((description (Info-copy-current-node-name 0))
+          (link (chunyang-Info-get-current-node-html)))
+      (let ((org (format "[[%s][%s]]" link description)))
+        (kill-new org)
+        (message "Copied: %s" org))))
+
+  (bind-key "C" 'chunyang-Info-copy-current-node-html Info-mode-map))
 
 (use-package cus-edit
   :preface
