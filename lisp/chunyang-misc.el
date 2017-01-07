@@ -276,5 +276,20 @@ BTW, 'C-u M-! date -I RET' does the same thing."
            (shell-command-to-string "date +'%Y-%m-%d'")
            0 -1)))
 
+
+(defun chunyang-key-is-undefined-thus-did-you-mean ()
+  "when you type some key but it is undefined, ask \"Did you mena\"."
+  (let ((msg (current-message)))
+    (if (and msg (string-suffix-p " is undefined" msg))
+        (message "%s\n\nDid you mean this?\n\tTODO" msg))))
+
+;; Notes that it's important to make sure this function can't slow
+;; down Emacs.
+;;
+;; TODO: Provide some useful info or even actions
+;;
+;; (add-hook 'post-command-hook
+;;           #'chunyang-key-is-undefined-thus-did-you-mean)
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
