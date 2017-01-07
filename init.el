@@ -445,7 +445,7 @@
   (defun chunyang-ace-window (arg)
     "A modified version of `ace-window'.
 When number of window <= 3, invoke `other-window', otherwise `ace-window'.
-One C-u, swap window, two C-u, delete window."
+One C-u, swap window, two C-u, `chunyang-window-click-swap'."
     (interactive "p")
     (cl-case arg
       (0
@@ -453,7 +453,7 @@ One C-u, swap window, two C-u, delete window."
              (not aw-ignore-on))
        (ace-select-window))
       (4 (ace-swap-window))
-      (16 (ace-delete-window))
+      (16 (call-interactively #'chunyang-window-click-swap))
       (t (if (<= (length (window-list)) 3)
              (other-window 1)
            (ace-select-window)))))

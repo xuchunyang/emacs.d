@@ -34,6 +34,23 @@ With ARG, swap two window."
       (chunyang--swap-window)
     (other-window +1)))
 
+(defun chunyang-window-click-swap (event)
+  "Click a window/buffer to swap."
+  (interactive "kClick a window to swap: ")
+  (let ((buf0 (current-buffer))
+        (win0 (get-buffer-window)))
+    (let* ((pos (nth 1 (aref event 0)))
+           (win1 (posn-window pos))
+           (buf1 (window-buffer win1)))
+      (if (equal win0 win1)
+          (user-error "Two windows are the same, can't swap")
+        (message "Swapping %s and %s..." buf0 buf1)
+        (select-window win0)
+        (switch-to-buffer buf1)
+        (select-window win1)
+        (switch-to-buffer buf0)
+        (message "Swapping %s and %s...Done" buf0 buf1)))))
+
 
 (defun mark-window ()
   "Put mark at end of window, point at beginning."
