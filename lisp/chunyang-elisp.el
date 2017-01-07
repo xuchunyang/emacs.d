@@ -184,6 +184,8 @@
              (princ (error-message-string err))))))
     (my-eval-print-last-sexp-1)))
 
+;; TODO Add props to toggle abbreviated printed representation like
+;; `eval-print-last-sexp'
 (defun chunyang-eval-print-last-sexp ()
   (interactive)
   (let ((standard-output (current-buffer)))
