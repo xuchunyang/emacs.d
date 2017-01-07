@@ -577,7 +577,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 ;; Configure a reasonable fill column, indicate it in the buffer and enable
 ;; automatic filling
-(setq-default fill-column 80)
+;; (setq-default fill-column 80)
 
 ;; I prefer indent long-line code myself
 ;; (setq comment-auto-fill-only-comments t)
@@ -687,6 +687,39 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :ensure t
   :bind (("C-c t l" . nlinum-mode)))
 
+
+;;; Whitespace - Highlight and Manage Whitespaces
+
+(use-package whitespace                 ; Highlight bad whitespace (tab)
+  :diminish " Whitespace"
+  ;; TODO: Consider turn on this mode by default
+  :bind ("C-c t w" . whitespace-mode)
+  :config
+  ;; Specify which kind of blank is visualized
+  (setq whitespace-style
+        '(face
+          trailing
+          ;; empty lines at beginning and/or end of buffer
+          ;; empty
+          ;; line is longer `fill-column'
+          lines-tail
+          ;; If `indent-tabs-mode' on, visualize spaces at the beginning of the
+          ;; line, otherwise, visualize tabs.
+          indentation
+          ;; Visualize TAB
+          tab-mark))
+  ;; Use `fill-column'
+  (setq whitespace-line-column nil))
+
+;; Useful commands
+;; `whitespace-cleanup'
+;; `delete-trailing-whitespace'
+;; `just-one-space'
+;; `cycle-spacing'
+
+
+;;; Enable & Disable some commands
+
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-defun 'disabled nil)
@@ -694,151 +727,10 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (put 'view-hello-file
      'disabled "I mistype C-h h a lot and it is too slow to block Emacs")
 
-
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
 (put 'timer-list 'disabled nil)
-
-(use-package help-mode
-  :preface
-  (defun view-help-buffer ()
-    "View the `*Help*' buffer."
-    (interactive)
-    (pop-to-buffer (help-buffer)))
-  (defun chunyang-clear-messages-buffer ()
-    "Delete the contents of the *Messages* buffer."
-    (interactive)
-    (with-current-buffer "*Messages*"
-      (let ((inhibit-read-only t))
-        (erase-buffer))))
-  (defun help-info-lookup-symbol ()
-    (interactive)
-    (when-let ((symbol (cadr help-xref-stack-item)))
-      (info-lookup-symbol symbol)))
-  (defun chunyang-describe-symbol-at-point ()
-    "Like `describe-symbol' but doesn't query always."
-    (interactive)
-    (require 'help-mode)
-    (let* ((is-symbol-p
-            (lambda (vv)
-              (cl-some (lambda (x) (funcall (nth 1 x) vv))
-                       describe-symbol-backends)))
-           (sym
-            (or (let ((it (intern (current-word))))
-                  (when (funcall is-symbol-p it)
-                    it))
-                (completing-read
-                 "Describe symbol: "
-                 obarray
-                 is-symbol-p
-                 t))))
-      (describe-symbol sym)))
-  :bind (("C-h ." . chunyang-describe-symbol-at-point)
-         ("C-h h" . view-help-buffer)
-         :map help-mode-map
-         ("b" . help-go-back)
-         ("f" . help-go-forward)
-         ("i" . help-info-lookup-symbol)))
-
-(use-package info-look
-  :defer t
-  :config
-  (info-lookup-add-help
-   :mode 'emacs-lisp-mode
-   :regexp "[^][()`'‘’,\" \t\n]+"
-   :doc-spec '(("(emacs)Command Index"             nil "['`‘]\\(M-x[ \t\n]+\\)?" "['’]") ;
-               ("(emacs)Variable Index"            nil "['`‘]" "['’]")
-               ("(elisp)Index"                     nil "^ -+ .*: " "\\( \\|$\\)")
-               ;; cl-lib
-               ("(cl) Function Index"              nil "^ -+ .*: " "\\( \\|$\\)")
-               ("(cl) Variable Index"              nil "^ -+ .*: " "\\( \\|$\\)")
-               ;; Org
-               ("(org) Variable Index"             nil "['`‘]" "['’]")
-               ("(org) Command and Function Index" nil "['`‘(]" "['’)]")
-               ;; Magit
-               ("(magit) Command Index"            nil "(['`‘]" "['’])")
-               ("(magit) Variable Index"           nil "^ -+ .*: " "\\( \\|$\\)"))))
-
-(use-package info
-  :defer t
-  :config
-  ;; NOTE:
-  ;; - MacPorts doesn't look like taking care of info documentation, it's too
-  ;;   bad. I have to create/update info dir myself (via install-info(1)),
-  ;;   sometimes I even have to fix info file such as
-  ;;   /opt/local/share/info/gfind.info
-  (when *is-mac*
-    (add-to-list 'Info-directory-list "/opt/local/share/info/" 'append))
-  ;; IDEA Track info browse history
-  ;; (defvar chunyang-Info-visited-nodes nil)
-  ;; (defun chunyang-Info-track-history ()
-  ;;   (list (file-name-nondirectory Info-current-file)
-  ;;         Info-current-node)
-  ;;   (message "todo..."))
-  ;; (add-hook 'Info-selection-hook 'chunyang-Info-track-history)
-
-  ;; Get HTML link
-  ;; (emacs) Echo Area
-  ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Echo-Area.html
-  ;;
-  ;; (elisp) The Echo Area
-  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Echo-Area.html
-  ;; IDEA Support more Info manuals (currently only Emacs and Org)
-  (defun chunyang-Info-get-current-node-html ()
-    (cl-assert (eq major-mode 'Info-mode))
-    (let* ((file (file-name-nondirectory Info-current-file))
-           (node Info-current-node)
-           (html (concat (replace-regexp-in-string " " "-" node) ".html")))
-      (if (string= file "org")
-          (concat "http://orgmode.org/manual/" html)
-        (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%s"
-                file html))))
-
-  (defun chunyang-Info-copy-current-node-html ()
-    (interactive)
-    (let ((url (chunyang-Info-get-current-node-html)))
-      (kill-new url)
-      (message "Copied: %s" url)))
-
-  (defun chunyang-Info-browse-current-node-html ()
-    (interactive)
-    (let ((url (chunyang-Info-get-current-node-html)))
-      (browse-url url)))
-
-  (defun chunyang-Info-markdown-current-node-html ()
-    (interactive)
-    (let ((description (Info-copy-current-node-name 0))
-          (link (chunyang-Info-get-current-node-html)))
-      (let ((markdown (format "[%s](%s)" description link)))
-        (kill-new markdown)
-        (message "Copied: %s" markdown))))
-
-  (defun chunyang-Info-org-current-node-html ()
-    (interactive)
-    (let ((description (Info-copy-current-node-name 0))
-          (link (chunyang-Info-get-current-node-html)))
-      (let ((org (format "[[%s][%s]]" link description)))
-        (kill-new org)
-        (message "Copied: %s" org))))
-
-  (bind-key "C" 'chunyang-Info-copy-current-node-html Info-mode-map))
-
-(use-package cus-edit
-  :preface
-  (defun chunyang/custom-mode-describe-symbol-at-point ()
-    (interactive)
-    (require 'info-look)
-    (let ((symbol (intern (downcase (info-lookup-guess-custom-symbol)))))
-      (describe-symbol symbol)))
-  :bind (:map custom-mode-map
-              ("C-h ." . chunyang/custom-mode-describe-symbol-at-point)))
-
-(use-package command-log-mode           ; BUG: Create a new empty buffer and
-                                        ; insert some text, should blame
-                                        ; function added to post-self-insert-hook
-  :disabled t
-  :ensure t)
 
 
 ;;; Navigation and scrolling
@@ -955,24 +847,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 
 ;;; Highlight
-(use-package whitespace                 ; Highlight bad whitespace (tab)
-  :bind ("C-c t w" . whitespace-mode)
-  ;; :init (add-hook 'prog-mode-hook 'whitespace-mode)
-  :config
-  (setq whitespace-style
-        '(face
-          trailing
-          ;; empty lines at beginning and/or end of buffer
-          ;; empty
-          ;; line is longer `fill-column'
-          lines-tail
-          ;; If `indent-tabs-mode' on, visualize spaces at the beginning of the
-          ;; line, otherwise, visualize tabs.
-          indentation
-          ;; Visualize TAB
-          tab-mark))
-  (setq whitespace-line-column nil)
-  :diminish " Whitespace")
 
 (use-package hl-line
   :bind ("C-c t L" . hl-line-mode))
@@ -1432,9 +1306,148 @@ See also `describe-function-or-variable'."
   :defer t)
 
 
-;;; Help
-
+;;; Help & Info
 (bind-key "C-h C-k" #'find-function-on-key)
+
+(use-package help-mode
+  :preface
+  (defun view-help-buffer ()
+    "View the `*Help*' buffer."
+    (interactive)
+    (pop-to-buffer (help-buffer)))
+  (defun chunyang-clear-messages-buffer ()
+    "Delete the contents of the *Messages* buffer."
+    (interactive)
+    (with-current-buffer "*Messages*"
+      (let ((inhibit-read-only t))
+        (erase-buffer))))
+  (defun help-info-lookup-symbol ()
+    (interactive)
+    (when-let ((symbol (cadr help-xref-stack-item)))
+      (info-lookup-symbol symbol)))
+  (defun chunyang-describe-symbol-at-point ()
+    "Like `describe-symbol' but doesn't query always."
+    (interactive)
+    (require 'help-mode)
+    (let* ((is-symbol-p
+            (lambda (vv)
+              (cl-some (lambda (x) (funcall (nth 1 x) vv))
+                       describe-symbol-backends)))
+           (sym
+            (or (let ((it (intern (current-word))))
+                  (when (funcall is-symbol-p it)
+                    it))
+                (completing-read
+                 "Describe symbol: "
+                 obarray
+                 is-symbol-p
+                 t))))
+      (describe-symbol sym)))
+  :bind (("C-h ." . chunyang-describe-symbol-at-point)
+         ("C-h h" . view-help-buffer)
+         :map help-mode-map
+         ("b" . help-go-back)
+         ("f" . help-go-forward)
+         ("i" . help-info-lookup-symbol)))
+
+(use-package info-look
+  :defer t
+  :config
+  (info-lookup-add-help
+   :mode 'emacs-lisp-mode
+   :regexp "[^][()`'‘’,\" \t\n]+"
+   :doc-spec '(("(emacs)Command Index"             nil "['`‘]\\(M-x[ \t\n]+\\)?" "['’]") ;
+               ("(emacs)Variable Index"            nil "['`‘]" "['’]")
+               ("(elisp)Index"                     nil "^ -+ .*: " "\\( \\|$\\)")
+               ;; cl-lib
+               ("(cl) Function Index"              nil "^ -+ .*: " "\\( \\|$\\)")
+               ("(cl) Variable Index"              nil "^ -+ .*: " "\\( \\|$\\)")
+               ;; Org
+               ("(org) Variable Index"             nil "['`‘]" "['’]")
+               ("(org) Command and Function Index" nil "['`‘(]" "['’)]")
+               ;; Magit
+               ("(magit) Command Index"            nil "(['`‘]" "['’])")
+               ("(magit) Variable Index"           nil "^ -+ .*: " "\\( \\|$\\)"))))
+
+(use-package info
+  :defer t
+  :config
+  ;; NOTE:
+  ;; - MacPorts doesn't look like taking care of info documentation, it's too
+  ;;   bad. I have to create/update info dir myself (via install-info(1)),
+  ;;   sometimes I even have to fix info file such as
+  ;;   /opt/local/share/info/gfind.info
+  (when *is-mac*
+    (add-to-list 'Info-directory-list "/opt/local/share/info/" 'append))
+  ;; IDEA Track info browse history
+  ;; (defvar chunyang-Info-visited-nodes nil)
+  ;; (defun chunyang-Info-track-history ()
+  ;;   (list (file-name-nondirectory Info-current-file)
+  ;;         Info-current-node)
+  ;;   (message "todo..."))
+  ;; (add-hook 'Info-selection-hook 'chunyang-Info-track-history)
+
+  ;; Get HTML link
+  ;; (emacs) Echo Area
+  ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Echo-Area.html
+  ;;
+  ;; (elisp) The Echo Area
+  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Echo-Area.html
+  ;; IDEA Support more Info manuals (currently only Emacs and Org)
+  (defun chunyang-Info-get-current-node-html ()
+    (cl-assert (eq major-mode 'Info-mode))
+    (let* ((file (file-name-nondirectory Info-current-file))
+           (node Info-current-node)
+           (html (concat (replace-regexp-in-string " " "-" node) ".html")))
+      (if (string= file "org")
+          (concat "http://orgmode.org/manual/" html)
+        (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%s"
+                file html))))
+
+  (defun chunyang-Info-copy-current-node-html ()
+    (interactive)
+    (let ((url (chunyang-Info-get-current-node-html)))
+      (kill-new url)
+      (message "Copied: %s" url)))
+
+  (defun chunyang-Info-browse-current-node-html ()
+    (interactive)
+    (let ((url (chunyang-Info-get-current-node-html)))
+      (browse-url url)))
+
+  (defun chunyang-Info-markdown-current-node-html ()
+    (interactive)
+    (let ((description (Info-copy-current-node-name 0))
+          (link (chunyang-Info-get-current-node-html)))
+      (let ((markdown (format "[%s](%s)" description link)))
+        (kill-new markdown)
+        (message "Copied: %s" markdown))))
+
+  (defun chunyang-Info-org-current-node-html ()
+    (interactive)
+    (let ((description (Info-copy-current-node-name 0))
+          (link (chunyang-Info-get-current-node-html)))
+      (let ((org (format "[[%s][%s]]" link description)))
+        (kill-new org)
+        (message "Copied: %s" org))))
+
+  (bind-key "C" 'chunyang-Info-copy-current-node-html Info-mode-map))
+
+(use-package cus-edit
+  :preface
+  (defun chunyang/custom-mode-describe-symbol-at-point ()
+    (interactive)
+    (require 'info-look)
+    (let ((symbol (intern (downcase (info-lookup-guess-custom-symbol)))))
+      (describe-symbol symbol)))
+  :bind (:map custom-mode-map
+              ("C-h ." . chunyang/custom-mode-describe-symbol-at-point)))
+
+(use-package command-log-mode           ; BUG: Create a new empty buffer and
+                                        ; insert some text, should blame
+                                        ; function added to post-self-insert-hook
+  :disabled t
+  :ensure t)
 
 
 ;;; Version Control
