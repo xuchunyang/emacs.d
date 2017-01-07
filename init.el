@@ -525,13 +525,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (use-package files
   :bind (("C-c f u" . revert-buffer)
-         ("C-c f n" . normal-mode))
-  :config
-  ;; Prefer GNU variants
-  (when (eq 'darwin system-type)
-    (setq insert-directory-program  "gls"
-          find-program              "gfind"
-          grep-program              "ggrep")))
+         ("C-c f n" . normal-mode)))
 
 (use-package dired                      ; Directory Editor
   :defer t
