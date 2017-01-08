@@ -1396,16 +1396,67 @@ See also `describe-function-or-variable'."
   ;;
   ;; (elisp) The Echo Area
   ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Echo-Area.html
-  ;; IDEA Support more Info manuals (currently only Emacs and Org)
+  ;; TODO Support even more Info manuals
+  (defvar chunyang-Info-html-alist
+    '(
+      ;; Special cases come first
+      ("org"  . "http://orgmode.org/manual/%s")
+      ("find" . "https://www.gnu.org/software/findutils/manual/html_node/find_html/%s")
+      ("standards" . "https://www.gnu.org/prep/standards/html_node/%s")
+      ("magit" . "https://magit.vc/manual/magit/%s")
+      ("slime" . "https://www.common-lisp.net/project/slime/doc/html/%s")
+      ;; Haha, just for some fun
+      ("geiser" . (lambda (_)
+                    ;; (info "(geiser) First aids")
+                    ;; http://www.nongnu.org/geiser/geiser_3.html#First-aids
+                    (if (string=  Info-current-node "Top")
+                        "http://www.nongnu.org/geiser/"
+                      (let ((node (replace-regexp-in-string " " "-" Info-current-node))
+                            (number (save-excursion
+                                      (goto-char (point-min))
+                                      (re-search-forward "^[0-9]")
+                                      (match-string 0))))
+
+                        (format "http://www.nongnu.org/geiser/geiser_%s.html#%s" number node)))))
+      ;; Hmm, macOS (or MacPorts) doesn't like GNU either
+      ("gawk" . "https://www.gnu.org/software/tar/manual/html_node/%s")
+      ;; GNU info documents.  Taken from my memory or see https://www.gnu.org/software/
+      (("awk" "sed" "tar" "make" "m4" "grep" "coreutils" "guile" "screen") .
+       (lambda (software)
+         (format "https://www.gnu.org/software/%s/manual/html_node/%%s" software)))
+      ;; Emacs info documents.  Taken from `org-info-emacs-documents'
+      (("ada-mode" "auth" "autotype" "bovine" "calc" "ccmode" "cl" "dbus" "dired-x"
+        "ebrowse" "ede" "ediff" "edt" "efaq-w32" "efaq" "eieio" "eintr" "elisp"
+        "emacs-gnutls" "emacs-mime" "emacs" "epa" "erc" "ert" "eshell" "eudc" "eww"
+        "flymake" "forms" "gnus" "htmlfontify" "idlwave" "ido" "info" "mairix-el"
+        "message" "mh-e" "newsticker" "nxml-mode" "octave-mode" "org" "pcl-cvs"
+        "pgg" "rcirc" "reftex" "remember" "sasl" "sc" "semantic" "ses" "sieve"
+        "smtpmail" "speedbar" "srecode" "todo-mode" "tramp" "url" "vip" "viper"
+        "widget" "wisent" "woman") .
+        (lambda (package)
+          (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%%s" package)))))
+
   (defun chunyang-Info-get-current-node-html ()
     (cl-assert (eq major-mode 'Info-mode))
     (let* ((file (file-name-nondirectory Info-current-file))
            (node Info-current-node)
-           (html (concat (replace-regexp-in-string " " "-" node) ".html")))
-      (if (string= file "org")
-          (concat "http://orgmode.org/manual/" html)
-        (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%s"
-                file html))))
+           (html (if (string= node "Top")
+                     ""
+                   (concat (replace-regexp-in-string " " "-" node) ".html")))
+           (baseurl (loop for (k . v) in chunyang-Info-html-alist
+                          when (or (equal file k) (member file k))
+                          return (if (stringp v) v (funcall v file)))))
+      ;; Maybe it's a good idea to assuming GNU softwares in this case
+      (cl-assert baseurl nil "Unsupported info document '%s'" file)
+      (format baseurl html)))
+
+  ;; TODO: Consider using `defhydra' or `helm' for these actions
+  ;; Copy: (elisp) Cons Cells
+  ;; Copy: (info "(elisp) Cons Cells")
+  ;; Copy: https://www.gnu.org/software/emacs/manual/html_node/elisp/Cons-Cells.html
+  ;; Open: https://www.gnu.org/software/emacs/manual/html_node/elisp/Cons-Cells.html
+  ;; Copy: Markdown: ...
+  ;; Copy: Org: ...
 
   (defun chunyang-Info-copy-current-node-html ()
     (interactive)
