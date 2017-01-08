@@ -783,6 +783,24 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 
 ;;; Search
+
+;; | Command   | Note                            |
+;; |-----------+---------------------------------|
+;; | grep      | grep                            |
+;; | lgrep     | grep + shell pattern for files  |
+;; | find-grep | find -exec grep                 |
+;; | rgrep     | like find-grep but filter files |
+;; | zgrep     | zgrep (search compressed file)  |
+;;
+;; See also (info "(emacs) Grep Searching")
+
+(use-package grep
+  :defer t
+  :config
+  (nconc grep-find-ignored-files
+         '("TAGS" "GTAGS" "GRTAGS" "GSYMS" "GPATH" "GTAGSROOT"))
+  (use-package wgrep :ensure t :defer t))
+
 (setq isearch-allow-scroll t)
 
 (use-package re-builder
@@ -790,15 +808,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :config
   ;; Escape 的工作就交给 Emacs 了
   (setq reb-re-syntax 'string))
-
-(use-package grep
-  :defer t
-  :config
-  (dolist (file '("TAGS" "GPATH" "GRTAGS" "GTAGS"))
-    (add-to-list 'grep-find-ignored-files file))
-  (add-to-list 'grep-find-ignored-directories "auto")
-  (add-to-list 'grep-find-ignored-directories "elpa")
-  (use-package wgrep :ensure t :defer t))
 
 (use-package anzu                       ; Position/matches count for isearch
   :disabled t
