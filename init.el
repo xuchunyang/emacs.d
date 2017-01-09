@@ -563,6 +563,9 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (use-package electric                   ; Electric code layout
   :init (electric-layout-mode))
 
+;; TODO: 支持中文标点（引号等。为什么中文括号默认就支持？）
+;; TODO: 如何删除 pair （paredit 这样的工具有很好的支持，但是非 lisp 环境下怎么办？）
+;; TODO: 如何直接改变 pair (cycle-quotes)
 (use-package elec-pair                  ; Electric pairs
   :init (electric-pair-mode))
 
