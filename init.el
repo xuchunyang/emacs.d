@@ -1424,9 +1424,14 @@ See also `describe-function-or-variable'."
       ;; Hmm, macOS (or MacPorts) doesn't like GNU either
       ("gawk" . "https://www.gnu.org/software/tar/manual/html_node/%s")
       ;; GNU info documents.  Taken from my memory or see https://www.gnu.org/software/
-      (("awk" "sed" "tar" "make" "m4" "grep" "coreutils" "guile" "screen") .
+      (("awk" "sed" "tar" "make" "m4" "grep" "coreutils" "guile" "screen"
+        "libc" "make" "gzip" "diffutils" "wget" "grub") .
+        (lambda (software)
+          (format "https://www.gnu.org/software/%s/manual/html_node/%%s" software)))
+      ("gcc-5" . "https://gcc.gnu.org/onlinedocs/gcc/%s")
+      (("gdb" "stabs") .
        (lambda (software)
-         (format "https://www.gnu.org/software/%s/manual/html_node/%%s" software)))
+         (format "https://sourceware.org/gdb/onlinedocs/%s/%%s" software)))
       ;; Emacs info documents.  Taken from `org-info-emacs-documents'
       (("ada-mode" "auth" "autotype" "bovine" "calc" "ccmode" "cl" "dbus" "dired-x"
         "ebrowse" "ede" "ediff" "edt" "efaq-w32" "efaq" "eieio" "eintr" "elisp"
@@ -1447,7 +1452,8 @@ See also `describe-function-or-variable'."
                      ""
                    (concat (replace-regexp-in-string " " "-" node) ".html")))
            (baseurl (loop for (k . v) in chunyang-Info-html-alist
-                          when (or (equal file k) (member file k))
+                          when (cond ((stringp k) (equal file k))
+                                     ((listp k) (member file k)))
                           return (if (stringp v) v (funcall v file)))))
       ;; Maybe it's a good idea to assuming GNU softwares in this case
       (cl-assert baseurl nil "Unsupported info document '%s'" file)
