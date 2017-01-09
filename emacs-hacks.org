@@ -1,0 +1,32 @@
+* Bind a key to two different commands
+  <2017-01-09 Mon>
+
+  When =electric-pair-mode= is enabled, the key =DEL= is interesting:
+  when the point is at the end of a empty quote such as "", it runs
+  =electric-pair-delete-pair=, otherwise it runs original command such
+  as =org-delete-backward-char= in Org mode.
+
+  For example, =RET= calls =emacs-version= when point is at the
+  beginning of the line, otherwise it works normally.
+
+  #+BEGIN_SRC emacs-lisp
+  (defvar foo-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "RET")
+        `(menu-item
+          "" emacs-version
+          :filter
+          ,(lambda (cmd)
+             (and (bolp)
+                  cmd))))
+      map))
+
+  (define-minor-mode foo-mode
+    "Foo."
+    :lighter " Foo"
+    :global t)
+  #+END_SRC
+
+  This can be useful since the key can still run *original* command without knowing what it is.
+
+  For documentation, see [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Extended-Menu-Items.html][(elisp) Extended Menu Items]].
