@@ -1478,17 +1478,19 @@ See also `describe-function-or-variable'."
     (let ((url (chunyang-Info-get-current-node-html)))
       (browse-url url)))
 
-  (defun chunyang-Info-markdown-current-node-html ()
-    (interactive)
-    (let ((description (Info-copy-current-node-name 0))
+  (defun chunyang-Info-markdown-current-node-html (&optional arg)
+    "ARG will be passed to `Info-copy-current-node-name'."
+    (interactive "P")
+    (let ((description (Info-copy-current-node-name arg))
           (link (chunyang-Info-get-current-node-html)))
       (let ((markdown (format "[%s](%s)" description link)))
         (kill-new markdown)
         (message "Copied: %s" markdown))))
 
-  (defun chunyang-Info-org-current-node-html ()
-    (interactive)
-    (let ((description (Info-copy-current-node-name 0))
+  (defun chunyang-Info-org-current-node-html (&optional arg)
+    "ARG will be passed to `Info-copy-current-node-name'."
+    (interactive "P")
+    (let ((description (Info-copy-current-node-name arg))
           (link (chunyang-Info-get-current-node-html)))
       (let ((org (format "[[%s][%s]]" link description)))
         (kill-new org)
