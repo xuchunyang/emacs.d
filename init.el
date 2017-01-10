@@ -2335,9 +2335,23 @@ Called with a prefix arg set search provider (default Google)."
 ;;; Common Lisp
 
 (use-package slime
+  :disabled t
   :ensure t
   :defer t
   :init (setq inferior-lisp-program "sbcl"))
+
+;; TODO eldoc support (`sly-autodoc-mode') is not working
+;; TODO Is completion working? (best with Company support, usually it should work out of box)
+(use-package sly
+  :ensure t
+  :defer t
+  :config
+  (setq inferior-lisp-program "sbcl")
+  (use-package sly-mrepl
+    :defer t
+    :config
+    ;; Enable Paredit in REPL too
+    (add-hook 'sly-mrepl-mode-hook #'paredit-mode)))
 
 
 ;;; Ruby
