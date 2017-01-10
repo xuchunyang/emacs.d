@@ -2487,6 +2487,7 @@ Called with a prefix arg set search provider (default Google)."
 
 ;; OCaml
 (use-package OCaml
+  :disabled t
   :ensure tuareg
   :preface
   ;; 官方的 Manual （竟然）提供了 Info 格式 <http://caml.inria.fr/pub/docs/manual-ocaml/>
