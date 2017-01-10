@@ -2690,6 +2690,10 @@ Called with a prefix arg set search provider (default Google)."
 (setq source-directory "~/src/emacs/")
 
 
+;;; Chinese | 中文
+(use-package chunyang-chinese)
+
+
 ;;; Customization
 
 ;; Load custom-file in the end to prevent it loads some package.
