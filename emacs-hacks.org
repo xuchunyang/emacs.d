@@ -58,3 +58,16 @@
 ** TODO 输入直角引号（台湾） [0/2]
    - [ ] 输入
    - [ ] 弯引号 <=> 直角引号（ =cycle-chinese-quotes= ）
+
+* Use the syntax of GNU ChangeLog entries for commit message
+  <2017-01-11 Wed>
+
+  To build [[https://www.gnu.org/prep/standards/html_node/Change-Logs.html][(info "(standards) Change Logs")]]:
+  1. (Default) put point to the file I have changed, and type =C-x 4
+     a= or =M-x add-change-log-entry=
+  2. (Magit) put point on the hunk in Magit buffer, and type
+     =magit-add-change-log-entry=
+
+  To commit, use =C-x v v= (=vc-next-action=) since it looks like to
+  be able to reuse the last ChangeLog entry. I can also use Magit
+  normally, though some editing needs to be done.
