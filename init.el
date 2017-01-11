@@ -812,14 +812,18 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :preface
   (setq isearch-allow-scroll t)
 
-  ;; Use text in the region as search string
-  (defun chunyang-isearch-yank-region (start end)
-    (interactive "r")
-    (deactivate-mark)
-    (goto-char start)
-    (isearch-yank-internal (lambda () end)))
+  (defun chunyang-isearch-mode-setup ()
+    "If the region is on, use it as initial search string.
+Intended to be added to `isearch-mode-hook'."
+    ;; Note that the text of the region can be an invalid regexp
+    (when (use-region-p)
+      (let ((beg (region-beginning))
+            (end (region-end)))
+        (deactivate-mark)
+        (goto-char beg)
+        (isearch-yank-internal (lambda () end)))))
 
-  (define-key isearch-mode-map [?\C-c ?\C-y] #'chunyang-isearch-yank-region))
+  (add-hook 'isearch-mode-hook #'chunyang-isearch-mode-setup))
 
 (use-package re-builder
   :defer t
