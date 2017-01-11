@@ -54,3 +54,8 @@ t ()
 {
     emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda-list))"
 }
+
+elisp-repl ()
+{
+    emacs --batch --eval '(while t (message "%s" (eval (read (read-string "> ")))))'
+}
