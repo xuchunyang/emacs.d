@@ -1407,6 +1407,7 @@ See also `describe-function-or-variable'."
   ;; (elisp) The Echo Area
   ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/The-Echo-Area.html
   ;; TODO Support even more Info manuals
+  ;; TODO Convert html url to info node
   (defvar chunyang-Info-html-alist
     '(
       ;; Special cases come first
