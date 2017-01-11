@@ -16,3 +16,9 @@
 # still running, see function 'emacs-session-save'
 # Ref: http://emacs.stackexchange.com/a/12773/3889
 /session.*
+
+# ChangeLog (created by C-x 4 a)
+ChangeLog
+
+# HTML (usually created by Org exporting)
+*.html
