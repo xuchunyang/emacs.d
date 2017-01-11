@@ -786,14 +786,14 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 
 ;;; Search
-
-;; | Command   | Note                            |
-;; |-----------+---------------------------------|
-;; | grep      | grep                            |
-;; | lgrep     | grep + shell pattern for files  |
-;; | find-grep | find -exec grep                 |
-;; | rgrep     | like find-grep but filter files |
-;; | zgrep     | zgrep (search compressed file)  |
+;; | Command     | Note                            |
+;; |-------------+---------------------------------|
+;; | grep        | grep                            |
+;; | lgrep       | grep + shell pattern for files  |
+;; | find-grep   | find -exec grep                 |
+;; | rgrep       | like find-grep but filter files |
+;; | zgrep       | zgrep (search compressed file)  |
+;; | vc-git-grep | git-grep                        |
 ;;
 ;; See also (info "(emacs) Grep Searching")
 
