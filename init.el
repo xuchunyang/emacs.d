@@ -708,11 +708,12 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   ;; Use `fill-column'
   (setq whitespace-line-column nil))
 
-;; Useful commands
+;; Useful commands to manage whitespace, tab, newline:
 ;; `whitespace-cleanup'
 ;; `delete-trailing-whitespace'
 ;; `just-one-space'
 ;; `cycle-spacing'
+;; `delete-blank-lines'
 
 
 ;;; Enable & Disable some commands
