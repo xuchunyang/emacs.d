@@ -107,14 +107,13 @@ If BUFFER is displayed in some window, select that window instead."
 ;;     (apply orig-fun args)))
 
 
-(defun chunyang-copy-buffer-file-name ()
-  "Save name of buffer is visiting to kill-ring."
+(defun chunyang-copy-buffer-file-name (&optional buffer)
+  "Save filename of BUFFER is visiting to kill-ring."
   (interactive)
-  (let ((f (buffer-file-name)))
-    (if f
-        (progn
-          (kill-new f)
-          (message "'%s' copied" f))
+  (let ((file (buffer-file-name buffer)))
+    (if file
+        (progn (kill-new file)
+               (message "Copied: %s" file))
       (user-error "Not visiting a file"))))
 
 (provide 'chunyang-buffers)
