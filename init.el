@@ -804,7 +804,21 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
          '("TAGS" "GTAGS" "GRTAGS" "GSYMS" "GPATH" "GTAGSROOT"))
   (use-package wgrep :ensure t :defer t))
 
-(setq isearch-allow-scroll t)
+;; Notes that isearch is not a package and it is loaded from the very
+;; beginning
+(use-package isearch
+  :defer t
+  :preface
+  (setq isearch-allow-scroll t)
+
+  ;; Use text in the region as search string
+  (defun chunyang-isearch-yank-region (start end)
+    (interactive "r")
+    (deactivate-mark)
+    (goto-char start)
+    (isearch-yank-internal (lambda () end)))
+
+  (define-key isearch-mode-map [?\C-c ?\C-y] #'chunyang-isearch-yank-region))
 
 (use-package re-builder
   :defer t
