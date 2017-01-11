@@ -1098,6 +1098,18 @@ Intended to be added to `isearch-mode-hook'."
 ;; `superword-mode' -- 把 this_is_a_symbol 当作一个 word
 ;; `hs-minor-mode' -- Hideshow / 折叠、隐藏
 
+(use-package eldoc
+  :defer t
+  :config
+  ;; Alternative to `eldoc-minibuffer-message'
+  (defun chunyang-eldoc-header-line-message (format-string &rest args)
+    (setq header-line-format
+          (apply #'format format-string args))
+    (force-mode-line-update))
+
+  ;; (setq eldoc-message-function #'chunyang-eldoc-header-line-message)
+  )
+
 (cl-defun chunyang-project-root (&optional (dir default-directory))
   "Return project root in DIR, if no project is found, return DIR."
   (or (cdr (project-current nil dir))
