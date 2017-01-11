@@ -231,6 +231,22 @@ I find the output of 'C-h v help-map' is hard to read."
                                       (string-to-number (match-string 0))))
             (overlay-put ov 'chunyang-show-number-as-char t)))))))
 
+
+;;; Pairs
+
+;; When `electric-pair-mode' doesn't work, I don't really understand
+;; the mode and are not able to custom it to do what I want.
+;;
+;; One can also use C-M-% and back-reference \&, see (info "(emacs) Regexp Replace")
+(defun chunyang-insert-pairs-on-region (beg end left-pair right-pair)
+  (interactive
+   (let ((beg (region-beginning))
+         (end (region-end))
+         (l (read-string "Left Pair: "))
+         (r (read-string "Right Pair: ")))
+     (list beg end l r)))
+  (insert left-pair (delete-and-extract-region beg end) right-pair))
+
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
