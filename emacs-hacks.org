@@ -71,3 +71,16 @@
   To commit, use =C-x v v= (=vc-next-action=) since it looks like to
   be able to reuse the last ChangeLog entry. I can also use Magit
   normally, though some editing needs to be done.
+
+* Emacs Lisp Packaging
+
+  | Type            | Author's Task                                                      | ELPA's Task                                         |
+  |-----------------+--------------------------------------------------------------------+-----------------------------------------------------|
+  | Single .el file | Nothing                                                            | Provide package metadata (archive) and the .el file |
+  | Multiple files  | Write foo-pkg.el (don't write foo-autoloads.el) then tar the files | Provide package metadata (archive) and the tar file |
+
+  Melpa & Melpa-Stable build the tar file for multiple files
+  automatically, and there is no need to provide =foo-pkg.el= since it
+  will be created automatically as well.
+
+  One can use =M-x package-install-file= to install a tar file.
