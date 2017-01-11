@@ -43,7 +43,17 @@
                                         (substring (symbol-name k) 1)
                                         v)
                                 v)))
-          :action #'insert)
+          :action
+          (helm-make-actions
+           "Insert Mark"
+           (lambda (mark)
+             "Insert MARK, if there is region, wrap the region with the mark."
+             (if (and (= (length mark) 2) (use-region-p))
+                 (insert (concat (substring mark 0 1)
+                                 (delete-and-extract-region (region-beginning)
+                                                            (region-end))
+                                 (substring mark 1)))
+               (insert mark)))))
         :buffer "*helm 输入中文标点*"))
 
 (provide 'chunyang-chinese)
