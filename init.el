@@ -2386,6 +2386,22 @@ Called with a prefix arg set search provider (default Google)."
   :defer t
   :config
   (setq inferior-lisp-program "sbcl")
+
+  (defun chunyang-sly-eval-print-last-sexp ()
+    "Like `chunyang-eval-print-last-sexp' in Emacs Lisp.
+Note that `sly-eval-last-expression' with prefix argument
+provides similiar function."
+    (interactive)
+    (let ((string (sly-last-expression)))
+      (sly-eval-async `(slynk:eval-and-grab-output ,string)
+        (lambda (result)
+          (cl-destructuring-bind (output value) result
+            (unless (current-line-empty-p) (insert ?\n))
+            (insert "     ⇒ " value)
+            (unless (current-line-empty-p) (insert ?\n)))))))
+
+  (define-key sly-mode-map "\C-j" #'chunyang-sly-eval-print-last-sexp)
+
   (use-package sly-mrepl
     :defer t
     :config
