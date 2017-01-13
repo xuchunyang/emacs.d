@@ -1745,6 +1745,11 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; (fcitx-default-setup)
   (fcitx-aggressive-setup))
 
+;; TODO: Figure out how it works
+(use-package sudo-edit
+  :ensure t
+  :defer t)
+
 
 ;;; Project
 (use-package projectile
