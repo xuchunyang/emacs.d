@@ -761,6 +761,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :init (add-hook* '(prog-mode-hook help-mode-hook) #'page-break-lines-mode))
 
 (use-package outline                    ; Navigate outlines in buffers
+  ;; TODO: Read (info "(emacs) Outline Mode") to learn this mode
+  ;; if it is useful, consider making helm support.
   :disabled t
   :diminish outline-minor-mode
   :config (dolist (hook '(text-mode-hook prog-mode-hook))
