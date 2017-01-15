@@ -59,3 +59,8 @@ elisp_repl ()
 {
     emacs --batch --eval '(while t (message "%s" (eval (read (read-string "> ")))))'
 }
+
+calc ()
+{
+    emacs -Q --batch --eval "(message \"%s\" (calc-eval \"$1\"))"
+}
