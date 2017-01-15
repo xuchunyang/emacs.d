@@ -2350,48 +2350,49 @@ Called with a prefix arg set search provider (default Google)."
 
 ;; GTK+
 
-(use-package cc-mode
-  ;; Tips:
-  ;;
-  ;; - (info "ccmode") has some practical tips
-  ;; - C-M-a/e and M-a/e understands functions and statements, it's cool
-
+(use-package gtk-look
   :if (eq system-type 'gnu/linux)
+  :ensure t
+  :defer t
   :preface
   (defun devhelp (symbol)
     (interactive (list (current-word)))
     (and symbol
          (start-process "devhelp" nil "devhelp" "-s" symbol)))
-  (use-package gtk-look
-    :ensure t
-    :defer t
-    :init
-    (defvar helm-gtk-lookup-symbol-input-history nil)
-    (defun helm-gtk-lookup-symbol ()
-      (interactive)
-      (helm :sources
-            (helm-build-sync-source "gtk-doc"
-              :candidates (gtk-lookup-cache-init)
-              :action
-              '(("View gtk-doc in eww" .
-                 (lambda (entry)
-                   (eww-browse-url
-                    (concat "file://" (nth 1 entry) (nth 0 entry)))))))
-            :input (when (memq major-mode '(c-mode))
-                     (current-word))
-            :buffer "*helm gtk-doc*"
-            :history 'helm-gtk-lookup-symbol-input-history))
-    :config
-    ;; Prefer EWW (`browse-url' prefers system's default browser)
-    (setq browse-url-browser-function
-          '(("file:///usr/share" . eww-browse-url)
-            ("." . browse-url-default-browser))))
+
+  (defvar helm-gtk-lookup-symbol-input-history nil)
+  (defun helm-gtk-lookup-symbol ()
+    (interactive)
+    (helm :sources
+          (helm-build-sync-source "gtk-doc"
+            :candidates (gtk-lookup-cache-init)
+            :action
+            '(("View gtk-doc in eww" .
+               (lambda (entry)
+                 (eww-browse-url
+                  (concat "file://" (nth 1 entry) (nth 0 entry)))))))
+          :input (when (memq major-mode '(c-mode))
+                   (current-word))
+          :buffer "*helm gtk-doc*"
+          :history 'helm-gtk-lookup-symbol-input-history))
+  :init
   (defun chunyang-c-mode-setup-gtk ()
     (define-key c-mode-map "\C-h." 'gtk-lookup-symbol)
     (define-key c-mode-map "\C-c\C-c" 'recompile))
+  (add-hook 'c-mode-hook 'chunyang-c-mode-setup-gtk)
+  :config
+  ;; Prefer EWW (`browse-url' prefers system's default browser)
+  (setq browse-url-browser-function
+        '(("file:///usr/share" . eww-browse-url)
+          ("." . browse-url-default-browser))))
+
+(use-package cc-mode
+  ;; Tips:
+  ;;
+  ;; - (info "ccmode") has some practical tips
+  ;; - C-M-a/e and M-a/e understands functions and statements, it's cool
   :defer t
   :init
-  (add-hook 'c-mode-hook 'chunyang-c-mode-setup-gtk)
   ;; Turn on Auto-newline and hungry-delete-key, they are adviced by cc-mode
   ;; manual, let me try them for a while. BTW, 'a' and 'h' will be indicated in
   ;; the mode-line, such as C/lah.  BTW, 'l' stands for electric keys, use C-c
