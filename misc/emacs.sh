@@ -41,21 +41,21 @@ info ()
     _open_emacs_window
 }
 
-find-file ()
+find_file ()
 {
     local file=$1
     emacsclient --eval "(find-file \"$file\")"
     _open_emacs_window
 }
 
-alias ff=find-file
+alias ff=find_file
 
 t ()
 {
     emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda-list))"
 }
 
-elisp-repl ()
+elisp_repl ()
 {
     emacs --batch --eval '(while t (message "%s" (eval (read (read-string "> ")))))'
 }
