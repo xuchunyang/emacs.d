@@ -89,8 +89,13 @@
 (use-package helm-buffers
   :defer t
   :config
-  (add-to-list 'helm-boring-buffer-regexp-list "^TAGS$")
-  (add-to-list 'helm-boring-buffer-regexp-list "git-gutter:diff")
+  (nconc helm-boring-buffer-regexp-list
+         '("^TAGS$" "git-gutter:diff"
+           ;; FIXME Tramp opens some buffers automatically once it has
+           ;; been used, I don't really know what it means at this
+           ;; point, for now, just tell helm to ignore, maybe take a
+           ;; look at (info "(tramp) Cleanup remote connections")
+           "\\`\\*tramp"))
 
   (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window))
 
