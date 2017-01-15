@@ -22,3 +22,7 @@ ChangeLog
 
 # HTML (usually created by Org exporting)
 *.html
+
+# Emacs module
+*.o
+*.so
