@@ -1747,10 +1747,31 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; (fcitx-default-setup)
   (fcitx-aggressive-setup))
 
-;; TODO: Figure out how it works
 (use-package sudo-edit
+  :disabled t
   :ensure t
   :defer t)
+
+(use-package chunyang-sudo-edit
+  :defer t                              ; Fake package so don't load
+  :preface
+  ;; Wow, Tramp makes it possible to edit local file as "sudo", see
+  ;; (info "(tramp) Default Method")
+  (defun chunyang-sudo-edit ()
+    (interactive)
+    (find-file (concat "/sudo::" (buffer-file-name))))
+
+  (defun chunyang-sudo-edit-notify ()
+    "Notify myself when edit a file owned by root.
+This should be add to `find-file-hook'."
+    (let ((old-msg (current-message)))
+      (when (and old-msg
+                 (string= old-msg "Note: file is write protected"))
+        (message "%s, %s"
+                 old-msg
+                 "use M-x chunyang-sudo-edit RET to edit as sudo"))))
+
+  (add-hook 'find-file-hook #'chunyang-sudo-edit-notify))
 
 
 ;;; Project
