@@ -49,6 +49,7 @@ find_file ()
 }
 
 alias ff=find_file
+alias dired=find_file
 
 t ()
 {
