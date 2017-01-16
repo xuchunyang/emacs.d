@@ -2299,6 +2299,24 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; C
 
+;; C Programming Tools:
+;; - GDB (info "(gdb) Top")
+;; - GCC (info "(gcc) Top")
+;; - CC Mode (info "(ccmode) Top")
+;;
+;; Note that it's not easy to use GDB on macOS (blame Apple).
+
+(use-package cc-mode
+  ;; Tips:
+  ;; - C-M-a/e and M-a/e understands functions and statements, it's cool
+  :defer t
+  :init
+  ;; Turn on Auto-newline and hungry-delete-key, they are adviced by cc-mode
+  ;; manual, let me try them for a while. BTW, 'a' and 'h' will be indicated in
+  ;; the mode-line, such as C/lah.  BTW, 'l' stands for electric keys, use C-c
+  ;; C-l to toggle it.
+  (add-hook 'c-mode-common-hook 'c-toggle-auto-hungry-state))
+
 (use-package irony
   :ensure t
   :defer t
@@ -2385,19 +2403,6 @@ Called with a prefix arg set search provider (default Google)."
   (setq browse-url-browser-function
         '(("file:///usr/share" . eww-browse-url)
           ("." . browse-url-default-browser))))
-
-(use-package cc-mode
-  ;; Tips:
-  ;;
-  ;; - (info "ccmode") has some practical tips
-  ;; - C-M-a/e and M-a/e understands functions and statements, it's cool
-  :defer t
-  :init
-  ;; Turn on Auto-newline and hungry-delete-key, they are adviced by cc-mode
-  ;; manual, let me try them for a while. BTW, 'a' and 'h' will be indicated in
-  ;; the mode-line, such as C/lah.  BTW, 'l' stands for electric keys, use C-c
-  ;; C-l to toggle it.
-  (add-hook 'c-mode-common-hook 'c-toggle-auto-hungry-state))
 
 
 ;;; Common Lisp
