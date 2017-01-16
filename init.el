@@ -2315,7 +2315,11 @@ Called with a prefix arg set search provider (default Google)."
   ;; manual, let me try them for a while. BTW, 'a' and 'h' will be indicated in
   ;; the mode-line, such as C/lah.  BTW, 'l' stands for electric keys, use C-c
   ;; C-l to toggle it.
-  (add-hook 'c-mode-common-hook 'c-toggle-auto-hungry-state))
+  (add-hook 'c-mode-common-hook 'c-toggle-auto-hungry-state)
+
+  (defun chunyang-c-mode-setup ()
+    (define-key c-mode-map "\C-c\C-c" 'recompile))
+  (add-hook 'c-mode-hook 'chunyang-c-mode-setup))
 
 (use-package irony
   :ensure t
@@ -2395,8 +2399,7 @@ Called with a prefix arg set search provider (default Google)."
           :history 'helm-gtk-lookup-symbol-input-history))
   :init
   (defun chunyang-c-mode-setup-gtk ()
-    (define-key c-mode-map "\C-h." 'gtk-lookup-symbol)
-    (define-key c-mode-map "\C-c\C-c" 'recompile))
+    (define-key c-mode-map "\C-h." 'gtk-lookup-symbol))
   (add-hook 'c-mode-hook 'chunyang-c-mode-setup-gtk)
   :config
   ;; Prefer EWW (`browse-url' prefers system's default browser)
