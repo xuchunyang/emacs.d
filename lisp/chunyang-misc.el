@@ -291,5 +291,15 @@ BTW, 'C-u M-! date -I RET' does the same thing."
 ;; (add-hook 'post-command-hook
 ;;           #'chunyang-key-is-undefined-thus-did-you-mean)
 
+
+(defun chunyang-computer-science-glossary-计算机科学词汇表-search ()
+  "Search 计算机科学里，常用词汇之译法.
+See URL `https://github.com/JuanitoFatas/Computer-Science-Glossary'."
+  (interactive)
+  (let ((data-file
+         "~/src/Computer-Science-Glossary/dict.textile"))
+    (assert (file-exists-p data-file))
+    (helm-do-grep-1 (list data-file))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
