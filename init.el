@@ -1572,7 +1572,7 @@ See also `describe-function-or-variable'."
   ;; Save files before executing git command for me
   (setq magit-save-repository-buffers 'dontask)
   ;; Show word-granularity differences for the current diff hunk
-  (setq magit-diff-refine-hunk t)
+  ;; (setq magit-diff-refine-hunk t)
 
   ;; My answer to https://emacs.stackexchange.com/questions/28502/magit-show-ignored-files
   ;; Command to list ignored files:
