@@ -1019,6 +1019,12 @@ Intended to be added to `isearch-mode-hook'."
   :init
   ;; (add-hook 'text-mode-hook #'flyspell-mode)
   ;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  ;; Magit commit message
+  (add-hook 'git-commit-mode-hook #'flyspell-mode)
+  ;; VC commit message
+  (add-hook 'log-edit-mode-hook #'flyspell-mode)
+  ;; Email
+  (add-hook 'message-mode-hook #'flyspell-mode)
   (use-package ispell
     :defer t
     :init
