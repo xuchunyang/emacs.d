@@ -205,21 +205,6 @@ BTW, 'C-u M-! date -I RET' does the same thing."
            0 -1)))
 
 
-(defun chunyang-key-is-undefined-thus-did-you-mean ()
-  "when you type some key but it is undefined, ask \"Did you mena\"."
-  (let ((msg (current-message)))
-    (if (and msg (string-suffix-p " is undefined" msg))
-        (message "%s\n\nDid you mean this?\n\tTODO" msg))))
-
-;; Notes that it's important to make sure this function can't slow
-;; down Emacs.
-;;
-;; TODO: Provide some useful info or even actions
-;;
-;; (add-hook 'post-command-hook
-;;           #'chunyang-key-is-undefined-thus-did-you-mean)
-
-
 (defun chunyang-computer-science-glossary-计算机科学词汇表-search ()
   "Search 计算机科学里，常用词汇之译法.
 See URL `https://github.com/JuanitoFatas/Computer-Science-Glossary'."

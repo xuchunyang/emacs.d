@@ -288,6 +288,7 @@
 
 
 ;;; Key
+
 (defun chunyang-insert-command-name-by-key ()
   (interactive)
   (insert (format "%s" (key-binding (read-key-sequence "Key: ")))))
@@ -306,6 +307,17 @@
       (human  (insert (key-description key)))
       (string (insert key))
       (vector (insert (format "%s" (read-kbd-macro key t)))))))
+
+;; According to my test ('M-x trace-function undefined'), when I type
+;; some undefined key, the command `undefined' will be called.
+(define-advice undefined (:after () do-something-when-key-binding-not-defined)
+  "Serve as common-not-found hook.
+
+At first, I want 'Did you mena xxx?', but I don't know how to implement."
+  ;; (message "%s is undefined"
+  ;;          (propertize (key-description (this-single-command-keys))
+  ;;                      'face 'error))
+  )
 
 
 ;;; Remove advice in the Help buffer
