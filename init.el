@@ -2722,6 +2722,18 @@ provides similiar function."
 ;; (setq url-gateway-method 'socks
 ;;       socks-server '("Default server" "127.0.0.1" 1080 5))
 
+(use-package url-cookie
+  :defer t
+  :init
+  ;; Disable saving cookie to disk because periodically message like
+  ;; the following
+  ;;
+  ;; Saving file /Users/xcy/.emacs.d/var/url/configuration/cookies...
+  ;; Wrote /Users/xcy/.emacs.d/var/url/configuration/cookies
+  ;;
+  ;; is very annoying.
+  (setq url-cookie-save-interval nil))
+
 (use-package opencc                     ; WIP
   :disabled t
   :load-path "~/src/emacs-opencc"
