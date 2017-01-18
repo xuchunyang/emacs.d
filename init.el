@@ -175,17 +175,22 @@
 
 ;;; User Interface
 
-;; It's possible that Emacs is not built with Tool Bar and Scroll Bar support,
-;; so we need to test firstly
-(when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
-(when (bound-and-true-p scroll-bar-mode) (scroll-bar-mode -1))
+;; It's possible that Emacs is not built with Tool Bar and Scroll Bar
+;; support, so we need to test firstly
+(and (bound-and-true-p tool-bar-mode)
+     (tool-bar-mode -1))
+(and (bound-and-true-p scroll-bar-mode)
+     (scroll-bar-mode -1))
 
-;; Turn off `menu-bar-mode' unless on MacOS
+;; Disable `menu-bar-mode' except macOS
 (unless *is-mac* (menu-bar-mode -1))
 
+;; Type M-x `about-emacs' to see it
 (setq inhibit-startup-screen t)
 
-(setq ring-bell-function #'ignore)      ; Don't ring bell on C-g
+;; Don't ring the bell (usually when Quit with C-g and undefined key
+;; binding)
+(setq ring-bell-function #'ignore)
 
 
 ;;; Yes Or No
