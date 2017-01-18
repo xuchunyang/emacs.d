@@ -5,45 +5,6 @@
 ;;; Code:
 
 ;; -----------------------------------------------------------------------------
-;; Show recent project/file in a buffer
-;;
-
-;; The code requires Projectile and Recentf for their data.  Also, this idea is
-;; inspired by Spacemacs's startup buffer, see <http://spacemacs.org/>.
-
-
-(defun chunyang-insert-file-list (list-display-name list)
-  ;; Copied from `spacemacs-buffer//insert-file-list'.
-  (when (car list)
-    (insert list-display-name)
-    (mapc (lambda (el)
-            (insert "\n    ")
-            (widget-create 'push-button
-                           :action `(lambda (&rest ignore) (find-file-existing ,el))
-                           :mouse-face 'highlight
-                           :follow-link "\C-m"
-                           :button-prefix ""
-                           :button-suffix ""
-                           :format "%[%t%]"
-                           (abbreviate-file-name el)))
-          list)))
-
-(defun chunyang-list-recentf-and-projects ()
-  (interactive)
-  (switch-to-buffer (get-buffer-create "*Recentf & Project List*"))
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (chunyang-insert-file-list "Recent Files:" (recentf-elements 5))
-    (insert "\n\n")
-    (chunyang-insert-file-list "Projects:" projectile-known-projects)
-    (goto-char (point-min))
-    (page-break-lines-mode)
-    (read-only-mode))
-  (local-set-key (kbd "RET") 'widget-button-press)
-  (local-set-key [down-mouse-1] 'widget-button-click))
-
-
-;; -----------------------------------------------------------------------------
 ;; Run-length
 ;;
 
@@ -129,7 +90,7 @@
 
 
 ;;; Download and eval
-(defun download-and-eval (url)
+(defun chunyang-download-and-eval (url)
   (let ((f (expand-file-name (file-name-nondirectory url)
                              temporary-file-directory)))
     (url-copy-file url f)
@@ -137,7 +98,7 @@
 
 
 ;; http://emacs.stackexchange.com/questions/20171/how-to-preserve-color-in-messages-buffer
-(defun my-message (format &rest args)
+(defun chunyang-message (format &rest args)
   "Acts like `message' but preserves string properties in the *Messages* buffer."
   (let ((message-log-max nil))
     (apply 'message format args))
@@ -150,10 +111,10 @@
         (insert "\n")))))
 
 ;; Oops, the following *breaks* Emacs
-;; (advice-add 'message :override #'my-message)
+;; (advice-add 'message :override #'chunyang-message)
 
 
-(defun increase-number-at-point (prefix)
+(defun chunyang-increase-number-at-point (prefix)
   "增加光标下数字以 prefix argument (默认为 1)."
   (interactive "p")
   (when (thing-at-point-looking-at "[0-9]+")
@@ -165,39 +126,6 @@
       (goto-char beg)
       (insert (number-to-string (+ number prefix)))
       (goto-char pos))))
-
-(defun insert-key-name ()
-  (interactive)
-  (insert (key-description (read-key-sequence "Type the key: "))))
-
-(defun insert-command-on-key ()
-  (interactive)
-  (insert (format "%s" (key-binding (read-key-sequence "Type the key: ")))))
-
-;; (defun f (f a)
-;;   (let ((b 100))
-;;     (funcall f a b)))
-
-;; (f (lambda (x y) (+ y x)) 3)
-
-;; Functions compose
-(defmacro o (f g)
-  `(lambda (&rest r)
-     (apply ',f (list (apply ',g r)))))
-
-;; (seq-map 'window-width
-;;          (seq-filter (o minibufferp window-buffer) (window-list-1 nil t)))
-
-(defmacro o2 (f g &rest args)
-  `(apply ,f (list (apply ,g (list ,@args)))))
-
-;; also `apply-partially'
-;; (defalias '1+ (apply-partially '+ 1)
-;;   "Increment argument by one.")
-;;
-;; (1+ 10)
-;;   => 11
-
 
 
 ;; Make local function definition
@@ -245,17 +173,17 @@
 ;; (redirect-shell-output-setup)
 
 ;; Launch isearch for other window/buffer
-(defun isearch-other-window ()
+(defun chunyang-isearch-other-window ()
   (interactive)
   (let ((input (current-word)))
     (other-window 1)
     (isearch-forward-regexp nil t)
     (and input (isearch-yank-string input))))
 
-(define-key ctl-x-4-map "s" #'isearch-other-window)
+(define-key ctl-x-4-map "s" #'chunyang-isearch-other-window)
 
 
-(defun random-word ()
+(defun chunyang-random-word ()
   "Pick a randome English word."
   (interactive)
   (let ((word
