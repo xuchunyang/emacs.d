@@ -561,7 +561,17 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (use-package dired                      ; Directory Editor
   :defer t
+  :preface
+  (defun chunyang-dired-view-file-other-window ()
+    (interactive)
+    (cl-letf (((symbol-function 'view-file) #'view-file-other-window))
+      (dired-view-file)))
   :config
+  ;; It's better to use ls(1) from GNU Coreutils since it supports
+  ;; --dired, thus Dired doesn't have to search filename.
+  ;;
+  ;; `insert-directory-program' `dired-listing-switches'
+  (bind-key "V" #'chunyang-dired-view-file-other-window dired-mode-map)
   (use-package dired-x
     :commands dired-omit-mode
     :init (add-hook 'dired-mode-hook #'dired-omit-mode)))
