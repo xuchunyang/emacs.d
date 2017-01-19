@@ -532,11 +532,36 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :bind (("C-c f u" . revert-buffer)
          ("C-c f n" . normal-mode)))
 
+;; TODO Try this first, if useless, remove.
+(defun chunyang-help ()
+  "My *personal* little helper."
+  (interactive)
+  (if (eq major-mode 'dired-mode)
+      (let* ((commands
+              '(dired-hide-details-mode
+                dired-omit-mode
+                wdired-change-to-wdired-mode))
+             (tips
+              (mapconcat
+               (lambda (cmd)
+                 (format "%-30s    %s"
+                         cmd (mapconcat
+                              'key-description
+                              ;; Ignore menu bar
+                              (cl-remove-if
+                               (lambda (key)
+                                 (eq (elt key 0) 'menu-bar))
+                               (where-is-internal cmd))
+                              ", ")))
+               commands "\n")))
+        (message "%s" tips))
+    (user-error "Unsupported context")))
+
+(bind-key "C-h p" #'chunyang-help) ; The default binding of 'C-h p' is `finder-by-keyword'
+
 (use-package dired                      ; Directory Editor
   :defer t
   :config
-  ;; --ignore=.git*
-  (setq dired-listing-switches "-alh --no-group --ignore=.git*")
   (use-package dired-x
     :commands dired-omit-mode
     :init (add-hook 'dired-mode-hook #'dired-omit-mode)))
