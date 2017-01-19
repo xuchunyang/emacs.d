@@ -65,3 +65,15 @@ calc ()
 {
     emacs -Q --batch --eval "(message \"%s\" (calc-eval \"$1\"))"
 }
+
+rg_in_emacs ()
+{
+    pat=$1                      # regexp
+    emacsclient --eval "(grep \"rg --smart-case --no-heading --line-number -e $pat\")"
+}
+
+git_grep_in_emacs ()
+{
+    pat=$1                      # basic regexp like Grep
+    emacsclient --eval "(vc-git-grep \"$pat\" \"\" default-directory)"
+}
