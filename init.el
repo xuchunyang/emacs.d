@@ -1531,13 +1531,30 @@ See also `describe-function-or-variable'."
         (lambda (package)
           (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%%s" package)))))
 
-  (defun chunyang-Info-get-current-node-html ()
+  (defun chunyang-org-info-map-anchor-url (node)
+    "Return URL associated to Info NODE."
+    ;; See (info "(texinfo) HTML Xref Node Name Expansion") for the
+    ;; expansion rule
+    (let* ((node (replace-regexp-in-string "[ \t\n\r]+" " " (org-trim node)))
+           (node (mapconcat (lambda (c)
+                              (if (string-match "[a-zA-Z0-9 ]" (string c))
+                                  (string c)
+                                (format "_%04x" c)))
+                            (string-to-list node) ""))
+           (node (replace-regexp-in-string " " "-" node))
+           (url (if (string= node "")
+                    ""
+                  (if (string-match "[0-9]" (substring node 0 1))
+                      (concat "g_t" node)
+                    node))))
+      url))
+(defun chunyang-Info-get-current-node-html ()
     (cl-assert (eq major-mode 'Info-mode))
     (let* ((file (file-name-nondirectory Info-current-file))
            (node Info-current-node)
            (html (if (string= node "Top")
                      ""
-                   (concat (replace-regexp-in-string " " "-" node) ".html")))
+                   (concat (chunyang-org-info-map-anchor-url node) ".html")))
            (baseurl (loop for (k . v) in chunyang-Info-html-alist
                           when (cond ((stringp k) (equal file k))
                                      ((listp k) (member file k)))
