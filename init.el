@@ -1548,7 +1548,7 @@ See also `describe-function-or-variable'."
                       (concat "g_t" node)
                     node))))
       url))
-(defun chunyang-Info-get-current-node-html ()
+  (defun chunyang-Info-get-current-node-html ()
     (cl-assert (eq major-mode 'Info-mode))
     (let* ((file (file-name-nondirectory Info-current-file))
            (node Info-current-node)
