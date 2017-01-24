@@ -63,14 +63,8 @@
   <2017-01-11 Wed>
 
   To build [[https://www.gnu.org/prep/standards/html_node/Change-Logs.html][(info "(standards) Change Logs")]]:
-  1. (Default) put point to the file I have changed, and type =C-x 4
-     a= or =M-x add-change-log-entry=
-  2. (Magit) put point on the hunk in Magit buffer, and type
-     =magit-add-change-log-entry=
-
-  To commit, use =C-x v v= (=vc-next-action=) since it looks like to
-  be able to reuse the last ChangeLog entry. I can also use Magit
-  normally, though some editing needs to be done.
+  1. (Default) Put point to the file I have changed, and type ~C-x 4 a~ or ~M-x add-change-log-entry~, then cut-and-paste or ~C-x v v~
+  2. (Magit) Put point on the diff, and type ~C~ (~magit-commit-add-log~)
 
 * Emacs Lisp Packaging
 
