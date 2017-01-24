@@ -716,6 +716,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
          ("C-c o C-s"   . mc/mark-all-in-region)))
 
 (use-package undo-tree                  ; Branching undo
+  :disabled t
   :ensure t
   :diminish undo-tree-mode
   :init (global-undo-tree-mode))
