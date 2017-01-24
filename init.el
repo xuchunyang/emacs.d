@@ -537,7 +537,15 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (use-package files
   :bind (("C-c f u" . revert-buffer)
-         ("C-c f n" . normal-mode)))
+         ("C-c f n" . normal-mode))
+  :preface
+  (defun chunyang-add-file-local-variable-post (&rest _r)
+    "Ask to save and revert the buffer."
+    (when (y-or-n-p "Save and revert this file?")
+      (save-buffer)
+      (revert-buffer nil :no-confirm)))
+  (advice-add 'add-file-local-variable :after #'chunyang-add-file-local-variable-post)
+  (advice-add 'add-file-local-variable-prop-line :after #'chunyang-add-file-local-variable-post))
 
 ;; TODO Try this first, if useless, remove.
 (defun chunyang-help ()
