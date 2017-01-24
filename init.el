@@ -21,24 +21,31 @@
 
 (require 'package)
 
+;; All ElPA
 (setq package-archives
-      '(("gnu"          . "https://elpa.emacs-china.org/gnu/")
-        ("melpa"        . "https://elpa.emacs-china.org/melpa/")
-        ("melpa-stable" . "https://elpa.emacs-china.org/melpa-stable/")
-        ("marmalade"    . "https://elpa.emacs-china.org/marmalade/")
-        ("org"          . "https://elpa.emacs-china.org/org/")
-        ("user42"       . "https://elpa.emacs-china.org/user42/")
-        ("SC"           . "https://elpa.emacs-china.org/sunrise-commander/")))
+      '(("gnu"          . "http://elpa.gnu.org/packages/")
+        ("melpa"        . "http://melpa.org/packages/")
+        ("melpa-stable" . "http://stable.melpa.org/packages/")
+        ("marmalade"    . "http://marmalade-repo.org/packages/")
+        ("org"          . "http://orgmode.org/elpa/")
+        ("user42"       . "http://download.tuxfamily.org/user42/elpa/packages/")
+        ("SC"           . "http://joseito.republika.pl/sunrise-commander/")))
 
+;; ELPA Mirror
 (setq package-archives
-      '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-        ("melpa" . "http://elpa.emacs-china.org/melpa/")
-        ;; Using org from Git
-        ;; ("org"   . "https://elpa.emacs-china.org/org/")
-        ;; `gtk-look'
-        ("user42" . "http://elpa.emacs-china.org/user42/")
-        ;; ("SC"     . "https://elpa.emacs-china.org/sunrise-commander/")
-        ))
+      '(("gnu"          . "http://elpa.emacs-china.org/gnu/")
+        ("melpa"        . "http://elpa.emacs-china.org/melpa/")
+        ("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")
+        ("marmalade"    . "http://elpa.emacs-china.org/marmalade/")
+        ("org"          . "http://elpa.emacs-china.org/org/")
+        ("user42"       . "http://elpa.emacs-china.org/user42/")
+        ("SC"           . "http://elpa.emacs-china.org/sunrise-commander/")))
+
+;; Current choices
+(setq package-archives
+      '(("gnu"    . "http://elpa.emacs-china.org/gnu/")
+        ("melpa"  . "http://elpa.emacs-china.org/melpa/")
+        ("user42" . "http://elpa.emacs-china.org/user42/")))
 
 ;; Different Emacs versions can't share the same elpa folder
 (setq package-user-dir (locate-user-emacs-file
