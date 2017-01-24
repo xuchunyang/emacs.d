@@ -214,5 +214,19 @@ See URL `https://github.com/JuanitoFatas/Computer-Science-Glossary'."
     (assert (file-exists-p data-file))
     (helm-do-grep-1 (list data-file))))
 
+
+(defun chunyang-package-archives-use-https ()
+  (setq package-archives
+        (mapcar (lambda (archive)
+                  (cons (car archive)
+                        (replace-regexp-in-string
+                         "\\`http://"
+                         "https://"
+                         (cdr archive)))
+                  archive)
+                package-archives)))
+
+;; (chunyang-package-archives-use-https)
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
