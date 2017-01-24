@@ -193,7 +193,8 @@
     (let ((res (eval (eval-sexp-add-defvars (elisp--preceding-sexp))
                      lexical-binding)))
       (unless (current-line-empty-p) (terpri))
-      (princ "     ⇒ ")
+      (princ "     => ")
+      ;; (princ "     ⇒ ")
       (princ (with-temp-buffer
                (elisp--eval-last-sexp-print-value res t)
                (buffer-string))))
