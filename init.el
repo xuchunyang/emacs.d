@@ -559,6 +559,12 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (bind-key "C-h p" #'chunyang-help) ; The default binding of 'C-h p' is `finder-by-keyword'
 
+;; Dired Tips:
+;;
+;; - 'C-u s' to edit ls switch
+;; - 'C-x C-q' (`dired-toggle-read-only') or
+;;   `wdired-change-to-wdired-mode' to edit dired buffer
+
 (use-package dired                      ; Directory Editor
   :defer t
   :preface
