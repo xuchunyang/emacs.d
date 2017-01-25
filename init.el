@@ -594,7 +594,11 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   ;; --dired, thus Dired doesn't have to search filename. See
   ;; `insert-directory-program'.
 
-  (setq dired-listing-switches "-Alh"))
+  (setq dired-listing-switches "-Alh")
+
+  ;; Use directory from other dired window as target directory while
+  ;; copying and renaming.
+  (setq dired-dwim-target t))
 
 ;; (info "(dired-x) Features")
 (use-package dired-x
@@ -602,6 +606,11 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   ;; loaded by default.
   :bind (("C-x C-j"   . dired-jump)
          ("C-x 4 C-j" . dired-jump-other-window)))
+
+(use-package async
+  :ensure t
+  :defer t
+  :init (eval-after-load 'dired '(dired-async-mode)))
 
 (use-package direx                      ; Alternative to Dired
   :ensure t
