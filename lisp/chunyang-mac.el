@@ -52,5 +52,19 @@
                        default-directory)))
   (chunyang-mac-Terminal-send-string (format "cd '%s'" dir)))
 
+
+;;; Finder.app
+
+;; IDEA: Reveal multiple files
+(defun chunyang-mac-Finder-reveal (file)
+  "Reveal (select/highlight) FILE in Finder."
+  (do-applescript
+   (format (concat
+            "tell application \"Finder\"\n"
+            "	activate\n"
+            "	reveal POSIX file \"%s\"\n"
+            "end tell")
+           (expand-file-name file))))
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here

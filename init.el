@@ -598,14 +598,47 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
   ;; Use directory from other dired window as target directory while
   ;; copying and renaming.
-  (setq dired-dwim-target t))
+  (setq dired-dwim-target t)
+
+  (when *is-mac*
+    (defun chunyang-dired-reveal-file-in-Finder ()
+      (interactive)
+      (let ((file (dired-get-file-for-visit)))
+        (chunyang-mac-Finder-reveal file)))
+
+    (defun chunyang-dired-quick-look-file ()
+      (interactive)
+      (let ((file (dired-get-file-for-visit)))
+        (shell-command (format "qlmanage -p '%s' &> /dev/null" file))))
+
+    ;; It is very cool but can't compare with Finder, anyway,
+    ;; qlmanage(1) is just for debugging.
+    ;; (bind-key "SPC" #'chunyang-dired-quick-look-file dired-mode-map)
+    ))
 
 ;; (info "(dired-x) Features")
 (use-package dired-x
   ;; Note that dired-x also sets the following binding when it gets
   ;; loaded by default.
   :bind (("C-x C-j"   . dired-jump)
-         ("C-x 4 C-j" . dired-jump-other-window)))
+         ("C-x 4 C-j" . dired-jump-other-window))
+  :config
+
+  ;; On macOS, use open(1) as guess shell command for some files
+  (when *is-mac*
+    (setq dired-guess-shell-alist-user
+          (list
+           (list (rx (and "."
+                          (or
+                           ;; Videos
+                           "mp4" "avi" "mkv" "rmvb"
+                           ;; Torrent
+                           "torrent"
+                           ;; PDF
+                           "pdf"
+                           ;; Image
+                           "gif" "png" "jpg" "jpeg")
+                          string-end)) "open")))))
 
 (use-package async
   :ensure t
@@ -617,6 +650,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :defer t)
 
 (use-package launch                     ; Open files in external programs
+  :disabled t
   :ensure t
   :defer t)
 
