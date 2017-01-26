@@ -107,6 +107,24 @@
   (define-key helm-find-files-map [?\M-o] #'helm-ff-run-switch-other-window)
   (define-key helm-generic-files-map [?\M-o] #'helm-ff-run-switch-other-window)
 
+  ;; FIXME: This is bad since helm can change this function at any time
+  (define-advice helm-ff-move-to-first-real-candidate (:override () dired-goto-file)
+    "Do move to first real candidate for `dired-goto-file'."
+    (let ((src (helm-get-current-source)))
+      (helm-aif (and (helm-file-completion-source-p src)
+                     (not (helm-empty-source-p))
+                     (or (string= "dired-goto-file" (assoc-default 'name src))
+                         (not (string-match
+                               "\\`[Dd]ired-"
+                               (assoc-default 'name src))))
+                     helm-ff--move-to-first-real-candidate
+                     (helm-get-selection nil nil src))
+          (unless (or (not (stringp it))
+                      (and (string-match helm-tramp-file-name-regexp it)
+                           (not (file-remote-p it nil t)))
+                      (file-exists-p it))
+            (helm-next-line)))))
+
   (use-package helm-ls-git
     :ensure t
     :defer t
