@@ -32,7 +32,7 @@
 1. ~M-x replace-string RET , RET C-q C-j RET~
 2. ~M-x delete-matching-lines RET ^$ RET~
 
-* [["https://vimgolf.com/challenges/52c3cb0d9b8634000200000e][A HAPPY NEW YEAR 2014 !]]
+* [[https://vimgolf.com/challenges/52c3cb0d9b8634000200000e][A HAPPY NEW YEAR 2014 !]]
 <2017-01-29 Sun>
 
 If necessary, use ~M-x org-increase-number-at-point~ or similar to
@@ -50,3 +50,26 @@ which is useful and run the following command.
   (delete-region end (point-max))
   (delete-region (point-min) beg))
 #+END_SRC
+
+* [[https://vimgolf.com/challenges/5462e3f41198b80002512673][I forgot quotes]]
+<2017-01-29 Sun>
+
+1. Enable ~electric-pair-mode~
+2. Mark the region of text which needs quotes and enter one ~"~
+
+* [[http://www.vimgolf.com/challenges/55bcdc3ef4219f456102374f][Vice versa]]
+
+> Little role switching.
+
+#+BEGIN_SRC diff
+- The quick brown fox jumps over the lazy dog.
++ The quick lazy dog jumps over the brown fox.
+#+END_SRC
+
+** Solution
+
+Hmm, I have made a package (swap-regions) for this.
+
+1. Select "brown fox" and cancel it with ~C-g~
+2. Select "lazy dog"
+3. ~M-x swap-regions~"
