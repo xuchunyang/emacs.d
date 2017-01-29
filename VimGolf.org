@@ -211,3 +211,30 @@ C-s . C-b RET C-f
 
 Run the last keyboard macro with ~C-x e~
 (~kmacro-end-and-call-macro~).
+
+* [[https://vimgolf.com/challenges/583112d0215b7c3ed2016bdb][Order and join]]
+<2017-01-29 Sun>
+
+Start file
+
+#+BEGIN_EXAMPLE
+four
+one
+two
+five
+three
+six
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+one two three
+four five
+six
+#+END_EXAMPLE
+
+** Solution
+
+Type ~M-^~ (~delete-indentation~ or its alias ~join-line~) for several
+times and in several places.
