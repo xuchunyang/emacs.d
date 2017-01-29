@@ -450,6 +450,11 @@
 (bind-key "C-x k" #'kill-this-buffer)
 (bind-key "C-x K" #'kill-buffer)
 
+(use-package ibuffer
+  :config
+  ;; Since I used to M-o
+  (unbind-key "M-o" ibuffer-mode-map))
+
 (use-package ace-window
   :ensure t
   :defer t
