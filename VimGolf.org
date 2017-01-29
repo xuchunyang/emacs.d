@@ -238,3 +238,29 @@ six
 
 Type ~M-^~ (~delete-indentation~ or its alias ~join-line~) for several
 times and in several places.
+
+* [[https://vimgolf.com/challenges/559c30948ef59c0eb7000002][Collect List]]
+<2017-01-29 Sun>
+
+Start file
+
+#+BEGIN_EXAMPLE
+  * item1
+  * item2
+  * item3
+  * item4
+  * item5
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+item1,item2,item3,item4,item5
+#+END_EXAMPLE
+
+** Solution
+
+1. Remove the prefix "* "
+   1. Mark the rectangle region with ~C-x SPC~
+   2. Delete it with ~C-w~
+2. Join the line with "," by ~M-% C-q C-j RET , RET~ (~query-replace~)
