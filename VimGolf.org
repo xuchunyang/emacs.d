@@ -135,3 +135,36 @@ Input is 99 V's. Output is 100 i's.
 
 1. ~C-k~
 2. ~C-u 100 i~ (or simply type ~M-1 0 0 i~)
+
+* [[http://www.vimgolf.com/challenges/540629666a1e4000020d9e5a][-a-b-c-]]
+<2017-01-29 Sun>
+
+#+BEGIN_SRC diff
+- abcdefghijklm
++ -a-b-c-d-e-f-g-h-i-j-k-l-m-
+#+END_SRC
+
+** Solution
+
+#+BEGIN_SRC emacs-lisp
+(defun put-hyphens-everywhere (beg end)
+  (interactive "*r")
+  (insert
+   (concat "-"
+           (mapconcat #'string
+                      (string-to-list (delete-and-extract-region beg end))
+                      "-")
+           "-")))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/4f0720c8f037090001000007][switch variable]]
+
+#+BEGIN_SRC diff
+- int barins, foovariable = 1;
++ int foovariable, barins = 1;
+#+END_SRC
+
+** Solution
+
+~M-t~ (~transpose-words~) should just work for this case, thougth it
+is better to use ~C-M-t~ (~transpose-sexps~).
