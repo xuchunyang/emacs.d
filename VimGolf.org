@@ -272,3 +272,45 @@ item1,item2,item3,item4,item5
 2. Yank the text with ~M-y~ (~helm-show-kill-ring~) and delete unneeded
    text with ~C-k~
 3. Repeat step 2
+
+* [[https://vimgolf.com/challenges/54595b13128576000257a3c1][Basic renumbering]]
+<2017-01-29 Sun>
+
+Start file
+
+#+BEGIN_EXAMPLE
+10 PRINT "The actual"
+15 PRINT "code doesn't"
+16 PRINT "really matter."
+20 PRINT "Just take"
+25 PRINT "care of"
+30 PRINT "the numbers."
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+10 PRINT "The actual"
+20 PRINT "code doesn't"
+30 PRINT "really matter."
+40 PRINT "Just take"
+50 PRINT "care of"
+60 PRINT "the numbers."
+#+END_EXAMPLE
+
+** Solution
+
+- Remove old prefix with ~C-x SPC~ (~rectangle-mark-mode~) and ~C-w~
+- Insert new prefix with the following command (Notes that ~C-x r N~
+  (~rectangle-number-lines~)'s step always is 1 thus doesn't work
+  here)
+
+#+BEGIN_SRC emacs-lisp
+(defun number-region (start end start-at step)
+  (interactive "*r\nnNumber to count from: \nnStep: ")
+  (apply-on-rectangle (lambda (start end _arg)
+                        (move-to-column start t)
+                        (insert (format "%d " start-at))
+                        (incf start-at step))
+                      start end nil))
+#+END_SRC
