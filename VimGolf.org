@@ -264,3 +264,11 @@ item1,item2,item3,item4,item5
    1. Mark the rectangle region with ~C-x SPC~
    2. Delete it with ~C-w~
 2. Join the line with "," by ~M-% C-q C-j RET , RET~ (~query-replace~)
+
+* [[https://vimgolf.com/challenges/576c778ea4896a561b01b4f2][Copy three lines]]
+<2017-01-29 Sun>
+
+1. Mark the text and copy it with ~M-w~
+2. Yank the text with ~M-y~ (~helm-show-kill-ring~) and delete unneeded
+   text with ~C-k~
+3. Repeat step 2
