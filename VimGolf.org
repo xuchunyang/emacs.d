@@ -58,6 +58,7 @@ which is useful and run the following command.
 2. Mark the region of text which needs quotes and enter one ~"~
 
 * [[http://www.vimgolf.com/challenges/55bcdc3ef4219f456102374f][Vice versa]]
+<2017-01-29 Sun>
 
 > Little role switching.
 
@@ -75,6 +76,7 @@ Hmm, I have made a package (swap-regions) for this.
 3. ~M-x swap-regions~
 
 * [[http://www.vimgolf.com/challenges/5192f96ad8df110002000002][Words in parens]]
+<2017-01-29 Sun>
 
 Start file:
 
@@ -106,3 +108,30 @@ Enable it if necessary
 1. Move point to the word and hit ~M-(~
 
 By the way, 1) mark the word 2) hit ~(~. works too.
+
+* [[http://www.vimgolf.com/challenges/56d70389bbbe462aff01d42a][Swap values]]
+<2017-01-29 Sun>
+
+#+BEGIN_SRC diff
+- name=www-data, groups=developer
++ name=developer, groups=www-data
+#+END_SRC
+
+Use ~swap-regions~.
+
+* [[http://www.vimgolf.com/challenges/53d93fc3768e280002124f23][V to the i]]
+<2017-01-29 Sun>
+
+#+BEGIN_QUOTE
+Input is 99 V's. Output is 100 i's.
+#+END_QUOTE
+
+#+BEGIN_SRC diff
+- VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
++ iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+#+END_SRC
+
+** Solution
+
+1. ~C-k~
+2. ~C-u 100 i~ (or simply type ~M-1 0 0 i~)
