@@ -37,3 +37,16 @@
 
 If necessary, use ~M-x org-increase-number-at-point~ or similar to
 increase/decrease number at point.
+
+* [[https://vimgolf.com/challenges/54862fbb3f90ac0002904cf5][Just the middle]]
+<2017-01-29 Sun>
+
+Just edit like in any normal text editor. Or mark the region of text
+which is useful and run the following command.
+
+#+BEGIN_SRC emacs-lisp
+(defun delete-whole-buffer-but-region (beg end)
+  (interactive "*r")
+  (delete-region end (point-max))
+  (delete-region (point-min) beg))
+#+END_SRC
