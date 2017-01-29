@@ -1,4 +1,6 @@
-* [[https://vimgolf.com/challenges/510b1c61e48b7e0002000028][VimGolf - Chinese Multiplication Table]]
+#+TITLE: Emacs Solutions of [[http://www.vimgolf.com/][VimGolf]]
+
+* [[https://vimgolf.com/challenges/510b1c61e48b7e0002000028][Chinese Multiplication Table]]
 <2017-01-29 Sun>
 
 #+BEGIN_SRC emacs-lisp :exports both
