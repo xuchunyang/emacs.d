@@ -72,4 +72,37 @@ Hmm, I have made a package (swap-regions) for this.
 
 1. Select "brown fox" and cancel it with ~C-g~
 2. Select "lazy dog"
-3. ~M-x swap-regions~"
+3. ~M-x swap-regions~
+
+* [[http://www.vimgolf.com/challenges/5192f96ad8df110002000002][Words in parens]]
+
+Start file:
+
+#+BEGIN_EXAMPLE
+one two
+three
+#+END_EXAMPLE
+
+End file:
+
+#+BEGIN_EXAMPLE
+(one) (two)
+(three)
+#+END_EXAMPLE
+
+** Solution
+
+*** Solution 1 with ~electric-pair-mode~
+
+Enable it if necessary
+
+1. Mark the word
+2. Hit ~(~
+
+*** Solution 2 with ~paredit-mode~
+
+Enable it if necessary
+
+1. Move point to the word and hit ~M-(~
+
+By the way, 1) mark the word 2) hit ~(~. works too.
