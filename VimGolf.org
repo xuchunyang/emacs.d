@@ -31,3 +31,9 @@
 
 1. ~M-x replace-string RET , RET C-q C-j RET~
 2. ~M-x delete-matching-lines RET ^$ RET~
+
+* [["https://vimgolf.com/challenges/52c3cb0d9b8634000200000e][A HAPPY NEW YEAR 2014 !]]
+<2017-01-29 Sun>
+
+If necessary, use ~M-x org-increase-number-at-point~ or similar to
+increase/decrease number at point.
