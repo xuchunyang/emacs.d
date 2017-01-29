@@ -25,3 +25,9 @@
 : 9*1=9 9*2=18 9*3=27 9*4=36 9*5=45 9*6=54 9*7=63 9*8=72 9*9=81
 
 注意上面有两处没有对齐。
+
+* [[https://vimgolf.com/challenges/56fb2e75ccffcc0009026473][One number per line]]
+<2017-01-29 Sun>
+
+1. ~M-x replace-string RET , RET C-q C-j RET~
+2. ~M-x delete-matching-lines RET ^$ RET~
