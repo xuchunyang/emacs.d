@@ -158,6 +158,7 @@ Input is 99 V's. Output is 100 i's.
 #+END_SRC
 
 * [[http://www.vimgolf.com/challenges/4f0720c8f037090001000007][switch variable]]
+<2017-01-29 Sun>
 
 #+BEGIN_SRC diff
 - int barins, foovariable = 1;
@@ -168,3 +169,45 @@ Input is 99 V's. Output is 100 i's.
 
 ~M-t~ (~transpose-words~) should just work for this case, thougth it
 is better to use ~C-M-t~ (~transpose-sexps~).
+
+* [[https://vimgolf.com/challenges/57343555fd77ad227900df4a][Split line with dots]]
+<2017-01-29 Sun>
+
+Start file
+
+#+BEGIN_SRC ruby
+class VimGolf
+  def split_me
+    MyModel .first_method.second_method(arg).third_method(arg.method_one.method_two)
+  end
+end
+#+END_SRC
+
+End file
+
+#+BEGIN_SRC ruby
+class VimGolf
+  def split_me
+    MyModel
+      .first_method
+      .second_method(arg)
+      .third_method(arg.method_one.method_two)
+  end
+end
+#+END_SRC
+
+** Solution
+
+~electric-indent-mode~ defaults to ~t~, thus simply ~RET~ will indent
+code automatically. So the solution is moving point to ~.~ and type
+~RET~.
+
+Just in case, I would have to repeat it a lot: define the following
+keyboard macro with ~<f3>~ and ~<f4>~ or ~C-x (~ and ~C-x )~.
+
+#+BEGIN_EXAMPLE
+C-s . C-b RET C-f
+#+END_EXAMPLE
+
+Run the last keyboard macro with ~C-x e~
+(~kmacro-end-and-call-macro~).
