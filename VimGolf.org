@@ -314,3 +314,52 @@ End file
                         (incf start-at step))
                       start end nil))
 #+END_SRC
+
+* [[https://vimgolf.com/challenges/51f4a64c6813e30002000018][quotes inside quotes]]
+<2017-01-30 Mon>
+
+Start file
+
+#+BEGIN_EXAMPLE
+This string contains a 'quoted' word.
+This string contains 'two' quoted 'words.'
+This 'string doesn't make things easy.'
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+This string contains a "quoted" word.
+This string contains "two" quoted "words."
+This "string doesn't make things easy."
+#+END_EXAMPLE
+
+** Solution
+
+1. Mark the text (including quotes)
+2. Call the following command
+
+#+BEGIN_SRC emacs-lisp
+(defun toggle-single-and-double-quote (beg end)
+  (interactive "*r")
+  (let ((s (buffer-substring beg end))
+        double-p)
+    (if (and (> (length s) 2)
+             (let ((left (aref s 0))
+                   (right (aref s (1- (length s)))))
+               (or (= left right ?')
+                   (prog1 (= left right ?\")
+                     (setq double-p t)))))
+        (progn (delete-region beg end)
+               (insert (if double-p ?' ?\")
+                       (substring s 1 -1)
+                       (if double-p ?' ?\")))
+      (message "You need mark a region of \"'foo'\" before calling this"))))
+#+END_SRC
+
+The following can help editing pairs or quotes under some particular
+situations nicely.
+
+- ~electric-pair-mode~ (built-in)
+- ParEdit (ELPA)
+- cycle-quotes (ELPA)
