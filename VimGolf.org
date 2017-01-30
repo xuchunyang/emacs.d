@@ -394,3 +394,43 @@ just = make  ,
 ~M-x align-regexp RET , RET~ works out of box. Though, I still don't
 know how this works. I will need to figure this out once facing more
 complex task.
+
+* [[https://vimgolf.com/challenges/4d1a1c36567bac34a9000002][Reformat/Refactor a Golfer Class]]
+<2017-01-30 Mon>
+
+Just edit normally.
+
+* [[https://vimgolf.com/challenges/4d1a8bf2b8cb3409320002c4][Search and Replace 0]]
+<2017-01-30 Mon>
+
+~M-% aaa RET xaaax RET~
+
+* [[https://vimgolf.com/challenges/53c66c482b4166000226bbee][Don't know what this is]]
+<2017-01-30 Mon>
+
+Start file
+
+#+BEGIN_EXAMPLE
+[1:0]
+[0:1]
+[1:100]
+[0:100]
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+[   ]
+[   ]
+[     ]
+[     ]
+#+END_EXAMPLE
+
+** Solution
+
+Use ~C-M-%~ (~query-replace-regexp~) then replace
+
+- ~\[\(.\)\]~ with
+- ~\,(format "[%s]" (make-string (length \1) ? ))~
+
+For the use of ~\,~, see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Regexp-Replace.html][(info "(emacs) Regexp Replace")]].
