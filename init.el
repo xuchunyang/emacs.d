@@ -160,6 +160,10 @@
 (use-package chunyang-mac
   :if *is-mac*)
 
+;; WIP MacPorts interface (manage ports, discover ports etc)
+(use-package macports
+  :if *is-mac*)
+
 
 ;;; GNU/Linux
 
