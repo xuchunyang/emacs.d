@@ -1,4 +1,4 @@
-#+TITLE: Emacs Solutions of [[http://www.vimgolf.com/][VimGolf]]
+#+TITLE: Emacs Solutions to [[http://www.vimgolf.com/][VimGolf]]
 
 * [[https://vimgolf.com/challenges/510b1c61e48b7e0002000028][Chinese Multiplication Table]]
 <2017-01-29 Sun>
@@ -434,3 +434,86 @@ Use ~C-M-%~ (~query-replace-regexp~) then replace
 - ~\,(format "[%s]" (make-string (length \1) ? ))~
 
 For the use of ~\,~, see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Regexp-Replace.html][(info "(emacs) Regexp Replace")]].
+
+* [[http://www.vimgolf.com/challenges/56ef78d9f604b51ec4007b8d][Scrambled numbers]]
+<2017-01-30 Mon>
+
+Start file
+
+#+BEGIN_EXAMPLE
+Four is 1.
+One is 2.
+Five is 3.
+Three is 4.
+Six is 5.
+Two is 6.
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+One is 1.
+Two is 2.
+Three is 3.
+Four is 4.
+Five is 5.
+Six is 6.
+#+END_EXAMPLE
+
+** Solution
+
+- Enable ~swap-word-mode~ then
+- swap word up/down with ~<M-down>~ and ~<M-up>~
+
+#+BEGIN_SRC emacs-lisp
+(defun swap-word-up->down ()
+  (interactive)
+  (let ((b1 (bounds-of-thing-at-point 'word))
+        s1 e1 t1
+        s2 e2 t2)
+    (when b1
+      (setq s1 (car b1)
+            e1 (cdr b1)
+            t1 (buffer-substring s1 e1))
+      (save-excursion
+        (forward-line 1)
+        (setq b2 (bounds-of-thing-at-point 'word)
+              s2 (car b2)
+              e2 (cdr b2)
+              t2 (buffer-substring s2 e2))
+        (delete-region s2 e2)
+        (insert t1))
+      (delete-region s1 e1)
+      (insert t2))))
+
+(defun swap-word-down->up ()
+  (interactive)
+  (let ((b1 (bounds-of-thing-at-point 'word))
+        s1 e1 t1
+        b2 s2 e2 t2)
+    (when b1
+      (save-excursion
+        (forward-line -1)
+        (setq b2 (bounds-of-thing-at-point 'word))
+        (when b2
+          (setq s1 (car b1)
+                e1 (cdr b1)
+                t1 (buffer-substring s1 e1)
+                s2 (car b2)
+                e2 (cdr b2)
+                t2 (buffer-substring s2 e2))))
+      (delete-region s1 e1)
+      (insert t2)
+      (forward-line -1)
+      (delete-region s2 e2)
+      (insert t1))))
+
+(define-minor-mode swap-word-mode
+  "Swap word up/down."
+  :init nil
+  :lighter " Swap word"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "<M-up>")  #'swap-word-down->up)
+            (define-key map (kbd "<M-down>") #'swap-word-up->down)
+            map))
+#+END_SRC
