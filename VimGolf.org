@@ -517,3 +517,39 @@ Six is 6.
             (define-key map (kbd "<M-down>") #'swap-word-up->down)
             map))
 #+END_SRC
+
+* [[http://www.vimgolf.com/challenges/54df95a4a4b28331e9000003][Space out the alphabet]]
+<2017-01-30 Mon>
+
+1. ~M-x replace-regexp RET \(.\) RET    \1 RET~
+2. Delete leading white spaces with rectangle mark mode.
+
+By the way, I don't know how a regexp which matches any character but
+not at the beginning of a line.
+
+* [[http://www.vimgolf.com/challenges/4f438739f5a8d70001000019][replacing each line of a block selection]]
+<2017-01-30 Mon>
+
+Replace (or query-replace) string (or regexp) as usual.
+
+* [[http://www.vimgolf.com/challenges/4ef209ef78702b0001000019][Make it more readable]]
+<2017-01-30 Mon>
+
+- Replace ~#~ with ~\n\n#~ with ~M-x replace-string~
+- Delete leading empty lines with the most obvious way (that is,
+  delete multiple times or mark then delete)
+
+* [[http://www.vimgolf.com/challenges/539c50b188b4e20002053e38][Where should I put the Newline?]]
+<2017-01-30 Mon>
+
+Replace (or query-replace) ~--->newline<---~ with ~--->\n<---~. Notes,
+to enter ~\n~ from MiniBuffer, type ~C-q C-j~ (~C-q~ is bound to
+~quoted-insert~).
+
+* [[http://www.vimgolf.com/challenges/4d716c76919202611400002b][Numbering a List]]
+<2017-01-30 Mon>
+
+1. Mark the region
+2. ~C-u C-x r N RET %1d. RET~ (i.e., call ~rectangle-number-lines~
+   with a prefix argument, and use the default start (that is 1), and
+   enter the format)
