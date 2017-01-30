@@ -363,3 +363,34 @@ situations nicely.
 - ~electric-pair-mode~ (built-in)
 - ParEdit (ELPA)
 - cycle-quotes (ELPA)
+
+* [[https://vimgolf.com/challenges/571808767dd9d30009000001][Align commas]]
+<2017-01-30 Mon>
+
+Start file
+
+#+BEGIN_EXAMPLE
+just = make,
+       all,
+       the,
+       commas,
+       line,
+       up
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+just = make  ,
+       all   ,
+       the   ,
+       commas,
+       line  ,
+       up
+#+END_EXAMPLE
+
+** Solution
+
+~M-x align-regexp RET , RET~ works out of box. Though, I still don't
+know how this works. I will need to figure this out once facing more
+complex task.
