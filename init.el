@@ -756,6 +756,12 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :ensure t
   :init (ace-link-setup-default))
 
+(use-package zop-to-char                ; alternative to `zap-to-char'
+  :ensure t
+  ;; TODO: Make a lighter version (I just want to move the point)
+  ;; :bind ("M-z" . zop-to-char)
+  )
+
 (use-package easy-kill                  ; Easy killing and marking on C-w
   :disabled t
   :ensure t
