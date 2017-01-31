@@ -648,3 +648,34 @@ the final output.
    paste it to next line
 2. Mark the second line and replace " " with "\n" with ~M-x
    replace-string~.
+
+* [[http://www.vimgolf.com/challenges/5526aef5814f89118e00f23c][camel riding]]
+<2017-01-31 Tue>
+
+#+BEGIN_SRC diff
+-val (schemas, activeCount, techTagCount, sharedCount, allowedPathsCount, rootCount, searchableCount) = fieldStats(store)
++val (schemas, schActiveCount, schTechTagCount, schSharedCount, schAllowedPathsCount, schRootCount, schSearchableCount) = fieldStats(store)
+#+END_SRC
+
+Define a keyboard macro of simple edit plus ~M-x upcase-initials-region~.
+
+* [[http://www.vimgolf.com/challenges/53b473a3ac0ceb00022303bd][Do you demand a shrubbery?]]
+<2017-01-31 Tue>
+
+Normal edit.
+
+* [[http://www.vimgolf.com/challenges/57a87f444f1a8e3c4000ff8c][Pretty multi-line bash]]
+<2017-01-31 Tue>
+
+~M-x align-regexp RET && RET~
+
+* [[http://www.vimgolf.com/challenges/54698da795f6da00020d85ed][Condensed Cases]]
+<2017-01-31 Tue>
+
+# \nbsp stands for one space, see (info "(org) Special symbols") for
+# more info
+1. Set "\nbsp\nbsp\nbsp\nbsp{}case" as ~fill-prefix~ by moving point right after it and
+   hitting ~C-.~ (or ~M-x set-fill-prefix~).
+2. Join the line with previous one with ~M-^~ (or ~M-x
+   delete-indentation~)
+3. Replace " " with " ," by using query-replace on a region.
