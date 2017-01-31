@@ -640,3 +640,11 @@ the final output.
 1. Delete line which don't contain a hash with ~M-x delete-non-matching-lines #~
 2. Make all # on its own line with replace " #" with "\n#"
 3. Reverse the lines (since it's sorted already) with ~M-x reverse-region~
+
+* [[http://www.vimgolf.com/challenges/5421e49fdbded100021e4934][Count both ways]]
+<2017-01-31 Tue>
+
+1. Copy "two three four five six seven eight nine ten eleven" and
+   paste it to next line
+2. Mark the second line and replace " " with "\n" with ~M-x
+   replace-string~.
