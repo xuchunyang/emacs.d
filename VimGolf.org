@@ -5,7 +5,7 @@
 #+CAPTION: Tracking the progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |   50 | 14.49 |
+|   345 |   53 | 15.36 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -814,3 +814,25 @@ Edit as usual.
 
 1. Mark the method with ~C-M-h~ (~mark-defun~)
 2. Comment the region with ~M-:~ (~comment-dwim~)
+
+* [[https://vimgolf.com/challenges/50ae009b65b8db0002000047][Let's play some Ivmgolf]]
+<2017-01-31 Tue>
+
+1. Mark "Iv" across 4 lines in rectangle mode with ~C-x SPC~
+   (~rectangle-mark-mode~)
+2. ~C-x r t Vi RET~ (~string-rectangle~)
+
+* [[https://vimgolf.com/challenges/57a021b0d938573add00bcd0][A grid of punctuation]]
+<2017-01-31 Tue>
+
+1. Record a keyboard macro for yanking "-=" and ~C-u 40 C-x e~
+   (~kmacro-end-and-call-macro~) to yank 40 times
+2. Make the second line by some manually edits
+3. Do the similar thing in 1
+
+* [[https://vimgolf.com/challenges/56462467f20fe74c93000001][lipsum lines]]
+<2017-01-31 Tue>
+
+1. Delete double-quotes
+2. Wrap lines in ~"\1",~ with ~C-M-%~ (~query-replace-regexp~)
+3. Cleanup
