@@ -726,3 +726,36 @@ Edit as usual.
 <2017-01-31 Tue>
 
 Edit as usual, nothing special.
+
+* [[https://vimgolf.com/challenges/4ed3d247a745c1000100002a][remove dupes from array]]
+<2017-01-31 Tue>
+
+Start file
+
+#+BEGIN_EXAMPLE
+[11, 2, 3,5  , 1,1, 22, 4]
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+[1, 2, 3, 4, 5, 11, 22]
+#+END_EXAMPLE
+
+** Solution
+
+Mark the numbers in the region and run the following command.
+
+#+BEGIN_SRC emacs-lisp
+(defun sort-and-remove-dup-in-region (start end)
+  (interactive "*r")
+  (let* ((str (buffer-substring start end))
+         (replace
+          (mapconcat #'number-to-string
+                     (sort (mapcar #'string-to-number
+                                   (delete-dups (split-string str "[ ]*,[ ]*")))
+                           #'<)
+                     ", ")))
+    (delete-region start end)
+    (insert replace)))
+#+END_SRC
