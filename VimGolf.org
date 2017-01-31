@@ -553,3 +553,47 @@ to enter ~\n~ from MiniBuffer, type ~C-q C-j~ (~C-q~ is bound to
 2. ~C-u C-x r N RET %1d. RET~ (i.e., call ~rectangle-number-lines~
    with a prefix argument, and use the default start (that is 1), and
    enter the format)
+
+* [[http://www.vimgolf.com/challenges/54345d14d529ef0002227d4c][That hyphen]]
+<2017-01-30 Mon>
+
+Just normal edit.
+
+* [[http://www.vimgolf.com/challenges/58409414770f4b474601384c][Sort files from hosts]]
+<2017-01-31 Tue>
+
+Start file
+
+#+BEGIN_EXAMPLE
+dartacan: /etc/hosts
+dartacan: /etc/httpd/conf/httpd.conf
+dartacan: /opt/scripts/list_vhosts
+mozart: /etc/resolv.conf
+mozart: /usr/bin/vim
+mozart: /usr/bin/awesome
+mozart: ~/.gem/ruby/2.1.0/bin/vimgolf
+gullit: /bin/bash
+gullit: /etc/hosts
+gullit: /usr/bin/xorg
+gullit: /usr/bin/xeyes
+gullit: /usr/bin/X
+gullit: /
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+dartacan: /etc/hosts /etc/httpd/conf/httpd.conf /opt/scripts/list_vhosts
+mozart: /etc/resolv.conf /usr/bin/vim /usr/bin/awesome ~/.gem/ruby/2.1.0/bin/vimgolf
+gullit: /bin/bash /etc/hosts /usr/bin/xorg /usr/bin/xeyes /usr/bin/X /
+#+END_EXAMPLE
+
+** Solution
+
+1. Define the following keyboard macro with ~C-x (~ and ~C-x )~
+2. Execute it with ~C-x e~ by moving point accordingly or ~M-x
+   apply-macro-to-region-lines~ by select the region.
+
+#+BEGIN_EXAMPLE
+Last macro: C-a C-SPC C-s : C-f C-w M-^
+#+END_EXAMPLE
