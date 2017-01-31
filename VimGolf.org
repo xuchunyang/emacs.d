@@ -597,3 +597,46 @@ gullit: /bin/bash /etc/hosts /usr/bin/xorg /usr/bin/xeyes /usr/bin/X /
 #+BEGIN_EXAMPLE
 Last macro: C-a C-SPC C-s : C-f C-w M-^
 #+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/57a208ce38e7e83a43000003][Generate a list of numbers]]
+<2017-01-31 Tue>
+
+#+BEGIN_QUOTE
+Please generate list of numbers from 1 to 20.
+#+END_QUOTE
+
+** Solution
+
+#+BEGIN_SRC emacs-lisp
+(loop for i from 1 to 20
+      do (insert (format "%s " i)))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/536cfa23fcccd100025678bd][Extract argument from function]]
+<2017-01-31 Tue>
+
+Nothing special, edit as usual.
+
+* [[http://www.vimgolf.com/challenges/4d1a4d82a860b7447200008d][Whitespace, empty lines and tabs]]
+<2017-01-31 Tue>
+
+1. Replace one tab with one space with query-replace or just replace
+2. Strip trailing whitespace with ~M-x delete-trailing-whitespace~
+3. Delete empty lines with ~M-x delete-matching-lines ^$~
+
+In Emacs, ~untabify~ and ~whitespace-cleanup~ are much more sophisticated.
+
+* [[http://www.vimgolf.com/challenges/5100ce70326e09000200004a][Saving the hashes(#)]]
+<2017-01-31 Tue>
+
+#+BEGIN_QUOTE
+Our goal is to delete every line which doesn't contain a hash
+signs. The remaining hash signs with numbers are then sorted to get
+the final output.
+#+END_QUOTE
+
+** Solution
+
+1. Delete line which don't contain a hash with ~M-x delete-non-matching-lines #~
+2. Make all # on its own line with replace " #" with "\n#"
+3. Reverse the lines (since it's sorted already) with ~M-x reverse-region~
