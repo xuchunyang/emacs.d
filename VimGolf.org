@@ -1,4 +1,14 @@
 #+TITLE: Emacs Solutions to [[http://www.vimgolf.com/][VimGolf]]
+#+OPTIONS: toc:nil
+
+#+NAME: progress
+#+CAPTION: Tracking the progress
+| Total | Done |   (%) |
+|-------+------+-------|
+|   345 |   50 | 14.49 |
+#+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
+
+#+TOC: headlines 1
 
 * [[https://vimgolf.com/challenges/510b1c61e48b7e0002000028][Chinese Multiplication Table]]
 <2017-01-29 Sun>
