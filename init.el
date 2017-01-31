@@ -67,7 +67,23 @@
     "Make sure :ensure fill `package-selected-packages'."
     (add-to-list 'package-selected-packages (car r))))
 
-(use-package use-package :ensure t)
+;; Use another '(use-package use-package ...)' to make previos takes
+;; effect
+(use-package use-package
+  :ensure t
+  :config
+  ;; Make sure `:if' comes before `:ensure'
+  (require 'subr-x)                     ; 24.4
+  (require 'seq)                        ; 25.1
+  (when-let ((l use-package-keywords)
+             (x (seq-position l :ensure))
+             (y (seq-position l :if)))
+    (when (< x y)
+      (setq use-package-keywords
+            (append (subseq l 0 x)
+                    '(:if :ensure)
+                    (subseq l (1+ x) y)
+                    (subseq l (1+ y)))))))
 
 ;; Define `config' to group package configuration (an alternative to
 ;; `use-package')
@@ -2416,11 +2432,9 @@ Called with a prefix arg set search provider (default Google)."
         do (add-to-list 'org-structure-template-alist al 'append)))
 
 (use-package grab-mac-link
-  ;; Notice that `:ensure' has a higher priority than `:if'
-  ;; :if *is-mac*
-  :disabled (not *is-mac*)
-  :load-path "~/src/grab-mac-link"
+  :if *is-mac*
   :ensure t
+  :load-path "~/src/grab-mac-link"
   :bind ("C-c L" . grab-mac-link))
 
 (use-package orglink
