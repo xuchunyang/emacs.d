@@ -759,3 +759,48 @@ Mark the numbers in the region and run the following command.
     (delete-region start end)
     (insert replace)))
 #+END_SRC
+
+* [[https://vimgolf.com/challenges/584dd156842bd00769000001][Double and switch]]
+<2017-01-31 Tue>
+
+Oh, I don't really know the answer and also don't have much interest
+to find it out. I decide to give it up.
+
+The following minor mode is for enlarge/shrink the region in binary
+way, which might be helpful for answering this challenge.
+
+#+BEGIN_SRC emacs-lisp
+(defvar binary-region-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map [?+] #'binary-region+)
+    (define-key map [?-] #'binary-region-)
+    map))
+
+(define-minor-mode binary-region-mode
+  "用二分法扩大或缩小 the region."
+  :lighter " Binary-Region"
+  :keymap binary-region-mode-map)
+
+(defun binary-region+ (start end)
+  (interactive "r")
+  (when (use-region-p)
+    (set-mark start)
+    (goto-char (+ (- end start) end))))
+
+(defun binary-region- (start end)
+  (interactive "r")
+  (when (use-region-p)
+    (set-mark start)
+    (goto-char (+ (/ (- end start) 2) start))))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/4d1a71b5b8cb340932000109][Change the content of a string]]
+<2017-01-31 Tue>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/54ddd1d261cec11d1b01707c][Mute the second method of this script]]
+<2017-01-31 Tue>
+
+1. Mark the method with ~C-M-h~ (~mark-defun~)
+2. Comment the region with ~M-:~ (~comment-dwim~)
