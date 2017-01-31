@@ -679,3 +679,50 @@ Normal edit.
 2. Join the line with previous one with ~M-^~ (or ~M-x
    delete-indentation~)
 3. Replace " " with " ," by using query-replace on a region.
+
+* [[http://www.vimgolf.com/challenges/5325695c6092800002072d06][Mess in revision history]]
+<2017-01-31 Tue>
+
+Use ~C-x SPC~ (~rectangle-mark-mode~) to mark the region and ~C-x r t~
+(~string-rectangle~) to insert the leading spaces.
+
+* [[http://www.vimgolf.com/challenges/5054baaafa0b390002000029][SFD-ROC: vimvimvim]]
+<2017-01-31 Tue>
+
+Replace "vim" with "vim\n" by typing ~M-x replace-string RET vim RET
+vim C-q C-j RET~.
+
+* [[http://www.vimgolf.com/challenges/56680033ac11043d6306aa07][Replace and keep the case]]
+<2017-01-31 Tue>
+
+Emacs by default does this, simply run ~M-%~ (~query-replace~) or just
+~M-x replace-string~.
+
+* [[http://www.vimgolf.com/challenges/580c21b5c177c54b0d067069][Start coding format]]
+<2017-01-31 Tue>
+
+Type it literally. CC Mode is powerful.
+
+* [[http://www.vimgolf.com/challenges/51e023f92b2f6d0002000066][Hole-in-one]]
+<2017-01-31 Tue>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/4d1e634e509d6e19d8000081][Shebangs for all]]
+<2017-01-31 Tue>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/5447b459380e8b0002000db3][Gray area]]
+<2017-01-31 Tue>
+
+Edit as usual.
+
+- Copy a region with ~M-w~ (~kill-ring-save~)
+- Clear a region with ~C-x r c~ (~clear-rectangle~)
+- Delete a region with ~C-w~ (~kill-region~)
+
+* [[http://www.vimgolf.com/challenges/53369b712a09c1000223fb57][Two become one]]
+<2017-01-31 Tue>
+
+Edit as usual, nothing special.
