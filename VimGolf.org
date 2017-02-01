@@ -5,7 +5,7 @@
 #+CAPTION: Tracking the progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |   53 | 15.36 |
+|   345 |   62 | 17.97 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -836,3 +836,65 @@ Edit as usual.
 1. Delete double-quotes
 2. Wrap lines in ~"\1",~ with ~C-M-%~ (~query-replace-regexp~)
 3. Cleanup
+
+* [[http://www.vimgolf.com/challenges/4d1ccfde35b40650b80004ae][The Cake is a Lie]]
+<2017-02-01 Wed>
+
+Simply run ~M-c~ (~capitalize-word~) a few times.
+
+1. Delete words with ~M-x replace-regexp RET [a-z ]* RET \n RET~
+2. Record keyboard macro ~C-a C-SPC C-e " , M-^~ then mark the
+   appropriate region and run ~M-x apply-macro-to-region-lines~
+3. Cleanup
+
+* [[http://www.vimgolf.com/challenges/4fc9d767d3a0d4000100000e][Append semicolon after expressions]]
+<2017-02-01 Wed>
+
+~C-M-% ^\(.+\)$ RET \1; RET~ (~query-replace-regexp~)
+
+* [[http://www.vimgolf.com/challenges/4d1a5275a860b74472000110][Sort and add attributes]]
+<2017-02-01 Wed>
+
+1. Sort via ~M-x sort-lines~
+2. Add attributes via
+   ~M-x replace-string RET ) RET  , :country => "USA") RET~
+
+* [[http://www.vimgolf.com/challenges/55d7692d134b34420f05ac0b][Add to end of each line... kinda]]
+<2017-02-01 Wed>
+
+Replace or query-replace as usual.
+
+* [[http://www.vimgolf.com/challenges/4d1e29fda93ce03311000066][Ruby 1.9 hashes]]
+<2017-02-01 Wed>
+
+Use ~query-replace-regexp~ or ~rectangle-mark-mode~.
+
+* [[http://www.vimgolf.com/challenges/4d1a6a8eb8cb34093200007a][Reconstruct the Sentence]]
+<2017-02-01 Wed>
+
+1. Sort lines with ~C-u -1 M-x sort-numeric-fields~
+2. Join lines via ~M-x replace-regexp~
+
+* [[http://www.vimgolf.com/challenges/54a8fb2ff4048c0002479f12][Happy TvvO]]
+<2017-02-01 Wed>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/4fa0d2fa2037000001000057][Exchanging Quotes]]
+<2017-02-01 Wed>
+
+Replace
+
+- ~'~ to ~"~
+- ~\'~ to ~'~
+
+with ~M-x plur-query-replace RET {',\'} RET {",'} RET~ (Notes that the
+command is from plur package, which is written by me and available
+from melpa)
+
+* [[http://www.vimgolf.com/challenges/553b97364ba96c319d0296eb][readability]]
+<2017-02-01 Wed>
+
+Surround ~[-=*+/]~ with one space by using ~M-x replace-regexp~. Notes
+that ~-~ is a special character in ~[]~, to include it, it should be
+placed at the beginning or end of ~[]~.
