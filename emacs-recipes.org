@@ -1,0 +1,30 @@
+#+TITLE: Emacs Recipes
+#+AUTHOR: Chunyang Xu
+#+EMAIL: mail@xuchunyang.me
+#+LANGUAGE: zh-CN
+
+#+SUBTITLE: A cookbook for GNU Emacs
+#+OPTIONS: toc:2
+
+* 排序 (Sorting)
+** 行内排序
+
+*** 问题
+
+把 "2 3 5 4 1" 修改成 "1 2 3 4 5"
+
+*** 答案
+
+1. 选中这 5 个数字
+2. ~M-x sort-regexp-fields RET [0-9] RET \& RET~
+
+*** 分析
+
+"[0-9]" 指定排序的单元，这里指一个数字。"\&" 指定排序的单元中的键，这里指整个单元。
+
+~sort-regexp-fields~ 使用字典排序 (Lexicographically or Alphabetical)，
+由于上面只有一位数字，所有它也能用。
+
+* 对齐 (Aligning)
+
+** TODO
