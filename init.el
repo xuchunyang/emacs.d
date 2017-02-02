@@ -405,7 +405,11 @@
   :init (add-hook #'after-init-hook #'save-place-mode))
 
 
-;;; Minibuffer with helm
+;;; Minibuffer
+
+;; Watch Minibuffer prompt and customize it accordingly
+(use-package prompt-watcher
+  :config (prompt-watcher-mode))
 
 (defcustom chunyang-completion-system 'helm
   "My preferred completion system."
