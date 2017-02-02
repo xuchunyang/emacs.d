@@ -5,7 +5,7 @@
 #+CAPTION: Tracking the progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |   62 | 17.97 |
+|   345 |   63 | 18.26 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -898,3 +898,8 @@ from melpa)
 Surround ~[-=*+/]~ with one space by using ~M-x replace-regexp~. Notes
 that ~-~ is a special character in ~[]~, to include it, it should be
 placed at the beginning or end of ~[]~.
+
+* [[https://vimgolf.com/challenges/55771cc4750ef86573003b83][Line 'em up!]]
+<2017-02-01 Wed>
+
+~M-x align-regexp RET => RET~
