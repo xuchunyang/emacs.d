@@ -97,7 +97,39 @@
            ;; look at (info "(tramp) Cleanup remote connections")
            "\\`\\*tramp"))
 
-  (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window))
+  (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window)
+
+  ;; "other window" action
+  (defun chunyang-helm-create-buffer-other-window (buffer-name)
+    (cl-letf (((symbol-function 'switch-to-buffer)
+               #'switch-to-buffer-other-window))
+      (let ((default-action
+              (cdr (car (helm-attr 'action helm-source-buffer-not-found 'ignorefn)))))
+        (funcall default-action buffer-name))))
+
+  (let ((source helm-source-buffer-not-found)
+        (action-name "Create buffer other window `M-o'"))
+    ;; Avoid duplicates of the same action
+    (helm-delete-action-from-source action-name source)
+    (helm-add-action-to-source action-name
+                               #'chunyang-helm-create-buffer-other-window
+                               source
+                               2))
+
+  ;; key binding for the new action
+  (defvar chunyang-helm-source-buffer-not-found-map
+    (let ((map (make-sparse-keymap)))
+      (set-keymap-parent map helm-map)
+      (define-key map "\M-o" #'chunyang-helm-create-buffer-other-window-cmd)
+      map))
+
+  (helm-attrset 'keymap chunyang-helm-source-buffer-not-found-map
+                helm-source-buffer-not-found)
+
+  (defun chunyang-helm-create-buffer-other-window-cmd ()
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'chunyang-helm-create-buffer-other-window))))
 
 (use-package helm-files
   :defer t
