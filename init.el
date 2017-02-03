@@ -2421,6 +2421,9 @@ Called with a prefix arg set search provider (default Google)."
   (setq org-edit-src-content-indentation 0)
 
   :config
+  ;; Storing & Export Manual Page link
+  (require 'org-man)
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    ' ((emacs-lisp . t)
