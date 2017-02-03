@@ -2435,19 +2435,9 @@ Called with a prefix arg set search provider (default Google)."
   :bind ("C-c L" . grab-mac-link))
 
 (use-package orglink
-  :disabled t                           ; I like this package, but it requires
-                                        ; org-8.3, while I am installing org
-                                        ; manuallly and in Emacs-25 the built-in
-                                        ; version of org is org-8.2, so If I
-                                        ; install this package via ELPA, org
-                                        ; will also be install as dependency,
-                                        ; this should be OK in fact, but I just
-                                        ; don't want this.
-  :ensure t
-  ;; :diminish orglink-mode
-  ;; NOTE The problem is: it will slow down Emacs startup
-  ;; :init (global-orglink-mode)
-  :defer t)
+  :load-path "~/src/orglink"
+  :init (setq orglink-mode-lighter nil)
+  :config (global-orglink-mode))
 
 
 (use-package habitica
