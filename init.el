@@ -365,33 +365,23 @@
 
 
 (use-package savehist                   ; Minibuffer history
-  ;; :disabled t
-  :defer t
-  :init
+  :config
   (savehist-mode)
   (setq history-length 1000
         history-delete-duplicates t
         savehist-additional-variables '(extended-command-history)))
 
 (use-package recentf                    ; Recent files
-  :defer t
   :config
   (setq recentf-max-saved-items 512
         recentf-exclude (list "/\\.git/.*\\'"      ; Git contents
                               "/\\.emacs\\.d/elpa" ; ELPA
-                              "/etc/.*\\'"         ; Package configuration
-                              "/var/.*\\'"         ; Package data
+                              "/etc/.*\\'" ; Package configuration
+                              "/var/.*\\'" ; Package data
                               ".*\\.gz\\'"
                               "TAGS"
                               ".*-autoloads\\.el\\'"))
-
-  ;; Reopen Last Closed File
-  (defun reopen-last-closed-file ()
-    (interactive)
-    (find-file (car recentf-list)))
-
-  ;; (define-key (current-global-map) "\M-z" #'reopen-last-closed-file)
-  )
+  (recentf-mode))
 
 (use-package bookmark
   :defer t
