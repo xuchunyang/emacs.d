@@ -2783,83 +2783,6 @@ provides similiar function."
   (setq imaxima-use-maxima-mode-flag t))
 
 
-;;; Fun
-(use-package fun
-  :defer t
-  :init
-  (defvar 2017年春节倒计时-timer nil)
-  (defun 2017年春节倒计时-1 ()
-    (let ((buf (get-buffer "*2017年春节倒计时*")))
-      (if buf
-          (with-current-buffer buf
-            (let* ((seconds (truncate
-                             (- (time-to-seconds (date-to-time "2017-01-28T00:00:00+0800"))
-                                (time-to-seconds))))
-                   (days    (/ seconds (* 24 60 60)))
-                   (hours   (progn (decf seconds (* days (* 24 60 60)))
-                                   (/ seconds (* 60 60))))
-                   (minutes (progn (decf seconds (* hours (* 60 60)))
-                                   (/ seconds 60)))
-                   (seconds (decf seconds (* minutes 60))))
-              (erase-buffer)
-              (insert "2017年春节时间：2017年1月28日 星期六 农历正月初一\n")
-              (insert "        目前距离2017年春节过年还有\n")
-              (insert (propertize (format "  %s 天 %s 时 %s 分 %s 秒"
-                                          days hours minutes seconds)
-                                  'face '(:height 2.0))))
-            (unless 2017年春节倒计时-timer
-              (setq 2017年春节倒计时-timer
-                    (run-at-time t 1 '2017年春节倒计时-1))))
-        (when 2017年春节倒计时-timer
-          (cancel-timer 2017年春节倒计时-timer)
-          (setq 2017年春节倒计时-timer nil)))))
-
-  (defun 2017年春节倒计时 ()
-    "目前距离2017年春节过年还有？
-
-2017年春节时间：2017年1月28日 星期六 农历正月初一"
-    (interactive)
-    (with-current-buffer (get-buffer-create "*2017年春节倒计时*")
-      (buffer-disable-undo)
-      (setq cursor-type nil)
-      (2017年春节倒计时-1)
-      (display-buffer (current-buffer))))
-
-  (defun 2017-新年快乐 ()
-    (interactive)
-    (let ((buf (get-buffer-create "*2017*")))
-      (switch-to-buffer buf)
-      (buffer-disable-undo)
-      (let* ((cursor-type nil)
-             (s
-              ;; Made with figlet(1) and http://www.kammerl.de/ascii/AsciiSignature.php
-              "            ___      __      _      ____     新  
-    a c s  |_  )    /  \\    / |    |__  |    年  
-   m        / /    | () |   | |      / /     快  
-  (E__[O]  /___|   _\\__/   _|_|_   _/_/_   __乐__
- {======|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|
-./o--000'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'")
-             (lines (split-string s "\n"))
-             (win-width (window-width))
-             (end-height (1- (/ (- (window-height) (length lines)) 2)))
-             (padded (mapconcat (lambda (line)
-                                  (concat (make-string win-width ?\s)
-                                          line
-                                          (make-string win-width ?\s)))
-                                lines "\n")))
-        (loop for i from 0 to win-width
-              do (progn (erase-buffer)
-                        (insert (make-string end-height ?\n))
-                        (insert (loop for line in (split-string padded "\n")
-                                      concat (concat (substring line i (1- (+ i win-width))) "\n")))
-                        (sleep-for 0 30)
-                        (discard-input)
-                        (redisplay))
-              finally do (progn (whitespace-cleanup)
-                                (let ((zone-programs [zone-pgm-putz-with-case]))
-                                  (zone))))))))
-
-
 ;;; Misc
 
 ;; Socks5 proxy setting of `url.el'
