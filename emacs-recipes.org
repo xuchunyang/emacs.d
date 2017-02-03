@@ -26,6 +26,35 @@
 由于上面只有一位数字，所有它也能用。
 
 * 对齐 (Aligning)
+** 对齐任意域 (field)
+*** 问题
+
+把
+
+#+BEGIN_SRC emacs-lisp
+(setq foo 1
+      foobar "hello"
+      foobarbaz nil)
+#+END_SRC
+
+改成
+
+#+BEGIN_SRC emacs-lisp
+(setq foo       1
+      foobar    "hello"
+      foobarbaz nil)
+#+END_SRC
+
+*** 答案
+
+选中后执行 ~C-u M-x align-regexp RET  .+\( \) RET 1 RET 1 RET y~
+
+*注* 正则表达式为 " .+\( \)"
+
+*** 分析
+
+正则表达式是用来定位可修改以达到对齐目的的空白处，也就是上面 1, 2, 3 前面的那一个空白，并用分组区隔开来。
+
 * 搜索和替换 (Searching and Replacing)
 ** 交换 emacs 和 vim
 *** 问题
