@@ -2,10 +2,9 @@
 #+OPTIONS: toc:nil
 
 #+NAME: progress
-#+CAPTION: Tracking the progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |   63 | 18.26 |
+|   345 |   66 | 19.13 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -903,3 +902,18 @@ placed at the beginning or end of ~[]~.
 <2017-02-01 Wed>
 
 ~M-x align-regexp RET => RET~
+
+* [[https://vimgolf.com/challenges/54e05c0e3da7a40ce4002226][ASCII box]]
+<2017-02-03 Fri>
+
+~M-x comment-box RET * RET~
+
+* [[https://vimgolf.com/challenges/4d1cdb0635b40650b8000527][Make Fancy Header]]
+<2017-02-03 Fri>
+
+I don't know fancy method, simply edit as usual.
+
+* [[https://vimgolf.com/challenges/53eb4ac3f690b50002f871b6][Lisp Condense]]
+<2017-02-03 Fri>
+
+Emacs understands Lisp. Type ~M-R~ (~paredit-raise-sexp~) or ~M-x raise-sexp~.
