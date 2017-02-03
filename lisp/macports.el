@@ -31,5 +31,12 @@
     (erase-buffer)
     (shell-command "port list" (current-buffer))))
 
+(defun macports-info-port (port)
+  (interactive
+   (list (save-excursion
+           (goto-char (line-beginning-position))
+           (current-word))))
+  (shell-command (concat "port info " port)))
+
 (provide 'macports)
 ;;; macports.el ends here
