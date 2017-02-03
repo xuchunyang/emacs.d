@@ -459,8 +459,8 @@
   :config (add-hook 'kill-buffer-query-functions
                     #'lunaryorn-do-not-kill-important-buffers))
 
-(bind-key "O" #'delete-other-windows  special-mode-map)
-(bind-key "Q" #'kill-this-buffer      special-mode-map)
+(bind-key "O"     #'delete-other-windows special-mode-map)
+(bind-key "Q"     #'kill-this-buffer     special-mode-map)
 (bind-key "C-x k" #'kill-this-buffer)
 (bind-key "C-x K" #'kill-buffer)
 
@@ -2696,7 +2696,7 @@ provides similiar function."
   ;; C-z C-a - Switch to REPL with current module
   (defun chunyang-geiser-setup ()
     (bind-keys :map geiser-mode-map
-               ("C-h ." . geiser-doc-symbol-at-point)
+               ("C-h ."   . geiser-doc-symbol-at-point)
                ("C-h C-." . geiser-doc-look-up-manual)))
   (add-hook 'geiser-mode-hook #'chunyang-geiser-setup)
 
