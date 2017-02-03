@@ -2394,8 +2394,10 @@ Called with a prefix arg set search provider (default Google)."
   (require 'org-loaddefs)
   (add-to-list 'Info-directory-list "~/src/org-mode/doc/")
 
-  (setq org-agenda-files (list "~/Sync/chunyang.org"))
-  (setq org-default-notes-file "~/Sync/chunyang.org")
+  (setq org-directory          "~/Sync/org"
+        org-agenda-files       '("~/Sync/org/")
+        org-default-notes-file "~/Sync/org/todo.org")
+
   (define-key global-map [?\C-c ?c] #'org-capture)
   (define-key global-map [?\C-c ?a] #'org-agenda)
 
