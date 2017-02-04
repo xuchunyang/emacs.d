@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |   70 | 20.29 |
+|   345 |   74 | 21.45 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -988,3 +988,28 @@ Use ~M-c~ (~capitalize-word~), ~M-u~ (~upcase-word~) and ~M-L~ (~downcase-dwim~)
 hmm, just delete the old and insert the new. Though,
 ~org-increase-number-at-point~ works (prefix with ~C-u 25~ and
  ~C-u 49~).
+
+* [[https://vimgolf.com/challenges/54f6e85d8dca0315e1010de1][Logging with key]]
+<2017-02-04 Sat>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/56a260eedb173f2f5d00f6f8][JS notation to Immutable.js notation]]
+<2017-02-04 Sat>
+
+Use keyboard macro and rectangle region mode.
+
+* [[https://vimgolf.com/challenges/4d1b1b97c58eaa2a8a0002fc][Python Hello World! Reformatting]]
+<2017-02-04 Sat>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/521c805d860021000200007d][VimGolfNight]]
+<2017-02-04 Sat>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/50519ca330c82d0002000035][The name of the game]]
+<2017-02-04 Sat>
+
+Edit as usual.
