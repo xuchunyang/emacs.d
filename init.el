@@ -2260,6 +2260,7 @@ Called with a prefix arg set search provider (default Google)."
   :commands shell-pop)
 
 (use-package eshell-z
+  :ensure t
   :commands eshell-z
   :load-path "~/src/eshell-z")
 
