@@ -287,6 +287,12 @@
     (deactivate-mark)
     (command-execute key)))
 
+(defun chunyang-eval-on-region (beg end)
+  "Eval a sexp on the region, local var `beg', `end' and `text' can be used.'"
+  (interactive "r")
+  (let ((text (buffer-substring-no-properties beg end)))
+    (eval (read--expression "Eval on region (local: beg, end, text): "))))
+
 
 ;;; Key
 
@@ -308,6 +314,20 @@
       (human  (insert (key-description key)))
       (string (insert key))
       (vector (insert (format "%s" (read-kbd-macro key t)))))))
+
+(defun chunyang-insert-key-and-command (key)
+  (interactive "k")
+  (let ((key (key-description key))
+        (cmd (key-binding key)))
+    (insert
+     (cl-case major-mode
+       (org-mode
+        (format "~%s~ (~%s~)" key cmd))
+       ((markdown-mode gfm-mode)
+        (format "`%s` (`%s`)" key cmd))
+       ((emacs-lisp-mode lisp-interaction-mode )
+        (format "%s (`%s')" key cmd))
+       (t (format "'%s' ('%s')" key cmd))))))
 
 ;; According to my test ('M-x trace-function undefined'), when I type
 ;; some undefined key, the command `undefined' will be called.
