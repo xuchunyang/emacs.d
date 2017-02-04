@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |   66 | 19.13 |
+|   345 |   70 | 20.29 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -917,3 +917,74 @@ I don't know fancy method, simply edit as usual.
 <2017-02-03 Fri>
 
 Emacs understands Lisp. Type ~M-R~ (~paredit-raise-sexp~) or ~M-x raise-sexp~.
+
+* [[https://vimgolf.com/challenges/56e69da07b3d84520a000001][Mirrored text]]
+<2017-02-04 Sat>
+
+#+BEGIN_SRC emacs-lisp
+(defun chunyang-eval-on-region (beg end)
+  (interactive "r")
+  (let ((text (buffer-substring-no-properties beg end)))
+    (eval (read--expression "Eval on region (local var: beg, end, text): "))))
+#+END_SRC
+
+~M-x chunyang-eval-on-region RET (kill-new (nreverse text)) RET~
+
+* [[https://vimgolf.com/challenges/53e1d5a0f201bc0002226501][120 Degrees]]
+<2017-02-04 Sat>
+
+#+BEGIN_QUOTE
+Rotate that triangle.
+#+END_QUOTE
+
+Start file
+
+#+BEGIN_EXAMPLE
+   4
+  3 5
+ 2   6
+1 9 8 7
+#+END_EXAMPLE
+
+End file
+
+#+BEGIN_EXAMPLE
+   4
+  3 5
+ 2   6
+1 9 8 7
+#+END_EXAMPLE
+
+** Solution
+
+Select that triangle and execute the following command
+
+#+BEGIN_SRC emacs-lisp
+(defun rotate-that-triangle (beg end)
+  (interactive "*r")
+  (let* ((text (buffer-substring beg end))
+         (list (split-string text))
+         (sorted (loop for i in '(0 2 4 8 7 6 5 3 1)
+                       collect (nth i list)))
+         (rotated (append (seq-subseq sorted 3)
+                          (seq-subseq sorted 0 3))))
+    (goto-char beg)
+    (loop for i in '(0 8 1 7 2 6 5 4 3)
+          do
+          (forward-to-word 1)
+          (cl-destructuring-bind (b . e) (bounds-of-thing-at-point 'word)
+            (delete-region b e)
+            (insert (nth i rotated))))))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/4d1a4f2ba860b744720000bf][Flodder-challenge]]
+<2017-02-04 Sat>
+
+Use ~M-c~ (~capitalize-word~), ~M-u~ (~upcase-word~) and ~M-L~ (~downcase-dwim~).
+
+* [[https://vimgolf.com/challenges/4d1c1a3cf655cd081000000d][A Simple One]]
+<2017-02-04 Sat>
+
+hmm, just delete the old and insert the new. Though,
+~org-increase-number-at-point~ works (prefix with ~C-u 25~ and
+ ~C-u 49~).
