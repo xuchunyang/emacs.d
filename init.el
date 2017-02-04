@@ -2601,10 +2601,9 @@ provides similiar function."
 ;;; Ruby
 
 (use-package ruby-mode
-  :ensure t
   :defer t
   :init
-  (add-hook 'ruby-mode 'superword-mode))
+  (add-hook 'ruby-mode-hook 'superword-mode))
 
 (use-package inf-ruby
   :ensure t
