@@ -291,7 +291,12 @@
   "Eval a sexp on the region, local var `beg', `end' and `text' can be used.'"
   (interactive "r")
   (let ((text (buffer-substring-no-properties beg end)))
-    (eval (read--expression "Eval on region (local: beg, end, text): "))))
+    (eval (read--expression "Eval on region (local: beg, end, text): ")
+          ;; hmm, really necessary? I still don't know very well on
+          ;; Emacs Lisp scope/environment
+          (list (cons 'beg beg)
+                (cons 'end end)
+                (cons 'text text)))))
 
 
 ;;; Key
