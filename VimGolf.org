@@ -2,9 +2,9 @@
 #+OPTIONS: toc:nil
 
 #+NAME: progress
-| Total | Done |   (%) |
-|-------+------+-------|
-|   345 |   74 | 21.45 |
+| Total | Done |  (%) |
+|-------+------+------|
+|   345 |   79 | 22.9 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1011,5 +1011,25 @@ Edit as usual.
 
 * [[https://vimgolf.com/challenges/50519ca330c82d0002000035][The name of the game]]
 <2017-02-04 Sat>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/50d0d80eaa503f000200001b][Swap assigned value]]
+<2017-02-05 Sun>
+
+Use ~swap-regions~.
+
+* [[https://vimgolf.com/challenges/4d1db1b8de2f897c2a00014a][Reverse Simple Deletion]]
+<2017-02-05 Sun>
+
+~C-M-% . RET \& C-q C-j RET~ (~query-replace-regexp~)
+
+* [[https://vimgolf.com/challenges/5107179a44d65e0002000048][Minimalist Limerick]]
+<2017-02-05 Sun>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/53ab5ade4367c700025ce66a][Shuffle puzzle]]
+<2017-02-05 Sun>
 
 Edit as usual.
