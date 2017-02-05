@@ -75,8 +75,8 @@
 
 (define-minor-mode mark-align-mode
   "Align through marking."
-  :lighter " Mark-Align")
-
+  :lighter " Mark-Align"
+  (and mark-align-mode (mark-align-set-mark-or-unset)))
 
 (provide 'mark-align)
 ;;; mark-align.el ends here
