@@ -1728,6 +1728,9 @@ See also `describe-function-or-variable'."
          ("C-x M-g" . magit-dispatch-popup))
   :init (global-git-commit-mode)
   :config
+  ;; For M-x `magit-list-repositories'
+  (setq magit-repository-directories '(("~/src" . 1)))
+
   ;; Save files before executing git command for me
   (setq magit-save-repository-buffers 'dontask)
   ;; Show word-granularity differences for the current diff hunk
