@@ -804,6 +804,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
          ("C-c A c" . align-current)
          ("C-c A r" . align-regexp)))
 
+(use-package mark-align)                ; Align visualized (via Marking)
+
 (use-package multiple-cursors           ; Edit text with multiple cursors
   :disabled t
   :ensure t
