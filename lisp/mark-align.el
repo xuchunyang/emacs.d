@@ -24,11 +24,15 @@
 
 ;;; Code:
 
-(defvar mark-align-markers nil)
+(defvar-local mark-align-markers nil)
+(defvar-local mark-align-overlays nil)
 
 (defun mark-align-set-mark ()
   (interactive)
-  (push (cons (point) (current-column)) mark-align-markers))
+  (push (cons (point) (current-column)) mark-align-markers)
+  (let ((ov (make-overlay (point) (1+ (point)))))
+    (overlay-put ov 'face 'underline)
+    (push ov mark-align-overlays)))
 
 (defun mark-align-done ()
   (interactive)
@@ -41,7 +45,9 @@
         (let ((col (current-column)))
           (when (< col max)
             (insert (make-string (- max col) ?\s))))))
-    (setq mark-align-markers nil))
+    (setq mark-align-markers nil)
+    (mapc #'delete-overlay mark-align-overlays)
+    (setq mark-align-overlays nil))
   (mark-align-mode -1))
 
 (defvar mark-align-mode-map
