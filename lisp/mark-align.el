@@ -24,15 +24,32 @@
 
 ;;; Code:
 
-(defvar-local mark-align-markers nil)
+(defvar-local mark-align-markers  nil)
 (defvar-local mark-align-overlays nil)
 
-(defun mark-align-set-mark ()
+(defun mark-align-set-mark-or-unset ()
   (interactive)
-  (push (cons (point) (current-column)) mark-align-markers)
-  (let ((ov (make-overlay (point) (1+ (point)))))
-    (overlay-put ov 'face 'underline)
-    (push ov mark-align-overlays)))
+  (let ((overlays (overlays-at (point)))
+        found)
+    (while overlays
+      (let ((ov (car overlays)))
+        (when (overlay-get ov 'mark-align)
+          (setq found ov
+                overlays nil))))
+    (if found
+        (progn (setq mark-align-markers
+                     (cl-remove-if (lambda (pos-col)
+                                     (= (car pos-col)
+                                        (overlay-start found)))
+                                   mark-align-markers)
+                     mark-align-overlays
+                     (delete found mark-align-overlays))
+               (delete-overlay found))
+      (push (cons (point) (current-column)) mark-align-markers)
+      (let ((ov (make-overlay (point) (1+ (point)))))
+        (overlay-put ov 'mark-align t)
+        (overlay-put ov 'face 'underline)
+        (push ov mark-align-overlays)))))
 
 (defun mark-align-done ()
   (interactive)
@@ -52,7 +69,7 @@
 
 (defvar mark-align-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-SPC")   #'mark-align-set-mark)
+    (define-key map (kbd "C-SPC")   #'mark-align-set-mark-or-unset)
     (define-key map (kbd "C-c C-c") #'mark-align-done)
     map))
 
