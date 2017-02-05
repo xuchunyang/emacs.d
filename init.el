@@ -615,6 +615,12 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
   (setq dired-listing-switches "-Alh")
 
+  ;; `dired-listing-switches' can't contain whitespace before
+  ;; the commit 148100d98319499f0ac6f57b8be08cbd14884a5c
+  (when (version<= "26.0.50.2" emacs-version)
+    (setq dired-listing-switches
+          (combine-and-quote-strings '("-Alh" "--time-style=+%_m月 %d %H:%M"))))
+
   ;; Use directory from other dired window as target directory while
   ;; copying and renaming.
   (setq dired-dwim-target t)
