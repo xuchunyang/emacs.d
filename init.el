@@ -1889,9 +1889,20 @@ See Info node `(magit) How to install the gitman info manual?'."
   )
 
 (use-package server
-  :defer 7
   :config
-  (unless (server-running-p) (server-start)))
+  (unless (server-running-p) (server-start))
+
+  ;; Hmm, 'C-c C-c' is easier than 'C-x #' to type
+  (defun chunyang-server-setup ()
+    (unless (key-binding [?\C-c ?\C-c])
+      (local-set-key [?\C-c ?\C-c] #'server-edit)))
+
+  (defun chunyang-server-cleanup ()
+    (when (eq (key-binding [?\C-c ?\C-c]) 'server-edit)
+      (define-key (current-local-map) [?\C-c ?\C-c] nil)))
+
+  (add-hook 'server-switch-hook #'chunyang-server-setup)
+  (add-hook 'server-done-hook #'chunyang-server-cleanup))
 
 (use-package gh-md             :ensure t :defer t)
 
