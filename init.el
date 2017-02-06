@@ -1262,11 +1262,7 @@ Intended to be added to `isearch-mode-hook'."
   ;; (setq eldoc-message-function #'chunyang-eldoc-header-line-message)
   )
 
-;; TODO: Write a local Minor Mode version
 (use-package which-func
-  :disabled t                           ; This is a global mode so it
-                                        ; can't work well with
-                                        ; `header-line-format'
   :config
   (setq which-func-unknown "⊥"
         which-func-format
@@ -1277,8 +1273,22 @@ Intended to be added to `isearch-mode-hook'."
                        help-echo "mouse-1: go to beginning\n\
  mouse-2: toggle rest visibility\n\
  mouse-3: go to end")))
-  (setq-default header-line-format
-                '(which-function-mode ("" which-func-format " "))))
+
+  (which-function-mode)
+
+  (define-minor-mode chunyang-which-function-wrap-mode
+    "Wrapper of `which-function-mode', unlike that, this is buffer-local."
+    nil nil nil
+    (if chunyang-which-function-wrap-mode
+        (if (and which-function-mode
+                 (null header-line-format))
+            (setq header-line-format
+                  '(which-function-mode ("" which-func-format " "))))
+      (setq header-line-format nil)))
+
+  (add-hook 'prog-mode-hook #'chunyang-which-function-wrap-mode)
+  (setq mode-line-misc-info
+        (assq-delete-all 'which-function-mode mode-line-misc-info)))
 
 (cl-defun chunyang-project-root (&optional (dir default-directory))
   "Return project root in DIR, if no project is found, return DIR."
