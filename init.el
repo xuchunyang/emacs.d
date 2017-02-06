@@ -1875,8 +1875,19 @@ See Info node `(magit) How to install the gitman info manual?'."
   :load-path "~/src/atomic-chrome"
   :config
   (setq atomic-chrome-url-major-mode-alist
-        '(("github\\.com"      . gfm-mode)
-          ("emacs-china\\.org" . gfm-mode)))
+        '(("github\\.com"        . gfm-mode)
+          ("emacs-china\\.org"   . gfm-mode)
+          ("stackexchange\\.com" . gfm-mode)
+          ("stackoverflow\\.com" . gfm-mode)))
+
+  (defun chunyang-atomic-chrome-mode-setup ()
+    (setq header-line-format
+          (substitute-command-keys
+           "Edit Chrome text area.  Finish \
+`\\[atomic-chrome-close-current-buffer]'.")))
+
+  (add-hook 'atomic-chrome-edit-mode-hook #'chunyang-atomic-chrome-mode-setup)
+
   (atomic-chrome-start-server))
 
 (use-package ediff
