@@ -78,3 +78,8 @@
   will be created automatically as well.
 
   One can use =M-x package-install-file= to install a tar file.
+
+* Apply Patch inside email (or anywhere)
+
+select the patch (diff) in the region and ~M-| git -C ~/path/to/repo apply RET~
+(~shell-command-on-region~).
