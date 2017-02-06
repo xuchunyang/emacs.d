@@ -1892,12 +1892,22 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 (use-package ediff
   :defer t
+  :init
+  (defun chunyang-dired-ediff (file-a file-b)
+    (interactive
+     (let ((files (dired-get-marked-files)))
+       (if (= (length files) 2)
+           (list (car files) (cadr files))
+         (let ((file-a (dired-get-filename nil t)))
+           (unless file-a
+             (setq file-a (read-file-name "File A to compare: ")))
+           (list file-a (read-file-name (format "Diff %s with: " file-a)))))))
+    (ediff-files file-a file-b))
   :config
-  ;; (setq ediff-window-setup-function 'ediff-setup-windows-plain
-  ;;       ediff-split-window-function 'split-window-horizontally)
-  ;; (setq ediff-custom-diff-program "diff"
-  ;;       ediff-custom-diff-options "-u")
-  )
+  ;; (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  ;; or --unified, more compact context, see
+  ;; (info "(diffutils) Unified Format")
+  (setq ediff-custom-diff-options "-u"))
 
 (use-package server
   :config
