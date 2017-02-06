@@ -34,7 +34,7 @@ magit ()
     _open_emacs_window
 }
 
-info ()
+info_in_emacs ()
 {
     local node=$1
     emacsclient --eval "(shell/info \"$node\")"
@@ -53,7 +53,7 @@ alias dired=find_file
 
 t ()
 {
-    emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda-list))"
+    emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda nil \"n\"))"
 }
 
 elisp_repl ()
@@ -70,10 +70,19 @@ rg_in_emacs ()
 {
     pat=$1                      # regexp
     emacsclient --eval "(grep \"rg --smart-case --no-heading --line-number -e $pat\")"
+    _open_emacs_window
 }
 
 git_grep_in_emacs ()
 {
     pat=$1                      # basic regexp like Grep
     emacsclient --eval "(vc-git-grep \"$pat\" \"\" default-directory)"
+    _open_emacs_window
+}
+
+man_in_emacs ()
+{
+    topic=$1
+    emacsclient --eval "(man \"$topic\")"
+    _open_emacs_window
 }
