@@ -2,9 +2,9 @@
 #+OPTIONS: toc:nil
 
 #+NAME: progress
-| Total | Done |  (%) |
-|-------+------+------|
-|   345 |   79 | 22.9 |
+| Total | Done |   (%) |
+|-------+------+-------|
+|   345 |   82 | 23.77 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1033,3 +1033,40 @@ Edit as usual.
 <2017-02-05 Sun>
 
 Edit as usual.
+
+* [[https://vimgolf.com/challenges/4d3c51f1aabf526ed6000030][HTML to Haml]]
+<2017-02-06 Mon>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/55358965015b7c2d46000001][Shuffled numbers]]
+<2017-02-06 Mon>
+
+Select the region and execute the following command.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-sort-lines (reverse beg end)
+  (interactive "P\nr")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (let ;; To make `forward-word' and etc. to ignore fields.
+	  ((inhibit-field-text-motion t))
+	(sort-subr reverse 'forward-line 'end-of-line nil 'forward-word
+                   (lambda (x y)
+                     (let ((list '(zero
+                                   one two three four five
+                                   six seven eight nine ten
+                                   eleven twelve thirteen fourteen fifteen
+                                   sixteen seventeen eighteen nineteen twenty))
+                           (s1 (buffer-substring (car x) (cdr x)))
+                           (s2 (buffer-substring (car y) (cdr y))))
+                       (< (seq-position list (intern s1))
+                          (seq-position list (intern s2))))))))))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/4d2c9d06eda6262e4e00007a][Assignment Alignment]]
+<2017-02-06 Mon>
+
+~M-x align-regexp RET = RET~
