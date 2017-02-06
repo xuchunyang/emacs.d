@@ -12,10 +12,17 @@
 (defvar echo-idle-delay 0.50)
 (defvar echo-function #'bing-message-current-word)
 
+
+(defun echo-message-without-log (format-string &rest args)
+  (let ((message-log-max nil))
+    (apply #'message format-string args)))
+
+(advice-add 'bing-dict--message :override #'echo-message-without-log)
+
 (defun bing-message-current-word ()
-  (when-let ((word (current-word nil t)))
-    ;; (message "-> %s" word)
-    (bing-dict-brief word)))
+  (let ((word (current-word nil t)))
+    (when word
+      (bing-dict-brief word))))
 
 (defun echo-schedule-timer ()
   (unless (and echo-timer
