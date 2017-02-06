@@ -82,4 +82,4 @@
 * Apply Patch inside email (or anywhere)
 
 select the patch (diff) in the region and ~M-| git -C ~/path/to/repo apply RET~
-(~shell-command-on-region~).
+or ~M-| patch -p1 -d ~/path/to/repo RET~.
