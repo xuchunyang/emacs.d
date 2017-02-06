@@ -1280,13 +1280,14 @@ Intended to be added to `isearch-mode-hook'."
     "Wrapper of `which-function-mode', unlike that, this is buffer-local."
     nil nil nil
     (if chunyang-which-function-wrap-mode
-        (if (and which-function-mode
-                 (null header-line-format))
+        (if which-function-mode
             (setq header-line-format
-                  '(which-function-mode ("" which-func-format " "))))
+                  '(which-function-mode ("" which-func-format " ")))
+          (setq header-line-format nil))
       (setq header-line-format nil)))
 
   (add-hook 'prog-mode-hook #'chunyang-which-function-wrap-mode)
+  (add-hook 'which-function-mode-hook #'chunyang-which-function-wrap-mode)
   (setq mode-line-misc-info
         (assq-delete-all 'which-function-mode mode-line-misc-info)))
 
