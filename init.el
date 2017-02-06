@@ -1262,6 +1262,24 @@ Intended to be added to `isearch-mode-hook'."
   ;; (setq eldoc-message-function #'chunyang-eldoc-header-line-message)
   )
 
+;; TODO: Write a local Minor Mode version
+(use-package which-func
+  :disabled t                           ; This is a global mode so it
+                                        ; can't work well with
+                                        ; `header-line-format'
+  :config
+  (setq which-func-unknown "⊥"
+        which-func-format
+        `((:propertize (" ➤ " which-func-current)
+                       local-map ,which-func-keymap
+                       face which-func
+                       mouse-face mode-line-highlight
+                       help-echo "mouse-1: go to beginning\n\
+ mouse-2: toggle rest visibility\n\
+ mouse-3: go to end")))
+  (setq-default header-line-format
+                '(which-function-mode ("" which-func-format " "))))
+
 (cl-defun chunyang-project-root (&optional (dir default-directory))
   "Return project root in DIR, if no project is found, return DIR."
   (or (cdr (project-current nil dir))
