@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |   82 | 23.77 |
+|   345 |   93 | 26.96 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1070,3 +1070,82 @@ Select the region and execute the following command.
 <2017-02-06 Mon>
 
 ~M-x align-regexp RET = RET~
+
+* [[https://vimgolf.com/challenges/4f99b09353e306000100003f][The meaning]]
+<2017-02-07 Tue>
+
+Go to the line end via ~C-e~ (~move-end-of-line~) and swap the chars
+with ~C-t~ (~transpose-chars~).
+
+* [[https://vimgolf.com/challenges/50bda7a73645b3000200004b][lamb had a little Mary]]
+<2017-02-07 Tue>
+
+Use ~M-x plur-replace~ or ~M-x query-replace-regexp~.
+
+* [[https://vimgolf.com/challenges/50ee7504c0e3aa0002000040][Prefixes and suffixes]]
+<2017-02-07 Tue>
+
+Use keyboard macro.
+
+* [[https://vimgolf.com/challenges/55e814a35f5608403d000001][Vim's not included features]]
+<2017-02-07 Tue>
+
+#+BEGIN_SRC emacs-lisp
+(while (re-search-forward "-[_[:word:]]+" nil t)
+    (message "%s" (match-string 0)))
+#+END_SRC
+
+Notes that the order is not the same as the end file.
+
+* [[https://vimgolf.com/challenges/56e3697dd64dfc4d1800a774][Free hyphen!]]
+<2017-02-07 Tue>
+
+Do it manually or record a keyboard macro.
+
+* [[https://vimgolf.com/challenges/525ee6a5de92470002000039][Split the words]]
+<2017-02-07 Tue>
+
+Do it manually or simply ignore this challenge.
+
+* [[https://vimgolf.com/challenges/4d4ab047795d626036000034][imports alignment (python)]]
+<2017-02-07 Tue>
+
+Do it manually.
+
+* [[https://vimgolf.com/challenges/56d30b70a365ed316105641b][Sorting a glossary]]
+<2017-02-07 Tue>
+
+Kill and Yank.
+
+* [[https://vimgolf.com/challenges/51103ad8041832000200003f][vim = 22 / 7]]
+<2017-02-07 Tue>
+
+Use keyboard macro.
+
+* [[https://vimgolf.com/challenges/51d6ddf4b0c5d6000200002e][Pairs of numbers]]
+<2017-02-07 Tue>
+
+Execute the following command:
+
+#+BEGIN_SRC emacs-lisp
+(defun foo ()
+  (interactive)
+  (let (numbers)
+    ;; Collect numbers
+    (while (re-search-forward "-?[.0-9]+" nil t)
+      (push (match-string 0) numbers))
+    (setq numbers (nreverse numbers))
+
+    ;; Compute and insert the result
+    (goto-char (point-max))
+    (seq-let (group1 group2) (seq-partition numbers (/ (length numbers) 2))
+      (seq-mapn
+       (lambda (x y)
+         (insert (format "[%s, %s]\n" x y)))
+       group1 group2))))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/4d1aaf2fb11838287d000036][Reverse characters in a line]]
+<2017-02-07 Tue>
+
+~M-: (insert (nreverse "text"))~ (~eval-expression~)
