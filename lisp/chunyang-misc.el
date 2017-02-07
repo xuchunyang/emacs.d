@@ -195,6 +195,10 @@
       (kill-new word)
       (message "Saved to kill-ring: %s" word))))
 
+(defun chunyang-goto-random-line ()
+  (interactive)
+  (goto-line (1+ (random (line-number-at-pos (point-max))))))
+
 
 (defun chunyang-insert-date ()
   "Insert the date using the ISO 8601 format, '%Y-%m-%d'.
