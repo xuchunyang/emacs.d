@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |   93 | 26.96 |
+|   345 |  106 | 30.72 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1149,3 +1149,102 @@ Execute the following command:
 <2017-02-07 Tue>
 
 ~M-: (insert (nreverse "text"))~ (~eval-expression~)
+
+* [[http://www.vimgolf.com/challenges/53fdb108658ede0002599a8f][Suffix sort]]
+<2017-02-08 Wed>
+
+Select the region and run the command:
+
+#+BEGIN_SRC emacs-lisp
+(defun suffix-sort (beg end)
+  "Sort from the end of the line, as if the letters in each line were reversed."
+  (interactive "*r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (sort-subr nil #'forward-line #'end-of-line nil nil
+                 (lambda (x y)
+                   (let ((s1 (buffer-substring (car x) (cdr x)))
+                         (s2 (buffer-substring (car y) (cdr y))))
+                     (string< (nreverse s1)
+                              (nreverse s2))))))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/50502d985cfbf50002000022][NATO phonetic alphabet]]
+<2017-02-08 Wed>
+
+1. Use ~M-%~ (~query-replace~) to split text into lines
+2. Use ~C-x r M-w~ (~copy-rectangle-as-kill~) and ~C-x r y~
+   (~yank-rectangle~) to add the prefix
+
+* [[http://www.vimgolf.com/challenges/508fe9f57acca60002000037][Stairs Indenting]]
+<2017-02-08 Wed>
+
+~C-M-% [0-9]+ RET \,(format "%s%s" (make-string (string-to-number \&) ? ) \&) RET~ (~query-replace-regexp~)
+
+Tips:
+- Use ~\,~ to follow a sexp
+- Use ~\&~ to denote the whole match
+
+* [[http://www.vimgolf.com/challenges/4d1a790fb8cb3409320001a8][Reformat most common surnames]]
+<2017-02-08 Wed>
+
+1. Remove unneed parts with ~C-M-%~ (~query-replace-regexp~)
+2. Fix cases by select the region and ~M-x capitalize-dwim~
+3. Add number prefix with ~C-u C-x r N %d. RET~ (~rectangle-number-lines~)
+
+* [[http://www.vimgolf.com/challenges/50af864132b7ed0002000075][A simple change]]
+<2017-02-08 Wed>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/4d1a6bafb8cb34093200008e][Wrap the text of an email message to 79 characters]]
+<2017-02-08 Wed>
+
+1. Change ~fill-column~ to 79 with ~C-x f~ (or ~M-x set-fill-column~)
+2. Change ~fill-prefix~ to "> " with ~C-x .~ (or ~M-x set-fill-prefix~)
+3. Fill with ~M-q~ (~fill-paragraph~) (need to go through step 2)
+
+* [[http://www.vimgolf.com/challenges/4f026d9b50582b000100002e][Replacing some words]]
+<2017-02-08 Wed>
+
+Pass (not very meaningful).
+
+* [[http://www.vimgolf.com/challenges/4dcd7b572c8e510001000005][Interweave two blocks of text]]
+<2017-02-08 Wed>
+
+1. Make "one two ..." the same width
+2. Copy and yank the numbers with ~C-w~ (~kill-region~) and ~C-x r y~
+   (~yank-rectangle~)
+
+* [[http://www.vimgolf.com/challenges/4d1ac1800a045132c0000011][Reformat a C golf submission]]
+<2017-02-08 Wed>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/4d1a6ed2b8cb3409320000c9][Add fold markers to a .c file]]
+<2017-02-08 Wed>
+
+Edit as usual or simply pass (makes no sense for Emacs).
+
+* [[http://www.vimgolf.com/challenges/4d1cc35a35b40650b800043a][Increment, increment, increment....]]
+<2017-02-08 Wed>
+
+Recoard the macro with ~M-1 F3 F3 RET F4~ and execute the macro repeatly.
+
+- ~M-1 F3~ to start recoarding and set keyboard macro counter to 1 (defaults to 0)
+- the second ~F3~ to insert the counter
+
+Notes that keyboard macro counter is incremented each time its value
+is inserted into the buffer. For more info, see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macro-Counter.html][(emacs) Keyboard Macro Counter]].
+
+* [[http://www.vimgolf.com/challenges/4d1b76d9c58eaa2a8a000866][Context insensitive completion 0]]
+<2017-02-08 Wed>
+
+Pass (I don't understand the question and have no interest to find out).
+
+* [[http://www.vimgolf.com/challenges/4d1b3d57c58eaa2a8a000510][Sorting paragraphs]]
+<2017-02-08 Wed>
+
+~M-x sort-paragraphs~
