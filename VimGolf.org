@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  106 | 30.72 |
+|   345 |  111 | 32.17 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1248,3 +1248,68 @@ Pass (I don't understand the question and have no interest to find out).
 <2017-02-08 Wed>
 
 ~M-x sort-paragraphs~
+
+* [[https://vimgolf.com/challenges/53d1f9344ab5290002ab30e0][Subtraction]]
+<2017-02-08 Wed>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments.
+
+#+BEGIN_SRC emacs-lisp
+^\(x+\) - \(.+\) =$  =>  \1 - \2 = \,(make-string (- (length \1) (length \2)) ?x)
+#+END_SRC
+
+/Wow, being able to run arbitrary Lisp is really awesome./
+
+* [[https://vimgolf.com/challenges/50be61aea748a30002000047][abcd > a b c d]]
+<2017-02-08 Wed>
+
+Replace one space with one tab via ~M-%~ (~query-replace~).
+
+* [[https://vimgolf.com/challenges/4ea9bc988b36f70001000008][Sort entries based on date]]
+<2017-02-08 Wed>
+
+Select the region and run the command:
+
+#+BEGIN_SRC emacs-lisp
+;; Adapt from `sort-paragraphs'
+(defun sort-paragraphs-based-on-date (reverse beg end)
+  (interactive "P\nr")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (sort-subr reverse
+		 (lambda ()
+                   (while (and (not (eobp)) (looking-at paragraph-separate))
+                     (forward-line 1)))
+		 #'forward-paragraph
+                 nil
+                 (lambda ()
+                   (re-search-forward
+                    (rx (repeat 2 (in digit)) "."
+                        (repeat 2 (in digit)) "."
+                        (repeat 4 (in digit)))))
+                 (lambda (x y)
+                   (let ((s1 (buffer-substring (car x) (cdr x)))
+                         (s2 (buffer-substring (car y) (cdr y))))
+                     (< (string-to-number (apply #'concat (nreverse (split-string s1 "\\."))))
+                        (string-to-number (apply #'concat (nreverse (split-string s2 "\\.")))))))))))
+#+END_SRC
+
+/~sort-subr~ is simply amazing/
+
+* [[https://vimgolf.com/challenges/513b1dcd2d1ae10002000010][Sort the VimGolf challenges by popularity]]
+<2017-02-08 Wed>
+
+1. Remove unneeded lines with ~M-x delete-non-matching-lines~
+2. Sort lines with ~C-u -2 M-x sort-numeric-fields~
+3. Reverse lines with ~M-x reverse-region~
+
+* [[https://vimgolf.com/challenges/52552abfb089a00002000007][Create Leading Zeros]]
+<2017-02-08 Wed>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments.
+
+#+BEGIN_EXAMPLE
+^[0-9]+  =>  \,(format "%04d" (string-to-number \&))
+#+END_EXAMPLE
