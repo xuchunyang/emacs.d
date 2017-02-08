@@ -242,7 +242,7 @@ If with prefix argument, search current directory."
 ;; Set up shorter key bindings
 (bind-keys ("M-x"     . helm-M-x)
            ("C-x C-f" . helm-find-files)
-           ("C-x f"   . helm-recentf)
+           ;; ("C-x f"   . helm-recentf)
            ("C-x C-d" . helm-browse-project)
            ("M-l"     . helm-mini)
            ("M-y"     . helm-show-kill-ring)
