@@ -707,9 +707,11 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;; I have used 'M-l' to run `helm-mini' for a long time
 (define-key global-map "\M-L" #'downcase-dwim)
 
-;; Configure a reasonable fill column, indicate it in the buffer and enable
-;; automatic filling
+;; Configure a reasonable fill column, indicate it in the buffer and
+;; enable automatic filling
 ;; (setq-default fill-column 80)
+;;
+;; or change it interactively via C-x f (`set-fill-column')
 
 ;; I prefer indent long-line code myself
 ;; (setq comment-auto-fill-only-comments t)
@@ -718,6 +720,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;; (add-hook 'prog-mode-hook #'auto-fill-mode)
 
 ;; (diminish 'auto-fill-function)          ; Not `auto-fill-mode' as usual
+
+;; To change `fill-prefix' interactively, type C-x . (`set-fill-prefix')
 
 ;; (global-visual-line-mode)
 
