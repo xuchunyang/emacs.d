@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  111 | 32.17 |
+|   345 |  115 | 33.33 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1313,3 +1313,24 @@ Run ~C-M-%~ (~query-replace-regexp~) with the following arguments.
 #+BEGIN_EXAMPLE
 ^[0-9]+  =>  \,(format "%04d" (string-to-number \&))
 #+END_EXAMPLE
+
+* [[https://vimgolf.com/challenges/544bcdd93cafc700021ee30e][learn vim in short time]]
+<2017-02-08 Wed>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/55389fb1d6367c11201571d1][remove all lines in first part]]
+<2017-02-08 Wed>
+
+Make the region and type ~M-x delete-duplicate-lines~.
+
+* [[https://vimgolf.com/challenges/56e4fe988cf590220106e9bb][Fun With The Diagonal]]
+<2017-02-08 Wed>
+
+Record keyboard macro ~M-c C-n~ and run it for several times.
+
+* [[https://vimgolf.com/challenges/4d1e037dde2f897c2a000417][Reverse and count]]
+<2017-02-08 Wed>
+
+1. Reverse with ~M-x reverse-region~
+2. Count with ~C-u C-x r N RET RET %d. RET~
