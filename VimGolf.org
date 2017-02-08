@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  115 | 33.33 |
+|   345 |  117 | 33.91 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1334,3 +1334,17 @@ Record keyboard macro ~M-c C-n~ and run it for several times.
 
 1. Reverse with ~M-x reverse-region~
 2. Count with ~C-u C-x r N RET RET %d. RET~
+
+* [[https://vimgolf.com/challenges/4d2478e20947c63e2600009c][Insert a Markdown link]]
+<2017-02-08 Wed>
+
+Do it manually or use feature provided by markdowm-mode (check the
+Menu Bar).
+
+* [[https://vimgolf.com/challenges/4d26f42298e8d72471000025][Generate English Alphabets]]
+<2017-02-08 Wed>
+
+#+BEGIN_SRC emacs-lisp
+(loop for i from ?a to ?z
+      do (insert i ?\n))
+#+END_SRC
