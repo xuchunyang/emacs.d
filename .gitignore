@@ -26,3 +26,6 @@ ChangeLog
 # Emacs module
 *.o
 *.so
+
+# Emacs diary-file
+/diary

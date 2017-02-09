@@ -2462,6 +2462,12 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; Org mode
 
+(use-package calendar
+  :init
+  ;; 每周从周一开始（需要 load 之前设置）
+  (setq calendar-week-start-day 1)
+  :defer t)
+
 ;; (require 'chunyang-org)
 
 ;; How to install Org 9.0 from Git?
