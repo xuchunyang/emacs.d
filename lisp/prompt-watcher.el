@@ -27,12 +27,11 @@
 (defun prompt-watcher ()
   (let ((prompt-fn
          (lambda (prompt)
-           (with-current-buffer (window-buffer (active-minibuffer-window))
-             (let ((inhibit-read-only t))
-               (erase-buffer)
-               (insert prompt)
-               (add-text-properties (point-min) (point-max)
-                                    minibuffer-prompt-properties))))))
+           (let ((inhibit-read-only t)
+                 (props (text-properties-at (point-min))))
+             (erase-buffer)
+             (insert prompt)
+             (set-text-properties (point-min) (point-max) props)))))
     (cond ((eq this-command 'shell-command-on-region)
            (and (equal (minibuffer-prompt) "Shell command on region: ")
                 current-prefix-arg
@@ -40,7 +39,7 @@
           ((eq this-command 'shell-command)
            (and (equal (minibuffer-prompt) "Shell command: ")
                 current-prefix-arg
-                (funcall prompt-fn "Shell command on region and insert: "))))))
+                (funcall prompt-fn "Shell command and insert output: "))))))
 
 (define-minor-mode prompt-watcher-mode
   "Watch the minibuffer prompt and customize if asking."
@@ -50,7 +49,6 @@
   (if prompt-watcher-mode
       (add-hook 'minibuffer-setup-hook #'prompt-watcher)
     (remove-hook 'minibuffer-setup-hook #'prompt-watcher)))
-
 
 (provide 'prompt-watcher)
 ;;; prompt-watcher.el ends here
