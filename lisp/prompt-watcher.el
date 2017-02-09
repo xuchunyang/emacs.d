@@ -39,7 +39,11 @@
           ((eq this-command 'shell-command)
            (and (equal (minibuffer-prompt) "Shell command: ")
                 current-prefix-arg
-                (funcall prompt-fn "Shell command and insert output: "))))))
+                (funcall prompt-fn "Shell command and insert output: ")))
+          ((eq this-command 'async-shell-command)
+           (and (equal (minibuffer-prompt) "Async shell command: ")
+                current-prefix-arg
+                (funcall prompt-fn "Async shell command and insert output: "))))))
 
 (define-minor-mode prompt-watcher-mode
   "Watch the minibuffer prompt and customize if asking."
