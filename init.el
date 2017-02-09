@@ -1289,7 +1289,7 @@ Intended to be added to `isearch-mode-hook'."
  mouse-2: toggle rest visibility\n\
  mouse-3: go to end")))
 
-  (which-function-mode)
+  ;; (which-function-mode)
 
   (define-minor-mode chunyang-which-function-wrap-mode
     "Wrapper of `which-function-mode', unlike that, this is buffer-local."
