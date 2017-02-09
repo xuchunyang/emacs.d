@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  117 | 33.91 |
+|   345 |  125 | 36.23 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1348,3 +1348,60 @@ Menu Bar).
 (loop for i from ?a to ?z
       do (insert i ?\n))
 #+END_SRC
+
+* [[https://vimgolf.com/challenges/4d34af20e747f561b3000081][Rotating Philosophers Problem]]
+<2017-02-09 Thu>
+
+Use Keyboard Macro.
+
+* [[https://vimgolf.com/challenges/4d1b9703c8bb5704eb000081][Hatsuyume]]
+<2017-02-09 Thu>
+
+Select the region and type ~C-u M-| nl -s ' ' -w 1 RET~ (~shell-command-on-region~).
+
+Notes that for nl(1) from GNU Coreutils:
+- ~-s STRING~ / ~--number-separator=STRING~ :: Separator
+- ~-w NUMBER~ :: ~--number-width=NUMBER~ :: Width
+
+* [[https://vimgolf.com/challenges/55054f0ac64edd79b00265ac][Interleave lines]]
+<2017-02-09 Thu>
+
+Kill-and-yank as usual.
+
+* [[https://vimgolf.com/challenges/54a480bb5db1600002939b54][increment by column in XML]]
+<2017-02-09 Thu>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+@@@@@  =>  \,(number-to-string (+ 10000 \#))
+#+END_EXAMPLE
+
+Notes that
+- ~\,~ starts a Lisp expression
+- ~\#~ means the number of replacements done so far (starting with 0)
+
+/query-replace-regexp is awesome/
+
+* [[https://vimgolf.com/challenges/53cee5e1c5f4b4000208b285][Change name of a variable]]
+<2017-02-09 Thu>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/546a627195f6da000265742d][Pretty format for variable declarations]]
+<2017-02-09 Thu>
+
+~M-x align-regexp RET = RET~
+
+* [[https://vimgolf.com/challenges/50b5266f448d770002000106][Readable Rubyhash]]
+<2017-02-09 Thu>
+
+Use ~C-M-%~ (~query-replace-regexp~).
+
+* [[https://vimgolf.com/challenges/50d42c56dffb94000200000c][Enumerate words]]
+<2017-02-09 Thu>
+
+1. Split text into lines with ~C-M-% [[:punct:] ] RET C-q C-j RET~ (~query-replace-regexp~)
+2. Delete empty lines with ~M-x delete-matching-lines RET ^$~
+3. Capitalize lines by selecting the region and type ~M-x capitalize-dwim~
+4. Sort lines with ~M-x sort-lines~
