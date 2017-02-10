@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  125 | 36.23 |
+|   345 |  135 | 39.13 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1052,8 +1052,8 @@ Select the region and execute the following command.
       (narrow-to-region beg end)
       (goto-char (point-min))
       (let ;; To make `forward-word' and etc. to ignore fields.
-	  ((inhibit-field-text-motion t))
-	(sort-subr reverse 'forward-line 'end-of-line nil 'forward-word
+          ((inhibit-field-text-motion t))
+        (sort-subr reverse 'forward-line 'end-of-line nil 'forward-word
                    (lambda (x y)
                      (let ((list '(zero
                                    one two three four five
@@ -1279,10 +1279,10 @@ Select the region and run the command:
       (narrow-to-region beg end)
       (goto-char (point-min))
       (sort-subr reverse
-		 (lambda ()
+                 (lambda ()
                    (while (and (not (eobp)) (looking-at paragraph-separate))
                      (forward-line 1)))
-		 #'forward-paragraph
+                 #'forward-paragraph
                  nil
                  (lambda ()
                    (re-search-forward
@@ -1405,3 +1405,66 @@ Use ~C-M-%~ (~query-replace-regexp~).
 2. Delete empty lines with ~M-x delete-matching-lines RET ^$~
 3. Capitalize lines by selecting the region and type ~M-x capitalize-dwim~
 4. Sort lines with ~M-x sort-lines~
+
+* [[http://www.vimgolf.com/challenges/4d28637c4bcd032f1c00003d][Reformat long lines]]
+<2017-02-10 Fri>
+
+Edit normally.
+
+* [[http://www.vimgolf.com/challenges/4d1bfa8fb2c3e06468000127][Table Reshuffle]]
+<2017-02-10 Fri>
+
+Record keyboard macro. Note that
+1. Use ~M-t~ (~transpose-words~)
+2. Use ~C-M-w~ (~append-next-kill~)
+
+* [[http://www.vimgolf.com/challenges/51b4e3b920faf70002000001][Number an outline]]
+<2017-02-10 Fri>
+
+#+BEGIN_SRC emacs-lisp
+(defvar english-number-alist '((One   . 1)
+                               (Two   . 2)
+                               (Three . 3)
+                               (Four  . 4)
+                               (Five  . 5)
+                               (Six   . 6)))
+#+END_SRC
+
+and run ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+[0-9]\. \(\w+\)$  =>  \,(format "%d. %s" (alist-get (intern \1) english-number-alist) \1)
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/4d1a7a05b8cb3409320001b4][Get rid of html tags]]
+<2017-02-10 Fri>
+
+Delete tags with ~C-M-% <.+?> RET RET~ (~query-replace-regexp~)
+
+* [[http://www.vimgolf.com/challenges/55e704665f560803fa000001][Assign numbers to fields]]
+<2017-02-10 Fri>
+
+~C-M-% \w+ RET \#:\& RET~ (~query-replace-regexp~)
+
+* TODO [[http://www.vimgolf.com/challenges/556d7209f6d1a10ee6000001][swap or reverse]]
+<2017-02-10 Fri>
+
+* [[http://www.vimgolf.com/challenges/50f3c2d55c891f0002000002][Word frequency alignment]]
+<2017-02-10 Fri>
+
+~M-x align-regexp RET [0-9] RET~
+
+* [[http://www.vimgolf.com/challenges/53f388dfb2a65900028494ae][NBCU Weekly Challenge - #0]]
+<2017-02-10 Fri>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/4d1e93e825ba287b2a0000ed][The holy-grail may help]]
+<2017-02-10 Fri>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/54cb9296b2df9e000307809a][Winning streak]]
+<2017-02-10 Fri>
+
+Use ~C-x r N~ (~rectangle-number-lines~) and cut-and-paste the rectangle region.
