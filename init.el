@@ -1329,19 +1329,21 @@ Intended to be added to `isearch-mode-hook'."
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region compilation-filter-start (point))))
 
-  (defvar chunyang-compilation-root nil)
-  (defun chunyang-compilation-setup ()
-    (setq chunyang-compilation-root (chunyang-project-root)))
-  (defun chunyang-compilation-save-buffers-predicate ()
-    (file-in-directory-p (buffer-file-name) chunyang-compilation-root))
+  ;; (defvar chunyang-compilation-root nil)
+  ;; (defun chunyang-compilation-setup ()
+  ;;   (setq chunyang-compilation-root (chunyang-project-root)))
+  ;; (defun chunyang-compilation-save-buffers-predicate ()
+  ;;   (file-in-directory-p (buffer-file-name) chunyang-compilation-root))
 
   :config
   ;; Colorize ansi escape color code
   (add-hook 'compilation-filter-hook 'chunyang-ansi-color-compilation-buffer)
 
+  ;; FIXME: This is not working on 25.1.1 from macOS
   ;; Only ask for saving files under current project
-  (setq compilation-process-setup-function 'chunyang-compilation-setup)
-  (setq compilation-save-buffers-predicate 'chunyang-compilation-save-buffers-predicate)
+  ;; (setq compilation-process-setup-function 'chunyang-compilation-setup)
+  ;; (setq compilation-save-buffers-predicate
+  ;;       'chunyang-compilation-save-buffers-predicate)
 
   (setq compilation-always-kill t
         compilation-scroll-output 'first-error))
