@@ -1356,6 +1356,25 @@ Intended to be added to `isearch-mode-hook'."
   ;; :init (global-prettify-symbols-mode)
   )
 
+(use-package bug-reference              ; buttonize bug references like issue #5
+  ;; Set `bug-reference-url-format' and `bug-reference-bug-regexp' per
+  ;; buffer/file/project.
+  ;;
+  ;; Example setting:
+  ;; bug-reference-url-format: "https://github.com/xuchunyang/emacs.d/issues/%s"
+  ;; bug-reference-bug-regexp: "\\(issue #\\)\\([0-9]+\\)"
+  ;;
+  ;; Notes that that github issue url works for pull request as well,
+  ;; since github redirects /issues/123 to /pull/123 if that is a pull
+  ;; request.
+  ;;
+  ;; To use, run `bug-reference-prog-mode' or `bug-reference-mode' via
+  ;; M-x or Local Variable or Hook like the following:
+  ;;
+  ;; (add-hook 'prog-mode-hook #'bug-reference-prog-mode)
+  ;; (add-hook 'magit-log-mode #'bug-reference-mode)
+  :defer t)
+
 
 ;;; Generic Lisp
 (use-package paredit                    ; Balanced sexp editing
