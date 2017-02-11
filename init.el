@@ -1373,7 +1373,12 @@ Intended to be added to `isearch-mode-hook'."
   ;;
   ;; (add-hook 'prog-mode-hook #'bug-reference-prog-mode)
   ;; (add-hook 'magit-log-mode #'bug-reference-mode)
-  :defer t)
+  ;;
+  ;; Loading at start-up to make sure Emacs knows
+  ;; `bug-reference-url-format' and `bug-reference-bug-regexp' are
+  ;; *safe* local variable
+  ;; :defer t
+  )
 
 
 ;;; Generic Lisp
