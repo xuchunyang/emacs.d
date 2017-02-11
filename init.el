@@ -1200,6 +1200,16 @@ Intended to be added to `isearch-mode-hook'."
     (define-key flyspell-mode-map [?\C-.] #'flyspell-popup-correct)
     (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
 
+;; NOTE: Goto https://www.languagetool.org/ to install the command
+;; line tool.  Java (JDK) is required.
+(use-package langtool                ; English Style and Grammar Check
+  :ensure t
+  :defer t
+  :config
+  (setq langtool-language-tool-jar
+        (car (nreverse (file-expand-wildcards
+                        "~/src/LanguageTool-*/languagetool-commandline.jar")))))
+
 (use-package checkdoc
   :disabled t                           ; Not working anyway
   :config (setq checkdoc-arguments-in-order-flag nil
