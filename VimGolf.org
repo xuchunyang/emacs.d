@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  135 | 39.13 |
+|   345 |  145 | 42.03 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1468,3 +1468,58 @@ Edit as usual.
 <2017-02-10 Fri>
 
 Use ~C-x r N~ (~rectangle-number-lines~) and cut-and-paste the rectangle region.
+
+* [[https://vimgolf.com/challenges/50e32889d5e627000200000d][Change your calendar]]
+<2017-02-11 Sat>
+
+Delete the old and insert the new one via ~M-x calendar~.
+
+* [[https://vimgolf.com/challenges/4e5ec5851836e0000100003e][Alphabetize the directory]]
+<2017-02-11 Sat>
+
+Paste text into an Org buffer and sort headings with ~C-c ^~ (~org-sort~).
+
+* [[https://vimgolf.com/challenges/5486c522908f4600023c53fa][Test everything!]]
+<2017-02-11 Sat>
+
+Use keyboard macro as usual.
+
+* [[https://vimgolf.com/challenges/51cf1fae5e439e0002000001][Top X]]
+<2017-02-11 Sat>
+
+1. Split into lines by replacing space into newline via ~M-%~ (~query-replace~)
+2. Remove duplicates via ~M-x delete-duplicate-lines~
+3. Join lines by replaing newline into space via ~M-%~ (~query-replace~)
+
+* [[https://vimgolf.com/challenges/5598ef76c0132f45c9005238][Entries sort]]
+<2017-02-11 Sat>
+
+1. Cut parts accros lines
+2. Sort lines
+3. Paste them back
+
+* [[https://vimgolf.com/challenges/512eda055d6ed80002000025][Parsing with CSV: Unify lines and result.]]
+<2017-02-11 Sat>
+
+Edit manually.
+
+* [[https://vimgolf.com/challenges/51cd1be19f3290000200000e][Assign list]]
+<2017-02-11 Sat>
+
+Use ~M-%~ (~query-replace~) and keyboard macro.
+
+* [[https://vimgolf.com/challenges/4d1c6d0535b40650b800017e][Compile C]]
+<2017-02-11 Sat>
+
+~C-u M-! cc foo.c && ./a.out~ (~shell-command~)
+
+* [[https://vimgolf.com/challenges/5078889ceedfc90002000047][Python to Ruby]]
+<2017-02-11 Sat>
+
+Edit as usual.
+
+* [[https://vimgolf.com/challenges/4d1a87fcb8cb340932000290][Deleting folded text]]
+<2017-02-11 Sat>
+
+Select the region via isearch and delete text in the region, since it
+is not easy to build regexp for it.
