@@ -2602,6 +2602,7 @@ Called with a prefix arg set search provider (default Google)."
   (add-hook 'c-mode-hook 'chunyang-c-mode-setup))
 
 (use-package irony
+  :disabled t
   :ensure t
   :defer t
   :init
@@ -2615,33 +2616,34 @@ Called with a prefix arg set search provider (default Google)."
     (define-key irony-mode-map [remap complete-symbol]
       'irony-completion-at-point-async))
   (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-(use-package company-irony
-  :ensure t
-  :defer t
-  :init (with-eval-after-load 'company
-          (add-to-list 'company-backends 'company-irony))
   :config
-  (define-advice company-irony--post-completion (:override (candidate) prefer-gnu-c-style)
-    "WARNING: This is a bad idea!  Hacking 20160826.56 from MELPA."
-    (when candidate
-      (let ((point-before-post-complete (point)))
-        (if (irony-snippet-available-p)
-            (irony-completion-post-complete candidate)
-          (let ((str (irony-completion-post-comp-str candidate)))
-            ;; Prefer GNU C style by adding one space after function name (2016-10-24 by xcy)
-            (unless (string-empty-p str)
-              (insert " "))
-            (insert str)
-            (company-template-c-like-templatify str)))
-        (unless (eq (point) point-before-post-complete)
-          (setq this-command 'self-insert-command))))))
+  (use-package company-irony
+    :ensure t
+    :defer t
+    :init (with-eval-after-load 'company
+            (add-to-list 'company-backends 'company-irony))
+    :config
+    (define-advice company-irony--post-completion (:override (candidate) prefer-gnu-c-style)
+      "WARNING: This is a bad idea!  Hacking 20160826.56 from MELPA."
+      (when candidate
+        (let ((point-before-post-complete (point)))
+          (if (irony-snippet-available-p)
+              (irony-completion-post-complete candidate)
+            (let ((str (irony-completion-post-comp-str candidate)))
+              ;; Prefer GNU C style by adding one space after function name (2016-10-24 by xcy)
+              (unless (string-empty-p str)
+                (insert " "))
+              (insert str)
+              (company-template-c-like-templatify str)))
+          (unless (eq (point) point-before-post-complete)
+            (setq this-command 'self-insert-command))))))
 
-(use-package irony-eldoc                ; Note: this does not work very well
-  :ensure t
-  :defer t
-  :init (add-hook 'irony-mode-hook 'irony-eldoc))
+  (use-package irony-eldoc        ; Note: this does not work very well
+    :ensure t
+    :defer t
+    :init (add-hook 'irony-mode-hook 'irony-eldoc)))
 
 (use-package flycheck-irony
   :ensure t
