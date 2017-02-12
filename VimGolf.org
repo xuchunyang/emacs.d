@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  145 | 42.03 |
+|   345 |  155 | 44.93 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1523,3 +1523,76 @@ Edit as usual.
 
 Select the region via isearch and delete text in the region, since it
 is not easy to build regexp for it.
+
+* [[https://vimgolf.com/challenges/4fe62f8a8b2f800001000043][Cleanining up 80 column concatenated text]]
+<2017-02-12 Sun>
+
+Cut-and-paste. Notes that use ~C-M-w~ (~append-next-kill~).
+
+* [[https://vimgolf.com/challenges/4d1be79bb2c3e064680000c6][Fix the Haiku]]
+<2017-02-12 Sun>
+
+Use ~M-c~ (~capitalize-word~) and ~C-x r t~ (~string-rectangle~).
+
+* [[https://vimgolf.com/challenges/56fcc3204a7725120c00c91c][SQL to YAML]]
+<2017-02-12 Sun>
+
+Pass (or use keyboard macro and maybe plus some manual edits).
+
+* [[https://vimgolf.com/challenges/4d1d0d5e35b40650b8000711][82 bottles of beer on the wall]]
+<2017-02-12 Sun>
+
+Duplicates the text 82 times and ~C-M-%~ (~query-replace-regexp~).
+
+* [[https://vimgolf.com/challenges/511991607729fb0002000003][Refactor arguments into object argument]]
+<2017-02-12 Sun>
+
+Pass (or edit manually).
+
+* [[https://vimgolf.com/challenges/4d1c27940e3d7832db000010][Prime Numbers]]
+<2017-02-12 Sun>
+
+#+BEGIN_SRC emacs-lisp
+(defun prime-numbers (until)
+  (assert (> until 1))
+  (loop for n from 2 to until
+        if (loop for i from 2 to (1- n)
+                 if (= 0 (% n i))
+                 return nil
+                 finally return t)
+        collect n))
+
+(insert (mapconcat #'number-to-string (prime-numbers 542) "\n"))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/50c2c246b0544c000200003f][Block Fun 1]]
+<2017-02-12 Sun>
+
+Recoard keyboard macro which uses ~C-x r M-w~
+(~copy-rectangle-as-kill~) and ~C-x r y~ (~yank-rectangle~).
+
+* [[https://vimgolf.com/challenges/54c392acbd7cbe0003329b7c][Separating firstname & lastname]]
+<2017-02-12 Sun>
+
+Type ~C-u M-x align-regexp~ with the following arguments:
+
+#+BEGIN_EXAMPLE
+ \(\) -> RegExp
+1     -> Group 1
+6     -> 6 white spaces
+y     -> Repeat (Don't not matter in this case)
+#+END_EXAMPLE
+
+* [[https://vimgolf.com/challenges/55faae943e9b67549b000001][Sudoku table]]
+<2017-02-12 Sun>
+
+Use Rectangle Region Mode heavily.
+
+* [[https://vimgolf.com/challenges/4d665abd7d73e02a55000009][Java Array2List]]
+<2017-02-12 Sun>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+\([0-9.]+\),? ?  =>  c.add(\1);
+#+END_EXAMPLE
