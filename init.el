@@ -416,6 +416,14 @@
 (use-package prompt-watcher
   :config (prompt-watcher-mode))
 
+;; NOTE Try this for a while. Disable if not like
+(use-package minibuf-eldef ; Only show defaults in prompts when applicable
+  :init
+  ;; Must be set before minibuf-eldef is loaded
+  (setq minibuffer-eldef-shorten-default t)
+  :config
+  (minibuffer-electric-default-mode))
+
 ;; Inspired by isearch's C-w `isearch-yank-word-or-char'.
 (defun chunyang-minibuffer-yank-word ()
   "Yank word at point in the buffer when entering minibuffer into minibuffer."
