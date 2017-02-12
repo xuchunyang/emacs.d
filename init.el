@@ -258,13 +258,28 @@
 
 
 ;;; Font
-
 ;; TODO: I have trouble setting English and Chinese fonts
 (cl-case window-system
-  ;; EmacsMac.app Carbon
-  ('mac (set-face-attribute 'default nil :font "Source Code Pro-13"))
-  ;; Emacs.app Cocoa
-  ('ns (set-face-attribute 'default nil :font "Source Code Pro-13"))
+  ;; 'mac -> EmacsMac.app Carbon
+  ;; 'ns  -> Emacs.app Cocoa
+  ((mac ns)
+   ;; 等宽: Source Code Pro 13 + STkaiti 16
+   (setq face-font-rescale-alist `(("STkaiti" . ,(/ 16.0 13))))
+
+   (set-face-attribute 'default nil :font "Source Code Pro-13")
+
+   (set-fontset-font t 'han      (font-spec :family "STkaiti"))
+   (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti"))
+
+   ;; 测试
+   "
+| 软件      |  版本 | 发布日期     |
+|-----------+-------+--------------|
+| GNU Emacs |  25.1 | 2016 年 9 月 |
+| Org       | 9.9.5 | 2017 年 2 月 |
+"
+   ;; 问题：不等高 Height
+   )
   ('x (dolist (charset '(kana han symbol cjk-misc bopomofo))
         (set-fontset-font (frame-parameter nil 'font)
                           charset
