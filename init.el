@@ -1671,13 +1671,17 @@ See also `describe-function-or-variable'."
 (use-package info
   :defer t
   :config
-  ;; NOTE:
-  ;; - MacPorts doesn't look like taking care of info documentation, it's too
-  ;;   bad. I have to create/update info dir myself (via install-info(1)),
-  ;;   sometimes I even have to fix info file such as
-  ;;   /opt/local/share/info/gfind.info
+  ;; NOTE: MacPorts doesn't take care of info documentation, thus
+  ;; don't forget to install them via install-info(1) manually
+
+  ;; Prefer MacPorts's Info Manual over system builtin
   (when *is-mac*
-    (add-to-list 'Info-directory-list "/opt/local/share/info/" 'append))
+    (let ((pos (1- (min (seq-position Info-directory-list "/usr/local/share/info/")
+                        (seq-position Info-directory-list "/usr/share/info/")))))
+      ;; Let's insert a new path at POS
+      (let ((tail (nthcdr pos Info-directory-list)))
+        (setcdr tail (cons "/opt/local/share/info/" (cdr tail))))))
+
   ;; IDEA Track info browse history
   ;; (defvar chunyang-Info-visited-nodes nil)
   ;; (defun chunyang-Info-track-history ()
