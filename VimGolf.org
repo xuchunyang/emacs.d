@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  155 | 44.93 |
+|   345 |  165 | 47.83 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1596,3 +1596,64 @@ Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
 #+BEGIN_EXAMPLE
 \([0-9.]+\),? ?  =>  c.add(\1);
 #+END_EXAMPLE
+
+* [[https://vimgolf.com/challenges/543e53c037ba3a00022b3ec7][Winding path]]
+<2017-02-14 Tue>
+
+Edit manually (use keyboard macro if convenient)
+
+* [[https://vimgolf.com/challenges/5035e5b3838d9e000200006d][Dehamlizing]]
+<2017-02-14 Tue>
+
+Edit manually or use haml directly.
+
+* TODO [[https://vimgolf.com/challenges/4fe9ab8b5089660001000002][Shuffle and Sort]]
+<2017-02-14 Tue>
+
+* [[https://vimgolf.com/challenges/54fb143d91984a0e75007579][Fill visual area]]
+<2017-02-14 Tue>
+
+Pass.
+
+* [[https://vimgolf.com/challenges/5491377167afde00024ba4cf][Refactoring useless Method away]]
+<2017-02-14 Tue>
+
+Use keyboard macro.
+
+* [[https://vimgolf.com/challenges/4d1c5e6035b40650b8000111][Another Mixed-Up Haiku]]
+<2017-02-14 Tue>
+
+Use keyboard macro.
+
+* [[https://vimgolf.com/challenges/4d6f45b938c0aa691b000003][Recursively Palindrome]]
+<2017-02-14 Tue>
+
+Insert a ~a~ in a new line then run the following command for 5 times.
+
+#+BEGIN_SRC emacs-lisp
+(defun palindrome ()
+  "Palindrome current line."
+  (interactive)
+  (let* ((beg (line-beginning-position))
+         (end (line-end-position))
+         (line (buffer-substring beg end))
+         (next (1+ (nth (/ (1- (length line)) 2)
+                        (string-to-list line)))))
+    (delete-region beg end)
+    (insert (format "%s%c%s" line next line))))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/4fdb12a383de630001000005][Aligning function arguments to match a specific coding style]]
+<2017-02-14 Tue>
+
+Run ~C-u M-x align-regexp~ with ~[^ ]\( \)[^ ]~.
+
+* [[https://vimgolf.com/challenges/5508d1ded05c5e2a710d7e93][Rail fence transposition cipher]]
+<2017-02-14 Tue>
+
+Pass.
+
+* [[https://vimgolf.com/challenges/4dab05bff1161c5a78000011][Sort the cardinal numbers]]
+<2017-02-14 Tue>
+
+Edit manually.
