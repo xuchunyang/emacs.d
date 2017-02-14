@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  165 | 47.83 |
+|   345 |  175 | 50.72 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1657,3 +1657,97 @@ Pass.
 <2017-02-14 Tue>
 
 Edit manually.
+
+* [[https://vimgolf.com/challenges/4db2c9272a007d1ee7000015][Complete the hex array data]]
+<2017-02-14 Tue>
+
+Use this code to insert the extra hex numbers
+
+#+BEGIN_SRC emacs-lisp
+(loop for i from #x10 to #xff
+      for j from 1
+      do
+      (insert (format "0x%02x, " i))
+      (when (zerop (% j 8))
+        (insert "\n")))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/4d1eaf7225ba287b2a00018b][Generate Fibonacci Numbers]]
+<2017-02-14 Tue>
+
+Insert
+
+#+BEGIN_EXAMPLE
+0
+1
+
+#+END_EXAMPLE
+
+and repeat this command for many times.
+
+#+BEGIN_SRC emacs-lisp
+(defun sum-prev-two-lines ()
+  (interactive)
+  (let ((sum
+         (save-excursion
+           (let ((a (progn (forward-line -1)
+                           (number-at-point)))
+                 (b (progn (forward-line -1)
+                           (number-at-point))))
+             (+ a b)))))
+    (insert (format "%d\n" sum))))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/4fe354e8f73248000100002d][Inconsistent real estate paste]]
+<2017-02-14 Tue>
+
+Edit manually.
+
+* [[https://vimgolf.com/challenges/50d0c33daa503f000200000f][Groups magic]]
+<2017-02-14 Tue>
+
+Run ~C-M-%~ (~query-replace-regexp~) with
+
+#+BEGIN_EXAMPLE
+[^ ]  =>  _
+#+END_EXAMPLE
+
+* [[https://vimgolf.com/challenges/50d62c51162fd30002000052][REDRUM]]
+<2017-02-14 Tue>
+
+#+BEGIN_QUOTE
+REDRUM  -reverse-> murder
+#+END_QUOTE
+
+Run ~C-M-%~ (~query-replace-regexp~) with
+
+#+BEGIN_EXAMPLE
+^.*$  =>  \,(nreverse \&)
+#+END_EXAMPLE
+
+* [[https://vimgolf.com/challenges/4d23054b7f75b01e0700014a][It'ss tooo coold too typpe todaay]]
+<2017-02-14 Tue>
+
+Use ispell.
+
+* [[https://vimgolf.com/challenges/4f081a4ef037090001000074][constructor]]
+<2017-02-14 Tue>
+
+Pass.
+
+* [[https://vimgolf.com/challenges/532bdb79fbefce0002650940][Piphilology]]
+<2017-02-14 Tue>
+
+- Open Calc with ~C-x * *~ (~calc-dispatch~)
+- Change precision to 33 with ~p 33~
+- Get the value of \pi{} with ~P~
+
+* [[https://vimgolf.com/challenges/5501297312685a3ca601d3d8][Land of the Lost]]
+<2017-02-14 Tue>
+
+Pass.
+
+* [[https://vimgolf.com/challenges/4de6287b17a57a000100003f][formatted text to markdown]]
+<2017-02-14 Tue>
+
+Pass.
