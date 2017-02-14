@@ -1882,7 +1882,11 @@ See Info node `(magit) How to install the gitman info manual?'."
                        (list (format "--work-tree=%s" (expand-file-name "~/"))
                              (format "--git-dir=%s"   (expand-file-name "~/.dotfiles/"))))))
           (apply orig-fun r))
-      (apply orig-fun r))))
+      (apply orig-fun r)))
+
+  ;; FIXME: Disable for some time in case it slows down Magit
+  (advice-remove 'magit-process-git-arguments
+                 #'magit-process-git-arguments@dotfiles-hack))
 
 (use-package vc
   :defer t
