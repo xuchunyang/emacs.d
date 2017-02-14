@@ -59,6 +59,7 @@
 (defun chunyang-mac-Finder-reveal (file)
   "Reveal (select/highlight) FILE in Finder."
   (interactive (list (or (buffer-file-name) ".")))
+  ;; FIXME: It is better and easier to use 'open -R'
   (do-applescript
    (format (concat
             "tell application \"Finder\"\n"
