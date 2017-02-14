@@ -58,6 +58,7 @@
 ;; IDEA: Reveal multiple files
 (defun chunyang-mac-Finder-reveal (file)
   "Reveal (select/highlight) FILE in Finder."
+  (interactive (list (or (buffer-file-name) ".")))
   (do-applescript
    (format (concat
             "tell application \"Finder\"\n"
