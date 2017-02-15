@@ -582,8 +582,16 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;; (setq backup-directory-alist `((".*" . ,(locate-user-emacs-file ".backup")))
 ;;       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
-;; Delete files to trash
-(setq delete-by-moving-to-trash t)
+(defconst *is-mac-port* (boundp 'mac-carbon-version-string)
+  "Is running the Emacs Mac Port?
+See URL `https://bitbucket.org/mituharu/emacs-mac'.")
+
+;; For Cocoa Emacs.app, trashing just means move file to
+;; ~/.local/share/Trash/, which is not very useful, so don't enable
+;; this feature in such case.
+(unless (and *is-mac* (not *is-mac-port*))
+  ;; Delete files to trash
+  (setq delete-by-moving-to-trash t))
 
 ;; Exit Emacs without confirm kill processes (Emacs-26.1)
 (setq confirm-kill-processes nil)
