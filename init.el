@@ -1405,6 +1405,10 @@ Intended to be added to `isearch-mode-hook'."
   ;; :defer t
   )
 
+(use-package nocomments-mode            ; Hide Comments
+  :ensure t
+  :defer t)
+
 
 ;;; Generic Lisp
 (use-package paredit                    ; Balanced sexp editing
