@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  175 | 50.72 |
+|   345 |  185 | 53.62 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1751,3 +1751,79 @@ Pass.
 <2017-02-14 Tue>
 
 Pass.
+
+* [[https://vimgolf.com/challenges/4d22bb117f75b01e070000fb][Cartesian product]]
+<2017-02-15 Wed>
+
+#+BEGIN_SRC emacs-lisp
+(dolist (i (number-sequence 1 5))
+  (dolist (j (number-sequence 1 5))
+    (insert (format "%d %d\n" i j))))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/50f1b2e316e0bb0002000051][Circle in a square]]
+<2017-02-15 Wed>
+
+Pass.
+
+* [[https://vimgolf.com/challenges/4dddc7c1ed7380000100000d][Multiplication table.]]
+<2017-02-15 Wed>
+
+Run the following to insert the numbers
+
+#+BEGIN_SRC emacs-lisp
+(dolist (i (number-sequence 1 10))
+  (dolist (j (number-sequence 1 10))
+    (insert (format "%d " (* i j))))
+  (insert "\n"))
+#+END_SRC
+
+and align the result by calling ~C-u M-x align-regexp~ with the
+following argument:
+
+#+BEGIN_EXAMPLE
+ \(\)
+1
+1
+y
+#+END_EXAMPLE
+
+* [[https://vimgolf.com/challenges/4d1b78e281502541ad000009][Turn this csv list into queries]]
+<2017-02-15 Wed>
+
+Pass. (It might be uneasy to record a keyboard macro).
+
+* [[https://vimgolf.com/challenges/5054b8c6fa0b39000200001e][SFD-ROC: The Quick Brown Fox]]
+<2017-02-15 Wed>
+
+Pass.
+
+* [[https://vimgolf.com/challenges/530d2148f78def0002660c96][Write Setters and Getters for PHP]]
+<2017-02-15 Wed>
+
+Pass.
+
+* [[https://vimgolf.com/challenges/519cb48135fc71000200004a][Draw the Go board]]
+<2017-02-15 Wed>
+
+Use keyboard macros.
+
+* [[https://vimgolf.com/challenges/52bc9404cbab90000200001c][O Christmas Tree]]
+<2017-02-15 Wed>
+
+Pass.
+
+* [[https://vimgolf.com/challenges/51093f4c6db41b0002000003][Define to require]]
+<2017-02-15 Wed>
+
+Pass.
+
+
+* [[https://vimgolf.com/challenges/500855e60599d90002000073][Convert pandoc unordered list to a numbered list]]
+<2017-02-15 Wed>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+^\(\s-+\)\* \,(concat \1 (number-to-string (1+ \#)))
+#+END_EXAMPLE
