@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  185 | 53.62 |
+|   345 |  195 | 56.52 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1827,3 +1827,66 @@ Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
 #+BEGIN_EXAMPLE
 ^\(\s-+\)\* \,(concat \1 (number-to-string (1+ \#)))
 #+END_EXAMPLE
+
+* [[https://vimgolf.com/challenges/4d1df910de2f897c2a0003c0][Almost encrypted]]
+<2017-02-16 Thu>
+
+#+BEGIN_SRC emacs-lisp
+(defun foo (char)
+  (cond ((<= ?a char ?m) (+ 13 char))
+        ((<= ?n char ?z) (+ -13 char))
+        ((<= ?A char ?M) (+ 13 char))
+        ((<= ?N char ?Z) (+ -13 char))
+        (t char)))
+#+END_SRC
+
+* [[https://vimgolf.com/challenges/50ad2cb165b8db0002000029][Unwrap the text of an email message]]
+<2017-02-16 Thu>
+
+1. Remove prefix
+2. Join line with ~M-^~ (~delete-indentation~) or ~M-%~ (~query-replace~)
+
+* [[https://vimgolf.com/challenges/5054b935fa0b390002000020][SFD-ROC: Tic-Tac-Toe]]
+<2017-02-16 Thu>
+
+Edit manually.
+
+* [[https://vimgolf.com/challenges/53f44761ba79e3000235fc6f][Comparing scores]]
+<2017-02-16 Thu>
+
+Use ~sort-lines~ and ~sort-fields~.
+
+* [[https://vimgolf.com/challenges/55f9720b4a665c2acf0008c8][Lower cased and dashed strings]]
+<2017-02-16 Thu>
+
+Run ~C-M-%~ (~query-replace-regexp~) with ~^.$~ as search pattern and
+the following as replace pattern
+
+#+BEGIN_EXAMPLE
+(format "%s\n    name: \"%s\""
+          (downcase (replace-regexp-in-string " " "-" \&))
+          \&)
+#+END_EXAMPLE
+
+* [[https://vimgolf.com/challenges/50b746da523acc0002000018][Checkerboard case pattern]]
+<2017-02-16 Thu>
+
+Use ~M-c~ (~capitalize-word~).
+
+* TODO [[https://vimgolf.com/challenges/541022801a2d8b0002238a17][Roman numerals]]
+<2017-02-16 Thu>
+
+* [[https://vimgolf.com/challenges/4d1aa1d9b8cb34093200039f][PEP8 Python Wrapping Comments and Code]]
+<2017-02-16 Thu>
+
+Use ~C-x f~ (~set-fill-column~) to change ~fill-column~.
+
+* [[https://vimgolf.com/challenges/4fe3d2c2f73248000100004b][Changing URL path in CSS]]
+<2017-02-16 Thu>
+
+Use ~C-M-%~ (~query-replace-regexp~).
+
+* [[https://vimgolf.com/challenges/4d2061daf1a3f252f4000087][Solve the Sokoban]]
+<2017-02-16 Thu>
+
+Pass.
