@@ -136,12 +136,12 @@
 
 ;;; Initialization
 
-;; And disable the site default settings (TODO: but what is it exactly?)
+;; Disable the site default settings. See (info "(emacs) Init File")
 (setq inhibit-default-init t)
 
-;; NO MORE AD
-;; Emacs 处理这个变量的方式挺有意思的，如果你的配置要还给其他人用，最好不去动这个变量
-(setq inhibit-startup-echo-area-message "xcy")
+;; Don't show "For information about GNU Emacs and the GNU system, type C-h
+;; C-a." after startup
+;; (setq inhibit-startup-echo-area-message "xcy")
 
 ;; Load personal information
 (load "~/.private.el" :no-error)
