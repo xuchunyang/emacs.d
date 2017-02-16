@@ -66,6 +66,14 @@ calc ()
     emacs -Q --batch --eval "(message \"%s\" (calc-eval \"$1\"))"
 }
 
+grep_in_emacs ()
+{
+    args=$*
+    # For simplicity, prefix with -n/--line-number, -H/--with-filename and --color
+    emacsclient --eval "(grep \"grep -nH --color $args\")"
+    _open_emacs_window
+}
+
 rg_in_emacs ()
 {
     pat=$1                      # regexp
@@ -84,5 +92,12 @@ man_in_emacs ()
 {
     topic=$1
     emacsclient --eval "(man \"$topic\")"
+    _open_emacs_window
+}
+
+shell_command ()
+{
+    cmd=$*
+    emacsclient --eval "(shell-command \"$cmd\")"
     _open_emacs_window
 }
