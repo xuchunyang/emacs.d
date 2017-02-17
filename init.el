@@ -658,10 +658,15 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
   (setq dired-listing-switches "-Alh")
 
   ;; `dired-listing-switches' can't contain whitespace before
-  ;; the commit 148100d98319499f0ac6f57b8be08cbd14884a5c
-  (when (version<= "26.0.50.2" emacs-version)
-    (setq dired-listing-switches
-          (combine-and-quote-strings '("-Alh" "--time-style=+%_m月 %d %H:%M"))))
+  ;; the commit c71b718be86bdda7b51c8ea0da30aa896a7833fe
+  ;;
+  ;; (when (version<= "26.0.50.2" emacs-version)
+  ;;   (setq dired-listing-switches
+  ;;         (combine-and-quote-strings '("-Alh" "--time-style=+%_m月 %d %H:%M"))))
+  ;;
+  ;; FIXME
+  ;; 1. 这回导致 Tramp 的 Dired 不能正常工作
+  ;; 2. Mode line 有点问题
 
   ;; Use directory from other dired window as target directory while
   ;; copying and renaming.
