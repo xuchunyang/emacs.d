@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  195 | 56.52 |
+|   345 |  205 | 59.42 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1888,5 +1888,74 @@ Use ~C-M-%~ (~query-replace-regexp~).
 
 * [[https://vimgolf.com/challenges/4d2061daf1a3f252f4000087][Solve the Sokoban]]
 <2017-02-16 Thu>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5490a40f6571cc0002bc6920][Square numbers]]
+<2017-02-17 Fri>
+
+1. Insert numbers with ~C-u C-x r N~ (~rectangle-number-lines~)
+2. Squre with ~C-M-%~ (~query-replace-regexp~)
+
+#+BEGIN_EXAMPLE
+^.*$ \,(number-to-string (expt (string-to-number \&) 2))
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/50b1517e9aad890002000004][Printable ASCII characters]]
+<2017-02-17 Fri>
+
+#+BEGIN_SRC emacs-lisp
+(loop for i from ?\s to ?~
+      do (insert (format "%c\n" i)))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/4fca76aad3a0d4000100007e][Calculate the table totals]]
+<2017-02-17 Fri>
+
+#+BEGIN_SRC org
+,#+tblfm: $4=$2*$3;%.2f
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/52409a089e26e1000200006d][Ninjas Leaderboard]]
+<2017-02-17 Fri>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4d2fb20e63b08b08b0000075][Overall Vimgolf Rank]]
+<2017-02-17 Fri>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+- Rank: \([0-9]+\)/ \,(progn (incf foo (string-to-number \1)) \&)
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/537a553282aa3e000222048a][HTML formatting: vertical alignment for readability]]
+<2017-02-17 Fri>
+
+Enable ~html-mode~ then mark the whole buffer and press ~TAB~. Adjust
+~sgml-basic-offset~ to 4 if like.
+
+* [[http://www.vimgolf.com/challenges/4d247aa50947c63e260000a4][Happy New Year!]]
+<2017-02-17 Fri>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following
+
+#+BEGIN_EXAMPLE
+. \,(let ((c (string-to-char \&))) (format "<%c> %d,  Hex %x,  Octal %o\n" c c c c))
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/4d22dcfa7f75b01e0700010e][Getters & Setters: Java]]
+<2017-02-17 Fri>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5054ba0cfa0b390002000023][SFD-ROC: Pipe Dreams]]
+<2017-02-17 Fri>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/555b647e6337c25795003d2c][Tiny column alignment]]
+<2017-02-17 Fri>
 
 Pass.
