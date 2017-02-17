@@ -185,9 +185,7 @@ If with prefix argument, search current directory."
          ("M-I" . helm-do-grep-ag))
   :config
   (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep)
-  (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep-ag)
-  (setq helm-grep-ag-command
-        "ag --smart-case --line-numbers --nogroup --color-match='0;32' %s %s %s"))
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep-ag))
 
 (use-package helm-regexp
   :defer t
