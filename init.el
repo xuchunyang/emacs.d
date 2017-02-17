@@ -2082,6 +2082,15 @@ See Info node `(magit) How to install the gitman info manual?'."
   :ensure t
   :defer t)
 
+(use-package tramp                      ; Work with remote files
+  ;; The entry point is find-file. Examples
+  ;;
+  ;; /sudo::/etc/shells
+  ;; /ssh:xcy@xuchunyang.me:/home/xcy/  or just
+  ;; /xuchunyang.me:/home/xcy
+  ;; /ftp:hmwzynmu@6MK2JSCNAME.FYVPS.COM:/domains/foo.xuchunyang.me/public_html/
+  :defer t)
+
 (use-package chunyang-sudo-edit
   :defer t                              ; Fake package so don't load
   :preface
