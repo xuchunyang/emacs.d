@@ -2773,10 +2773,21 @@ provides similiar function."
         (lambda (result)
           (cl-destructuring-bind (output value) result
             (unless (current-line-empty-p) (insert ?\n))
-            (insert "     ⇒ " value)
+            ;; (insert "     ⇒ " value)
+            (insert "     => " value)
             (unless (current-line-empty-p) (insert ?\n)))))))
 
+  (defun chunyang-sly-eval-print-last-sexp-in-comment ()
+    (interactive)
+    (let ((string (sly-last-expression)))
+      (sly-eval-async `(slynk:eval-and-grab-output ,string)
+        (lambda (result)
+          (cl-destructuring-bind (output value) result
+            (comment-dwim nil)
+            (insert (format " => %s" value)))))))
+
   (define-key sly-mode-map "\C-j" #'chunyang-sly-eval-print-last-sexp)
+  (define-key sly-mode-map "\C-j" #'chunyang-sly-eval-print-last-sexp-in-comment)
 
   (use-package sly-mrepl
     :defer t
