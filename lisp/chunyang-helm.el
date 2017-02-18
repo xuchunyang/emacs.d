@@ -283,6 +283,23 @@ If with prefix argument, search current directory."
   :config (setq helm-org-headings-fontify t))
 
 
+;;; EWW Bookmarks
+
+(defun helm-eww-bookmarks ()
+  "Alternative to `eww-list-bookmarks'."
+  (interactive)
+  (require 'eww)
+  (helm :sources
+        (helm-build-sync-source "EWW Bookmarks"
+          :candidates
+          (lambda ()
+            (cl-loop for elt in (eww-read-bookmarks)
+                     collect (cons (plist-get elt :title)
+                                   (plist-get elt :url))))
+          :action #'eww)
+        :buffer "*Helm EWW Bookmarks*"))
+
+
 ;;; Manage advises
 (defun advice--members (symbol)
   (let ((definition (advice--symbol-function symbol))
