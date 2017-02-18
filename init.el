@@ -2092,7 +2092,17 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; /ssh:xcy@xuchunyang.me:/home/xcy/  or just
   ;; /xuchunyang.me:/home/xcy
   ;; /ftp:hmwzynmu@6MK2JSCNAME.FYVPS.COM:/domains/foo.xuchunyang.me/public_html/
-  :defer t)
+  ;;
+  ;; Dired, Magit, Shell (M-x shell /ssh:xuchunyang.me:/bin/bash) and
+  ;; Eshell works, while ansi-term doesn't not. See
+  ;; (info "(tramp) Remote processes")
+  :defer t
+  :config
+  ;; Disable version control to avoid delays:
+  (setq vc-ignore-dir-regexp
+        (format "\\(%s\\)\\|\\(%s\\)"
+                vc-ignore-dir-regexp
+                tramp-file-name-regexp)))
 
 (use-package chunyang-sudo-edit
   :defer t                              ; Fake package so don't load
