@@ -2606,9 +2606,15 @@ Called with a prefix arg set search provider (default Google)."
   (require 'org-loaddefs)
   (add-to-list 'Info-directory-list "~/src/org-mode/doc/")
 
+  ;; prevent demoting heading also shifting text inside sections
+  (setq org-adapt-indentation nil)
+
   (setq org-directory          "~/Sync/org"
         org-agenda-files       '("~/Sync/org/")
         org-default-notes-file "~/Sync/org/todo.org")
+
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file "todo.org") "* TODO %?\n%U\n%a\n")))
 
   (define-key global-map [?\C-c ?c] #'org-capture)
   (define-key global-map [?\C-c ?a] #'org-agenda)
