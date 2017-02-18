@@ -384,7 +384,11 @@
   (savehist-mode)
   (setq history-length 1000
         history-delete-duplicates t
-        savehist-additional-variables '(extended-command-history)))
+        savehist-additional-variables
+        '(extended-command-history
+          ;; Record recent directories. To use, type
+          ;; C-u C-x C-f (helm-find-files)
+          helm-ff-history)))
 
 (use-package recentf                    ; Recent files
   :config
