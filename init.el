@@ -1287,6 +1287,8 @@ Intended to be added to `isearch-mode-hook'."
 ;; TODO: Fontify markdown link like org, see `org-descriptive-links',
 ;; `orglink', and (elisp) Font Lock Mode.
 (use-package markdown-mode
+  :ensure t
+  :defer t
   :preface
   (defun chunyang-markdown-insert-link (title link)
     (interactive
@@ -1294,12 +1296,9 @@ Intended to be added to `isearch-mode-hook'."
            (link  (read-string "Link: ")))
        (list title link)))
     (insert (format "[%s](%s)" title link)))
-  :ensure t
-  :defer t
   ;; :mode ("README\\.md\\'" . gfm-mode)
-  ;; :config
-  ;; (setq markdown-command "pandoc -s -f markdown -t html")
-  )
+  :config
+  (setq markdown-command "pandoc --standalone -f markdown -t html"))
 
 (use-package yaml-mode :ensure t :defer t)
 
