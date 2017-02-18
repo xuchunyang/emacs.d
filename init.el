@@ -2312,7 +2312,19 @@ This should be add to `find-file-hook'."
   (use-package shr
     :config
     ;; Don't use proportional fonts for text
-    (setq shr-use-fonts nil)))
+    (setq shr-use-fonts nil)
+
+    (defun chunyang-theme-dark-p ()
+      "Return non-nil if using Dark theme."
+      ;; FIXME: Use a proper way for this
+      (let ((theme (car custom-enabled-themes)))
+        (and theme
+             (string-match-p (rx (or "night" "eighties" "dark"))
+                             (symbol-name theme)))))
+
+    (when (chunyang-theme-dark-p)
+      ;; (info "(Mu4e) Displaying rich-text messages")
+      (setq shr-color-visible-luminance-min 75))))
 
 (use-package google-this
   :disabled t
