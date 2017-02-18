@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  205 | 59.42 |
+|   345 |  215 | 62.32 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -1957,5 +1957,76 @@ Pass.
 
 * [[http://www.vimgolf.com/challenges/555b647e6337c25795003d2c][Tiny column alignment]]
 <2017-02-17 Fri>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4d28aef94bcd032f1c0000dc][The Universal Declaration of Human Rights, Article 1]]
+<2017-02-18 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/51a115429bada1000200001b][paste indent correction - JS]]
+<2017-02-18 Sat>
+
+Use major-mode's feature to indent.
+
+* [[http://www.vimgolf.com/challenges/4dd3e19aec9eb6000100000d][Complete the hex array data (Part II)]]
+<2017-02-18 Sat>
+
+#+BEGIN_SRC emacs-lisp
+(loop for i from #x00 to #xFF
+      do (insert (format "0x%x, " i))
+      when (zerop (% (1+ i) 8))
+      do (insert "\n"))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/4fbf8e303be58b0001000024][Format the output]]
+<2017-02-18 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/55007a7412685a180e000005][Not enough Ps]]
+<2017-02-18 Sat>
+
+Replace "B" with "P" via ~M-%~ (~query-replace~).
+
+* [[http://www.vimgolf.com/challenges/4d1dfe2cde2f897c2a0003e3][Letters are numbers]]
+<2017-02-18 Sat>
+
+#+BEGIN_SRC emacs-lisp
+(mapconcat #'number-to-string (string-to-list "abc") "")
+#+END_SRC
+
+#+RESULTS:
+: 979899
+
+* [[http://www.vimgolf.com/challenges/4d2482950947c63e260000b1][Word Blender]]
+<2017-02-18 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/51459ef6b94aa50002000002][It's a factor]]
+<2017-02-18 Sat>
+
+#+BEGIN_SRC emacs-lisp
+(defun find-factors (number)
+  (delete-dups
+   (loop for i from 1 to number
+         if (zerop (% number i))
+         collect i)))
+
+(find-factors 9)
+#+END_SRC
+
+#+RESULTS:
+| 1 | 3 | 9 |
+
+* [[http://www.vimgolf.com/challenges/54bd44d755bd48000310c6e0][Greek column realign]]
+<2017-02-18 Sat>
+
+Edit as qusual.
+
+* [[http://www.vimgolf.com/challenges/54a94976f4048c00026d8ed6][C to VimDict]]
+<2017-02-18 Sat>
 
 Pass.
