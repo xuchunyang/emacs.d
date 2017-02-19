@@ -2111,14 +2111,21 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; (info "(tramp) Default Method")
   (defun chunyang-sudo-edit ()
     (interactive)
-    (find-file (concat "/sudo::" (buffer-file-name))))
+    (let ((fn (buffer-file-name))
+          (pt (point)))
+      (kill-buffer)
+      (find-file (concat "/sudo::" fn))
+      (goto-char pt)))
 
   (defun chunyang-sudo-edit-notify ()
     "Notify myself when edit a file owned by root.
 This should be add to `find-file-hook'."
     (let ((old-msg (current-message)))
       (when (and old-msg
-                 (string= old-msg "Note: file is write protected"))
+                 (string= old-msg "Note: file is write protected")
+                 ;; `chunyang-sudo-edit' doesn't work for remote files
+                 ;; for now
+                 (not (file-remote-p (buffer-file-name))))
         (message "%s, %s"
                  old-msg
                  "use M-x chunyang-sudo-edit RET to edit as sudo"))))
