@@ -391,7 +391,7 @@
           helm-ff-history)))
 
 (use-package recentf                    ; Recent files
-  :config
+  :init
   (setq recentf-max-saved-items 512
         recentf-exclude (list "/\\.git/.*\\'"      ; Git contents
                               "/\\.emacs\\.d/elpa" ; ELPA
@@ -400,7 +400,12 @@
                               ".*\\.gz\\'"
                               "TAGS"
                               ".*-autoloads\\.el\\'"))
-  (recentf-mode))
+  ;; FIXME:
+  ;; Not sure why use-package gives a warnning about this on only
+  ;; Emacs 26.0.50. It is OK since helm will enable it automatically.
+  ;; :config (recentf-mode)
+  )
+
 
 (use-package bookmark
   :defer t
