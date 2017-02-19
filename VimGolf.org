@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  215 | 62.32 |
+|   345 |  220 | 63.77 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2028,5 +2028,68 @@ Edit as qusual.
 
 * [[http://www.vimgolf.com/challenges/54a94976f4048c00026d8ed6][C to VimDict]]
 <2017-02-18 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/50ef5caf767623000200004b][Execute immediate SQL]]
+<2017-02-19 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4d1ba304c8bb5704eb00012d][Linear congruential generator]]
+<2017-02-19 Sun>
+
+#+BEGIN_SRC emacs-lisp
+(defun insert-next ()
+  (interactive)
+  (let* ((this (number-at-point))
+         (next (% (+ (* 25 this) 7) 48)))
+    (goto-char (line-end-position))
+    (insert (format "\n%s" next))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/518360f3fa5db2000200001a][Lookahead and Lookbehind]]
+<2017-02-19 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5521ef575709ea270a00ce69][Remove hard line breaks]]
+<2017-02-19 Sun>
+
+- Set ~fill-column~ to a large number with ~C-x f~ (~set-fill-column~)
+- then fill with ~M-q~ (~fill-paragraph~)
+
+* [[http://www.vimgolf.com/challenges/4d1c7ee635b40650b8000203][Remove Accent off the Letter]]
+<2017-02-19 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/548879e3844403000250b6aa][JSON string rotation]]
+<2017-02-19 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/50b4b5e6448d77000200004d][Chucking wood]]
+<2017-02-19 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/51e3f82a0754780002000078][Hanging Indent for Footnotes]]
+<2017-02-19 Sun>
+
+- Unfill
+- set fill-column/fill-prefix
+- fill
+- cleanup
+
+there is some better way, looks like change-log-mode has such function.
+
+* [[http://www.vimgolf.com/challenges/5054bb26fa0b39000200002b][SFD-ROC: ROT13 ]]
+<2017-02-19 Sun>
+
+Sort twice.
+
+* [[http://www.vimgolf.com/challenges/50128129201f450002000027][Complete the circuit grid!]]
+<2017-02-19 Sun>
 
 Pass.
