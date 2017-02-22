@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  220 | 63.77 |
+|   345 |  235 | 68.12 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2093,3 +2093,141 @@ Sort twice.
 <2017-02-19 Sun>
 
 Pass.
+
+* [[http://www.vimgolf.com/challenges/50127eba201f450002000024][Make the circuit grid!]]
+<2017-02-22 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/50d76e775539af000200006f][Transposition]]
+<2017-02-22 Wed>
+
+Use this ~foo~ to transpose the text, then use ~C-u M-x align-regexp~ to align.
+
+#+BEGIN_SRC emacs-lisp
+(defun chunyang-transpose (lists)
+  "Return the transpose of a martrix LISTS.
+See URL `https://en.wikipedia.org/wiki/Transpose'."
+  ;; NOTE assuming LISTS is a valid martrix
+  (cl-loop for idx from 0 to (1- (length (car lists)))
+           collect (cl-loop for lst in lists
+                            collect (nth idx lst))))
+
+(defun lines-into-lists (beg end)
+  (interactive "r")
+  (let ((lines (split-string (buffer-substring beg end) "\n" )))
+    (delq nil (mapcar (lambda (line) (split-string line " " t))
+                      lines))))
+
+(defun insert-lists (lists)
+  (loop for lst in lists
+        do (insert (mapconcat #'identity lst " ")
+                   "\n")))
+
+(defun foo ()
+  (interactive)
+  (insert-lists
+   (chunyang-transpose
+    (call-interactively #'lines-into-lists))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/50ba20af5b346c0002000035][Python: Lots of function arguments]]
+<2017-02-22 Wed>
+
+~M-q~ (~fill-paragraph~).
+
+* [[http://www.vimgolf.com/challenges/549fc5c05874e9000220eb54][Binary and Increment]]
+<2017-02-22 Wed>
+
+The function ~format~ supports hex and octal, but not binary. For now,
+I can use the following:
+
+#+BEGIN_SRC emacs-lisp
+(defun chunyang-format-as-binary (number)
+  ;; FIXME: It might be better to calculate directly
+  (let ((map '((?0 . "000")
+               (?1 . "001")
+               (?2 . "010")
+               (?3 . "011")
+               (?4 . "100")
+               (?5 . "101")
+               (?6 . "110")
+               (?7 . "111"))))
+    (replace-regexp-in-string
+     "\\`0+" ""
+     (mapconcat #'identity
+                (mapcar (lambda (c) (cdr (assq c map)))
+                        (string-to-list (format "%o" number))) ""))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/4e379f2fdfb67a000100002e][PHP <--> Java class conversion Part 2]]
+<2017-02-22 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5054ba5efa0b390002000026][SFD-ROC: ASCII Logo Border]]
+<2017-02-22 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/502f2e628f37220002000031][Create an alphabet diamond]]
+<2017-02-22 Wed>
+
+Run the following to creeate the half, then use ~M-x reverse-region~
+to create the rest.
+
+#+BEGIN_SRC emacs-lisp :exports both
+(cl-loop for char from ?Z downto ?A
+         for text from 52 downto 2 by 2
+         for space from 0
+         concat (concat (make-string space ?\s)
+                        (make-string text char)
+                        "\n"))
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+ YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+     UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+      TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+       SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+        RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+         QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+          PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+           OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+            NNNNNNNNNNNNNNNNNNNNNNNNNNNN
+             MMMMMMMMMMMMMMMMMMMMMMMMMM
+              LLLLLLLLLLLLLLLLLLLLLLLL
+               KKKKKKKKKKKKKKKKKKKKKK
+                JJJJJJJJJJJJJJJJJJJJ
+                 IIIIIIIIIIIIIIIIII
+                  HHHHHHHHHHHHHHHH
+                   GGGGGGGGGGGGGG
+                    FFFFFFFFFFFF
+                     EEEEEEEEEE
+                      DDDDDDDD
+                       CCCCCC
+                        BBBB
+                         AA
+#+end_example
+
+* [[http://www.vimgolf.com/challenges/50a1b172c654360002000033][Add links to an existing HTML table]]
+<2017-02-22 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4d29ae2107e0177c7e000036][Before there was Farmville...]]
+<2017-02-22 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5314fc4e6e902e00027b74d1][Five Pillars]]
+<2017-02-22 Wed>
+
+- Use ~C-M-%~ (~query-replace-regexp~) to delete punctuation characters ~\s.~.
+- Use keyboard macros to split text into lines
+- Use ~C-u M-x align-regexp RET \(\s-*\)  RET 1 RET 0 RET y RET~ to align.
