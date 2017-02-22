@@ -232,5 +232,39 @@ See URL `https://github.com/JuanitoFatas/Computer-Science-Glossary'."
 
 ;; (chunyang-package-archives-use-https)
 
+
+;;; 转置矩阵 - Transpose
+
+(defun chunyang-transpose (lists)
+  "Return the transpose of a martrix LISTS.
+See URL `https://en.wikipedia.org/wiki/Transpose'."
+  ;; NOTE assuming LISTS is a valid martrix
+  (cl-loop for idx from 0 to (1- (length (car lists)))
+           collect (cl-loop for lst in lists
+                            collect (nth idx lst))))
+
+;; (chunyang-transpose '((1 3 5)
+;;                       (2 4 5)))
+;;      => ((1 2) (3 4) (5 5))
+
+
+;;; Format binary number
+
+(defun chunyang-format-as-binary (number)
+  ;; FIXME: It might be better to calculate directly
+  (let ((map '((?0 . "000")
+               (?1 . "001")
+               (?2 . "010")
+               (?3 . "011")
+               (?4 . "100")
+               (?5 . "101")
+               (?6 . "110")
+               (?7 . "111"))))
+    (replace-regexp-in-string
+     "\\`0+" ""
+     (mapconcat #'identity
+                (mapcar (lambda (c) (cdr (assq c map)))
+                        (string-to-list (format "%o" number))) ""))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
