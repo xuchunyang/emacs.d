@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  235 | 68.12 |
+|   345 |  245 | 71.01 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2231,3 +2231,55 @@ Pass.
 - Use ~C-M-%~ (~query-replace-regexp~) to delete punctuation characters ~\s.~.
 - Use keyboard macros to split text into lines
 - Use ~C-u M-x align-regexp RET \(\s-*\)  RET 1 RET 0 RET y RET~ to align.
+
+* [[http://www.vimgolf.com/challenges/50525d0730c82d0002000077][Circle of Fifths with Sharps]]
+<2017-02-23 Thu>
+
+Use the same method as in Transposition.
+
+* [[http://www.vimgolf.com/challenges/50b375efd028d90002000050][Flip the chessboard]]
+<2017-02-23 Thu>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5301e83c0cb38c0002000008][Carriage return]]
+<2017-02-23 Thu>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/50c13afab855760002000049][Harder than "abcd > a b c d"]]
+<2017-02-23 Thu>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+  \,(make-string (1+ \#) ? )
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/54d5f51d20b05716be00036d][Sort with uniq OpenEmbedded package names]]
+<2017-02-23 Thu>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4d1da368de2f897c2a000114][Dumb to smart]]
+<2017-02-23 Thu>
+
+Do it manually.
+
+* TODO [[http://www.vimgolf.com/challenges/5039216a1eb07a0002000026][Sierpinski's Triangle]]
+<2017-02-23 Thu>
+
+* [[http://www.vimgolf.com/challenges/55b35f751b16ea1bc100a0e2][Maze path]]
+<2017-02-23 Thu>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/50c195c1b85576000200005b][fib.c cleanup]]
+<2017-02-23 Thu>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4d2513c10947c63e2600019f][Here, piggy, piggy...]]
+<2017-02-23 Thu>
+
+Pass.
