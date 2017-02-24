@@ -47,9 +47,12 @@
 
 (defun chunyang-mac-Terminal-cd (dir)
   "Open Terminal.app and cd to DIR in it."
-  (interactive (list (if current-prefix-arg
-                         (read-directory-name "cd to: ")
-                       default-directory)))
+  (interactive (list
+                ;; Because shell doesn't expand 'dir'
+                (expand-file-name
+                 (if current-prefix-arg
+                     (read-directory-name "cd to: ")
+                   default-directory))))
   (chunyang-mac-Terminal-send-string (format "cd '%s'" dir)))
 
 
