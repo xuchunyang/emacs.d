@@ -1,0 +1,35 @@
+#!/usr/bin/env emacs --no-site-file --script
+;;; hello --- A demo script in Emacs Lisp  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2017  Chunyang Xu
+
+;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; URL: https://github.com/xuchunyang/emacs.d
+;; Created: 2017-02-24
+;; Modified: 2017-02-24
+
+;;; Commentary:
+
+;; NOTE The shebang works on macOS since the argument is splited but
+;; not on GNU/Linux, one cah use 'emacs --script /path/to/the/script'
+;; instead.
+
+;;; Code:
+
+(message "%s" "Hello, world!")
+
+(terpri)
+
+(message "%s" "Current Environment:")
+(let ((alist `((emacs-version . ,emacs-version )
+               (lexical-binding . ,lexical-binding)
+               (load-path . ,load-path)
+               (exec-path . ,exec-path)
+               (features . ,features))))
+  (pp alist))
+
+;; Local Variables:
+;; time-stamp-pattern: "20/Modified:\\\\?[ \t]+%:y-%02m-%02d\\\\?\n"
+;; End:
+
+;;; hello ends here
