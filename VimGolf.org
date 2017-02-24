@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  245 | 71.01 |
+|   345 |  251 | 72.75 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2283,3 +2283,52 @@ Pass.
 <2017-02-23 Thu>
 
 Pass.
+
+* [[http://www.vimgolf.com/challenges/55250aff5eba2c043f0318f5][Merge blank lines and properly capitalize]]
+<2017-02-24 Fri>
+
+1. Delete unwanted blank with ~C-x C-o~ (~delete-blank-lines~) or ~C-M-%~ (~query-replace-regexp~)
+2. Capitalize manually
+
+* [[http://www.vimgolf.com/challenges/565bb80fceffe53baa038f0c][No naked if allowed!]]
+<2017-02-24 Fri>
+
+1. Add one space after ~//~ with ~M-%~ (~query-replace~)
+2. Move comment on its one line with ~C-u M-;~ (~comment-dwim~) and yank
+
+* [[http://www.vimgolf.com/challenges/56f8745e27bf6e0006010ec1][Convert pasted text into Markdown]]
+<2017-02-24 Fri>
+
+1. Add one blank line with ~M-%~ (~query-replace~)
+2. Fill qith ~M-q~ (~fill-paragraph~)
+
+* [[http://www.vimgolf.com/challenges/521df209452feb000200012d][Recursive Cowsay]]
+<2017-02-24 Fri>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5287aac7bba8eb0002000002][Permutations N=4]]
+<2017-02-24 Fri>
+
+#+BEGIN_SRC emacs-lisp
+(let ((l '(1 2 3 4))
+      result)
+  (dolist (i l)
+    (dolist (j (remove i l))
+      (dolist (k (remove j (remove i l)))
+        (push (list i j k (car (remove k (remove j (remove i l))))) result))))
+  (dolist (list (nreverse result))
+    (insert (mapconcat #'number-to-string list "")
+            ?\n)))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/54d6ed13bb73ec0688000001][50 factorials mod 97]]
+<2017-02-24 Fri>
+
+#+BEGIN_SRC emacs-lisp :exports both
+(loop for i from 1 to 50
+      collect (calc-eval (format "%d! %% 97" i)))
+#+END_SRC
+
+#+RESULTS:
+| 1 | 2 | 6 | 24 | 23 | 41 | 93 | 65 | 3 | 30 | 39 | 80 | 70 | 10 | 53 | 72 | 60 | 13 | 53 | 90 | 47 | 64 | 17 | 20 | 15 | 2 | 54 | 57 | 4 | 23 | 34 | 21 | 14 | 88 | 73 | 9 | 42 | 44 | 67 | 61 | 76 | 88 | 1 | 44 | 40 | 94 | 53 | 22 | 11 | 65 |
