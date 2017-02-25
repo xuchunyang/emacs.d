@@ -2424,6 +2424,7 @@ Called with a prefix arg set search provider (default Google)."
 ;;; Dictionary
 (use-package youdao-dictionary
   :ensure t
+  :load-path "~/src/youdao-dictionary.el"
   :bind (("C-c y" . youdao-dictionary-search)
          ("C-c Y" . youdao-dictionary-search-at-point+)))
 
