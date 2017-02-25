@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  251 | 72.75 |
+|   345 |  255 | 73.91 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2332,3 +2332,37 @@ Pass.
 
 #+RESULTS:
 | 1 | 2 | 6 | 24 | 23 | 41 | 93 | 65 | 3 | 30 | 39 | 80 | 70 | 10 | 53 | 72 | 60 | 13 | 53 | 90 | 47 | 64 | 17 | 20 | 15 | 2 | 54 | 57 | 4 | 23 | 34 | 21 | 14 | 88 | 73 | 9 | 42 | 44 | 67 | 61 | 76 | 88 | 1 | 44 | 40 | 94 | 53 | 22 | 11 | 65 |
+
+* [[http://www.vimgolf.com/challenges/5474ef0bcf59b600024c64de][Config Sections]]
+<2017-02-25 Sat>
+
+#+BEGIN_SRC emacs-lisp
+(defun foo (beg end)
+  (interactive "*r")
+  (let ((s (delete-and-extract-region beg end)))
+    (insert (make-string 30 ?#) "\n"
+            (format "## %s ##" (s-center (- 30 6) s)) "\n"
+            (make-string 30 ?#) "\n")))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/50ed6ac0c0e3aa0002000003][Coordinates placeholder]]
+<2017-02-25 Sat>
+
+#+BEGIN_SRC emacs-lisp
+(while (search-forward "test" nil t)
+  (message "%d,%d"
+           (save-excursion
+             (goto-char (match-beginning 0))
+             (1+ (current-column)))
+           (line-number-at-pos)))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/5052dd5c2a8bfe000200001c][Enharmonic Equivalents]]
+<2017-02-25 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5014b2156318a4000200000b][Convert regular pandoc footnotes to in-line notes]]
+<2017-02-25 Sat>
+
+Pass.
