@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  255 | 73.91 |
+|   345 |  268 | 77.68 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2364,5 +2364,165 @@ Pass.
 
 * [[http://www.vimgolf.com/challenges/5014b2156318a4000200000b][Convert regular pandoc footnotes to in-line notes]]
 <2017-02-25 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/547dae4372572300022c560e][Simple Maths]]
+<2017-02-25 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4d22038df74d0b11490000fb][Return the cow]]
+<2017-02-25 Sat>
+
+#+BEGIN_SRC emacs-lisp
+(defun return-the-cow (beg end)
+  (interactive "*r")
+  (let* ((s (delete-and-extract-region beg end))
+         (s (apply #'string (mapcar
+                             (lambda (c)
+                               (cl-case c
+                                 (?\\ ?/)
+                                 (?/ ?\\)
+                                 (?\( ?\))
+                                 (?\) ?\()
+                                 (t c)))
+                             (string-to-list s))))
+         (lines (split-string s "\n"))
+         (max (apply #'max (mapcar #'length lines))))
+    (insert
+     (mapconcat #'identity
+                (mapcar (lambda (line) (nreverse (format (format "%%-%ds" max) line)))
+                        lines)
+                "\n"))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/50a9cedcf54bf60002000028][Sort by sum of numbers in a line(?)]]
+<2017-02-25 Sat>
+
+Use ~sort-numeric-fields~.
+
+* [[http://www.vimgolf.com/challenges/4f6144f46938f20001000061][un-C-escape string]]
+<2017-02-26 Sun>
+
+Use ~M-%~ (~query-replace~).
+
+* [[http://www.vimgolf.com/challenges/55ff7ea45a2b52043e06dee2][Forgot to follow the naming convention...]]
+<2017-02-26 Sun>
+
+Use the following to do it one by one or simply use ~C-M-%~ (~query-replace-regexp~).
+
+#+BEGIN_SRC emacs-lisp
+(defun foo ()
+  (interactive)
+  (cl-destructuring-bind (beg . end) (bounds-of-thing-at-point 'symbol)
+    (capitalize-region beg end)
+    (replace-string "_" "" nil beg end)))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/52232097e52582000200002c][Untangle my tail, please!]]
+<2017-02-26 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/51bd468414b59a0002000012][Across-Down Flip]]
+<2017-02-26 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5223a618e52582000200005c][Under the cupola]]
+<2017-02-26 Sun>
+
+#+BEGIN_SRC emacs-lisp
+(defun foo ()
+  (interactive)
+  (let* ((text "The pink stars are falling in lines")
+         (words (split-string text " "))
+         (max (apply #'max (mapcar #'length words)))
+         (words (mapcar
+                 (lambda (s)
+                   (substring (concat s (make-string max ?\s)) 0 max))
+                 words))
+         (lists (mapcar #'string-to-list words)))
+    (insert
+     (mapconcat #'identity
+                (mapcar (lambda (l) (mapconcat #'string l "  "))
+                        (chunyang-transpose lists))
+                "\n"))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/51330725b051320002000042][Extended Customer 2]]
+<2017-02-26 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/50ea3ca82bf6290002000040][XML to JSON]]
+<2017-02-27 Mon>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/50ab5251aeb26e0002000033][Sort by your own sum]]
+<2017-02-27 Mon>
+
+#+BEGIN_SRC emacs-lisp
+(defun foo (beg end)
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (sort-subr t 'forward-line 'end-of-line nil nil
+                 (lambda (x y)
+                   (let ((s1 (buffer-substring (car x) (cdr x)))
+                         (s2 (buffer-substring (car y) (cdr y))))
+                     (< (string-to-number (calc-eval s1))
+                        (string-to-number (calc-eval s2)))))))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/50406e76badccf000200003b][maximun and minimun]]
+<2017-02-27 Mon>
+
+Use keyboard macro to run this command on every line then align the result with ~M-x align-regexp~.
+
+#+BEGIN_SRC emacs-lisp
+(defun foo ()
+  (interactive)
+  (let* ((line (buffer-substring (line-beginning-position)
+                                 (line-end-position)))
+         (list (append (read (replace-regexp-in-string "," "" line)) nil))
+         (min (apply #'min list))
+         (max (apply #'max list)))
+    (goto-char (line-end-position))
+    (insert (format " %s <> %s" min max))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/50d8b2039d73b70002000046][Greek Letters]]
+<2017-02-27 Mon>
+
+#+NAME: greek letters
+| alpha   | Α | α |
+| beta    | Β | β |
+| gamma   | Γ | γ |
+| delta   | Δ | δ |
+| epsilon | Ε | ε |
+| zeta    | Ζ | ζ |
+| eta     | Η | η |
+| theta   | Θ | θ |
+| iota    | Ι | ι |
+| kappa   | Κ | κ |
+| lambda  | Λ | λ |
+| mu      | Μ | μ |
+| nu      | Ν | ν |
+| ksi     | Ξ | ξ |
+| omicron | Ο | ο |
+| pi      | Π | π |
+| rho     | Ρ | ρ |
+| sigma   | Σ | σ |
+| tau     | Τ | τ |
+| upsilon | Υ | υ |
+| phї     | Φ | φ |
+| chi     | Χ | χ |
+| psi     | Ψ | ψ |
+| omega   | Ω | ω |
 
 Pass.
