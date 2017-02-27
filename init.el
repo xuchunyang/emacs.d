@@ -2622,9 +2622,21 @@ Called with a prefix arg set search provider (default Google)."
   ;; prevent demoting heading also shifting text inside sections
   (setq org-adapt-indentation nil)
 
-  (setq org-directory          "~/Sync/org"
-        org-agenda-files       '("~/Sync/org/")
-        org-default-notes-file "~/Sync/org/todo.org")
+  (setq
+   ;; Dir of all Org files
+   org-directory "~/Dropbox/org"
+   ;; Agenda
+   org-agenda-files (list "~/Dropbox/org/")
+   ;; Capture
+   org-default-notes-file "~/Dropbox/org/todo.org"
+   ;; Capture used by MobileOrg
+   org-mobile-inbox-for-pull "~/Dropbox/org/from-mobile.org"
+   ;; Set to <your Dropbox root directory>/MobileOrg.
+   org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+
+  ;; NOTE Use
+  ;; - `org-mobile-pull' to pull notes from MobileOrg
+  ;; - `org-mobile-push' to push notes to MobileOrg
 
   (setq org-capture-templates
         '(("t" "Todo" entry (file "todo.org") "* TODO %?\n%U\n%a\n")))
