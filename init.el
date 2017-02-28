@@ -404,7 +404,7 @@
   ;; Not sure why use-package gives a warnning about this on only
   ;; Emacs 26.0.50. It is OK since helm will enable it automatically.
   ;; :config (recentf-mode)
-  )
+  :defer t)
 
 
 (use-package bookmark
@@ -508,6 +508,7 @@
 (bind-key "C-x K" #'kill-buffer)
 
 (use-package ibuffer
+  :defer t
   :config
   ;; Since I used to M-o
   (unbind-key "M-o" ibuffer-mode-map))
@@ -840,7 +841,7 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
   :ensure t
   ;; TODO: Make a lighter version (I just want to move the point)
   ;; :bind ("M-z" . zop-to-char)
-  )
+  :defer t)
 
 (use-package easy-kill                  ; Easy killing and marking on C-w
   :disabled t
@@ -864,7 +865,8 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
          ("C-c A c" . align-current)
          ("C-c A r" . align-regexp)))
 
-(use-package mark-align)                ; Align visualized (via Marking)
+(use-package mark-align                 ; Align visualized (via Marking)
+  :commands mark-align-mode)
 
 (use-package multiple-cursors           ; Edit text with multiple cursors
   :disabled t
@@ -1332,6 +1334,7 @@ Intended to be added to `isearch-mode-hook'."
   )
 
 (use-package which-func
+  :defer t
   :config
   (setq which-func-unknown "⊥"
         which-func-format
@@ -1424,7 +1427,7 @@ Intended to be added to `isearch-mode-hook'."
   ;; `bug-reference-url-format' and `bug-reference-bug-regexp' are
   ;; *safe* local variable
   ;; :defer t
-  )
+  :defer t)
 
 (use-package nocomments-mode            ; Hide Comments
   :ensure t
@@ -2009,6 +2012,8 @@ See Info node `(magit) How to install the gitman info manual?'."
 (use-package atomic-chrome
   :ensure t                             ; To install its dependencies
   :load-path "~/src/atomic-chrome"
+  :defer 5                              ; since the entry of this
+                                        ; package is from Chrome
   :config
   (setq atomic-chrome-url-major-mode-alist
         '(("github\\.com"        . gfm-mode)
@@ -2680,7 +2685,7 @@ Called with a prefix arg set search provider (default Google)."
 (use-package orglink
   :load-path "~/src/orglink"
   :init (setq orglink-mode-lighter nil)
-  :config (global-orglink-mode))
+  :commands (orglink-mode global-orglink-mode))
 
 
 (use-package habitica
