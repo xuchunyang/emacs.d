@@ -2680,7 +2680,12 @@ Called with a prefix arg set search provider (default Google)."
   :if *is-mac*
   :ensure t
   :load-path "~/src/grab-mac-link"
-  :bind ("C-c L" . grab-mac-link))
+  :commands grab-mac-link
+  :init
+  (defun chunyang-grab-mac-link-from-chrome-as-org ()
+    "Insert link & title of the current tab of Chrome as an Org link."
+    (interactive "*")
+    (insert (grab-mac-link 'chrome 'org))))
 
 (use-package orglink
   :load-path "~/src/orglink"
