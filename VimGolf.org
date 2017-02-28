@@ -4,7 +4,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  268 | 77.68 |
+|   345 |  275 | 79.71 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2524,5 +2524,68 @@ Use keyboard macro to run this command on every line then align the result with 
 | chi     | Χ | χ |
 | psi     | Ψ | ψ |
 | omega   | Ω | ω |
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/50a2bdd4f0ea8a0002000055][Presidential Sorting]]
+<2017-02-27 Mon>
+
+Use ~align-regexp~.
+
+* [[http://www.vimgolf.com/challenges/55213dc25709ea0851015904][Custom McCarthy sequence]]
+<2017-02-27 Mon>
+
+Notes that ~m91~ in the following is standard, I am ignoring the question.
+
+#+BEGIN_SRC emacs-lisp :exports both
+(defun m91 (n)
+  (cond ((<= n 100) (m91 (m91 (+ n 11))))
+        (t (- n 10))))
+
+(loop for i from 1 to 120
+      collect (m91 i))
+#+END_SRC
+
+#+RESULTS:
+| 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99 | 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110 |
+
+* [[http://www.vimgolf.com/challenges/5123331bb2bc340002000003][Fibonacci Triangles]]
+<2017-02-27 Mon>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/510a052c6db41b0002000028][LaTeX to XML Math Delimiters]]
+<2017-02-27 Mon>
+
+Use ~C-M-%~ (~query-replace-regexp~), I think.
+
+* [[http://www.vimgolf.com/challenges/54a5b367b5be62000263f9ef][range(10) digit rotation]]
+<2017-02-27 Mon>
+
+#+BEGIN_SRC emacs-lisp :exports both
+(loop with nums = (number-sequence 0 9)
+      for i from 0 to 9
+      collect (-replace 5 '* (-rotate (- i) nums)))
+#+END_SRC
+
+#+RESULTS:
+| 0 | 1 | 2 | 3 | 4 | * | 6 | 7 | 8 | 9 |
+| 1 | 2 | 3 | 4 | * | 6 | 7 | 8 | 9 | 0 |
+| 2 | 3 | 4 | * | 6 | 7 | 8 | 9 | 0 | 1 |
+| 3 | 4 | * | 6 | 7 | 8 | 9 | 0 | 1 | 2 |
+| 4 | * | 6 | 7 | 8 | 9 | 0 | 1 | 2 | 3 |
+| * | 6 | 7 | 8 | 9 | 0 | 1 | 2 | 3 | 4 |
+| 6 | 7 | 8 | 9 | 0 | 1 | 2 | 3 | 4 | * |
+| 7 | 8 | 9 | 0 | 1 | 2 | 3 | 4 | * | 6 |
+| 8 | 9 | 0 | 1 | 2 | 3 | 4 | * | 6 | 7 |
+| 9 | 0 | 1 | 2 | 3 | 4 | * | 6 | 7 | 8 |
+
+* [[http://www.vimgolf.com/challenges/511d618c094242000200001a][199 Fibonacci Numbers]]
+<2017-02-28 Tue>
+
+Use Calc.
+
+* [[http://www.vimgolf.com/challenges/548c6254c3fe990002bb28f7][Hail to Alekseï Pajitnov]]
+<2017-02-28 Tue>
 
 Pass.
