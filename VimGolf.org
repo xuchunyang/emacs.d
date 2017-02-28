@@ -1,10 +1,11 @@
+# -*- coding: utf-8; -*-
 #+TITLE: Emacs Solutions to [[http://www.vimgolf.com/][VimGolf]]
 #+OPTIONS: toc:nil
 
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  275 | 79.71 |
+|   345 |  285 | 82.61 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2587,5 +2588,82 @@ Use Calc.
 
 * [[http://www.vimgolf.com/challenges/548c6254c3fe990002bb28f7][Hail to Alekseï Pajitnov]]
 <2017-02-28 Tue>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/542c8cb02da21600022c7477][Acute accents]]
+<2017-02-28 Tue>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4e7dedb4f447090001000002][Refactor to Helpers]]
+<2017-02-28 Tue>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/51a388ac06f7d20002000006][Change The Perspective]]
+<2017-02-28 Tue>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/54f8cc2718a13f0a630041e5][Conway sequence]]
+<2017-03-01 Wed>
+
+#+BEGIN_SRC emacs-lisp
+(defun look-and-say (number)
+  "Return the next to NUMBER (a string).
+See URL `http://en.wikipedia.org/wiki/Look-and-say_sequence'."
+  (let ((s number)
+        (pos 0)
+        char match
+        (result ""))
+    (while (< pos (length s))
+      (setq char (elt s pos))
+      (setq re (rx-to-string `(1+ ,char)))
+      (string-match re s pos)
+      (setq match (match-string 0 s))
+      (setq result (concat result (format "%d%c" (length match) char)))
+      (incf pos (length match)))
+    result))
+
+(look-and-say "111221")
+#+END_SRC
+
+#+RESULTS:
+: 312211
+
+* [[http://www.vimgolf.com/challenges/55b18bbea9c2c30d04000001][Simple, Practical, and Common]]
+<2017-03-01 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/57d7d06d9ce5640f6f000001][Every other line]]
+<2017-03-01 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4d1a34ccfa85f32065000004][Simple text editing with Vim]]
+<2017-03-01 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/587cab5a0740c90006000006][Combines all items]]
+<2017-03-01 Wed>
+
+- Sort lines
+- Delete unneeded leading numbers
+- Join lines
+
+* [[http://www.vimgolf.com/challenges/58753af0f5ef5c0006000006][Change attribute to getter]]
+<2017-03-01 Wed>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+\.\(\w+\) → \,(format ".get('%s')" \&)
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/58860440c57fb30006000004][Extract HTML option values from tag values]]
+<2017-03-01 Wed>
 
 Pass.
