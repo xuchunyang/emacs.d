@@ -3120,6 +3120,14 @@ provides similiar function."
   (when *is-gnu-linux*
     (setq e2ansi-background-mode 'dark)))
 
+(use-package chunyang-fun               ; For fun
+  :preface
+  (let ((org (locate-user-emacs-file "lisp/chunyang-fun.org"))
+        (el  (locate-user-emacs-file "lisp/chunyang-fun.el")))
+    (when (file-newer-than-file-p org el)
+      (org-babel-tangle-file org)))
+  :commands chunyang-fun-roll-news)
+
 
 ;;; IM
 

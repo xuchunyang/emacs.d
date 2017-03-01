@@ -1,0 +1,128 @@
+#+TITLE: Just for Fun
+#+PROPERTY: header-args    :tangle yes
+
+* 如何使用该 Org 文件
+
+只需确保该 Org 文件及时导出到 Emacs Lisp 文件，可以用 ~org-babel-tangle-file~
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(org-babel-tangle-file (locate-user-emacs-file "lisp/chunyang-fun.org"))
+#+END_SRC
+
+但我不想每次 Emacs 启动的时候加载 Org，因为这样 Emacs 启动会变慢，并且也没必要。实际上只需要在 Org 文件更新了之后，才有必要重新导出 Emacs Lisp 文件
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(let ((org (locate-user-emacs-file "lisp/chunyang-fun.org"))
+      (el  (locate-user-emacs-file "lisp/chunyang-fun.el")))
+  (when (file-newer-than-file-p org el)
+    (org-babel-tangle-file org)))
+#+END_SRC
+
+最终在 ~init.el~ 中使用类似于如下配置
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package chunyang-fun               ; For fun
+  :preface
+  (let ((org (locate-user-emacs-file "lisp/chunyang-fun.org"))
+        (el  (locate-user-emacs-file "lisp/chunyang-fun.el")))
+    (when (file-newer-than-file-p org el)
+      (org-babel-tangle-file org)))
+  :commands chunyang-fun-roll-news)
+#+END_SRC
+
+* Standard header
+
+开启 ~lexical-binding~ 等。
+
+#+BEGIN_SRC emacs-lisp
+;;; chunyang-fun.el --- For fun                      -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2016-2017  Chunyang Xu
+
+;; Author: Chunyang Xu <mail@xuchunyang.me>
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;;
+
+;;; Code:
+#+END_SRC
+
+测试下 ~lexical-binding~
+
+#+BEGIN_SRC emacs-lisp
+(message "lexical-binding = %s in %s"
+         lexical-binding (or load-file-name
+                             buffer-file-name))
+#+END_SRC
+
+值得注意的是 ~org-babel-load-file~ 并不会搭理上述开启 ~lexical-binding~ 的方法，至于如何开启，可参考 ob-emacs-lisp.el
+
+* 在 Echo Area 滚动显示（模拟电视下方的滚动新闻）
+
+新闻 ~abc~ 自右向左滚动：
+
+#+BEGIN_EXAMPLE
+abc|    |
+ ab|c   |
+  a|bc  |
+   |abc |
+   | abc|
+   |  ab|c
+   |   a|bc
+   |    |abc
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp
+(defun chunyang-fun-roll-news--make-strings (width text)
+  (let* ((text-width (length text))
+         (left (+ width text-width))
+         (align (+ left text-width)))
+    (flet ((aux
+            (left)
+            (if (zerop left)
+                (list text)
+              (cons (concat (make-string left ?\s) text)
+                    (aux (1- left)))))
+           (string-pad
+            (s)
+            (let ((padding (make-string (- align (length s)) ?\s)))
+              (concat s padding))))
+      (mapcar (lambda (s)
+                (substring s text-width left))
+              (mapcar #'string-pad (aux left))))))
+
+(defun chunyang-fun-roll-news (string)
+  "在 Echo Area 滚动显示 STRING."
+  (interactive
+   (list (if (use-region-p)
+             (buffer-substring (region-beginning)
+                               (region-end))
+           (buffer-substring (line-beginning-position)
+                             (line-end-position)))))
+  (seq-doseq (s (chunyang-fun-roll-news--make-strings (window-width) string))
+    (let (message-log-max)
+      (message "%s" s)
+      (sleep-for 0.1)
+      (redisplay))))
+#+END_SRC
+
+* Standard end
+
+#+BEGIN_SRC emacs-lisp
+(provide 'chunyang-fun)
+;;; chunyang-fun.el ends here
+#+END_SRC
