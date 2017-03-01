@@ -71,6 +71,7 @@
 
 
 ;;; Format Emacs Lisp
+
 (defun chunyang-one-space (beg end &optional query-p)
   "Keep only one blank space."
   (interactive "r\nP")
@@ -89,7 +90,8 @@
 ;; Also note C-u C-M-q
 
 
-;;; Download and eval
+;;; Download and Eval file written in Emacs Lisp
+
 (defun chunyang-download-and-eval (url)
   (let ((f (expand-file-name (file-name-nondirectory url)
                              temporary-file-directory)))
@@ -97,7 +99,10 @@
     (load-file f)))
 
 
-;; http://emacs.stackexchange.com/questions/20171/how-to-preserve-color-in-messages-buffer
+;;; Keep text properties in `message'
+
+;; See http://emacs.stackexchange.com/questions/20171/how-to-preserve-color-in-messages-buffer
+
 (defun chunyang-message (format &rest args)
   "Acts like `message' but preserves string properties in the *Messages* buffer."
   (let ((message-log-max nil))
@@ -114,6 +119,8 @@
 ;; (advice-add 'message :override #'chunyang-message)
 
 
+;;; Increase and Decrease number at point
+
 (defun chunyang-increase-number-at-point (prefix)
   "增加光标下数字以 prefix argument (默认为 1)."
   (interactive "p")
@@ -128,7 +135,8 @@
       (goto-char pos))))
 
 
-;; Make local function definition
+;;; Make local function definition
+
 ;; FIXME: Use `flet' instead, though it is obsolete by `cl-flet'. (NO)
 ;; FIXME: 用 `cl-letf' 支持 recursin
 (defmacro chunyang-flet (binding &rest body)
@@ -153,7 +161,7 @@
 ;; (factorial 3)
 
 
-;; Redirect shell command output to Emacs buffer
+;;; Redirect shell command output to Emacs buffer
 
 (defun redirect-shell-output-setup ()
   "Redirect shell command ouput to /tmp/emacs will appear in the buffer *Shell Command Ouput*."
@@ -172,7 +180,8 @@
                                  (insert-file-contents file)))))))
 ;; (redirect-shell-output-setup)
 
-;; Launch isearch for other window/buffer
+;;; Launch isearch for other window/buffer
+
 (defun chunyang-isearch-other-window ()
   (interactive)
   (let ((input (current-word)))
@@ -183,6 +192,8 @@
 (define-key ctl-x-4-map "s" #'chunyang-isearch-other-window)
 
 
+;;; Random
+
 (defun chunyang-random-word ()
   "Pick a randome English word."
   (interactive)
@@ -200,6 +211,8 @@
   (goto-line (1+ (random (line-number-at-pos (point-max))))))
 
 
+;;; Timestamps
+
 (defun chunyang-insert-date ()
   "Insert the date using the ISO 8601 format, '%Y-%m-%d'.
 BTW, 'C-u M-! date -I RET' does the same thing."
@@ -219,6 +232,8 @@ See URL `https://github.com/JuanitoFatas/Computer-Science-Glossary'."
     (helm-do-grep-1 (list data-file))))
 
 
+;;; Change http to https in `package-archives'
+
 (defun chunyang-package-archives-use-https ()
   (setq package-archives
         (mapcar (lambda (archive)
