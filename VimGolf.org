@@ -5,7 +5,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  285 | 82.61 |
+|   345 |  291 | 84.35 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2667,3 +2667,49 @@ Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
 <2017-03-01 Wed>
 
 Pass.
+
+* [[http://www.vimgolf.com/challenges/587e0a9d5944680006000007][Turn a ninja to case-insensitive {Nn}{Ii}{Nn}{Jj}{Aa} regexp!]]
+<2017-03-01 Wed>
+
+#+BEGIN_SRC emacs-lisp
+(loop for c in (string-to-list "SarCastic")
+      concat (format "[%c%c]"
+                     (upcase c)
+                     (downcase c)))
+#+END_SRC
+
+#+RESULTS:
+: [Ss][Aa][Rr][Cc][Aa][Ss][Tt][Ii][Cc]
+
+* [[http://www.vimgolf.com/challenges/56421fb1603ec626ec000003][Angular naming conventions]]
+<2017-03-01 Wed>
+
+#+BEGIN_SRC emacs-lisp
+(let ((case-fold-search nil))
+  (replace-regexp-in-string "[A-Z]"
+                            (lambda (s) (concat "-" (downcase s)))
+                            "greatDanesAreMyFriends" t))
+#+END_SRC
+
+#+RESULTS:
+: great-danes-are-my-friends
+
+* [[http://www.vimgolf.com/challenges/5796493277f1fc12b1002044][Array of characters]]
+<2017-03-01 Wed>
+
+Use ~M-%~ (~query-replace~) and ~C-M-%~ (~query-replace-regexp~).
+
+* [[http://www.vimgolf.com/challenges/56eb0843251cf25ae40963de][underscore_to_camelCase]]
+<2017-03-01 Wed>
+
+Use ~C-M-%~ (~query-replace-regexp~).
+
+* [[http://www.vimgolf.com/challenges/56704157109fb85a6d017d08][FoodCritic023: Prefer conditional attributes]]
+<2017-03-01 Wed>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/4fca701fd3a0d40001000074][Remove noise from HTTP log]]
+<2017-03-01 Wed>
+
+Use ~C-M-%~ (~query-replace-regexp~).
