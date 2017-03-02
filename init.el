@@ -209,8 +209,13 @@
 (and (bound-and-true-p scroll-bar-mode)
      (scroll-bar-mode -1))
 
-;; Disable `menu-bar-mode' except macOS
-(unless *is-mac* (menu-bar-mode -1))
+(defconst *is-windows* (eq system-type 'windows-nt))
+
+;; Disable `menu-bar-mode' except macOS & Windows
+(unless (or *is-mac*
+            ;; I don't familiar with Windows, thus that menu bar helps
+            *is-windows*)
+  (menu-bar-mode -1))
 
 ;; Type M-x `about-emacs' to see it
 (setq inhibit-startup-screen t)
@@ -280,6 +285,8 @@
 "
    ;; 问题：不等高 Height
    )
+  ('w32
+   (set-face-attribute 'default nil :font "Source Code Pro-10"))
   ('x (dolist (charset '(kana han symbol cjk-misc bopomofo))
         (set-fontset-font (frame-parameter nil 'font)
                           charset
