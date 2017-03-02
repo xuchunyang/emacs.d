@@ -3135,6 +3135,17 @@ provides similiar function."
       (org-babel-tangle-file org)))
   :commands chunyang-fun-roll-news)
 
+(use-package fortune
+  :commands (fortune fortune-message)
+  :config
+  (cond (*is-mac*
+         ;; On macOS, fortune is installed via MacPorts
+         (setq fortune-dir  "/opt/local/share/games/fortune/"
+               fortune-file "/opt/local/share/games/fortune/fortunes"))
+        (*is-gnu-linux*
+         (setq fortune-dir  "/usr/share/games/fortunes/"
+               fortune-file "/usr/share/games/fortunes/fortunes"))))
+
 
 ;;; IM
 
