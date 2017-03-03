@@ -3,9 +3,9 @@
 #+OPTIONS: toc:nil
 
 #+NAME: progress
-| Total | Done |   (%) |
-|-------+------+-------|
-|   345 |  316 | 91.59 |
+| Total | Done |  (%) |
+|-------+------+------|
+|   345 |  325 | 94.2 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2864,6 +2864,89 @@ Edit as usual.
 
 ~M-x delete-non-matching-lines~.
 
+* [[http://www.vimgolf.com/challenges/51ed21c65b7a9c0002000012][Counting in binary]]
+<2017-03-03 Fri>
+
+#+BEGIN_SRC emacs-lisp :exports both
+(defun number-to-binary (num)
+  ;; num is less than 16
+  (let (res)
+    (while (/= 0 (/ num 2))
+      (push (% num 2) res)
+      (setq num (/ num 2)))
+    (push num res)
+    (let ((s (mapconcat #'number-to-string res "")))
+      ;; Make sure width is 4
+      (replace-regexp-in-string
+       "1" "A"
+       (replace-regexp-in-string
+        "0" "a"
+        (concat (make-string (- 4 (length s)) ?0)
+                s))))))
+
+(loop for i from 0 to 15
+      collect (number-to-binary i))
+#+END_SRC
+
+#+RESULTS:
+| aaaa | aaaA | aaAa | aaAA | aAaa | aAaA | aAAa | aAAA | Aaaa | AaaA | AaAa | AaAA | AAaa | AAaA | AAAa | AAAA |
+
+* [[http://www.vimgolf.com/challenges/52222f6ea98cbe0002000078][Letter case trickery]]
+<2017-03-04 Sat>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/524e1a20b81fe50002000008][attr_aligner]]
+<2017-03-04 Sat>
+
+Use ~M-%~ (~query-replace~) and ~TAB~ (~indent-for-tab-command~).
+
+* [[http://www.vimgolf.com/challenges/5293b3574f09ff0002000033][Going underground....]]
+<2017-03-04 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/53159f5d33b3f800023aa880][Vim tetris]]
+<2017-03-04 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/53bddd87dbd3db0002c48c0f][Neither Fizz nor Buzz]]
+<2017-03-04 Sat>
+
+Type ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+0 → \,(format "%d" (line-number-at-pos))
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/53eac8a559e21500021ee41b][NBCU Weekly Challenge - Test]]
+<2017-03-04 Sat>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/54180e031079d30002383ee5][vim1001]]
+<2017-03-04 Sat>
+
+#+BEGIN_SRC emacs-lisp :exports both
+(loop repeat 5
+      for x from 1001 by 10
+      for y from 1005 by 10
+      collect (list x y))
+#+END_SRC
+
+#+RESULTS:
+| 1001 | 1005 |
+| 1011 | 1015 |
+| 1021 | 1025 |
+| 1031 | 1035 |
+| 1041 | 1045 |
+
+* [[http://www.vimgolf.com/challenges/542eff6588fc4d00021aa9cd][Refactor static member invocation]]
+<2017-03-04 Sat>
+
+Pass.
+
 
 
 #+BEGIN_SRC emacs-lisp
@@ -2879,17 +2962,6 @@ Edit as usual.
 #+END_SRC
 
 #+BEGIN_EXAMPLE
-+51dfe1d12b2f6d0002000046
-+51ed21c65b7a9c0002000012
-+52222f6ea98cbe0002000078
-+524e1a20b81fe50002000008
-+5293b3574f09ff0002000033
-+53159f5d33b3f800023aa880
-+53bddd87dbd3db0002c48c0f
-+53eac8a559e21500021ee41b
-+541022801a2d8b0002238a17
-+54180e031079d30002383ee5
-+542eff6588fc4d00021aa9cd
 +54514fd7238fe900021e7c42
 +545baafb7974800002353443
 +54aa4898e87aa400023e3a19
