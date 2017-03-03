@@ -5,7 +5,7 @@
 #+NAME: progress
 | Total | Done |   (%) |
 |-------+------+-------|
-|   345 |  305 | 88.41 |
+|   345 |  316 | 91.59 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2797,6 +2797,73 @@ Use ~M-%~ (~query-replace~).
 
 Use ~C-x SPC~ (~rectangle-mark-mode~), ~C-x r M-w~ (~copy-rectangle-as-kill~) and ~C-x r y~ (~yank-rectangle~), then add comma with ~C-M-%~ (~query-replace-regexp~).
 
+* [[http://www.vimgolf.com/challenges/4fa085222037000001000045][Reverse and double space]]
+<2017-03-03 Fri>
+
+~M-x reverse-region~ then add one extra newline per line by replacing
+one newline with two newlines via ~M-%~ (~query-replace~).
+
+* [[http://www.vimgolf.com/challenges/4fca29ddd3a0d40001000038][Remove semicolons after expressions]]
+<2017-03-03 Fri>
+
+Delete unwanted semicolons with ~M-%~ (~query-replace~).
+
+* [[http://www.vimgolf.com/challenges/4fcccb70024f950001000026][Switch function arguments]]
+<2017-03-03 Fri>
+
+Use ~C-M-t~ (~transpose-sexps~).
+
+* [[http://www.vimgolf.com/challenges/4fcd8dc2ff37f20001000020][Create a pandoc compatible table]]
+<2017-03-03 Fri>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/4fe9ab8b5089660001000002][Shuffle and Sort]]
+<2017-03-03 Fri>
+
+#+BEGIN_SRC emacs-lisp
+(defun shuffle ()
+  (declare (interactive-only t))
+  (interactive)
+  (let ((str (buffer-substring (line-beginning-position)
+                               (line-end-position))))
+    (delete-region (line-beginning-position)
+                   (line-end-position))
+    (insert
+     (mapconcat #'identity
+                (-rotate -1 (split-string str ","))
+                ","))))
+#+END_SRC
+
+* [[http://www.vimgolf.com/challenges/50048db8cdc4060002000004][Vertical Limit]]
+<2017-03-03 Fri>
+
+Enable ~electric-pair-mode~ and use keyboard macro.
+
+* [[http://www.vimgolf.com/challenges/5039216a1eb07a0002000026][Sierpinski's Triangle]]
+<2017-03-03 Fri>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/504e43017890650002000019][The Quick Brown Fox Jumps Over The Lazy Vim]]
+<2017-03-03 Fri>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/505cb13a52512d000200002b][you're stuck on jQuery < 1.7]]
+<2017-03-03 Fri>
+
+Use ~C-M-%~ (~query-replace-regexp~).
+
+* [[http://www.vimgolf.com/challenges/50b1d7239aad89000200002d][Extract text from xml]]
+<2017-03-03 Fri>
+
+Edit as usual.
+
+* [[http://www.vimgolf.com/challenges/51dfe1d12b2f6d0002000046][Delete unwanted lines]]
+<2017-03-03 Fri>
+
+~M-x delete-non-matching-lines~.
 
 
 
@@ -2813,16 +2880,6 @@ Use ~C-x SPC~ (~rectangle-mark-mode~), ~C-x r M-w~ (~copy-rectangle-as-kill~) an
 #+END_SRC
 
 #+BEGIN_EXAMPLE
-+4fa085222037000001000045
-+4fca29ddd3a0d40001000038
-+4fcccb70024f950001000026
-+4fcd8dc2ff37f20001000020
-+4fe9ab8b5089660001000002
-+50048db8cdc4060002000004
-+5039216a1eb07a0002000026
-+504e43017890650002000019
-+505cb13a52512d000200002b
-+50b1d7239aad89000200002d
 +51dfe1d12b2f6d0002000046
 +51ed21c65b7a9c0002000012
 +52222f6ea98cbe0002000078
