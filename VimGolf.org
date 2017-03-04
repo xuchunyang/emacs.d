@@ -5,7 +5,7 @@
 #+NAME: progress
 | Total | Done |  (%) |
 |-------+------+------|
-|   345 |  325 | 94.2 |
+|   345 |  335 | 97.1 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -2947,6 +2947,75 @@ Edit as usual.
 
 Pass.
 
+* [[http://www.vimgolf.com/challenges/54514fd7238fe900021e7c42][Shift down]]
+<2017-03-04 Sat>
+
+Use the following command to insert the new but also preserve indent.
+
+#+BEGIN_SRC emacs-lisp
+(defun chunyang-newline-keep-indent ()
+  (declare (interactive-only t))
+  (interactive)
+  (insert (format "\n%s" (make-string (current-column) ?\s))))
+#+END_SRC
+
+*Update* or simply use ~C-M-o~ (~split-line~).
+
+* [[http://www.vimgolf.com/challenges/545baafb7974800002353443][Replace Parameter with Explicit Methods]]
+<2017-03-04 Sat>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/54aa4898e87aa400023e3a19][Wget failed to download redirections]]
+<2017-03-04 Sat>
+
+Make the whole buffer then type ~M-| grep --only-matching https://.*$~
+(~shell-command-on-region~).
+
+* [[http://www.vimgolf.com/challenges/54e2169fb89efb2ab10012e6][Sorting database text output]]
+<2017-03-04 Sat>
+
+- Use ~C-x SPC~ (~rectangle-mark-mode~) to remove unwanted words
+- Use ~M-%~ (~query-replace~) to remove unwanted spaces
+- Use ~sort-numeric-fields~ to sort lines as numbers
+- Use ~delete-duplicate-lines~ to delete duplicates
+- Use ~M-^~ (~org-delete-indentation~) and keyboard macro to join lines
+- Use ~M-%~ (~query-replace~) to add commas.
+
+* [[http://www.vimgolf.com/challenges/5518cd2bfb03aa1d9402a6a3][Fix the XML]]
+<2017-03-04 Sat>
+
+Turn on ~xml-mode~ then issue ~C-c /~ (~nxml-finish-element~) to fix the tags.
+
+* [[http://www.vimgolf.com/challenges/558aef9a9b964426b5010562][Restore order to the alphabet]]
+<2017-03-04 Sat>
+
+Run ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+[a-z] → \,(char-to-string (+ ?a \#))
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/55926044bbcb9851bc000001][Mirror Symmetry]]
+<2017-03-05 Sun>
+
+Use ~M-% / RET \/ RET~ (~query-replace~).
+
+* [[http://www.vimgolf.com/challenges/559e6360b6f8bd0f17010b61][Make HTML List]]
+<2017-03-05 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/563368fc3a2bb61edd0128f5][Manual SQL]]
+<2017-03-05 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5666943bac55c907fd02066f][comments galore]]
+<2017-03-05 Sun>
+
+Use ~C-x SPC~ (~rectangle-mark-mode~) and ~C-x r t~ (~string-rectangle~).
+
 
 
 #+BEGIN_SRC emacs-lisp
@@ -2962,16 +3031,6 @@ Pass.
 #+END_SRC
 
 #+BEGIN_EXAMPLE
-+54514fd7238fe900021e7c42
-+545baafb7974800002353443
-+54aa4898e87aa400023e3a19
-+54e2169fb89efb2ab10012e6
-+5518cd2bfb03aa1d9402a6a3
-+556d7209f6d1a10ee6000001
-+558aef9a9b964426b5010562
-+55926044bbcb9851bc000001
-+559e6360b6f8bd0f17010b61
-+563368fc3a2bb61edd0128f5
 +5666943bac55c907fd02066f
 +5675405ac5936f0ba3000002
 +56add9a16518ef02c001af3d
