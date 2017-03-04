@@ -320,19 +320,31 @@
       (string (insert key))
       (vector (insert (format "%s" (read-kbd-macro key t)))))))
 
-(defun chunyang-insert-key-and-command (key)
-  (interactive "k")
-  (let ((key (key-description key))
-        (cmd (key-binding key)))
+(defun chunyang-insert-key-and-command (key buffer)
+  "Insert name of the KEY and command will run by it.
+BUFFER is the KEY will run within, if nil the current buffer will
+be used.
+
+If called interactively, with prefix argument, BUFFER will be asked."
+  (interactive (let* ((buf (if current-prefix-arg
+                               (read-buffer "Buffer: ")
+                             (current-buffer)))
+                      (key (with-current-buffer buf
+                             (read-key-sequence "Key: "))))
+                 (list key buf)))
+  (let (key-name command)
+    (with-current-buffer (or buffer (current-buffer))
+      (setq key-name (key-description key)
+            cmd (key-binding key)))
     (insert
      (cl-case major-mode
        (org-mode
-        (format "~%s~ (~%s~)" key cmd))
+        (format "~%s~ (~%s~)" key-name cmd))
        ((markdown-mode gfm-mode)
-        (format "`%s` (`%s`)" key cmd))
+        (format "`%s` (`%s`)" key-name cmd))
        ((emacs-lisp-mode lisp-interaction-mode )
-        (format "%s (`%s')" key cmd))
-       (t (format "'%s' ('%s')" key cmd))))))
+        (format "%s (`%s')" key-name cmd))
+       (t (format "'%s' ('%s')" key-name cmd))))))
 
 ;; According to my test ('M-x trace-function undefined'), when I type
 ;; some undefined key, the command `undefined' will be called.
