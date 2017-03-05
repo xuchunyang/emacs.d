@@ -2346,6 +2346,9 @@ This should be add to `find-file-hook'."
 (use-package eww
   :defer t
   :config
+  (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
+  (setq eww-search-prefix "https://www.google.com/search?q=")
+  (setq eww-search-prefix "https://www.bing.com/search?q=")
   (use-package shr
     :config
     ;; Don't use proportional fonts for text
