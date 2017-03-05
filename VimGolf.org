@@ -3,9 +3,9 @@
 #+OPTIONS: toc:nil
 
 #+NAME: progress
-| Total | Done |  (%) |
-|-------+------+------|
-|   345 |  335 | 97.1 |
+| Total | Done |   (%) |
+|-------+------+-------|
+|   345 |  347 | 100.6 |
 #+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
@@ -3016,6 +3016,73 @@ Pass.
 
 Use ~C-x SPC~ (~rectangle-mark-mode~) and ~C-x r t~ (~string-rectangle~).
 
+* [[http://www.vimgolf.com/challenges/5675405ac5936f0ba3000002][Create bison tokens]]
+<2017-03-05 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/56add9a16518ef02c001af3d][Alsa configuration]]
+<2017-03-05 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/56e36925d64dfc4d28000001][Inner hyphens]]
+<2017-03-05 Sun>
+
+Use ~C-M-%~ (~query-replace-regexp~) with the following arguments
+
+#+BEGIN_EXAMPLE
+. → \&-
+#+END_EXAMPLE
+
+* [[http://www.vimgolf.com/challenges/56e59ff88cf5905fe501ce5b][ASCII Art]]
+<2017-03-05 Sun>
+
+Use copy-and-paste and ~M-x reverse-region~ to create the half part.
+
+* [[http://www.vimgolf.com/challenges/571028960c64c90990000003][From A to B]]
+<2017-03-05 Sun>
+
+- Use ~M-%~ (~query-replace~) to replace ~A~ with ~B~ then ~a~ with ~b~.
+- Use ~M-%~ (~query-replace~) wot remove unwanted text
+- Use ~M-x reverse-region~
+
+* [[http://www.vimgolf.com/challenges/57786c012ec4a10d2e000001][Wrap text in quotes]]
+<2017-03-05 Sun>
+
+Use ~M-h~ (~mark-paragraph~) and enter double quote (Also make sure
+~electric-pair-mode~ is on).
+
+* [[http://www.vimgolf.com/challenges/57959f8a083a7e0c45000001][Paragraph sort]]
+<2017-03-05 Sun>
+
+Mark paragraph with ~M-h~ (~mark-paragraph~) then hit ~M-x sort-lines~.
+
+* [[http://www.vimgolf.com/challenges/57a4ec036f04c40bf8000001][ascii-art diamond]]
+<2017-03-05 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/57ab8b6f621d160fcd000001][C Reformatting]]
+<2017-03-05 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/57cf3e398c660c1f8f014717][Paragraph breaks]]
+<2017-03-05 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/57fbb753ab6108077204f440][7th Birthday]]
+<2017-03-05 Sun>
+
+Pass.
+
+* [[http://www.vimgolf.com/challenges/5853f052854f48716101cc70][replace 2nd column blanks with values in same column if blank]]
+<2017-03-05 Sun>
+
+Pass.
+
 
 
 #+BEGIN_SRC emacs-lisp
@@ -3029,19 +3096,3 @@ Use ~C-x SPC~ (~rectangle-mark-mode~) and ~C-x r t~ (~string-rectangle~).
                        (line-end-position)))))
   (browse-url (format "http://www.vimgolf.com/challenges/%s" id)))
 #+END_SRC
-
-#+BEGIN_EXAMPLE
-+5666943bac55c907fd02066f
-+5675405ac5936f0ba3000002
-+56add9a16518ef02c001af3d
-+56e36925d64dfc4d28000001
-+56e59ff88cf5905fe501ce5b
-+571028960c64c90990000003
-+57786c012ec4a10d2e000001
-+57959f8a083a7e0c45000001
-+57a4ec036f04c40bf8000001
-+57ab8b6f621d160fcd000001
-+57cf3e398c660c1f8f014717
-+57fbb753ab6108077204f440
-+5853f052854f48716101cc70
-#+END_EXAMPLE
