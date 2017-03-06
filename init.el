@@ -789,7 +789,8 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 ;; (global-visual-line-mode)
 
-(use-package visual-fill-column
+(use-package visual-fill-column         ; `fill-column' for `visual-line-mode'
+  :disabled t
   ;; TODO: use-package: 自定义关键词
   ;; :description "定制 Emacs 自带 visual-line-mode 的宽度"
   ;; :url "foobar"
