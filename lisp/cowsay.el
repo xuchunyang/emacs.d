@@ -4,7 +4,7 @@
 
 ;; Author: Chunyang Xu <mail@xuchunyang.me>
 ;; Created: 2017-03-05
-;; Modified: 2017-03-05
+;; Modified: 2017-03-06
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -28,6 +28,17 @@
 (defun cowsay--string-pad (len string)
   "If STRING is shorter than LEN, pad it with space in the end."
   (format (format "%%-%ds" len) string))
+
+(defun cowsay--trim (string)
+  ;; Remove trailing newlines
+  (setq string
+        (if (string-match "\n+\\'" string)
+            (replace-match "" t t string)
+          string))
+  ;; Replace multiple spaces and/and tabs with one space
+  (if (string-match "[ \t]+" string)
+      (replace-match " " t t string)
+    string))
 
 (defun cowsay--fill (string column)
   "Fill STRING within the max width COLUMN"
@@ -95,7 +106,7 @@ This should be the same as M-| cowsay."
          (region-end))
       (user-error "No region")) nil t))
   (let ((cowsay
-         (concat (cowsay--wrap (cowsay--fill string (or column 40)))
+         (concat (cowsay--wrap (cowsay--fill (cowsay--trim string) (or column 40)))
                  "        \\   ^__^
          \\  (oo)\\_______
             (__)\\       )\\/\\
