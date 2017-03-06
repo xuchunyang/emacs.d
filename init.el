@@ -1434,7 +1434,7 @@ Intended to be added to `isearch-mode-hook'."
   ;; `bug-reference-url-format' and `bug-reference-bug-regexp' are
   ;; *safe* local variable
   ;; :defer t
-  :defer t)
+  )
 
 (use-package nocomments-mode            ; Hide Comments
   :ensure t
