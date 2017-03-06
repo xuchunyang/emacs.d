@@ -3112,10 +3112,17 @@ provides similiar function."
   :init (add-hook 'before-save-hook 'time-stamp))
 
 (use-package autoinsert
-  :disabled t
+  ;; :emacwiki "https://www.emacswiki.org/emacs/AutoInsertMode"
   :defer t
   :config
-  (add-to-list 'auto-insert-alist "TODO Add some Python if it is really useful"))
+  ;; Note that the following should not be evaled more than once
+  (define-auto-insert
+    '(sh-mode . "Shell Script header")
+    ;; (info "(autotype) Skeleton Language")
+    '("Short description: "
+      "#!/bin/sh" \n
+      "# " (file-name-nondirectory (buffer-file-name)) " - " str \n
+      \n \n)))
 
 (use-package restart-emacs :ensure t :defer t)
 
