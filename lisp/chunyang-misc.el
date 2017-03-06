@@ -92,7 +92,9 @@
 
 ;;; Download and Eval file written in Emacs Lisp
 
-(defun chunyang-download-and-eval (url)
+(defun chunyang-download-and-load (url)
+  "Download an Emacs Lisp file from URL and load it."
+  (interactive "sURL of the Emacs Lisp file to load: ")
   (let ((f (expand-file-name (file-name-nondirectory url)
                              temporary-file-directory)))
     (url-copy-file url f)
