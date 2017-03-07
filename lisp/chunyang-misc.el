@@ -283,5 +283,35 @@ See URL `https://en.wikipedia.org/wiki/Transpose'."
                 (mapcar (lambda (c) (cdr (assq c map)))
                         (string-to-list (format "%o" number))) ""))))
 
+
+;;; Public IP & Location
+
+(defun chunyang-get-public-ip-and-location ()
+  "Get Public IP & Location via http://ip.cn"
+  (interactive)
+  (with-current-buffer (url-retrieve-synchronously "http://ip.cn/")
+    (set-buffer-multibyte t)
+    ;; Delete header
+    (ignore-errors
+      (goto-char (point-min))
+      (delete-region (point-min)
+                     (1+ (re-search-forward "^$" nil t))))
+    (let* ((divs
+            (let-alist (libxml-parse-html-region (point-min) (point-max)) .body.div))
+           (div
+            (cl-find-if
+             (lambda (elt)
+               (and (listp elt)
+                    (equal (cdr (assq 'id (plist-get elt 'div)))
+                           "result")))
+             divs)))
+      (seq-let (_class p1 p2 p3) (cdr (assq 'div (cdr div)))
+        (let ((ip (car (last (car (last p1)))))
+              (location (car (last (car (last p2)))))
+              (geoip (car (last p3))))
+          (message "IP: %s | 地理位置: %s | GeoIP: %s"
+                   ip location geoip)
+          (list ip location geoip))))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
