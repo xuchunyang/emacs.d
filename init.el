@@ -2062,6 +2062,9 @@ See Info node `(magit) How to install the gitman info manual?'."
   :config
   (unless (server-running-p) (server-start))
 
+  (defun open-emacs-window ()
+    (select-frame-set-input-focus (selected-frame)))
+
   ;; Hmm, 'C-c C-c' is easier than 'C-x #' to type
   (defun chunyang-server-setup ()
     (unless (key-binding [?\C-c ?\C-c])
