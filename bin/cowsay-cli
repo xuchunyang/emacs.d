@@ -1,0 +1,80 @@
+;;; cowsay-cli --- CLI interface for cowsay.el  -*- mode: emacs-lisp; lexical-binding: t; -*-
+
+;; Copyright (C) 2017  Chunyang Xu
+
+;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Keywords: cowsay
+;; Version: 2017-03-07
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;;
+
+;;; Code:
+
+(defconst cowsay-version "2017-03-07")
+
+(defvar cowsay-column 40)
+
+;; * Process command line arguments *
+
+;; Try [[https://github.com/rejeep/commander.el][rejeep/commander.el: Emacs command line parser]] in the future.
+
+;; Remove '--' added by ./cowsay
+(pop argv)
+
+;; Debug
+;; (message "-> %S" argv)
+
+(defun cowsay-print-help-and-exit ()
+  (princ (format "cowsay version %s, powered by Emacs version %s" cowsay-version emacs-version))
+  (princ "\n")
+  (princ "Usage: cowsay [-h/--help] [-W wrapcolumn]")
+  (princ "\n")
+  (kill-emacs 0))
+
+(cond ((or (member "--help" argv)
+           (member "-h" argv))
+       (cowsay-print-help-and-exit))
+      ((and (member "-W" argv)
+            (require 'cl-lib)
+            (condition-case nil
+                (setq cowsay-column
+                      (floor (string-to-number
+                              (nth (1+ (cl-position "-W" argv :test #'string=)) argv))))
+              (error
+               (princ "Wrong argument for -W (the whole command line args was %S)" argv)
+               (princ "\n")
+               (princ "\n")
+               (cowsay-print-help-and-exit))))))
+
+;; Ignore all remaining arguments (?)
+(setq argv nil)
+
+;; * Require *
+
+(require 'cowsay (expand-file-name
+                  "../lisp/cowsay.el"
+                  (file-name-directory load-file-name)))
+
+;; * Main *
+
+(with-temp-buffer
+  (insert-file-contents-literally "/dev/stdin")
+  (princ (cowsay (buffer-string) cowsay-column))
+  (princ "\n"))
+
+;;; cowsay-cli ends here

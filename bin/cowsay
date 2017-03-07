@@ -1,39 +1,7 @@
-#!/usr/bin/env emacs --no-site-file --script
-;;; cowsay --- cowsay(1) in Emacs                    -*- lexical-binding: t; -*-
+#!/bin/bash
+# cowsay - cowsay(1) powered by Emacs
 
-;; Copyright (C) 2017  Chunyang Xu
+# See [[http://tldp.org/LDP/abs/html/string-manipulation.html][Manipulating Strings]]
+script="${0%/*}/cowsay-cli"
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
-;; Keywords: cowsay
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Commentary:
-
-;;
-
-;;; Code:
-
-(require 'cowsay (expand-file-name
-                  "../lisp/cowsay.el"
-                  (file-name-directory load-file-name)))
-
-(with-temp-buffer
-  (insert-file-contents-literally "/dev/stdin")
-  (princ (cowsay (buffer-string)))
-  (princ "\n"))
-
-;; TODO Handle command line options (like --help and --column)
-
-;;; cowsay ends here
+emacs --no-site-file --script "$script" -- "$@"
