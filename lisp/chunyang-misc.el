@@ -286,10 +286,15 @@ See URL `https://en.wikipedia.org/wiki/Transpose'."
 
 ;;; Public IP & Location
 
-(defun chunyang-get-public-ip-and-location ()
-  "Get Public IP & Location via http://ip.cn"
-  (interactive)
-  (with-current-buffer (url-retrieve-synchronously "http://ip.cn/")
+(defun chunyang-get-ip-location (&optional ip)
+  "Get location of IP from http://ip.cn.
+With prefix argument, IP is prompted."
+  (interactive
+   (list (and current-prefix-arg (read-string "IP: "))))
+  (with-current-buffer (url-retrieve-synchronously
+                        (if ip
+                            (concat "http://ip.cn/index.php?ip=" ip)
+                          "http://ip.cn/"))
     (set-buffer-multibyte t)
     ;; Delete header
     (ignore-errors
