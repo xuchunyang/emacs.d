@@ -3141,12 +3141,20 @@ provides similiar function."
   (when *is-gnu-linux*
     (setq e2ansi-background-mode 'dark)))
 
+
+;;; Game
+
+(use-package threes
+  :ensure t
+  :defer t)
+
 (use-package chunyang-fun               ; For fun
   :preface
   (let ((org (locate-user-emacs-file "lisp/chunyang-fun.org"))
         (el  (locate-user-emacs-file "lisp/chunyang-fun.el")))
     (when (file-newer-than-file-p org el)
-      (org-babel-tangle-file org)))
+      (org-babel-tangle-file org)
+      (byte-compile-file el)))
   :commands chunyang-fun-roll-news)
 
 (use-package fortune
