@@ -320,31 +320,61 @@
       (string (insert key))
       (vector (insert (format "%s" (read-kbd-macro key t)))))))
 
-(defun chunyang-insert-key-and-command (key buffer)
-  "Insert name of the KEY and command will run by it.
-BUFFER is the KEY will run within, if nil the current buffer will
-be used.
+(defvar chunyang-format-command-on-key--formats
+  '(("Markdown     `C-n` (`next-line`)"          . markdown)
+    ("Markdown kbd <kbd>C-n</kbd> (`next-line`)" . markdown-kbd)
+    ("Org          ~C-n~ (~next-line~)"          . org)
+    ("Emacs Lisp   C-n (`next-line')"            . emacs-lisp)
+    ("Default      'C-n' ('next-line')"          . default)))
 
-If called interactively, with prefix argument, BUFFER will be asked."
-  (interactive (let* ((buf (if current-prefix-arg
-                               (read-buffer "Buffer: ")
-                             (current-buffer)))
-                      (key (with-current-buffer buf
-                             (read-key-sequence "Key: "))))
-                 (list key buf)))
-  (let (key-name command)
+(defun chunyang-format-command-on-key--default-format ()
+  (cl-case major-mode
+    (emacs-lisp-mode          'emacs-lisp)
+    (org-mode                 'org)
+    ((markdown-mode gfm-mode) 'markdown)
+    (t                        'default)))
+
+(defun chunyang-format-command-on-key (buffer key &optional format)
+  "Format command on KEY in BUFFER in FORMAT.
+With prefix arg, ask the format to use, otherwise, the format is
+picked according to the major-mode."
+  (interactive
+   (let* ((buf (read-buffer "Buffer: " (current-buffer)))
+          (key (with-current-buffer buf
+                 (read-key-sequence (format "Run Key in %S: " buf))))
+          (default-format
+            (chunyang-format-command-on-key--default-format))
+          (default-format-desc
+            (car (rassq default-format chunyang-format-command-on-key--formats)))
+          (format (if current-prefix-arg
+                      (cdr (assoc
+                            (completing-read "Format: "
+                                             chunyang-format-command-on-key--formats
+                                             nil t nil nil
+                                             default-format-desc)
+                            chunyang-format-command-on-key--formats))
+                    default-format)))
+     (list buf key format)))
+  ;; In case calling from Lisp and FORMAT is omitted
+  (setq format (or format (chunyang-format-command-on-key--default-format)))
+  (let (key-name command result)
     (with-current-buffer (or buffer (current-buffer))
       (setq key-name (key-description key)
             cmd (key-binding key)))
-    (insert
-     (cl-case major-mode
-       (org-mode
-        (format "~%s~ (~%s~)" key-name cmd))
-       ((markdown-mode gfm-mode)
-        (format "`%s` (`%s`)" key-name cmd))
-       ((emacs-lisp-mode lisp-interaction-mode )
-        (format "%s (`%s')" key-name cmd))
-       (t (format "'%s' ('%s')" key-name cmd))))))
+    (setq result
+          (cl-case format
+            (org
+             (format "~%s~ (~%s~)" key-name cmd))
+            (markdown
+             (format "`%s` (`%s`)" key-name cmd))
+            (markdown-kbd
+             (format "<kbd>%s</kbd> (`%s`)" key-name cmd))
+            (emacs-lisp
+             (format "%s (`%s')" key-name cmd))
+            (default (format "'%s' ('%s')" key-name cmd))))
+    (kill-new result)
+    (message "Killed: %s" result)
+    (insert result)))
 
 ;; According to my test ('M-x trace-function undefined'), when I type
 ;; some undefined key, the command `undefined' will be called.
