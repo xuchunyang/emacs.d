@@ -286,6 +286,7 @@ See URL `https://en.wikipedia.org/wiki/Transpose'."
 
 ;;; Public IP & Location
 
+;; XXX: Oops, '$ curl ip.cn' just works, no needs to parse HTML
 (defun chunyang-get-ip-location (&optional ip)
   "Get location of IP from http://ip.cn.
 With prefix argument, IP is prompted."
