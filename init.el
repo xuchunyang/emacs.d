@@ -2545,14 +2545,17 @@ Called with a prefix arg set search provider (default Google)."
 
               (require 'eshell-z)))
 
-  ;; Needed at least for `eshell-git-prompt'?
-  (setq eshell-highlight-prompt nil)
 
   (use-package eshell-git-prompt
+    :load-path "~/src/eshell-git-prompt"
     :ensure t
-    :config (eshell-git-prompt-use-theme 'powerline)))
-
-
+    :init
+    ;; Needed at least for `eshell-git-prompt'?
+    ;; (setq eshell-highlight-prompt nil)
+    :config
+    ;; Type "use-theme" in Eshell to change theme
+    ;; (eshell-git-prompt-use-theme 'simple)
+    ))
 
 (use-package eshell-did-you-mean
   :disabled t
