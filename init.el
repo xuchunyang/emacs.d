@@ -2264,9 +2264,9 @@ This should be add to `find-file-hook'."
 
 ;;; Web & IRC & Email & RSS
 
-;; I could not download mails from QQMail with offlineimap and mbsync
-;; successfully, so I give up reading mails from Emacs.  But I still can and
-;; need to write and send from Emacs.
+;; Just by providing the following, Emacs can already send emails
+;;
+;; Password is provided in ~/.authinfo file (this file should be encrypted via gpg)
 (setq user-full-name       "Chunyang Xu"
       user-mail-address    "mail@xuchunyang.me"
       smtpmail-smtp-server "smtp.exmail.qq.com"
