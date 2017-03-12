@@ -2679,11 +2679,23 @@ Called with a prefix arg set search provider (default Google)."
   ;; Storing & Export Manual Page link
   (require 'org-man)
 
+  (use-package ob-lisp                  ; Common Lisp
+    :defer t
+    :config
+    ;; Requires SLY or SLIME, and the latter is used by default
+    (setq org-babel-lisp-eval-fn 'sly-eval))
+
   (org-babel-do-load-languages
    'org-babel-load-languages
-   ' ((emacs-lisp . t)
-      (shell      . t)
-      (ruby       . t)))
+   '((emacs-lisp . t)
+     (shell      . t)
+     ;; TODO: Write Eshell Support
+     (ruby       . t)
+     (python     . t)
+     (perl       . t)
+     ;; Common Lisp
+     (lisp       . t)
+     (ditaa      . t)))
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
 
