@@ -2153,6 +2153,10 @@ This should be add to `find-file-hook'."
 
   (add-hook 'find-file-hook #'chunyang-sudo-edit-notify))
 
+(use-package ansible-doc
+  :ensure t
+  :commands ansible-doc)
+
 
 ;;; Project
 (use-package projectile
