@@ -2504,16 +2504,15 @@ Called with a prefix arg set search provider (default Google)."
 (use-package eshell
   :defer t
   :preface
-  (defun eshell-insert-last-arg ()
-    "Insert the last arg of the last command, like ESC-. in shell."
+  (defun chunyang-eshell-insert-last-arg ()
+    "Insert the (rough) last arg of the last command, like ESC-. in shell."
     (interactive)
-    (with-current-buffer "*eshell*"
+    (with-current-buffer eshell-buffer-name
       (let ((last-arg
              (car (last
                    (split-string
                     (substring-no-properties (eshell-get-history 0)))))))
-        (when last-arg
-          (insert last-arg)))))
+        (and last-arg (insert last-arg)))))
   :bind ("C-x m" . eshell)              ; 'C-x m' runs `compose-mail' by default
   :config
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
@@ -2535,7 +2534,7 @@ Called with a prefix arg set search provider (default Google)."
               ;; (eshell-smart-initialize)
               (bind-keys :map eshell-mode-map
                          ("C-c C-q" . eshell-kill-process)
-                         ("C-c ."   . eshell-insert-last-arg))
+                         ("M-."     . chunyang-eshell-insert-last-arg))
               (eshell/export "EDITOR=emacsclient -n")
               (eshell/export "VISUAL=emacsclient -n")
               ;; Disable scroll, see
