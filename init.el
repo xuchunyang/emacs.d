@@ -2157,6 +2157,11 @@ This should be add to `find-file-hook'."
   :ensure t
   :commands ansible-doc)
 
+(use-package ztree                      ; Diff directories
+  ;; TODO: Learn more about this package
+  :ensure t
+  :defer t)
+
 
 ;;; Project
 (use-package projectile
@@ -2724,12 +2729,15 @@ Called with a prefix arg set search provider (default Google)."
   :init (setq orglink-mode-lighter nil)
   :commands (orglink-mode global-orglink-mode))
 
-
+;; TODO: Learn more about this package
+(use-package org-board                  ; Bookmark with Org
+  :ensure t
+  :defer t)
+
 (use-package habitica
   :disabled t
   :ensure t
   :defer t)
-
 
 
 ;;; C
