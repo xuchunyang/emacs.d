@@ -3147,6 +3147,14 @@ provides similiar function."
 
 (use-package restart-emacs :ensure t :defer t)
 
+(use-package package-utils :ensure t :defer t)
+
+;; See [[https://xuchunyang.me/Logs/upgrade-packages-then-restart-emacs.html][升级 Emacs Package 然后重启 Emacs]]
+(defun chunyang-upgrade-packages-then-restart-emacs ()
+  (interactive)
+  (package-utils-upgrade-all)
+  (restart-emacs))
+
 (use-package e2ansi                     ; Provide Syntax Highlight for shell by
                                         ; Emacs.  This is very cool.
   :ensure t
