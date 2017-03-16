@@ -2703,7 +2703,9 @@ Called with a prefix arg set search provider (default Google)."
      (perl       . t)
      ;; Common Lisp
      (lisp       . t)
-     (ditaa      . t)))
+     (ditaa      . t)
+     ;; Guile, Racket etc
+     (scheme     . t)))
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
 
@@ -2993,8 +2995,9 @@ provides similiar function."
   :ensure t
   :defer t
   :init
-  (setq geiser-default-implementation 'racket)
-  (setq geiser-active-implementations '(racket))
+  (setq geiser-default-implementation 'guile)
+  ;; See (info "(geiser) Must needs") for URLs to them
+  (setq geiser-active-implementations '(guile racket chicken chez))
 
   ;; Important keys:
   ;; C-c C-z - Switch between source and REPL
