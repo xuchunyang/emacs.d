@@ -1,0 +1,83 @@
+#+TITLE: 用 ASCII Art 解释命令
+#+DATE: <2017-03-17 Fri>
+#+Modified: <2017-03-17 Fri>
+
+[[https://github.com/vain/explain][vain/explain: Explain commands using ASCII art]] 的 Emacs Lisp 移植。
+
+比如，把
+
+#+BEGIN_EXAMPLE
+vim -p .bashrc .vimrc
+--- -- --------------
+
+Open the editor.
+
+Open the files in tabs. Open the files in tabs. Open the files in tabs. Open the files in tabs. Open the files in tabs. Open the files in tabs.
+
+Which files to open?
+#+END_EXAMPLE
+
+用程序转化成
+
+#+BEGIN_EXAMPLE
+vim -p .bashrc .vimrc
+\_/ |  \____________/
+ |  |         |
+ |  |         \- Which files to open?
+ |  |
+ |  \- Open the files in tabs.
+ |
+ \- Open the editor.
+#+END_EXAMPLE
+
+* 为什么要移植？
+
+只是为了找乐子，没有特别的理由，原作者是用 Python 的。而且我现在还不清楚该怎么实现，也有可能还没完成就放弃了，但也没什么大不了的。
+
+* 如何表示输入？
+
+为了便于实现，用 Alist 表示输入
+
+#+BEGIN_SRC emacs-lisp :results value verbatim
+;; vim -p .bashrc .vimrc
+(setq explain-command-alist
+      '(("vim"            . "Open the editor.")
+        ("-p"             . "Open the files in tabs.")
+        (".bashrc .vimrc" . "Which files to open?")))
+#+END_SRC
+
+#+RESULTS:
+: (("vim" . "Open the editor.") ("-p" . "Open the files in tabs.") (".bashrc .vimrc" . "Which files to open?"))
+
+* 如何输出？
+
+还是为了方便实现，假设描述字符串的长度较短，不用换行。
+
+** DONE 获取底盘
+
+矩形的 String 操作还是比较麻烦。
+
+#+BEGIN_SRC emacs-lisp :results value verbatim :exports both :eval never-export
+(defun foo (s)
+  (let ((len (length s)))
+    (if (<= len 2)
+        (concat "|" (make-string (1- len) ?\s))
+      (concat "\\" (make-string (- len 2) ?_) "/"))))
+
+(list (foo "vim")
+      (foo "-p")
+      (foo ".bashrc .vimrc"))
+#+END_SRC
+
+#+RESULTS:
+: ("\\_/" "| " "\\____________/")
+
+** DONE 计算高度
+
+最后一个高度为二，倒数第二个高度为四，倒数第三个高度为六。也就是说依次增加二。
+
+** TODO 画出骨架
+
+** TODO 把文字插进去
+
+可以先把文字竖起来插入，之后再想办法掰弯。
