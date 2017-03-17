@@ -2001,6 +2001,10 @@ See Info node `(magit) How to install the gitman info manual?'."
 
 ;;; Tools and utilities
 
+(use-package woman
+  :defer t
+  :config (setq woman-fill-frame t))
+
 (use-package comint
   :defer t
   :config
