@@ -3158,6 +3158,23 @@ provides similiar function."
 
 (use-package restart-emacs :ensure t :defer t)
 
+(defun chunyang-open-another-emacs ()
+  "Open another Emacs instance without closing the current one.
+
+Mainly for testing / debugging.
+
+Right now it assumes:
+1. run a graphic emacs on macOS.
+2. want another graphic emacs.
+3. the new emacs is started with -Q."
+  (interactive)
+  (unless (and *is-mac* (display-graphic-p))
+    (user-error "Unsupported platform or situation."))
+  (let ((app
+         (replace-regexp-in-string
+          "/Contents/MacOS/" "" invocation-directory)))
+    (call-process "open" nil nil nil "-n" "-a" app "--args" "-q")))
+
 (use-package package-utils :ensure t :defer t)
 
 ;; See [[https://xuchunyang.me/Logs/upgrade-packages-then-restart-emacs.html][升级 Emacs Package 然后重启 Emacs]]
