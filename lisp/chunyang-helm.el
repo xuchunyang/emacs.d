@@ -253,7 +253,11 @@ If with prefix argument, search current directory."
   (helm-descbinds-mode))
 
 (use-package helm-open-github
-  :ensure t :defer t)
+  :ensure t
+  :commands (helm-open-github-from-file ; Use the region for selecting specfic lines
+             helm-open-github-from-issues
+             helm-open-github-from-commit
+             helm-open-github-from-pull-requests))
 
 (use-package helm-github-stars
   :ensure t
