@@ -56,51 +56,61 @@ That is, if it doesn't match any of the `recentb-exclude' checks."
           (-buffer-file-name buffer-file-name)
           (-major-mode major-mode)
           (-default-directory default-directory))
-      ;; FIXME Don't add duplicate
-      (push (list :description -buffer-name ; TODO: More descriptive and unique
-                  :open-function
-                  (cond ((eq -major-mode 'Info-mode)
-                         (let ((node (format "(%s) %s"
-                                             (file-name-nondirectory Info-current-file)
-                                             Info-current-node)))
-                           (lambda () (info node))))
-                        ;; TODO: Support more situations like Help, Man, Eshell
-                        ;; Maybe take a look at bookmark & org-mode for inspiration
-                        ((eq -major-mode 'custom-theme-choose-mode)
-                         #'customize-themes)
-                        (-buffer-file-name
-                         (lambda () (find-file -buffer-file-name)))
-                        (t
-                         (lambda ()
-                           (message "recentb: don't know how to open this buffer %s"
-                                    buffer-name)))))
-            recentb-list))))
+      (let ((elt
+             (list :description -buffer-name ; TODO: More descriptive and unique
+                   :open-function
+                   (cond ((eq -major-mode 'Info-mode)
+                          (let ((node (format "(%s) %s"
+                                              (file-name-nondirectory Info-current-file)
+                                              Info-current-node)))
+                            (lambda () (info node))))
+                         ;; TODO: Support more situations like Help, Man, Eshell
+                         ;; Maybe take a look at bookmark & org-mode for inspiration
+                         ((eq -major-mode 'custom-theme-choose-mode)
+                          #'customize-themes)
+                         (-buffer-file-name
+                          (lambda () (find-file -buffer-file-name)))
+                         (t
+                          (lambda ()
+                            (message "recentb: don't know how to open this buffer %s"
+                                     buffer-name)))))))
+        ;; FIXME Use more precise way to test for duplicates
+        (setq recentb-list (remove elt recentb-list))
+        (push elt recentb-list)))))
+
+(defun recentb-open (elt)
+  (funcall (plist-get elt :open-function))
+  (setq recentb-list (remove elt recentb-list)))
 
 (defun recentb-reopen-closed-buffer ()
   "Reopen last closed buffer."
   (interactive)
   (let ((elt (car recentb-list)))
     (if elt
-        (progn
-          (pop recentb-list)
-          (message "recentb: opening %s" (plist-get elt :description))
-          (funcall (plist-get elt :open-function)))
+        (recentb-open elt)
       (message "`recentb-list' is empty"))))
 
 (defun helm-recentb ()
   (interactive)
   (require 'helm)
-  (helm :sources
-        (helm-build-sync-source "Recent closed buffers"
-          :candidates (mapcar
-                       (lambda (elt)
-                         (cons (plist-get elt :description)
-                               elt))
-                       recentb-list)
-          :action (helm-make-actions
-                   "Open"
-                   (lambda (elt)
-                     (funcall (plist-get elt :open-function)))))))
+  (if recentb-list
+      (helm :sources
+            (helm-build-sync-source "Recent closed buffers"
+              :candidates
+              (mapcar
+               (lambda (elt)
+                 (cons (plist-get elt :description)
+                       elt))
+               recentb-list)
+              :action
+              (helm-make-actions
+               "Open"
+               #'recentb-open
+               "Delete from recentb (for debugging)"
+               (lambda (elt)
+                 (setq recentb-list
+                       (--remove-first (equal elt it) recentb-list))))))
+    (message "`recentb-list' is empty")))
 
 (define-minor-mode recentb-mode
   "Toggle Recentb mode."
