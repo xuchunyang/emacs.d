@@ -41,7 +41,7 @@ That is, if it doesn't match any of the `recentb-exclude' checks."
 
 (defun recentb-track-closed-buffer ()
   (when (recentb-include-p (buffer-name))
-    (let ((buffer-name (buffer-name))
+    (let ((-buffer-name (buffer-name))
           ;; Prefix with '-' to make lexical-binding work (am I right?)
           ;;
           ;; (special-variable-p 'major-mode)
@@ -56,15 +56,18 @@ That is, if it doesn't match any of the `recentb-exclude' checks."
           (-buffer-file-name buffer-file-name)
           (-major-mode major-mode)
           (-default-directory default-directory))
-      (push (list :description buffer-name
+      ;; FIXME Don't add duplicate
+      (push (list :description -buffer-name ; TODO: More descriptive and unique
                   :open-function
-                  (cond ((eq major-mode 'Info-mode)
+                  (cond ((eq -major-mode 'Info-mode)
                          (let ((node (format "(%s) %s"
                                              (file-name-nondirectory Info-current-file)
                                              Info-current-node)))
                            (lambda () (info node))))
-                        ;; Support more situations like Help, Man, Eshell
+                        ;; TODO: Support more situations like Help, Man, Eshell
                         ;; Maybe take a look at bookmark & org-mode for inspiration
+                        ((eq -major-mode 'custom-theme-choose-mode)
+                         #'customize-themes)
                         (-buffer-file-name
                          (lambda () (find-file -buffer-file-name)))
                         (t
