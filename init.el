@@ -413,6 +413,8 @@
   ;; :config (recentf-mode)
   :defer t)
 
+(use-package recentb
+  :config (recentb-mode))
 
 (use-package bookmark
   :defer t
