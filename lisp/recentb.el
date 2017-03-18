@@ -73,7 +73,7 @@ That is, if it doesn't match any of the `recentb-exclude' checks."
                          (t
                           (lambda ()
                             (message "recentb: don't know how to open this buffer %s"
-                                     buffer-name)))))))
+                                     -buffer-name)))))))
         ;; FIXME Use more precise way to test for duplicates
         (setq recentb-list (remove elt recentb-list))
         (push elt recentb-list)))))
