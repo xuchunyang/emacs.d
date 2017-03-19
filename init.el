@@ -2717,13 +2717,14 @@ Called with a prefix arg set search provider (default Google)."
      (lisp       . t)
      (ditaa      . t)
      ;; Guile, Racket etc
-     (scheme     . t)))
+     (scheme     . t)
+     (latex      . t)))
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
 
   ;; (org) Easy templates
   (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC")
-                    ("S" "#+BEGIN_SRC shell\n?\n#+END_SRC")
+                    ("S" "#+BEGIN_SRC sh\n?\n#+END_SRC")
                     ("r" "#+BEGIN_SRC ruby\n?\n#+END_SRC"))
         do (add-to-list 'org-structure-template-alist al 'append)))
 
