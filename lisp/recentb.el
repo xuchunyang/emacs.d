@@ -68,6 +68,21 @@ That is, if it doesn't match any of the `recentb-exclude' checks."
                          ;; Maybe take a look at bookmark & org-mode for inspiration
                          ((eq -major-mode 'custom-theme-choose-mode)
                           #'customize-themes)
+                         ((string= -buffer-name "*About GNU Emacs*")
+                          #'about-emacs)
+                         ((string= -buffer-name "*Help*")
+                          (let ((help-fn (car help-xref-stack-item))
+                                (help-args (cdr help-xref-stack-item))
+                                ;; (pos (point))
+                                )
+                            (lambda ()
+                              (cond ((get-buffer "*Help*")
+                                     #'view-help-buffer)
+                                    (help-fn
+                                     (apply help-fn help-args))
+                                    (t
+                                     (message "recentb: don't know how to open this help buffer"
+                                              -buffer-name))))))
                          (-buffer-file-name
                           (lambda () (find-file -buffer-file-name)))
                          (t
@@ -109,7 +124,8 @@ That is, if it doesn't match any of the `recentb-exclude' checks."
                "Delete from recentb (for debugging)"
                (lambda (elt)
                  (setq recentb-list
-                       (--remove-first (equal elt it) recentb-list))))))
+                       (--remove-first (equal elt it) recentb-list)))))
+            :buffer "*helm recentb*")
     (message "`recentb-list' is empty")))
 
 (define-minor-mode recentb-mode
