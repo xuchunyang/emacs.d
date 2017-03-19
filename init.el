@@ -2511,6 +2511,12 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :commands shell-pop)
 
+(use-package pcomplete
+  :defer t
+  :config
+  (use-package pcmpl-git
+    :load-path "~/src/pcmpl-git-el"))
+
 (use-package eshell-z
   :ensure t
   :commands eshell-z
