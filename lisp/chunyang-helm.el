@@ -23,12 +23,12 @@
           ;; Display helm's buffer in one bottom widnow
           ;; NOTE: This will make, C-h m, C-t and full-frame etc, not working!
           (add-to-list 'display-buffer-alist
-                       '("\\`\\*helm.*\\*\\'"
+                       '("\\` ?\\*helm.*\\*\\'"
                          (display-buffer-in-side-window)
                          (window-height . 0.4)))
           (setq helm-display-function #'display-buffer))
       (setq display-buffer-alist
-            (delete '("\\`\\*helm.*\\*\\'"
+            (delete '("\\` ?\\*helm.*\\*\\'"
                       (display-buffer-in-side-window)
                       (window-height . 0.4)) display-buffer-alist))
       (let ((standard-value (eval (car (get 'helm-display-function 'standard-value)))))
