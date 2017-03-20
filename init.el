@@ -2138,11 +2138,12 @@ See Info node `(magit) How to install the gitman info manual?'."
   ;; (info "(tramp) Default Method")
   (defun chunyang-sudo-edit ()
     (interactive)
-    (let ((fn (buffer-file-name))
+    (let ((buf (current-buffer))
+          (fn (buffer-file-name))
           (pt (point)))
-      (kill-buffer)
       (find-file (concat "/sudo::" fn))
-      (goto-char pt)))
+      (goto-char pt)
+      (kill-buffer buf)))
 
   (defun chunyang-sudo-edit-notify ()
     "Notify myself when edit a file owned by root.
