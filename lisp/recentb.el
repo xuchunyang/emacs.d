@@ -68,6 +68,8 @@ That is, if it doesn't match any of the `recentb-exclude' checks."
                          ;; Maybe take a look at bookmark & org-mode for inspiration
                          ((eq -major-mode 'custom-theme-choose-mode)
                           #'customize-themes)
+                         ((string= -buffer-name "*Org Agenda*")
+                          #'org-agenda)
                          ((string= -buffer-name "*About GNU Emacs*")
                           #'about-emacs)
                          ((string= -buffer-name "*Help*")
