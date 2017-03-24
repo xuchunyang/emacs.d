@@ -165,9 +165,10 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell
-  :if (eq window-system 'ns)
+  :if (memq window-system '(ns mac))
   :ensure t
   :config
+  (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))
 
 ;; For passing aliases
