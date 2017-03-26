@@ -2720,7 +2720,11 @@ Called with a prefix arg set search provider (default Google)."
      (ditaa      . t)
      ;; Guile, Racket etc
      (scheme     . t)
-     (latex      . t)))
+     ;; C, C++ and D
+     (C          . t)
+     (latex      . t)
+     (R          . t)
+     (org        . t)))
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
 
