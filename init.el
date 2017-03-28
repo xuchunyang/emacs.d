@@ -971,11 +971,19 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
   :diminish page-break-lines-mode
   :defer t
   :preface
-  (defun add-hook* (hooks funs)
-    (dolist (hook (if (listp hooks) hooks (list hooks)))
-      (dolist (fun (if (listp funs) funs (list funs)))
-        (add-hook hook fun))))
-  :init (add-hook* '(prog-mode-hook help-mode-hook) #'page-break-lines-mode))
+  (defun chunyang-add-hooks (hooks funcs &optional append local)
+    (dolist (hook hooks)
+      (dolist (func funcs)
+        (add-hook hook func append local))))
+
+  (defun chunyang-remove-hooks (hooks funcs &optional local)
+    (dolist (hook hooks)
+      (dolist (func funcs)
+        (remove-hook hook func local))))
+  :init
+  (chunyang-add-hooks
+   '(prog-mode-hook compilation-mode-hook outline-mode-hook help-mode-hook)
+   '(page-break-lines-mode)))
 
 (use-package outline                    ; Navigate outlines in buffers
   ;; TODO: Read (info "(emacs) Outline Mode") to learn this mode
