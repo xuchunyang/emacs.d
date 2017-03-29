@@ -3070,6 +3070,7 @@ provides similiar function."
 ;;; Python
 
 (use-package python
+  :disabled t
   :defer t
   :init
   (setq python-shell-interpreter "python3"
