@@ -1791,6 +1791,7 @@ See also `describe-function-or-variable'."
 
   (defun chunyang-org-info-map-anchor-url (node)
     "Return URL associated to Info NODE."
+    (require 'org)                      ; for `org-trim'
     ;; See (info "(texinfo) HTML Xref Node Name Expansion") for the
     ;; expansion rule
     (let* ((node (replace-regexp-in-string "[ \t\n\r]+" " " (org-trim node)))
