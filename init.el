@@ -1616,7 +1616,8 @@ See also `describe-function-or-variable'."
   :defer t
   :preface
   ;; TODO: Fontify #1234 (make it clickable) in certain modes
-  (defun chunyang-open-debbug-gnu-bug-by-id (id)
+  (defun chunyang-open-emacs-bug (id)
+    "Open emacs bug report in browser, the bug id looks like Bug#25942."
     (interactive (list
                   (or (number-at-point)
                       (and (looking-at "#\\([0-9]*\\)")
