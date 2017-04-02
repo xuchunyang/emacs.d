@@ -2721,7 +2721,7 @@ Called with a prefix arg set search provider (default Google)."
    'org-babel-load-languages
    '((emacs-lisp . t)
      (shell      . t)
-     ;; TODO: Write Eshell Support
+     (eshell     . t)
      (ruby       . t)
      (python     . t)
      (perl       . t)
