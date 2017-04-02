@@ -3020,7 +3020,7 @@ provides similiar function."
 ;; After:
 ;; EXAMPLE: unfold (fn x => if x > 3 then NONE else SOME (x + 1, x)) 0 = [0, 1, 2, 3]
 
-(use-package geiser
+(use-package geiser                     ; For Scheme
   :ensure t
   :defer t
   :init
