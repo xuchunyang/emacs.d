@@ -792,6 +792,19 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 ;; (global-visual-line-mode)
 
+(use-package visual-line-mode
+  :defer t
+  :init
+  ;; NOTE: `visual-line-mode' 或者说 `word-wrap' 不能处理中文
+  ;; https://emacs-china.org/t/topic/2616
+  ;;
+  ;; 但是没了 `word-wrap'，也就没太多理由再用 `visual-line-mode'（？）
+  ;; 因为 Emacs 默认本来就开启了 Line Wrap
+  (defun chunyang-disable-word-wrap ()
+    (setq word-wrap nil))
+
+  (add-hook 'visual-line-mode-hook #'chunyang-disable-word-wrap))
+
 (use-package visual-fill-column         ; `fill-column' for `visual-line-mode'
   :disabled t
   ;; TODO: use-package: 自定义关键词
