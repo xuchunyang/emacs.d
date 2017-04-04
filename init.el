@@ -800,10 +800,18 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
   ;;
   ;; 但是没了 `word-wrap'，也就没太多理由再用 `visual-line-mode'（？）
   ;; 因为 Emacs 默认本来就开启了 Line Wrap
-  (defun chunyang-disable-word-wrap ()
-    (setq word-wrap nil))
+  ;;
+  ;; (defun chunyang-disable-word-wrap ()
+  ;;   (setq word-wrap nil))
+  ;; (add-hook 'visual-line-mode-hook #'chunyang-disable-word-wrap)
 
-  (add-hook 'visual-line-mode-hook #'chunyang-disable-word-wrap))
+  (define-minor-mode chinese-visual-line-mode
+    "Like Visual Line mode excepting turning off `word-wrap'."
+    :lighter ""
+    (if chinese-visual-line-mode
+        (progn (visual-line-mode)
+               (setq word-wrap nil))
+      (visual-line-mode -1))))
 
 (use-package visual-fill-column         ; `fill-column' for `visual-line-mode'
   :disabled t
