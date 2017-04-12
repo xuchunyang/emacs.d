@@ -2726,8 +2726,6 @@ Called with a prefix arg set search provider (default Google)."
   (when *is-mac*
     (autoload 'org-mac-grab-link "org-mac-link"))
 
-  (setq org-edit-src-content-indentation 0)
-
   :config
   ;; Storing & Export Manual Page link
   (require 'org-man)
@@ -2737,6 +2735,9 @@ Called with a prefix arg set search provider (default Google)."
     :config
     ;; Requires SLY or SLIME, and the latter is used by default
     (setq org-babel-lisp-eval-fn 'sly-eval))
+
+  (setq org-edit-src-content-indentation 0)
+  (setq org-src-window-setup 'current-window)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
