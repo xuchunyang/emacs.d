@@ -2849,9 +2849,10 @@ Called with a prefix arg set search provider (default Google)."
     :config
     ;; Prefer "fun ()" over "fun()"
     (define-advice company-irony--post-completion
-        (:override (candidate) prefer-gnu-c-style)
-      "WARNING: This is a bad idea!  Hacking 20160826.56 from MELPA."
-      (when candidate
+        (:override (candidate) put-space-open-parentheses-maybe)
+      "Add one space before open-parenthesis if using GNU style."
+      (when (and (equal c-indentation-style "gnu")
+                 candidate)
         (let ((point-before-post-complete (point)))
           (if (irony-snippet-available-p)
               (irony-completion-post-complete candidate)
@@ -2863,9 +2864,7 @@ Called with a prefix arg set search provider (default Google)."
               (insert str)
               (company-template-c-like-templatify str)))
           (unless (eq (point) point-before-post-complete)
-            (setq this-command 'self-insert-command)))))
-    (advice-remove 'company-irony--post-completion
-                   #'company-irony--post-completion@prefer-gnu-c-style))
+            (setq this-command 'self-insert-command))))))
 
   (use-package irony-eldoc        ; Note: this does not work very well
     :ensure t
