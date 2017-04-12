@@ -2813,6 +2813,13 @@ Called with a prefix arg set search provider (default Google)."
   (add-hook 'c-mode-common-hook 'c-toggle-auto-hungry-state)
 
   (defun chunyang-c-mode-setup ()
+    (when buffer-file-name
+      (unless (file-exists-p "Makefile")
+        (setq-local compile-command
+                    (let ((fn (file-name-nondirectory buffer-file-name)))
+                      (format "cc %s -o %s -std=c99 -Wall -Wextra"
+                              (shell-quote-argument fn)
+                              (shell-quote-argument (file-name-sans-extension fn)))))))
     (define-key c-mode-map "\C-c\C-c" 'recompile))
   (add-hook 'c-mode-hook 'chunyang-c-mode-setup))
 
