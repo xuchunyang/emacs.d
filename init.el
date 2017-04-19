@@ -2822,9 +2822,23 @@ Called with a prefix arg set search provider (default Google)."
                               (shell-quote-argument fn)
                               (shell-quote-argument (file-name-sans-extension fn)))))))
     (define-key c-mode-map "\C-c\C-c" 'recompile))
-  (add-hook 'c-mode-hook 'chunyang-c-mode-setup))
+  (add-hook 'c-mode-hook 'chunyang-c-mode-setup)
+
+  (defun chunyang-cpp-lookup ()
+    "Lookup C function/macro/etc prototype via Preprocessing."
+    (interactive)
+    (let ((symbol (current-word))
+          (buffer "*clang-cpp-output*")
+          (file buffer-file-name))
+      (with-current-buffer (get-buffer-create buffer)
+        (erase-buffer)
+        (call-process "cc" nil t nil "-E" file)
+        (goto-char (point-min))
+        (re-search-forward symbol nil t)
+        (display-buffer (current-buffer))))))
 
 (use-package irony
+  :disabled t
   :ensure t
   :defer t
   :init
