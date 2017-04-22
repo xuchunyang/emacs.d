@@ -2608,7 +2608,9 @@ Called with a prefix arg set search provider (default Google)."
     :config
     ;; Type "use-theme" in Eshell to change theme
     ;; (eshell-git-prompt-use-theme 'simple)
-    ))
+    )
+
+  (use-package chunyang-eshell-ext))
 
 (use-package eshell-did-you-mean
   :disabled t
