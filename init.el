@@ -2398,8 +2398,11 @@ This should be add to `find-file-hook'."
 (use-package eww
   :defer t
   :config
+  ;; XXX Both Google & DuckDuckGo are currently bocked in China
   (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
-  (setq eww-search-prefix "https://www.google.com/search?q=")
+  ;; Eww doesn't support Javascript, but HTTPS version of Google requires it (?)
+  ;; (setq eww-search-prefix "https://www.google.com.hk/search?q=")
+  (setq eww-search-prefix "http://www.google.com.hk/search?q=")
   (setq eww-search-prefix "https://www.bing.com/search?q=")
   (use-package shr
     :config
@@ -3171,9 +3174,27 @@ provides similiar function."
 
 ;;; Misc
 
-;; Socks5 proxy setting of `url.el'
-;; (setq url-gateway-method 'socks
-;;       socks-server '("Default server" "127.0.0.1" 1080 5))
+;; Socks5 proxy setting for `url.el'
+(setq socks-server '("Default server" "127.0.0.1" 1080 5))
+
+;; 白名单
+(setq url-gateway-local-host-regexp
+      (concat "\\`"
+              (regexp-opt '("localhost"
+                            "127.0.0.1"
+                            "elpa.emacs-china.org"))
+              "\\'"))
+
+;; (setq url-gateway-method 'socks)
+
+;; XXX 好像不会及时生效 (?)
+;; (define-minor-mode chunyang-socks-proxy-mode
+;;   "Toggle Socks Proxy mode for the 'url' library."
+;;   :global t
+;;   (setq url-gateway-method
+;;         (if chunyang-socks-proxy-mode
+;;             'socks
+;;           'native)))
 
 (use-package url-cookie
   :defer t
