@@ -2845,7 +2845,7 @@ Called with a prefix arg set search provider (default Google)."
       (unless (file-exists-p "Makefile")
         (setq-local compile-command
                     (let ((fn (file-name-nondirectory buffer-file-name)))
-                      (format "cc %s -o %s -std=c99 -Wall -Wextra -pedantic"
+                      (format "cc %s -o %s -std=c99 -Wall"
                               (shell-quote-argument fn)
                               (shell-quote-argument (file-name-sans-extension fn)))))))
     (define-key c-mode-map "\C-c\C-c" 'recompile))
