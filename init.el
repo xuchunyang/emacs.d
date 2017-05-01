@@ -2507,22 +2507,44 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t)
 
+(use-package google-translate
+  :ensure t
+  :preface
+  (defvar chunyang-google-translate-history nil)
+  (defun chunyang-google-translate (query)
+    (interactive
+     (let ((default
+             (or (and (use-region-p)
+                      (buffer-substring
+                       (region-beginning) (region-end)))
+                 (current-word))))
+       (list (read-string (if default
+                              (format "Google Translate (default %s): " default)
+                            "Google Translate: ")
+                          nil
+                          'google-translate-history
+                          default))))
+    (browse-url (format "https://www.google.com/translate_t?text=%s"
+                        (url-hexify-string query))))
+  :config
+  ;; translate.google.com -> translate.google.cn
+  ;; Becuase the latter is not blocked in China.
+  (dolist (url '(google-translate--tkk-url
+                 google-translate-base-url
+                 google-translate-listen-url))
+    (set url (replace-regexp-in-string
+              (regexp-quote "translate.google.com")
+              "translate.google.cn"
+              (symbol-value url))))
+
+  ;; For M-x `google-translate-smooth-translate'
+  (setq google-translate-translation-directions-alist
+        '(("en" . "zh-CN") ("zh-CN" . "en"))))
+
 (use-package echo
   :commands echo-mode)
 
-(defvar google-translate-history nil)
 
-(defun google-translate (query)
-  (interactive
-   (let* ((initial-input
-           (when (use-region-p)
-             (buffer-substring (region-beginning) (region-end))))
-          (string (read-string "Translate: "
-                               initial-input
-                               'google-translate-history)))
-     (list string)))
-  (browse-url (format "https://www.google.com/translate_t?text=%s"
-                      (url-hexify-string query))))
 
 
 ;;; Shell (including shell-command, shell, term and Eshell)
