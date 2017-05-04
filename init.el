@@ -21,27 +21,6 @@
 
 (require 'package)
 
-;; All ElPA
-(setq package-archives
-      '(("gnu"          . "http://elpa.gnu.org/packages/")
-        ("melpa"        . "http://melpa.org/packages/")
-        ("melpa-stable" . "http://stable.melpa.org/packages/")
-        ("marmalade"    . "http://marmalade-repo.org/packages/")
-        ("org"          . "http://orgmode.org/elpa/")
-        ("user42"       . "http://download.tuxfamily.org/user42/elpa/packages/")
-        ("SC"           . "http://joseito.republika.pl/sunrise-commander/")))
-
-;; ELPA Mirror
-(setq package-archives
-      '(("gnu"          . "http://elpa.emacs-china.org/gnu/")
-        ("melpa"        . "http://elpa.emacs-china.org/melpa/")
-        ("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")
-        ("marmalade"    . "http://elpa.emacs-china.org/marmalade/")
-        ("org"          . "http://elpa.emacs-china.org/org/")
-        ("user42"       . "http://elpa.emacs-china.org/user42/")
-        ("SC"           . "http://elpa.emacs-china.org/sunrise-commander/")))
-
-;; Current choices
 (setq package-archives
       '(("gnu"    . "http://elpa.emacs-china.org/gnu/")
         ("org"    . "http://elpa.emacs-china.org/org/")
@@ -49,10 +28,7 @@
         ("user42" . "http://elpa.emacs-china.org/user42/")))
 
 ;; Different Emacs versions can't share the same elpa folder
-(setq package-user-dir (locate-user-emacs-file
-                        (format "elpa-%d-%d"
-                                emacs-major-version
-                                emacs-minor-version)))
+(setq package-user-dir (locate-user-emacs-file (concat "elpa-" emacs-version)))
 
 (package-initialize)
 
@@ -85,23 +61,6 @@
                     '(:if :ensure)
                     (subseq l (1+ x) y)
                     (subseq l (1+ y)))))))
-
-;; Define `config' to group package configuration (an alternative to
-;; `use-package')
-(defmacro config (pkg &rest args)
-  "Group PKG's configuration in one place."
-  ;; TODO: :if
-  ;; TODO: :ensure
-  ;; TODO: :bind
-  ;; TODO: Handle error (by wrapping `condition-case'?)
-  (declare (indent defun))
-  (if (memq :disabled args)
-      (let ((t-or-nil (plist-get args :disabled)))
-        (setq args (delq :disabled args))
-        (setq args (delq t-or-nil args))
-        (unless t-or-nil
-          `(progn ,@args)))
-    `(progn ,@args)))
 
 ;; My private packages
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
