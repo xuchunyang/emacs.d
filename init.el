@@ -44,6 +44,7 @@
 ;; Current choices
 (setq package-archives
       '(("gnu"    . "http://elpa.emacs-china.org/gnu/")
+        ("org"    . "http://elpa.emacs-china.org/org/")
         ("melpa"  . "http://elpa.emacs-china.org/melpa/")
         ("user42" . "http://elpa.emacs-china.org/user42/")))
 
@@ -2701,59 +2702,14 @@ Called with a prefix arg set search provider (default Google)."
   (setq calendar-week-start-day 1)
   :defer t)
 
-;; (require 'chunyang-org)
-
-;; How to install Org 9.0 from Git?
-;; - git clone ...
-;; - git checkout -b v9.0 release_9.0
-;; - make
-;; - setup `load-path' and `Info-directory-list'
-;; - load the autoload file `org-loaddefs.el'
-
 (use-package org
-  :defer t
-  ;; Install Org 9.0 from Git
-  :load-path "~/src/org-mode/lisp"
-  :load-path "~/src/org-mode/contrib/lisp"
-  :bind ("C-c l" . org-store-link)
+  :ensure org-plus-contrib
   :init
-  ;; Yes, since I am installing Org from Git, not package.el or built-in
-  (require 'org-loaddefs)
-  (add-to-list 'Info-directory-list "~/src/org-mode/doc/")
-
-  ;; prevent demoting heading also shifting text inside sections
-  (setq org-adapt-indentation nil)
-
-  (setq
-   ;; Dir of all Org files
-   org-directory "~/Dropbox/org"
-   ;; Agenda
-   org-agenda-files (list "~/Dropbox/org/")
-   ;; Capture
-   org-default-notes-file "~/Dropbox/org/todo.org"
-   ;; Capture used by MobileOrg
-   org-mobile-inbox-for-pull "~/Dropbox/org/from-mobile.org"
-   ;; Set to <your Dropbox root directory>/MobileOrg.
-   org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-
-  ;; NOTE Use
-  ;; - `org-mobile-pull' to pull notes from MobileOrg
-  ;; - `org-mobile-push' to push notes to MobileOrg
-
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file "todo.org") "* TODO %?\n%U\n%a\n")))
-
-  (define-key global-map [?\C-c ?c] #'org-capture)
-  (define-key global-map [?\C-c ?a] #'org-agenda)
-
-  ;; This will loads org.el but I need it from the begining
-  ;; (require 'org-protocol)
-
-  ;; TODO: Create and load autoloads file for contrib/lisp
   (when *is-mac*
     (autoload 'org-mac-grab-link "org-mac-link"))
-
   :config
+  (setq org-src-window-setup 'current-window)
+
   ;; Storing & Export Manual Page link
   (require 'org-man)
 
@@ -2762,9 +2718,6 @@ Called with a prefix arg set search provider (default Google)."
     :config
     ;; Requires SLY or SLIME, and the latter is used by default
     (setq org-babel-lisp-eval-fn 'sly-eval))
-
-  (setq org-edit-src-content-indentation 0)
-  (setq org-src-window-setup 'current-window)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
