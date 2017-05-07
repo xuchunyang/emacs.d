@@ -2668,6 +2668,7 @@ Called with a prefix arg set search provider (default Google)."
   :init
   (when *is-mac*
     (autoload 'org-mac-grab-link "org-mac-link"))
+  :defer t
   :config
   (setq org-src-window-setup 'current-window)
 
