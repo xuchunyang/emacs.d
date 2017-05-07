@@ -3296,6 +3296,15 @@ Right now it assumes:
 ;; (setq redisplay-dont-pause nil)
 
 
+;;; PDF
+
+(use-package pdf-tools
+  :if *is-gnu-linux*
+  :ensure t
+  ;; XXX defer loading this
+  :init (pdf-tools-install))
+
+
 ;;; Customization
 
 ;; Load custom-file in the end to prevent it loads some package.
