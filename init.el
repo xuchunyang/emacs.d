@@ -2370,12 +2370,14 @@ This should be add to `find-file-hook'."
     (setq shr-use-fonts nil)
 
     (defun chunyang-theme-dark-p ()
-      "Return non-nil if using Dark theme."
+      "Return t if using Dark theme."
       ;; FIXME: Use a proper way for this
       (let ((theme (car custom-enabled-themes)))
         (and theme
-             (string-match-p (rx (or "night" "eighties" "dark"))
-                             (symbol-name theme)))))
+             (or (string-match-p (rx (or "night" "eighties" "dark" "deep"))
+                                 (symbol-name theme))
+                 (string= (symbol-name theme) "wombat"))
+             t)))
 
     (when (chunyang-theme-dark-p)
       ;; (info "(Mu4e) Displaying rich-text messages")
