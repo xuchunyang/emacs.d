@@ -3287,6 +3287,14 @@ Right now it assumes:
 ;;; Chinese | 中文
 (use-package chunyang-chinese)
 
+;; macOS 下，使用官方 GUI Emacs 和系统自带的拼音输入法时，输入期间，在
+;; Emacs buffer 已出现字母会随着输入的进行而发生“抖动”，相关讨论：
+;; - https://emacs-china.org/t/mac-gui-emacs/186
+;; - https://debbugs.gnu.org/cgi/bugreport.cgi?bug=+23412
+
+;; 临时解决方法，有效但不清楚有没有副作用
+;; (setq redisplay-dont-pause nil)
+
 
 ;;; Customization
 
