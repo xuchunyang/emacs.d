@@ -1635,7 +1635,19 @@ See also `describe-function-or-variable'."
 
 
 ;;; Help & Info
+
+(defun chunyang-info-elisp-manual ()
+  (interactive)
+  (info "elisp"))
+
+(defun chunyang-info-org-manual ()
+  (interactive)
+  (info "org"))
+
 (bind-key "C-h C-k" #'find-function-on-key)
+;; C-h r `info-emacs-manual'
+(bind-key "C-h E"   #'chunyang-info-elisp-manual)
+(bind-key "C-h O"   #'chunyang-info-org-manual)
 
 (use-package help-mode
   :preface
