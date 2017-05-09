@@ -2743,6 +2743,14 @@ Called with a prefix arg set search provider (default Google)."
     (interactive "*")
     (insert (grab-mac-link 'chrome 'org))))
 
+(use-package htmlize                    ; Enable src block syntax
+                                        ; highlightting during
+                                        ; exporting from org to html
+  :ensure t
+  :defer t
+  ;; :init (setq org-html-htmlize-output-type 'css)
+  )
+
 (use-package orglink
   :load-path "~/src/orglink"
   :init (setq orglink-mode-lighter nil)
