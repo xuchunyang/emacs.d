@@ -319,5 +319,29 @@ With prefix argument, IP is prompted."
                    ip location geoip)
           (list ip location geoip))))))
 
+
+;;; Debug Emacs init file
+
+(defun chunyang-open-another-emacs ()
+  "Open another Emacs instance without closing the current one.
+For testing / debugging Emacs init file."
+  (interactive)
+  ;; XXX: Make it work under other environment ?
+  (unless (and *is-mac* (display-graphic-p))
+    (user-error "Unsupported platform or situation."))
+  (let ((app (replace-regexp-in-string
+              "/Contents/MacOS/"
+              ""
+              invocation-directory)))
+    (call-process-shell-command
+     (read-shell-command
+      "Shell command: "
+      ;; Initial input
+      (format "open -n -a %s" (shell-quote-argument app))
+      nil
+      ;; Default value, just in case I forget how to pass arguments
+      ;; through open, i.e., --args
+      (format "open -n -a %s --args -Q" (shell-quote-argument app))))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
