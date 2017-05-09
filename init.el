@@ -2682,6 +2682,9 @@ Called with a prefix arg set search provider (default Google)."
     (autoload 'org-mac-grab-link "org-mac-link"))
   :defer t
   :config
+  ;; prevent demoting heading also shifting text inside sections
+  (setq org-adapt-indentation nil)
+
   (setq org-src-window-setup 'current-window)
 
   ;; Storing & Export Manual Page link
