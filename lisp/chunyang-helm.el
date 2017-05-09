@@ -1,8 +1,6 @@
-;; Install helm from Git
+;;; chunyang-helm.el --- My Helm configuration       -*- lexical-binding: t; -*-
 
-(when (version< "25" emacs-version)     ; Only use helm-from-git for Emacs 25
-  (add-to-list 'load-path "~/src/emacs-async")
-  (add-to-list 'load-path "~/src/helm"))
+;;; Code:
 
 (setq helm-command-prefix-key "C-c h")
 
@@ -389,3 +387,4 @@ If with prefix argument, search current directory."
   (helm-string (shell-command-to-string command)))
 
 (provide 'chunyang-helm)
+;;; chunyang-helm.el ends here

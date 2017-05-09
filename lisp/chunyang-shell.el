@@ -7,6 +7,7 @@
 ;;; Code:
 
 ;; Copied from `eshell/info'
+;; for ~/.emacs.d/misc/emacs.sh
 (defun shell/info (&rest args)
   "Run the info command in-frame with the same behavior as command-line `info', ie:
   `info'           => goes to top info window

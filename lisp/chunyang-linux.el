@@ -53,5 +53,9 @@
       (let ((default-directory dir))
         (shell-command "gnome-terminal")))))
 
+(defun insert-x11-primary-selection ()
+  (interactive)
+  (insert (gui-get-primary-selection)))
+
 (provide 'chunyang-linux)
 ;;; chunyang-linux.el ends here
