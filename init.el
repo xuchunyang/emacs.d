@@ -101,7 +101,7 @@
 
 ;; Don't show "For information about GNU Emacs and the GNU system, type C-h
 ;; C-a." after startup
-;; (setq inhibit-startup-echo-area-message "xcy")
+(setq inhibit-startup-echo-area-message "xcy")
 
 ;; Load personal information
 (load "~/.private.el" :no-error)
