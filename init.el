@@ -2718,7 +2718,19 @@ Called with a prefix arg set search provider (default Google)."
   (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC")
                     ("S" "#+BEGIN_SRC sh\n?\n#+END_SRC")
                     ("r" "#+BEGIN_SRC ruby\n?\n#+END_SRC"))
-        do (add-to-list 'org-structure-template-alist al 'append)))
+        do (add-to-list 'org-structure-template-alist al 'append))
+
+  (defun chunyang-org-info-lookup-symbol ()
+    "Call `info-lookup-symbol' within a source edit buffer if needed."
+    (interactive)
+    (if (not (org-in-src-block-p))
+        (call-interactively 'info-lookup-symbol)
+      (org-babel-do-in-edit-buffer
+       (save-excursion
+         (call-interactively 'info-lookup-symbol)))
+      (switch-to-buffer-other-window "*info*")))
+
+  (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map))
 
 (use-package grab-mac-link
   :if *is-mac*
