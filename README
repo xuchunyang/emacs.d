@@ -2,22 +2,19 @@
 
 * Personal Emacs Configuration
 
-** To Do items
-
-*** TODO macOS 下的图形界面的 Emacs 25 执行 elisp 慢
-
-表现有：Emacs 启动非常慢、第一次使用 Org mode、Magit、Eshell 也有显著的延迟。
-
-#+BEGIN_SRC emacs-lisp
-(emacs-init-time)
+#+CAPTION: 从命令行启动 Emacs 所需的最少时间
+#+BEGIN_SRC sh :results output
+  (time emacs -l init.elc --batch --eval '(message "Hello, world!")') 2>&1
 #+END_SRC
 
 #+RESULTS:
-: 23.2 seconds
+: Hello, world!
+: 
+: real	0m1.756s
+: user	0m1.505s
+: sys	0m0.217s
 
-- [ ] 测试非图形界面的相同版本的 Emacs 是否有同样的问题？
-- [ ] 排除个人因素，用标准化的方法测试
-- [ ] 测试不同版本的 Emacs，从 24.4 到 master
+** To Do items
 
 *** TODO 改进 Emacs 版本支持，需要支持 24.5+，可以考虑用 CI 验证
 
