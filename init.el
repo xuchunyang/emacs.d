@@ -1836,6 +1836,9 @@ See also `describe-function-or-variable'."
   :ensure t                             ; To install its dependencies
   :defer 7                              ; since the entry of this
                                         ; package is from Chrome
+  :preface
+  (defun chunyang-atomic-chrome-server-running-p ()
+    (zerop (call-process "lsof" nil nil nil "-i" ":64292")))
   :config
   (setq atomic-chrome-url-major-mode-alist
         '(("github\\.com"        . gfm-mode)
@@ -1851,7 +1854,9 @@ See also `describe-function-or-variable'."
 
   (add-hook 'atomic-chrome-edit-mode-hook #'chunyang-atomic-chrome-mode-setup)
 
-  (atomic-chrome-start-server))
+  (if (chunyang-atomic-chrome-server-running-p)
+      (message "Can't start atomic-chrome server, because port 64292 is already used")
+    (atomic-chrome-start-server)))
 
 (use-package ediff
   :defer t
