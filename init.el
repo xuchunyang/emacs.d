@@ -2378,6 +2378,9 @@ Called with a prefix arg set search provider (default Google)."
   :init
   (when *is-mac*
     (autoload 'org-mac-grab-link "org-mac-link"))
+  ;; For some reason, Emacs complains this function is not to known
+  ;; defined.
+  (autoload 'org-element-update-syntax "org-element")
   :defer t
   :config
   ;; prevent demoting heading also shifting text inside sections
