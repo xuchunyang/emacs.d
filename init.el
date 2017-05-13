@@ -88,12 +88,14 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell
-  :disabled t                           ; XXX Cache the result to speedup
-  :if (memq window-system '(ns mac))
+  :if (eq window-system 'ns)       ; Only for the official Cocoa Emacs
   :ensure t
-  :config
-  (setq exec-path-from-shell-arguments '("-l"))
-  (exec-path-from-shell-initialize))
+  :defer t
+  :init
+  (setenv "PATH"
+          (eval-when-compile
+            (require 'exec-path-from-shell)
+            (exec-path-from-shell-getenv "PATH"))))
 
 (use-package chunyang-mac
   :if *is-mac*
