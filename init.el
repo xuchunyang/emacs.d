@@ -2978,12 +2978,16 @@ provides similiar function."
   (setq gitter--debug t))
 
 
-;;; TODO
+;;; Programming Language
 
 (use-package language-detection
   :ensure t
-  ;; TODO Try this package
-  :defer t)
+  :defer t
+  :preface
+  (defun chunyang-language-detection-region (b e)
+    (interactive "r")
+    (message "Language: %s"
+             (language-detection-string (buffer-substring b e)))))
 
 
 ;;; Emacs
