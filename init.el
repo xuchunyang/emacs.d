@@ -2070,6 +2070,18 @@ This should be add to `find-file-hook'."
   (setq eww-search-prefix "http://www.google.com.hk/search?q=")
   (setq eww-search-prefix "https://www.bing.com/search?q="))
 
+(use-package shr-tag-pre-highlight
+  :load-path "~/src/shr-tag-pre-highlight.el"
+  :after shr
+  :config
+  (add-to-list 'shr-external-rendering-functions
+               '(pre . shr-tag-pre-highlight))
+
+  (when (version< emacs-version "26")
+    (with-eval-after-load 'eww
+      (advice-add 'eww-display-html :around
+                  'eww-display-html--override-shr-external-rendering-functions))))
+
 (use-package shr
   :defer t
   :config
