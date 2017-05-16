@@ -11,6 +11,9 @@
 
 ;;; Code:
 
+
+;;; 中文标点符号
+
 (defvar chunyang-chinese-marks
   '((:句号 "。")
     (:逗号 "，")
@@ -55,6 +58,10 @@
                                  (substring mark 1)))
                (insert mark)))))
         :buffer "*helm 输入中文标点*"))
+
+
+;;; TODO 中文分词
+
 
 (provide 'chunyang-chinese)
 ;;; chunyang-chinese.el ends here
