@@ -1840,7 +1840,10 @@ See also `describe-function-or-variable'."
                                         ; package is from Chrome
   :preface
   (defun chunyang-atomic-chrome-server-running-p ()
-    (zerop (call-process "lsof" nil nil nil "-i" ":64292")))
+    (cond ((executable-find "lsof")
+           (zerop (call-process "lsof" nil nil nil "-i" ":64292")))
+          ((executable-find "netstat")  ; Windows
+           (zerop (call-process-shell-command "netstat -aon | grep 64292")))))
   :config
   (setq atomic-chrome-url-major-mode-alist
         '(("github\\.com"        . gfm-mode)
