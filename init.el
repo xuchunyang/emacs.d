@@ -418,6 +418,11 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (use-package frame
   :preface
+  (defun chunyang-toggle-frame-transparency ()
+    (interactive)
+    (if (equal (frame-parameter nil 'alpha) 85)
+        (set-frame-parameter nil 'alpha 100)
+      (set-frame-parameter nil 'alpha 85)))
   (defun chunyang-frame-left-half ()
     (interactive)
     (set-frame-width (selected-frame) (/ 177 2))
