@@ -92,10 +92,11 @@
   :ensure t
   :defer t
   :init
-  (setenv "PATH"
-          (eval-when-compile
-            (require 'exec-path-from-shell)
-            (exec-path-from-shell-getenv "PATH"))))
+  (let ((path (eval-when-compile
+                (require 'exec-path-from-shell)
+                (exec-path-from-shell-getenv "PATH"))))
+    (setenv "PATH" path)
+    (setq exec-path (append (parse-colon-path path) (list exec-directory)))))
 
 (use-package chunyang-mac
   :if *is-mac*
