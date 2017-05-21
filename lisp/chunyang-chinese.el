@@ -60,8 +60,48 @@
         :buffer "*helm 输入中文标点*"))
 
 
-;;; TODO 中文分词
+;;; 中文分词
 
+;; For testing:
+;; 如何实现中文取词
+
+(defvar mark-chinese-word--words '("如何" "实现" "中文" "取词"))
+
+(defun mark-chinese-word--substrings (string nth)
+  "Return all substring in STRING which contains NTH."
+  (let (before
+        (before-bound (1+ nth))
+        after
+        (after-bound (1+ (- (length string) nth)))
+        result)
+    (setq before 0)
+    (while (< before before-bound)
+      (setq after 1)
+      (while (< after after-bound)
+        (push (cons (substring string (- nth before) (+ nth after))
+                    (cons before after))
+              result)
+        (incf after))
+      (incf before))
+    result))
+
+;; (mark-chinese-word--substrings "中文取词" 2)
+;; => (("中文取词" 2 . 2) ("中文取" 2 . 1) ("文取词" 1 . 2) ("文取" 1 . 1) ("取词" 0 . 2) ("取" 0 . 1))
+
+(defun mark-chinese-word ()
+  "Mark a Chinese word at point."
+  (interactive)
+  (let ((str (thing-at-point 'word))
+        (nth (- (point) (car (bounds-of-thing-at-point 'word)))))
+    (let ((word
+           (loop for s in (mark-chinese-word--substrings str nth)
+                 when (member (car s) mark-chinese-word--words)
+                 return s)))
+      (if word
+          (progn (set-mark (- (point) (cadr word)))
+                 (goto-char (+ (point) (cddr word))))
+        (set-mark (point))
+        (forward-char 1)))))
 
 (provide 'chunyang-chinese)
 ;;; chunyang-chinese.el ends here
