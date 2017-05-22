@@ -10,6 +10,9 @@
 
 ;;; Start up
 
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file :no-error)
+
 (require 'package)
 
 (setq package-archives
@@ -3054,16 +3057,5 @@ provides similiar function."
   :ensure t
   ;; XXX defer loading this
   :init (pdf-tools-install))
-
-
-;;; Customization
-
-;; Load custom-file in the end to prevent it loads some package.
-
-(use-package cus-edit
-  :defer t
-  :init
-  (setq custom-file (locate-user-emacs-file "custom.el"))
-  (load custom-file :no-error :no-message))
 
 ;;; init.el ends here
