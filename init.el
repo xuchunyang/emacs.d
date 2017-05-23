@@ -10,9 +10,6 @@
 
 ;;; Start up
 
-(setq custom-file (locate-user-emacs-file "custom.el"))
-(load custom-file :no-error)
-
 (require 'package)
 
 (setq package-archives
@@ -26,6 +23,9 @@
       (locate-user-emacs-file (concat "elpa-" emacs-version)))
 
 (package-initialize)
+
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file :no-error)
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
