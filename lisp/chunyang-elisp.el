@@ -392,6 +392,7 @@ At first, I want 'Did you mena xxx?', but I don't know how to implement."
 
 (defun describe-function@advice-remove-button (&rest r)
   "Add a button to remove advice."
+  (require 'subr-x)
   (when-let ((buf (get-buffer "*Help*")))
     (with-current-buffer buf
       (save-excursion
