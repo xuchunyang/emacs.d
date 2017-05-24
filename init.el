@@ -2095,7 +2095,8 @@ This should be add to `find-file-hook'."
           :buffer "*Helm EWW Bookmarks*"))
 
   (defun chunyang-eww-import-bookmarks (bookmarks-html-file)
-    "Import bookmarks from BOOKMARKS-HTML-FILE."
+    "Import bookmarks from BOOKMARKS-HTML-FILE.
+Note that this will OVERRIDE the existing EWW bookmarks."
     (interactive "fBookmarks HTML File: ")
 
     ;; Check if some libraries exist
@@ -2121,7 +2122,40 @@ your Emacs doesn't have libxml2 support"))
                                 :title title
                                 :time time)))
       (eww-write-bookmarks)))
+
+  (defun chunyang-eww-import-bookmarks-from-chrome-1 (json)
+    "Adapted from `helm-chrome--add-bookmark'."
+    (when (and (listp json) (listp (cdr json)))
+      (cond
+       ((assq 'roots json)
+        (dolist (item (alist-get 'roots json))
+          (chunyang-eww-import-bookmarks-from-chrome-1 item)))
+       ((equal (alist-get 'type json) "folder")
+        (cl-loop for item across (alist-get 'children json)
+                 do (chunyang-eww-import-bookmarks-from-chrome-1 item)))
+       ((equal (alist-get 'type json) "url")
+        (setq eww-bookmarks
+              (append eww-bookmarks
+                      (list (list
+                             :url  (alist-get 'url json)
+                             :title (alist-get 'name json)
+                             :time (seconds-to-time
+                                    (string-to-number
+                                     (let ((str (alist-get 'date_added json)))
+                                       ;; 1 second = 100,000 micro seconds
+                                       (substring str 0 (- (length str) 6)))))))))))))
+
+  (defun chunyang-eww-import-bookmarks-from-chrome ()
+    "Import bookmarks from Google Chrome's Bookmarks JSON file.
+Note that this will OVERRIDE the existing EWW bookmarks."
+    (interactive)
+    (chunyang-eww-import-bookmarks-from-chrome-1
+     (json-read-file
+      "/Users/xcy/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"))
+    (eww-write-bookmarks))
   :config
+  ;; Sync bookmarks every time from Chrome
+  (chunyang-eww-import-bookmarks-from-chrome)
   ;; XXX Both Google & DuckDuckGo are currently bocked in China
   (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
   ;; Eww doesn't support Javascript, but HTTPS version of Google requires it (?)

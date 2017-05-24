@@ -31,5 +31,18 @@ otherwise it is named `SYMBOL@NAME'.
       `(prog1 ,@(and (symbolp advice) `((defun ,advice ,lambda-list ,@body)))
          (advice-add ',symbol ,where #',advice ,@(and props `(',props)))))))
 
+;; Emacs 25.1
+(unless (fboundp 'alist-get)
+  (defun alist-get (key alist &optional default remove)
+    "Return the value associated with KEY in ALIST, using `assq'.
+If KEY is not found in ALIST, return DEFAULT.
+
+This is a generalized variable suitable for use with `setf'.
+When using it to set a value, optional argument REMOVE non-nil
+means to remove KEY from ALIST if the new value is `eql' to DEFAULT."
+    (ignore remove) ;;Silence byte-compiler.
+    (let ((x (assq key alist)))
+      (if x (cdr x) default))))
+
 (provide 'chunyang-emacs-compatibility)
 ;;; chunyang-emacs-compatibility.el ends here
