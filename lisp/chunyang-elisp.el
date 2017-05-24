@@ -384,6 +384,9 @@ At first, I want 'Did you mena xxx?', but I don't know how to implement."
                  (advice (intern (match-string 1)))
                  (button-fun (lambda (_)
                                (message "Removing %s from %s" advice fun)
+                               ;; FIXME Not working for lambda, maybe
+                               ;; https://emacs.stackexchange.com/questions/33020/how-can-i-remove-an-unnamed-advice
+                               ;; can help
                                (advice-remove fun advice)
                                (save-excursion (revert-buffer nil t))))
                  (inhibit-read-only t))
