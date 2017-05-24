@@ -1978,6 +1978,10 @@ This should be add to `find-file-hook'."
   :ensure t
   :defer t)
 
+(use-package lastpass
+  :load-path "/Users/xcy/src/lastpass.el"
+  :commands helm-lastpass)
+
 
 ;;; Project
 
