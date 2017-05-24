@@ -2091,7 +2091,12 @@ This should be add to `find-file-hook'."
               (cl-loop for elt in (eww-read-bookmarks)
                        collect (cons (plist-get elt :title)
                                      (plist-get elt :url))))
-            :action #'eww)
+            :action (helm-make-actions
+                     "eww" #'eww
+                     "browse-url" #'browse-url
+                     "Copy URL" (lambda (url)
+                                  (kill-new url)
+                                  (message "Copied: %s" url))))
           :buffer "*Helm EWW Bookmarks*"))
 
   (defun chunyang-eww-import-bookmarks (bookmarks-html-file)
