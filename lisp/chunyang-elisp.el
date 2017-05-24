@@ -152,10 +152,6 @@
 
 (add-hook 'lisp-interaction-mode-hook #'chunyang-disable-some-modes-in-scratch)
 
-(defun current-line-empty-p ()
-  (string= "" (buffer-substring (line-beginning-position)
-                                (line-end-position))))
-
 (defun chunyang-eval-print-last-sexp (&optional eval-last-sexp-arg-internal)
   "Adapted from `eval-print-last-sexp'."
   (interactive "P")
@@ -192,6 +188,10 @@
       ;; Indent comment
       (comment-dwim nil))))
 
+(defun chunyang-current-line-empty-p ()
+  (string= "" (buffer-substring (line-beginning-position)
+                                (line-end-position))))
+
 (defun chunyang-macroexpand-print-last-sexp ()
   (interactive)
   (let ((standard-output (current-buffer)))
@@ -199,7 +199,7 @@
     (let ((res (macroexpand (elisp--preceding-sexp))))
       (princ "     ≡ ")
       (princ res)
-      (unless (current-line-empty-p) (terpri)))))
+      (unless (chunyang-current-line-empty-p) (terpri)))))
 
 
 (define-minor-mode display-pos-mode
