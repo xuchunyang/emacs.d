@@ -2127,6 +2127,7 @@ your Emacs doesn't have libxml2 support"))
 
 (use-package shr-tag-pre-highlight
   :load-path "~/src/shr-tag-pre-highlight.el"
+  :ensure t
   :after shr
   :config
   (add-to-list 'shr-external-rendering-functions
