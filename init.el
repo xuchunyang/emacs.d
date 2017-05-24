@@ -2075,6 +2075,21 @@ This should be add to `find-file-hook'."
 (use-package eww
   :defer t
   :preface
+  (defun helm-eww-bookmarks ()
+    "Alternative to `eww-list-bookmarks'."
+    (interactive)
+    (require 'helm)
+    (require 'eww)
+    (helm :sources
+          (helm-build-sync-source "EWW Bookmarks"
+            :candidates
+            (lambda ()
+              (cl-loop for elt in (eww-read-bookmarks)
+                       collect (cons (plist-get elt :title)
+                                     (plist-get elt :url))))
+            :action #'eww)
+          :buffer "*Helm EWW Bookmarks*"))
+
   (defun chunyang-eww-import-bookmarks (bookmarks-html-file)
     "Import bookmarks from BOOKMARKS-HTML-FILE."
     (interactive "fBookmarks HTML File: ")
