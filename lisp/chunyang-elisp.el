@@ -156,49 +156,31 @@
   (string= "" (buffer-substring (line-beginning-position)
                                 (line-end-position))))
 
-(defun my-eval-print-last-sexp-1 ()
-  (let ((standard-output (current-buffer)))
-    (terpri)
-    (let ((res
-           (eval
-            (eval-sexp-add-defvars (elisp--preceding-sexp)) lexical-binding)))
-      (unless (current-line-empty-p) (terpri))
-      (princ "     ⇒ ")                ; or =>
-      (princ (with-temp-buffer
-               (elisp--eval-last-sexp-print-value res t)
-               (buffer-string))))
-    (unless (current-line-empty-p) (terpri))))
-
-(defun my-eval-print-last-sexp (&optional error->)
-  "Like `my-eval-print-last-sexp' but format result value a bit."
+(defun chunyang-eval-print-last-sexp (&optional eval-last-sexp-arg-internal)
+  "Adapted from `eval-print-last-sexp'."
   (interactive "P")
-  (require 'elisp-mode)
-  (if error->
-      ;; Handle error by myself
-      (let ((eval-expression-debug-on-error nil))
-        (condition-case err
-            (my-eval-print-last-sexp-1)
-          (error
-           (let ((standard-output (current-buffer)))
-             (princ "error→ ")        ; or error->
-             (princ (error-message-string err))))))
-    (my-eval-print-last-sexp-1)))
-
-;; TODO Add props to toggle abbreviated printed representation like
-;; `eval-print-last-sexp'
-(defun chunyang-eval-print-last-sexp ()
-  (interactive)
-  (let ((standard-output (current-buffer)))
+  (let ((standard-output (current-buffer))
+        (error-descriptor nil))
     (terpri)
-    (let ((res (eval (eval-sexp-add-defvars (elisp--preceding-sexp))
-                     lexical-binding)))
-      (unless (current-line-empty-p) (terpri))
-      (princ "     => ")
-      ;; (princ "     ⇒ ")
-      (princ (with-temp-buffer
-               (elisp--eval-last-sexp-print-value res t)
-               (buffer-string))))
-    (unless (current-line-empty-p) (terpri))))
+    (let* ((p0 (point))
+           (p1 (condition-case err
+                   (progn (eval-last-sexp (or eval-last-sexp-arg-internal t))
+                          (point))
+                 (error (setq error-descriptor err))))
+           (prompt (if error-descriptor
+                       "error-> "       ; error→
+                     "     => "         ; ⇒
+                     )))
+      (if (not error-descriptor)
+          (progn (goto-char p0)
+                 (princ prompt)
+                 (goto-char (+ p1 (length prompt))))
+        (princ prompt)
+        (princ (error-message-string error-descriptor))))
+    (terpri)
+    (when error-descriptor
+      ;; Re-throw the error signal
+      (signal (car error-descriptor) (cdr error-descriptor)))))
 
 (defun chunyang-eval-print-last-sexp-use-comment ()
   (interactive)
