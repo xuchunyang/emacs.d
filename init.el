@@ -351,7 +351,9 @@
          ("C-h t" . chunyang-switch-scratch)
          :map lisp-interaction-mode-map
          ("C-c C-l" . scratch-clear))
-  :commands chunyang-window-click-swap)
+  :commands (chunyang-window-click-swap
+             chunyang-abbreviate-file-name-at-point
+             chunyang-expand-file-name-at-point))
 
 (use-package chunyang-misc
   :commands chunyang-open-another-emacs)

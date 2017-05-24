@@ -247,6 +247,26 @@ I find the output of 'C-h v help-map' is hard to read."
      (list beg end l r)))
   (insert left-pair (delete-and-extract-region beg end) right-pair))
 
+
+;;; Filename
+
+(defun chunyang-abbreviate-file-name-at-point ()
+  (interactive "*")
+  (require 'dash)
+  (--if-let (thing-at-point 'filename)
+      (-let (((beg . end) (bounds-of-thing-at-point 'filename)))
+        (delete-region beg end)
+        (insert (abbreviate-file-name it)))
+    (user-error "No filename at point")))
+
+(defun chunyang-expand-file-name-at-point ()
+  (interactive "*")
+  (require 'dash)
+  (--if-let (thing-at-point 'filename)
+      (-let (((beg . end) (bounds-of-thing-at-point 'filename)))
+        (delete-region beg end)
+        (insert (expand-file-name it)))
+    (user-error "No filename at point")))
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
