@@ -235,11 +235,9 @@
   (add-to-list 'display-time-world-list '("Asia/Shanghai" "上海")))
 
 
-;; 设置引号的样式，默认 curve 样式会把「`like this'」显示成「‘like
-;; this’」，虽然美观，但给我造成了问题
-;;
-;; XXX @Emacs-25 @unstable @new-feature ???
-(setq text-quoting-style 'grave)
+;; Prefer the old fashion (< Emacs 25) `quote' in *Help* & *Messages*
+;; WARNNING: This is not a user option
+;; (setq text-quoting-style 'grave)
 
 ;;; Emacs session persistence
 (use-package desktop                    ; frame/window/buffer and global vars
