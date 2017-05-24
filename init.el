@@ -25,7 +25,7 @@
 (package-initialize)
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
-(load custom-file :no-error)
+(load custom-file :no-error :no-message)
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
