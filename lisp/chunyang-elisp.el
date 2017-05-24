@@ -339,7 +339,7 @@ picked according to the major-mode."
      (list buf key format)))
   ;; In case calling from Lisp and FORMAT is omitted
   (setq format (or format (chunyang-format-command-on-key--default-format)))
-  (let (key-name command result)
+  (let (key-name cmd result)
     (with-current-buffer (or buffer (current-buffer))
       (setq key-name (key-description key)
             cmd (key-binding key)))
