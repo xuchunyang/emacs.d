@@ -2114,6 +2114,16 @@ This should be add to `find-file-hook'."
 (use-package eww
   :defer t
   :preface
+  (defun chunyang-eww-visit-chrome-tab ()
+    "EWW URL of the current Chrome Tab."
+    (interactive)
+    (unless *is-mac*
+      (user-error
+       "`chunyang-eww-visit-chrome-tab' supports macOS only"))
+    (require 'grab-mac-link)
+    (require 'dash)
+    (-let (((url . _title) (grab-mac-link-chrome-1)))
+      (eww url)))
   (defun helm-eww-bookmarks ()
     "Alternative to `eww-list-bookmarks'."
     (interactive)
