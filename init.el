@@ -2019,7 +2019,24 @@ This should be add to `find-file-hook'."
 
 (setq message-directory (locate-user-emacs-file "var/Mail"))
 
+(use-package notmuch
+  :ensure t            ; Install from ELPA while it is not recommended
+  :commands notmuch
+  :config
+  (setq notmuch-search-oldest-first nil)
+
+  ;; Don't save sent mail locally
+  (setq notmuch-fcc-dirs nil)
+  
+  ;; Don't display notmuch logo, it's invisible in dark theme
+  (setq notmuch-show-logo nil))
+
+(use-package helm-notmuch
+  :ensure t
+  :defer t)
+
 (use-package mu4e
+  :disabled t                           ; Have trouble installing on macOS
   :preface
   ;; On Mac OS, I installed mu manually since MacPorts failed for some reason
   ;; thus I have to setup `load-path' for mu4e
