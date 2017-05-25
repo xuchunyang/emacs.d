@@ -8,6 +8,21 @@
 ;;; Code:
 
 
+;;; Debug init file
+
+(defun chunyang-quit-init-el ()
+  "Call it from init file to quit loading immediately."
+  (when load-in-progress
+    (with-current-buffer " *load*"
+      (message "%s:%s:%s"
+               load-file-name
+               (line-number-at-pos)
+               (buffer-substring-no-properties
+                (line-beginning-position)
+                (line-end-position)))
+      (goto-char (point-max)))))
+
+
 ;;; Start up
 
 (require 'package)
