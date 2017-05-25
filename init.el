@@ -2020,7 +2020,10 @@ This should be add to `find-file-hook'."
 (setq message-directory (locate-user-emacs-file "var/Mail"))
 
 (use-package notmuch
-  :ensure t            ; Install from ELPA while it is not recommended
+  ;; Installed notmuch from Git on macOS with:
+  ;; ./configure && make && sudo make install
+  :if *is-mac*
+  :load-path "/usr/local/share/emacs/site-lisp"
   :commands notmuch
   :config
   (setq notmuch-search-oldest-first nil)
