@@ -2025,7 +2025,13 @@ This should be add to `find-file-hook'."
   :if *is-mac*
   :load-path "/usr/local/share/emacs/site-lisp"
   :commands notmuch
+  :preface
+  (defun chunyang-notmuch-update ()
+    (interactive)
+    (shell-command "offlineimap && notmuch new &"))
   :config
+  (bind-key "U" #'chunyang-notmuch-update notmuch-hello-mode-map)
+
   (setq notmuch-search-oldest-first nil)
 
   ;; Don't save sent mail locally
