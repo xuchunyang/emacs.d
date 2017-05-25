@@ -2487,15 +2487,19 @@ Called with a prefix arg set search provider (default Google)."
 (use-package org
   :ensure org-plus-contrib
   :init
-  (when *is-mac*
-    (autoload 'org-mac-grab-link "org-mac-link"))
-  ;; For some reason, Emacs complains this function is not to known
-  ;; defined.
-  (autoload 'org-element-update-syntax "org-element")
+  (when *is-mac* (autoload 'org-mac-grab-link "org-mac-link"))
   :defer t
+  :bind (("C-c c" . org-capture)
+         ("C-c a" . org-agenda)
+         ("C-c l" . org-store-link))
   :config
-  ;; prevent demoting heading also shifting text inside sections
-  (setq org-adapt-indentation nil)
+
+  (setq org-directory          "~/Notes"
+        org-default-notes-file (concat org-directory "/notes.org")
+        org-agenda-files       (list org-directory))
+
+  ;; Prevent demoting heading also shifting text inside sections
+  ;; (setq org-adapt-indentation nil)
 
   (setq org-src-window-setup 'current-window)
 
@@ -2530,9 +2534,7 @@ Called with a prefix arg set search provider (default Google)."
   (setq org-confirm-babel-evaluate nil)
 
   ;; (org) Easy templates
-  (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC")
-                    ("S" "#+BEGIN_SRC sh\n?\n#+END_SRC")
-                    ("r" "#+BEGIN_SRC ruby\n?\n#+END_SRC"))
+  (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
         do (add-to-list 'org-structure-template-alist al 'append))
 
   (defun chunyang-org-info-lookup-symbol ()
