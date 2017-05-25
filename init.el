@@ -2736,8 +2736,6 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t
   :preface
-
-
   (defun chunyang-sly-eval-print-last-sexp ()
     "Like `chunyang-eval-print-last-sexp' in Emacs Lisp.
 Note that `sly-eval-last-expression' with prefix argument
@@ -2747,10 +2745,10 @@ provides similiar function."
       (sly-eval-async `(slynk:eval-and-grab-output ,string)
         (lambda (result)
           (cl-destructuring-bind (_output value) result
-            (unless (current-line-empty-p) (insert ?\n))
+            (unless (chunyang-current-line-empty-p) (insert ?\n))
             ;; (insert "     ⇒ " value)
             (insert "     => " value)
-            (unless (current-line-empty-p) (insert ?\n)))))))
+            (unless (chunyang-current-line-empty-p) (insert ?\n)))))))
 
   (defun chunyang-sly-eval-print-last-sexp-in-comment ()
     (interactive)
