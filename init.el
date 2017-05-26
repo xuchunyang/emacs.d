@@ -3128,6 +3128,14 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package gnugo                      ; 围棋
+  :ensure t
+  :disabled t)
+
+(use-package chess                      ; 国际象棋
+  :ensure t
+  :disabled t)
+
 
 
 ;;; init.el ends here
