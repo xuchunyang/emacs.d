@@ -2982,11 +2982,6 @@ provides similiar function."
   ;; `aa2u' is hard to recall
   (defalias 'ascii-art-to-unicode 'aa2u))
 
-(use-package sl
-  :ensure t
-  :load-path "~/src/sl.el"
-  :commands (sl sl-little sl-forever sl-little-forever sl-screen-saver))
-
 (use-package time-stamp                 ; Built-in
   :defer t
   :init (add-hook 'before-save-hook 'time-stamp))
@@ -3101,5 +3096,19 @@ provides similiar function."
   :ensure t
   ;; XXX defer loading this
   :init (pdf-tools-install))
+
+
+;;; Fun
+
+(use-package sl
+  :ensure t
+  :load-path "~/src/sl.el"
+  :commands (sl sl-little sl-forever sl-little-forever sl-screen-saver))
+
+(use-package xpm
+  :ensure t
+  :defer t)
+
+
 
 ;;; init.el ends here
