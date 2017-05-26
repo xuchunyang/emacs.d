@@ -2562,8 +2562,9 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package orglink
   :load-path "~/src/orglink"
-  :init (setq orglink-mode-lighter nil)
-  :commands (orglink-mode global-orglink-mode))
+  :commands (orglink-mode global-orglink-mode)
+  :init (add-hook 'emacs-lisp-mode-hook #'orglink-mode)
+  :config (setq orglink-mode-lighter nil))
 
 ;; TODO: Learn more about this package
 (use-package org-board                  ; Bookmark with Org
