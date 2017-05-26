@@ -360,14 +360,14 @@ picked according to the major-mode."
 
 ;; According to my test ('M-x trace-function undefined'), when I type
 ;; some undefined key, the command `undefined' will be called.
-(define-advice undefined (:after () do-something-when-key-binding-not-defined)
-  "Serve as common-not-found hook.
+;; (define-advice undefined (:after () do-something-when-key-binding-not-defined)
+;;   "Serve as common-not-found hook.
 
-At first, I want 'Did you mena xxx?', but I don't know how to implement."
-  ;; (message "%s is undefined"
-  ;;          (propertize (key-description (this-single-command-keys))
-  ;;                      'face 'error))
-  )
+;; At first, I want 'Did you mena xxx?', but I don't know how to implement."
+;;   (message "%s is undefined"
+;;            (propertize (key-description (this-single-command-keys))
+;;                        'face 'error))
+;;   )
 
 
 ;;; Remove advice in the Help buffer
