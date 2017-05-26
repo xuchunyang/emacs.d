@@ -1,4 +1,36 @@
-;; ace-link support
+;;; ace-link-notmuch.el --- ace-link support for notmuch  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2017  Chunyang Xu
+
+;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Package-Requires: ((avy "0.2.0"))
+;; Keywords: notmuch, link
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;; This package provides ace-link support for Notmuch's `notmuch-hello-mode'
+;; and `notmuch-show-mode'.
+;;
+;; Use `ace-link-notmuch-setup' to set up the default bindings.
+
+;;; Code:
+
+(require 'avy)
+(require 'wid-edit)
+
 (defun ace-link--notmuch-hello-collect ()
   "Collect the positions of visible links in *notmuch-hello*."
   (let (candidates pt)
@@ -31,8 +63,6 @@
                #'avy--overlay-pre))))
     (ace-link--notmuch-hello-action pt)))
 
-(define-key notmuch-hello-mode-map "o" 'ace-link-notmuch-hello)
-
 (defun ace-link--notmuch-show-collect ()
   "Collect the positions of visible links in `notmuch-show' buffer."
   (let (candidates pt)
@@ -60,6 +90,14 @@
                #'avy--overlay-pre))))
     (ace-link--notmuch-show-action pt)))
 
-(define-key notmuch-show-mode-map "o" 'ace-link-notmuch-show)
+;;;###autoload
+(defun ace-link-notmuch-setup (&optional key)
+  "Bind KEY to appropriate functions in appropriate keymaps."
+  (setq key (or key "o"))
+  (eval-after-load "notmuch-hello"
+    '(define-key notmuch-hello-mode-map key 'ace-link-notmuch-hello))
+  (eval-after-load "notuch-show"
+    '(define-key notmuch-show-mode-map key 'ace-link-notmuch-show)))
 
 (provide 'ace-link-notmuch)
+;;; ace-link-notmuch.el ends here

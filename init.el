@@ -2040,6 +2040,11 @@ This should be add to `find-file-hook'."
   ;; Don't display notmuch logo, it's invisible in dark theme
   (setq notmuch-show-logo nil))
 
+(use-package ace-link-notmuch
+  :ensure ace-link
+  :after notmuch
+  :config (ace-link-notmuch-setup))
+
 (use-package helm-notmuch
   :ensure t
   :defer t)
