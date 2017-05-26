@@ -786,10 +786,9 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
          ("C-c o C-s"   . mc/mark-all-in-region)))
 
 (use-package undo-tree                  ; Branching undo
-  :disabled t
   :ensure t
   :diminish undo-tree-mode
-  :init (global-undo-tree-mode))
+  :config (global-undo-tree-mode))
 
 (use-package nlinum                     ; Line numbers in display margin
   :ensure t
