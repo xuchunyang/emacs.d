@@ -2968,24 +2968,6 @@ provides similiar function."
   ;; is very annoying.
   (setq url-cookie-save-interval nil))
 
-(use-package opencc                     ; WIP
-  :disabled t
-  :load-path "~/src/emacs-opencc"
-  :commands (opencc-use-api opencc-use-cli opencc)
-  :defer t)
-
-(use-package chunyang-blog
-  :disabled t
-  :load-path "~/src/blog"
-  :commands chunyang-blog-publish)
-
-(use-package number-to-word             ; WIP
-  :disabled t
-  :defer t
-  :load-path "~/src/number-to-word")
-
-;; (use-package nginx-mode :ensure t :defer t)
-
 (use-package ascii-art-to-unicode
   :ensure t
   :defer t
