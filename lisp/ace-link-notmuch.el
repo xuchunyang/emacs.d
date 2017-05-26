@@ -95,9 +95,9 @@
   "Bind KEY to appropriate functions in appropriate keymaps."
   (setq key (or key "o"))
   (eval-after-load "notmuch-hello"
-    '(define-key notmuch-hello-mode-map key 'ace-link-notmuch-hello))
-  (eval-after-load "notuch-show"
-    '(define-key notmuch-show-mode-map key 'ace-link-notmuch-show)))
+    `(define-key notmuch-hello-mode-map ,key 'ace-link-notmuch-hello))
+  (eval-after-load "notmuch-show"
+    `(define-key notmuch-show-mode-map ,key 'ace-link-notmuch-show)))
 
 (provide 'ace-link-notmuch)
 ;;; ace-link-notmuch.el ends here
