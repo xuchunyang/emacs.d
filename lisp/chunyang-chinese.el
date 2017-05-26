@@ -103,5 +103,61 @@
         (set-mark (point))
         (forward-char 1)))))
 
+
+;;; Treat "M-。" as "M-."
+
+(defvar chinese-punctuation-alist
+  '(("，" . ",")
+    ("《" . "<")
+    ("。" . ".")
+    ("》" . ">")
+    ("／" . "/")
+    ("？" . "?")
+    ("‘" . "'")
+    ("’" . "'")
+    ("“" . "\"")
+    ("”" . "\"")
+    ("；" . ";")
+    ("：" . ":")
+    ("【" . "[")
+    ("「" . "{")
+    ("】" . "]")
+    ("」" . "}")
+    ("、" . "\\")
+    ("·" . "`")
+    ("～" . "~")
+    ("！" . "!")
+    ("（" . "(")
+    ("）" . ")")
+    ;; Not working: edmacro-parse-keys: C- must prefix a single character, not ——
+    ;; ("——" . "_")
+    ))
+
+;; 注意：改了这个值之后，用 `C-M-x' 重新加载 `chinese-punctuation-mode' 方能生效
+(defvar chinese-punctuation-mode-map
+  (let ((map (make-sparse-keymap)))
+    (dolist (prefix '("C-x " "C-c " "C-" "M-"))
+      (loop for (i . j) in chinese-punctuation-alist
+            for k1 = (concat prefix i)
+            for k2 = (concat prefix j)
+            do (define-key map (kbd k1)
+                 `(lambda ()
+                    (interactive)
+                    (let ((func (key-binding ,(kbd k2))))
+                      (cond ((null func)
+                             (call-interactively 'undefined))
+                            ((keymapp func)
+                             (error "I don't know how to deal with keymap (yet)"))
+                            (t
+                             (call-interactively func))))))))
+    map))
+
+(define-minor-mode chinese-punctuation-mode
+  "映射一些含中文全角标点的按键组合至英文，如 \[C-x 。] 至 \[C-x .].
+
+\\{chinese-punctuation-mode-map}"
+  :global t
+  :lighter " Chinese")
+
 (provide 'chunyang-chinese)
 ;;; chunyang-chinese.el ends here
