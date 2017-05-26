@@ -2055,6 +2055,12 @@ This should be add to `find-file-hook'."
 (use-package eww
   :defer t
   :preface
+  (defun chunyang-eww-toggle-image ()
+    (interactive)
+    (setq shr-inhibit-images (not shr-inhibit-images))
+    (eww-reload)
+    (message "Image is now %s"
+             (if shr-inhibit-images "off" "on")))  
   (defun chunyang-eww-visit-chrome-tab ()
     "EWW URL of the current Chrome Tab."
     (interactive)
@@ -2145,6 +2151,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
       "/Users/xcy/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"))
     (eww-write-bookmarks))
   :config
+  (bind-key "M" #'chunyang-eww-toggle-image eww-mode-map)
   ;; Sync bookmarks every time from Chrome
   (chunyang-eww-import-bookmarks-from-chrome)
   ;; XXX Both Google & DuckDuckGo are currently bocked in China
