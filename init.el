@@ -49,7 +49,25 @@
 
 ;; use-package.el is no longer needed at runtime
 (eval-when-compile
-  (require 'use-package))
+  (require 'use-package)
+
+  ;; Add new keyword `:homepage'
+  (add-to-list 'use-package-keywords :homepage t)
+
+  ;; I do not really know what is going on here, just copy-and-paste
+  ;; it from
+  ;; https://github.com/jwiegley/use-package#extending-use-package-with-new-or-modified-keywords
+  (defun use-package-normalize/:homepage (_name-symbol keyword args)
+    (use-package-only-one (symbol-name keyword) args
+      (lambda (_label arg)
+        (if (stringp arg)
+            arg
+          (use-package-error ":homepage wants a URL (a string)")))))
+
+  (defun use-package-handler/:homepage (_name-symbol _keyword _homepage _rest _state)
+    ;; Do sth or just do nothing?
+    nil))
+
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
 
@@ -3106,6 +3124,7 @@ provides similiar function."
   :commands (sl sl-little sl-forever sl-little-forever sl-screen-saver))
 
 (use-package xpm
+  :homepage "http://www.gnuvola.org/software/xpm/"
   :ensure t
   :defer t)
 
