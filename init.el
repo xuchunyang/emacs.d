@@ -368,7 +368,8 @@
          ("C-c C-l" . scratch-clear))
   :commands (chunyang-window-click-swap
              chunyang-abbreviate-file-name-at-point
-             chunyang-expand-file-name-at-point))
+             chunyang-expand-file-name-at-point
+             chunyang-show-number-as-char))
 
 (use-package chunyang-misc
   :commands chunyang-open-another-emacs)
