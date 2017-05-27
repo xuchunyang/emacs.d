@@ -1026,7 +1026,9 @@ Intended to be added to `isearch-mode-hook'."
 (use-package hl-todo
   :ensure t
   :defer t
-  :init (add-hook 'prog-mode-hook #'hl-todo-mode)
+  :init
+  (add-hook 'prog-mode-hook #'hl-todo-mode)
+  (add-hook 'yaml-mode-hook #'hl-todo-mode)
   :config
   (add-to-list 'hl-todo-keyword-faces '("IDEA" . "#d0bf8f")))
 
@@ -2588,7 +2590,9 @@ Called with a prefix arg set search provider (default Google)."
 (use-package orglink
   :load-path "~/src/orglink"
   :commands (orglink-mode global-orglink-mode)
-  :init (add-hook 'emacs-lisp-mode-hook #'orglink-mode)
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'orglink-mode)
+  (add-hook 'yaml-mode-hook       #'orglink-mode)
   :config (setq orglink-mode-lighter nil))
 
 ;; TODO: Learn more about this package
