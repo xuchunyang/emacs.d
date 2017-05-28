@@ -2034,10 +2034,24 @@ This should be add to `find-file-hook'."
       user-mail-address    "mail@xuchunyang.me"
       smtpmail-smtp-server "smtp.exmail.qq.com"
       send-mail-function   'smtpmail-send-it)
-;; don't keep message buffers around
-(setq message-kill-buffer-on-exit t)
 
-(setq message-directory (locate-user-emacs-file "var/Mail"))
+(use-package message
+  :defer t
+  :preface
+  (defun chunyang-message-signature ()
+    "Setup message signature adaptively."
+    (require 'epa-mail)
+    (let ((real-recipients (epa-mail-default-recipients)))
+      (cond ((member "emacs-orgmode@gnu.org" real-recipients)
+             (call-interactively #'org-version))
+            ((member "emacs-devel@gnu.org" real-recipients)
+             nil)
+            (t nil))))
+  :config
+  ;; don't keep message buffers around
+  (setq message-kill-buffer-on-exit t)
+  (setq message-directory (locate-user-emacs-file "var/Mail"))
+  (setq message-signature 'chunyang-message-signature))
 
 (use-package notmuch
   ;; Installed notmuch from Git on macOS with:
