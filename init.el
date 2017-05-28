@@ -2058,7 +2058,10 @@ This should be add to `find-file-hook'."
   (setq notmuch-fcc-dirs nil)
   
   ;; Don't display notmuch logo, it's invisible in dark theme
-  (setq notmuch-show-logo nil))
+  (setq notmuch-show-logo nil)
+
+  ;; Tell others I am using Notmuch
+  (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full))
 
 (use-package ace-link-notmuch
   :ensure ace-link
