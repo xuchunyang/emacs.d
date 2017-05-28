@@ -2500,6 +2500,11 @@ Called with a prefix arg set search provider (default Google)."
 (use-package org
   :ensure org-plus-contrib
   :init
+  ;; Prefer Org mode from git if available
+  (add-to-list 'load-path "~/src/org-mode/lisp")
+  ;; `:append' to make sure newer `htmlize.el' from Melpa is used
+  (add-to-list 'load-path "~/src/org-mode/contrib/lisp" :append)
+  (add-to-list 'Info-directory-list "~/src/org-mode/doc")
   (when *is-mac* (autoload 'org-mac-grab-link "org-mac-link"))
   :defer t
   :bind (("C-c c" . org-capture)
