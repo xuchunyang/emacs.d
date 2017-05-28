@@ -1,3 +1,4 @@
+# -*- coding: utf-8; -*-
 #+TITLE: Emacs Solutions to [[http://www.vimgolf.com/][VimGolf]]
 #+OPTIONS: toc:nil
 
