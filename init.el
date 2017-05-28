@@ -2526,10 +2526,6 @@ Called with a prefix arg set search provider (default Google)."
   (require 'org-eww)
   (require 'org-notmuch)
 
-  ;; XXX Work-around for the org link highlightting problem
-  ;; [[notmuch:id:CAFyQvY32gg33eOB973RwaKUFPjGSK5TRLBCoGZBTganJmx75dw@mail.gmail.com][Email from Kaushal Modi: Re: {O} Bug: link formating pr]]
-  (setq org-highlight-links (delete 'plain org-highlight-links))
-  
   (use-package ob-lisp                  ; Common Lisp
     :defer t
     :config
