@@ -1779,9 +1779,14 @@ See also `describe-function-or-variable'."
   :ensure t)
 
 
-
-
 ;;; Version Control
+
+(use-package diff-mode
+  :defer t
+  :config
+  ;; I used this key for M-o (`chunyang-ace-window')
+  (unbind-key "M-o" diff-mode-map))
+
 (use-package magit
   :ensure t
   :bind (("C-x g"   . magit-status)
