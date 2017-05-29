@@ -2079,6 +2079,10 @@ This should be add to `find-file-hook'."
   ;; Don't display notmuch logo, it's invisible in dark theme
   (setq notmuch-show-logo nil)
 
+  ;; Don't enable `visual-line-mode' by default
+  (remove-hook 'notmuch-show-hook
+               #'notmuch-show-turn-on-visual-line-mode)
+
   ;; Tell others I am using Notmuch
   (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full))
 
