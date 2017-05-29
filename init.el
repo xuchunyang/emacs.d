@@ -51,22 +51,14 @@
 (eval-when-compile
   (require 'use-package)
 
-  ;; Add new keyword `:homepage'
+  ;; Add new keyword
+  ;; <https://github.com/jwiegley/use-package#extending-use-package-with-new-or-modified-keywords>
   (add-to-list 'use-package-keywords :homepage t)
-
-  ;; I do not really know what is going on here, just copy-and-paste
-  ;; it from
-  ;; https://github.com/jwiegley/use-package#extending-use-package-with-new-or-modified-keywords
-  (defun use-package-normalize/:homepage (_name-symbol keyword args)
-    (use-package-only-one (symbol-name keyword) args
-      (lambda (_label arg)
-        (if (stringp arg)
-            arg
-          (use-package-error ":homepage wants a URL (a string)")))))
-
-  (defun use-package-handler/:homepage (_name-symbol _keyword _homepage _rest _state)
-    ;; Do sth or just do nothing?
-    nil))
+  (defalias 'use-package-normalize/:homepage #'ignore)
+  (defalias 'use-package-handler/:homepage #'ignore)
+  (add-to-list 'use-package-keywords :tips t)
+  (defalias 'use-package-normalize/:tips #'ignore)
+  (defalias 'use-package-handler/:tips #'ignore))
 
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
@@ -2042,6 +2034,9 @@ This should be add to `find-file-hook'."
 
 (use-package message
   :defer t
+  :tips
+  ((message-elide-region         . "C-c C-e 省略一段冗长的引用")
+   (message-mark-inserted-region . "C-c M-m 给一段文字（常常是代码）加上框"))
   :preface
   (defun chunyang-message-signature ()
     "Setup message signature adaptively."
