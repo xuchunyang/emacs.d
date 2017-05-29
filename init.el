@@ -54,11 +54,11 @@
   ;; Add new keyword
   ;; <https://github.com/jwiegley/use-package#extending-use-package-with-new-or-modified-keywords>
   (add-to-list 'use-package-keywords :homepage t)
-  (defalias 'use-package-normalize/:homepage #'ignore)
-  (defalias 'use-package-handler/:homepage #'ignore)
+  (defun use-package-normalize/:homepage (&rest _))
+  (defun use-package-handler/:homepage (&rest _))
   (add-to-list 'use-package-keywords :tips t)
-  (defalias 'use-package-normalize/:tips #'ignore)
-  (defalias 'use-package-handler/:tips #'ignore))
+  (defun use-package-normalize/:tips (&rest _))
+  (defun use-package-handler/:tips (&rest _)))
 
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
