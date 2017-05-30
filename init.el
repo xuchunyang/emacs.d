@@ -2273,6 +2273,9 @@ Called with a prefix arg set search provider (default Google)."
 
 (bind-key "M-s M-s" #'web-search)
 
+
+;;; Music
+
 (use-package emms
   :disabled t
   :ensure t
@@ -2305,8 +2308,10 @@ Called with a prefix arg set search provider (default Google)."
   (add-hook 'emms-player-seeked-functions #'chunyang-emms-indicate-seek 'append))
 
 (use-package bongo
+  :disabled t
   :ensure t
   :defer t)
+
 
 ;;; Dictionary
 (use-package youdao-dictionary
