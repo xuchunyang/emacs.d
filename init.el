@@ -2062,7 +2062,7 @@ This should be add to `find-file-hook'."
   :preface
   (defun chunyang-notmuch-update ()
     (interactive)
-    (shell-command "offlineimap && notmuch new &"))
+    (shell-command "notmuch new &"))
   :config
   (bind-key "U" #'chunyang-notmuch-update notmuch-hello-mode-map)
 
