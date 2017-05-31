@@ -904,19 +904,27 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 (use-package imenu
   :defer t
-  :preface
-  (defun chunyang-imenu-build-expression (name)
-    (list
-     name (rx-to-string
-           `(and ,(concat "(" name)
-                 symbol-end (1+ (syntax whitespace)) symbol-start
-                 (group-n 1 (1+ (or (syntax word) (syntax symbol))))
-                 symbol-end)) 1))
-  (defun chunyang-imenu-setup-elisp ()
-    (add-to-list 'lisp-imenu-generic-expression
-                 (chunyang-imenu-build-expression "defhydra")))
-  :init
-  (add-hook 'emacs-lisp-mode-hook #'chunyang-imenu-setup-elisp))
+  :config
+  ;; Support `use-package' and `defhydra'
+  (eval-after-load 'lisp-mode
+    `(let ((sym-regexp (or (bound-and-true-p lisp-mode-symbol-regexp)
+                           "\\(?:\\sw\\|\\s_\\|\\\\.\\)+")))
+       (add-to-list
+        'lisp-imenu-generic-expression
+        (list "Packages"
+              (concat "^\\s-*("
+                      ,(eval-when-compile
+                         (regexp-opt '("use-package" "require") t))
+                      "\\s-+\\(" sym-regexp "\\)")
+              2))
+       (add-to-list
+        'lisp-imenu-generic-expression
+        (list "Hydras"
+              (concat "^\\s-*("
+                      ,(eval-when-compile
+                         (regexp-opt '("defhydra") t))
+                      "\\s-+\\(" sym-regexp "\\)")
+              2)))))
 
 
 ;;; Search
