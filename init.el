@@ -1335,6 +1335,7 @@ Intended to be added to `isearch-mode-hook'."
 
 
 ;;; Generic Lisp
+
 (use-package paredit                    ; Balanced sexp editing
   :ensure t
   :diminish paredit-mode
@@ -1360,15 +1361,9 @@ Intended to be added to `isearch-mode-hook'."
 
 ;;; Emacs Lisp
 
-(use-package lisp-mode
+(use-package elisp-mode
   :defer t
   :preface
-  ;; (defadvice pp-display-expression (after make-read-only (expression out-buffer-name) activate)
-  ;;   "Enable `view-mode' in the output buffer - if any - so it can be closed with `\"q\"."
-  ;;   (when (get-buffer out-buffer-name)
-  ;;     (with-current-buffer out-buffer-name
-  ;;       (view-mode))))
-
   (defun chunyang-elisp-function-or-variable-quickhelp (symbol)
     "Display a short documentation of function or variable using `popup'.
 
@@ -1406,38 +1401,16 @@ See also `describe-function-or-variable'."
   (bind-key "M-:"     #'pp-eval-expression)
   (bind-key "C-c t d" #'toggle-debug-on-error)
 
-
-  (use-package rebox2
-    :disabled t
-    :ensure t
-    :diminish rebox-mode
-    :bind ("M-q" . rebox-dwim)
-    :preface
-    (defun chunyang--elisp-comment-setup ()
-      (setq-local rebox-style-loop '(21 23 25 27))
-      (setq-local rebox-min-fill-column 40))
-    :config
-    (add-hook 'emacs-lisp-mode-hook #'chunyang--elisp-comment-setup))
-
-  ;; TODO make my own hook func
-  (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-  (use-package ipretty
-    :disabled t                         ; Turn off for some time
-    :ensure t
-    :defer t
-    :init (add-hook 'emacs-lisp-mode-hook #'ipretty-mode))
-
-  ;; (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
-  ;;   (add-hook hook 'turn-on-elisp-slime-nav-mode))
-  (use-package aggressive-indent
-    :ensure t
-    :defer t
-    :diminish aggressive-indent-mode
-    :init
-    (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
-
   (when (version< emacs-version "25")
     (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
+
+(use-package aggressive-indent
+  :disabled t
+  :ensure t
+  :defer t
+  :diminish aggressive-indent-mode
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
 
 (use-package el-search
   :if (version< "25" emacs-version)
