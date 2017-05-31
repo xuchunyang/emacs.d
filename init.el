@@ -898,22 +898,19 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 (use-package imenu
   :defer t
-  :init
-  ;; Helper function
-  (defun my-imenu--build-expression (name)
-    "Return `imenu-generic-expression' of macro or function NAME."
+  :preface
+  (defun chunyang-imenu-build-expression (name)
     (list
      name (rx-to-string
            `(and ,(concat "(" name)
                  symbol-end (1+ (syntax whitespace)) symbol-start
                  (group-n 1 (1+ (or (syntax word) (syntax symbol))))
                  symbol-end)) 1))
-
-  (defun my-imenu--setup-elisp ()
-    (dolist (name '("use-package" "defhydra"))
-      (add-to-list 'imenu-generic-expression (my-imenu--build-expression name))))
-
-  (add-hook 'emacs-lisp-mode-hook #'my-imenu--setup-elisp))
+  (defun chunyang-imenu-setup-elisp ()
+    (add-to-list 'lisp-imenu-generic-expression
+                 (chunyang-imenu-build-expression "defhydra")))
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'chunyang-imenu-setup-elisp))
 
 
 ;;; Search
