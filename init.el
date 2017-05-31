@@ -109,8 +109,9 @@
 (defconst *is-mac* (eq system-type 'darwin))
 
 (use-package ns-win
-  :defer t
   :if *is-mac*
+  :no-require t
+  :defer t
   :init
   (setq mac-command-modifier 'meta
         mac-option-modifier 'control))
@@ -150,6 +151,8 @@
 
 (use-package grab-x-link
   :if *is-gnu-linux*
+  :no-require t               ; Silence byte-compile warnning on macOS
+  :commands grab-x-link
   :load-path "/home/xcy/src/grab-x-link")
 
 
@@ -220,12 +223,14 @@
 
 (use-package spacemacs-theme
   :ensure t
+  :no-require t                      ; Silence byte-compiling warnings
   :defer t
   :init (setq spacemacs-theme-comment-bg nil
               spacemacs-theme-org-height nil))
 
 (use-package tomorrow-theme
   :ensure color-theme-sanityinc-tomorrow
+  :no-require t
   :defer t)
 
 ;; Mode line
@@ -676,6 +681,7 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 (use-package visual-line-mode
   :defer t
+  :no-require t
   :init
   ;; NOTE: `visual-line-mode' 或者说 `word-wrap' 不能处理中文
   ;; https://emacs-china.org/t/topic/2616
@@ -935,6 +941,7 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 ;; Notes that isearch is not a package and it is loaded from the very
 ;; beginning
 (use-package isearch
+  :no-require t
   :defer t
   :preface
   (setq isearch-allow-scroll t)
@@ -1972,7 +1979,8 @@ See also `describe-function-or-variable'."
                 tramp-file-name-regexp)))
 
 (use-package chunyang-sudo-edit
-  :defer t                              ; Fake package so don't load
+  :no-require t
+  :defer t
   :preface
   ;; Wow, Tramp makes it possible to edit local file as "sudo", see
   ;; (info "(tramp) Default Method")
@@ -2817,6 +2825,7 @@ provides similiar function."
   (define-key sly-mode-map "\C-j" #'chunyang-sly-eval-print-last-sexp-in-comment))
 
 (use-package sly-mrepl
+  :no-require t                      ; Silence byte-compiling warnning
   :defer t
   :config
   ;; Enable Paredit in REPL too
