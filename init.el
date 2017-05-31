@@ -1348,7 +1348,9 @@ Intended to be added to `isearch-mode-hook'."
   :ensure t
   :diminish paredit-mode
   :commands paredit-mode
-  :init (add-hook 'lisp-mode-hook 'paredit-mode)
+  :init
+  (add-hook 'lisp-mode-hook 'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
   :config
   (unbind-key "M-r" paredit-mode-map) (bind-key "M-R" #'paredit-raise-sexp  paredit-mode-map)
   (unbind-key "M-s" paredit-mode-map) (bind-key "M-S" #'paredit-splice-sexp paredit-mode-map)
