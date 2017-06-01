@@ -2052,6 +2052,11 @@ This should be add to `find-file-hook'."
     (interactive)
     (shell-command "notmuch new &"))
   :config
+  ;; 为了搜索中文, 'XAPIAN_CJK_NGRAM' 必须在 'notmuch new' 前设置
+  ;; (同样的，不要忘记在给 Shell 也做同样的设置）
+  (unless (getenv "XAPIAN_CJK_NGRAM")
+    (setenv "XAPIAN_CJK_NGRAM" "1"))
+
   (bind-key "U" #'chunyang-notmuch-update notmuch-hello-mode-map)
 
   (setq notmuch-search-oldest-first nil)
