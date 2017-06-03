@@ -904,27 +904,7 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 (use-package imenu
   :defer t
-  :config
-  ;; Support `use-package' and `defhydra'
-  (eval-after-load 'lisp-mode
-    `(let ((sym-regexp (or (bound-and-true-p lisp-mode-symbol-regexp)
-                           "\\(?:\\sw\\|\\s_\\|\\\\.\\)+")))
-       (add-to-list
-        'lisp-imenu-generic-expression
-        (list "Packages"
-              (concat "^\\s-*("
-                      ,(eval-when-compile
-                         (regexp-opt '("use-package" "require") t))
-                      "\\s-+\\(" sym-regexp "\\)")
-              2))
-       (add-to-list
-        'lisp-imenu-generic-expression
-        (list "Hydras"
-              (concat "^\\s-*("
-                      ,(eval-when-compile
-                         (regexp-opt '("defhydra") t))
-                      "\\s-+\\(" sym-regexp "\\)")
-              2)))))
+  :config)
 
 
 ;;; Search
@@ -1410,6 +1390,25 @@ See also `describe-function-or-variable'."
   (bind-key "C-h C-." #'chunyang-elisp-function-or-variable-quickhelp)
   (bind-key "M-:"     #'pp-eval-expression)
   (bind-key "C-c t d" #'toggle-debug-on-error)
+
+  (let ((sym-regexp (or (bound-and-true-p lisp-mode-symbol-regexp)
+                        "\\(?:\\sw\\|\\s_\\|\\\\.\\)+")))
+    (add-to-list
+     'lisp-imenu-generic-expression
+     (list "Packages"
+           (concat "^\\s-*("
+                   (eval-when-compile
+                     (regexp-opt '("use-package" "require") t))
+                   "\\s-+\\(" sym-regexp "\\)")
+           2))
+    (add-to-list
+     'lisp-imenu-generic-expression
+     (list "Hydras"
+           (concat "^\\s-*("
+                   (eval-when-compile
+                     (regexp-opt '("defhydra") t))
+                   "\\s-+\\(" sym-regexp "\\)")
+           2)))
 
   (when (version< emacs-version "25")
     (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
