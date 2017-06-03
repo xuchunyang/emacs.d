@@ -3085,6 +3085,20 @@ provides similiar function."
       (byte-compile-file el)))
   :commands chunyang-fun-roll-news)
 
+(use-package chunyang-picture
+  :commands (chunyang-download-bing-picture
+             chunyang-about-honey-select)
+  :bind ("C-h C-a" . chunyang-about-honey-select)
+  :config
+  ;; (add-hook 'emacs-startup-hook
+  ;;           (lambda ()
+  ;;             (toggle-frame-maximized)
+  ;;             (sit-for 1)
+  ;;             (about-emacs)))
+  ;; (setq fancy-splash-image
+  ;;       (chunyang-download-bing-picture "~/Pictures" "bing.jpg"))
+  )
+
 (use-package fortune
   :commands (fortune fortune-message)
   :config
