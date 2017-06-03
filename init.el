@@ -58,7 +58,10 @@
   (defun use-package-handler/:homepage (&rest _))
   (add-to-list 'use-package-keywords :tips t)
   (defun use-package-normalize/:tips (&rest _))
-  (defun use-package-handler/:tips (&rest _)))
+  (defun use-package-handler/:tips (&rest _))
+  (add-to-list 'use-package-keywords :summary t)
+  (defun use-package-normalize/:summary (&rest _))
+  (defun use-package-handler/:summary (&rest _)))
 
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
@@ -3185,6 +3188,11 @@ provides similiar function."
 (use-package chess                      ; 国际象棋
   :ensure t
   :disabled t)
+
+(use-package spinner
+  :summary "Add spinners and progress-bars to the mode-line for ongoing operations"
+  :ensure t
+  :defer t)
 
 
 
