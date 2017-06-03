@@ -69,7 +69,8 @@
 
 ;;;###autoload
 (defun chunyang-about-honey-select (&optional dir)
-  "Like `about-emacs' but replace Emacs's logo with a Honey Select picture."
+  "Fetch a picture on Honey Select to DIR and display in *About GNU Emacs*.
+Argument nil or omitted means save to `default-directory'."
   (interactive)
   (unless dir
     (setq dir (let ((default "~/Pictures/Honey Select"))
@@ -77,28 +78,37 @@
                     default
                   default-directory))))
   (let ((default-directory dir)
-        (process-environment (append '("LC_ALL=C") process-environment)))
-    (start-process
-     "wget" "*wget*" "wget"
-     "--server-response"
-     "--content-disposition"
-     "--no-clobber"
-     "http://signavatar.com/50020_s.gif")
-    (display-buffer "*wget*")
-    (set-process-sentinel
-     (get-buffer-process "*wget*")
-     (lambda (_proc event)
-       (cond ((string= event "finished\n")
-              (with-current-buffer "*wget*"
-                (save-excursion
-                  (goto-char (point-min))
-                  (re-search-forward "  Location: \\(.+\\)$")
-                  (setq fancy-splash-image
-                        (expand-file-name (file-name-nondirectory (match-string 1))))
-                  (kill-buffer)
-                  (delete-other-windows)))
-              (about-emacs)))))))
-
+        (process-environment (append '("LC_ALL=C") process-environment))
+        buf proc)
+    (setq buf (get-buffer-create "*wget*"))
+    (setq proc (get-buffer-process buf))
+    (when proc (kill-process proc))
+    (with-current-buffer buf
+      (setq proc (start-process
+                  "wget" buf "wget"
+                  "--server-response"
+                  "--content-disposition"
+                  "--no-clobber"
+                  "http://signavatar.com/50020_s.gif"))
+      (require 'shell)
+      (shell-mode)
+      (display-buffer buf)
+      (set-process-sentinel
+       proc
+       (lambda (_proc event)
+         (cond ((string= event "finished\n")
+                (with-current-buffer buf
+                  (save-excursion
+                    (goto-char (point-min))
+                    (re-search-forward "  Location: \\(.+\\)$")
+                    (setq fancy-splash-image
+                          (expand-file-name (file-name-nondirectory (match-string 1))))
+                    (kill-buffer)
+                    (delete-other-windows)))
+                (about-emacs)))))
+      ;; Use the comint filter for proper handling of carriage motion
+      ;; (see `comint-inhibit-carriage-motion'),.
+      (set-process-filter proc 'comint-output-filter))))
 
 (provide 'chunyang-picture)
 ;;; chunyang-picture.el ends here
