@@ -110,5 +110,17 @@ Argument nil or omitted means save to `default-directory'."
       ;; (see `comint-inhibit-carriage-motion'),.
       (set-process-filter proc 'comint-output-filter))))
 
+(defun chunyanb-about-emacs-refresh ()
+  "Choose another picture randomly to display in *About GNU Emacs*."
+  (interactive)
+  (let ((default-directory "~/Pictures/Honey Select/")
+        file)
+    (assert (file-exists-p default-directory))
+    (setq file (shell-command-to-string "find . -type f -name '*.png' | shuf -n1 | tr -d '\n'"))
+    (assert file)
+    (setq file (expand-file-name file))
+    (setq fancy-splash-image file)
+    (about-emacs)))
+
 (provide 'chunyang-picture)
 ;;; chunyang-picture.el ends here

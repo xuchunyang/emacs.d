@@ -3091,7 +3091,8 @@ provides similiar function."
 (use-package chunyang-picture
   :commands (chunyang-download-bing-picture
              chunyang-about-honey-select)
-  :bind ("C-h C-a" . chunyang-about-honey-select)
+  ;; :bind ("C-h C-a" . chunyang-about-honey-select)
+  :bind (:map splash-screen-keymap ("g" . chunyanb-about-emacs-refresh))
   :config
   ;; (add-hook 'emacs-startup-hook
   ;;           (lambda ()
