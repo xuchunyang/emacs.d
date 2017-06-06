@@ -2058,7 +2058,7 @@ This should be add to `find-file-hook'."
      (lambda (_proc _event)
        (require 'dash)
        (--when-let (get-buffer "*notmuch-hello*")
-         (with-current-buffer buffer
+         (with-current-buffer it
            (notmuch-refresh-this-buffer))))))
   :config
   ;; 为了搜索中文, 'XAPIAN_CJK_NGRAM' 必须在 'notmuch new' 前设置
