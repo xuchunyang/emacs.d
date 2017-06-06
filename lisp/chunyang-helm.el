@@ -122,7 +122,46 @@
   (defun chunyang-helm-create-buffer-other-window-cmd ()
     (interactive)
     (with-helm-alive-p
-      (helm-exit-and-execute-action 'chunyang-helm-create-buffer-other-window))))
+     (helm-exit-and-execute-action 'chunyang-helm-create-buffer-other-window)))
+
+  (defvar helm-source-ivy-view 
+    (helm-build-sync-source "Ivy Views"
+      :candidates
+      (lambda ()
+        (require 'ivy)
+        (mapcar (lambda (view)
+                  (cons (car view) view))
+                ivy-views))
+      :nomark t
+      :action
+      (helm-make-actions
+       "Open"
+       (lambda (view)
+         (delete-other-windows)
+         (let (
+               ;; silence "Directory has changed on disk"
+               (inhibit-message t))
+           (ivy-set-view-recur (cadr view))))
+       "Delete"
+       (lambda (view)
+         (setq ivy-views (delete view ivy-views))))))
+
+  (setq helm-mini-default-sources
+	'(helm-source-buffers-list
+	  helm-source-ivy-view
+	  helm-source-recentf
+	  helm-source-buffer-not-found)))
+
+
+;;; Use Ivy's view with Helm
+;; https://oremacs.com/2016/06/27/ivy-push-view/
+
+(use-package ivy
+  :ensure t
+  :bind (("C-c v" . ivy-push-view)
+         ("C-c V" . ivy-pop-view)))
+
+
 
 (use-package helm-files
   :defer t
