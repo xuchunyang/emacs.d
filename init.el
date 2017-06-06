@@ -2012,6 +2012,16 @@ This should be add to `find-file-hook'."
 ;; (use-package projectile :disabled t)
 
 
+;;; GPG | GnuPG
+
+;; XXX I have GnuPG 2.0.30 installed via MacPorts, but Emacs requires
+;; 2.1.6 according to `epg-config--program-alist'. However, if I set
+;; `epg-gpg-program' manually, it will owrks for me. What will not
+;; work?
+(when *is-mac*
+  (custom-set-variables '(epg-gpg-program  "gpg2")))
+
+
 ;;; Web & IRC & Email & RSS
 
 ;; Just by providing the following, Emacs can already send emails
@@ -2019,6 +2029,8 @@ This should be add to `find-file-hook'."
 ;; Password is provided in ~/.authinfo file (this file should be encrypted via gpg)
 (setq user-full-name       "Chunyang Xu"
       user-mail-address    "mail@xuchunyang.me"
+      ;; This is required for ~/.authinfo.gpg but not ~/.authinfo
+      smtpmail-smtp-user   user-mail-address
       smtpmail-smtp-server "smtp.exmail.qq.com"
       send-mail-function   'smtpmail-send-it)
 
@@ -2069,6 +2081,8 @@ This should be add to `find-file-hook'."
   (bind-key "U" #'chunyang-notmuch-update notmuch-hello-mode-map)
 
   (setq notmuch-search-oldest-first nil)
+
+  (setq notmuch-crypto-process-mime t)
 
   ;; Don't save sent mail locally
   (setq notmuch-fcc-dirs nil)
