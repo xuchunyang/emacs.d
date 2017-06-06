@@ -2056,8 +2056,10 @@ This should be add to `find-file-hook'."
     (set-process-sentinel
      (get-buffer-process "*Async Shell Command*")
      (lambda (_proc _event)
-       (with-current-buffer "*notmuch-hello*"
-         (notmuch-refresh-this-buffer)))))
+       (require 'dash)
+       (--when-let (get-buffer "*notmuch-hello*")
+         (with-current-buffer buffer
+           (notmuch-refresh-this-buffer))))))
   :config
   ;; 为了搜索中文, 'XAPIAN_CJK_NGRAM' 必须在 'notmuch new' 前设置
   ;; (同样的，不要忘记在给 Shell 也做同样的设置）
