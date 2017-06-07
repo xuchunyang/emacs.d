@@ -45,6 +45,7 @@
         (delete-region (point-min)
                        (1+ (re-search-forward "^$" nil t)))
         (goto-char (point-min))
+        (require 'json)
         (setq json (json-read))
         ;; http://bing.com/az/hprichbg/rb/PonteSantAngelo_ZH-CN15413822788_1920x1080.jpg
         (setq pic-url
