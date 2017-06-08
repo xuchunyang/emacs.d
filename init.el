@@ -3101,6 +3101,7 @@ provides similiar function."
   (let ((org (locate-user-emacs-file "lisp/chunyang-fun.org"))
         (el  (locate-user-emacs-file "lisp/chunyang-fun.el")))
     (when (file-newer-than-file-p org el)
+      (require 'ob)
       (org-babel-tangle-file org)
       (byte-compile-file el)))
   :commands chunyang-fun-roll-news)
