@@ -224,7 +224,7 @@
 ;; I change theme periodically so I don't want hard-code it here,
 ;; instead, I use the Custom via 'M-x customize-themes'.
 
-;; All right, engouh is enough, ALL themes are safe.
+;; All right, enough is enough, ALL themes are safe to me.
 (setq custom-safe-themes t)
 
 (use-package spacemacs-theme
