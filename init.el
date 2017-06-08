@@ -3178,6 +3178,7 @@ provides similiar function."
 ;;; PDF
 
 (use-package pdf-tools
+  :disabled t
   :if *is-gnu-linux*
   :ensure t
   ;; XXX defer loading this
