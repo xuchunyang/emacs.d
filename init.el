@@ -2618,6 +2618,7 @@ Called with a prefix arg set search provider (default Google)."
          (call-interactively 'info-lookup-symbol)))
       (switch-to-buffer-other-window "*info*")))
 
+  ;; Or use C-c C-v C-x (`org-babel-do-key-sequence-in-edit-buffer') instead
   (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map))
 
 (use-package grab-mac-link
