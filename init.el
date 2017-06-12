@@ -2709,7 +2709,15 @@ Called with a prefix arg set search provider (default Google)."
         (call-process "cc" nil t nil "-E" file)
         (goto-char (point-min))
         (re-search-forward symbol nil t)
-        (display-buffer (current-buffer))))))
+        (display-buffer (current-buffer)))))
+  :config
+  ;; Add imenu support for section comment like this
+  ;; /*** includes ***/
+  (add-to-list
+   'cc-imenu-c-generic-expression
+   (list "Section"
+         (rx line-start "/***" (group (1+ not-newline)) "***/" line-end)
+         1)))
 
 (use-package irony
   :disabled t
