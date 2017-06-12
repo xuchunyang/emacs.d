@@ -1327,6 +1327,13 @@ Intended to be added to `isearch-mode-hook'."
   :ensure t
   :defer t)
 
+(use-package rebox2
+  :ensure t
+  :defer t)
+
+(use-package chunyang-comment
+  :commands chunyang-comment-section)
+
 
 ;;; Generic Lisp
 
