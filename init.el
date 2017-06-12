@@ -2544,6 +2544,16 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package org
   :ensure org-plus-contrib
+  :preface
+  (defun chunyang-org-info-lookup-symbol ()
+    "Call `info-lookup-symbol' within a source edit buffer if needed."
+    (interactive)
+    (if (not (org-in-src-block-p))
+        (call-interactively 'info-lookup-symbol)
+      (org-babel-do-in-edit-buffer
+       (save-excursion
+         (call-interactively 'info-lookup-symbol)))
+      (switch-to-buffer-other-window "*info*")))
   :init
   ;; Prefer Org mode from git if available
   (add-to-list 'load-path "~/src/org-mode/lisp")
@@ -2564,6 +2574,7 @@ Called with a prefix arg set search provider (default Google)."
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda)
          ("C-c l" . org-store-link))
+  :bind (:map org-mode-map ("C-h S" . chunyang-org-info-lookup-symbol))
   :config
 
   (setq org-directory          "~/Notes"
@@ -2610,17 +2621,6 @@ Called with a prefix arg set search provider (default Google)."
   ;; (org) Easy templates
   (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
         do (add-to-list 'org-structure-template-alist al 'append))
-
-  (defun chunyang-org-info-lookup-symbol ()
-    "Call `info-lookup-symbol' within a source edit buffer if needed."
-    (interactive)
-    (if (not (org-in-src-block-p))
-        (call-interactively 'info-lookup-symbol)
-      (org-babel-do-in-edit-buffer
-       (save-excursion
-         (call-interactively 'info-lookup-symbol)))
-      (switch-to-buffer-other-window "*info*")))
-
   ;; Or use C-c C-v C-x (`org-babel-do-key-sequence-in-edit-buffer') instead
   (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map))
 
