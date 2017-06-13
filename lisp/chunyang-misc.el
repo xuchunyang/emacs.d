@@ -343,5 +343,23 @@ For testing / debugging Emacs init file."
       ;; through open, i.e., --args
       (format "open -n -a %s --args -Q" (shell-quote-argument app))))))
 
+
+;;; Timer | Stopwatch
+
+(defun chunyang-timer ()
+  "Stopwatch."
+  (interactive)
+  (let ((t1 (current-time))
+        t2)
+    (while (/= ?\C-g
+               (read-key
+                (concat (current-time-string t1) " | "
+                        "Timer started. Stop with C-g"))))
+    (setq t2 (current-time))
+    (message "%s - %s = %fs"
+             (current-time-string t1)
+             (current-time-string t2)
+             (float-time (time-subtract t2 t1)))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
