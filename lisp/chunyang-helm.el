@@ -122,7 +122,7 @@
   (defun chunyang-helm-create-buffer-other-window-cmd ()
     (interactive)
     (with-helm-alive-p
-     (helm-exit-and-execute-action 'chunyang-helm-create-buffer-other-window)))
+      (helm-exit-and-execute-action 'chunyang-helm-create-buffer-other-window)))
 
   (defvar helm-source-ivy-view 
     (helm-build-sync-source "Ivy Views"
@@ -150,7 +150,10 @@
 	'(helm-source-buffers-list
 	  helm-source-ivy-view
 	  helm-source-recentf
-	  helm-source-buffer-not-found)))
+	  helm-source-buffer-not-found))
+
+  ;; It can be very slow by checking remote files (Tramp)
+  (setq helm-buffer-skip-remote-checking t))
 
 
 ;;; Use Ivy's view with Helm

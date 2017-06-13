@@ -1965,13 +1965,17 @@ See also `describe-function-or-variable'."
   ;; Dired, Magit, Shell (M-x shell /ssh:xuchunyang.me:/bin/bash) and
   ;; Eshell works, while ansi-term doesn't not. See
   ;; (info "(tramp) Remote processes")
+  ;;
+  ;; To disable Tramp, set `tramp-mode' to nil.
   :defer t
   :config
   ;; Disable version control to avoid delays:
   (setq vc-ignore-dir-regexp
         (format "\\(%s\\)\\|\\(%s\\)"
                 vc-ignore-dir-regexp
-                tramp-file-name-regexp)))
+                tramp-file-name-regexp))
+  ;; By default, Tramp re-computes directory every 10s.
+  (setq tramp-completion-reread-directory-timeout nil))
 
 (use-package chunyang-sudo-edit
   :no-require t
