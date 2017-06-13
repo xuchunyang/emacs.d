@@ -2398,7 +2398,17 @@ Called with a prefix arg set search provider (default Google)."
 (use-package echo
   :commands echo-mode)
 
-
+;; [[https://www.moedict.tw/about.html][萌典]] - 繁体 - 台湾
+;; See also [[https://github.com/kuanyui/moedict.el][kuanyui/moedict.el: Moe Dictionary client for Emacs. 萌典 Emacs 版客戶端]]
+(defun chunyang-moedict (query)
+  (interactive
+   (let ((char (char-after)))
+     (list (read-string "萌典: "
+                        (and char
+                             (> (string-bytes (string char)) 1)
+                             (string char))))))
+  ;; TODO: Render the reuslt
+  (shell-command (format "curl 'https://www.moedict.tw/uni/%s'" query)))
 
 
 ;;; Shell (including shell-command, shell, term and Eshell)
