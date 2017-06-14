@@ -2098,7 +2098,6 @@ This should be add to `find-file-hook'."
 (use-package notmuch
   ;; Installed notmuch from Git on macOS with:
   ;; ./configure && make && sudo make install
-  :if *is-mac*
   :load-path "/usr/local/share/emacs/site-lisp"
   :commands notmuch
   :preface
