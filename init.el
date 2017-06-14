@@ -2244,9 +2244,13 @@ your Emacs doesn't have libxml2 support"))
     "Import bookmarks from Google Chrome's Bookmarks JSON file.
 Note that this will OVERRIDE the existing EWW bookmarks."
     (interactive)
-    (chunyang-eww-import-bookmarks-from-chrome-1
-     (json-read-file
-      "/Users/xcy/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"))
+    (let ((bookmark-file
+           (car (cl-delete-if-not
+                 'file-exists-p
+                 `("~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"
+                   "~/.config/chromium/Default/Bookmarks")))))
+      (chunyang-eww-import-bookmarks-from-chrome-1
+       (json-read-file bookmark-file)))
     (eww-write-bookmarks))
   :config
   (bind-key "M" #'chunyang-eww-toggle-image eww-mode-map)
