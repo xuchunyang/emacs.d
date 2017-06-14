@@ -323,6 +323,31 @@ If with prefix argument, search current directory."
   :config (setq helm-org-headings-fontify t))
 
 
+;;; mdfind(1)
+
+(defun helm-mdfind ()
+  "mdfind(1) within helm."
+  (interactive)
+  (require 'helm)
+  (helm :sources
+        (helm-build-async-source "mdfind"
+          :candidates-process
+          (lambda ()
+            (let ((proc
+                   (start-process-shell-command
+                    "mdfind"
+                    helm-buffer
+                    (concat "mdfind " helm-pattern))))
+              (prog1 proc
+                (set-process-sentinel
+                 proc
+                 (lambda (_process _event))))))
+          :nohighlight t
+          :requires-pattern 2
+          :action helm-find-files-actions)
+        :buffer "*helm-mdfind*"))
+
+
 ;;; Manage advises
 (defun advice--members (symbol)
   (let ((definition (advice--symbol-function symbol))

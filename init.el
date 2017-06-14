@@ -1860,7 +1860,32 @@ See also `describe-function-or-variable'."
 
 (use-package gitignore-mode             ; Edit .gitignore files
   :ensure t
-  :defer t)
+  :defer t
+  :preface
+  (defun helm-gitignore-template ()
+    (interactive)
+    (require 'helm)
+    (helm :sources
+          (helm-build-in-buffer-source "Gitignore Templates"
+            :data
+            (split-string
+             (shell-command-to-string
+              "curl -s https://api.github.com/gitignore/templates | jq -r '.[]'")
+             "\n")
+            :action
+            (let ((new-action
+                   (lambda (fun)
+                     (lambda (lang)
+                       (funcall
+                        fun
+                        (shell-command-to-string
+                         (format
+                          "curl -s https://api.github.com/gitignore/templates/%s | jq -r '.source'"
+                          lang)))))))
+              (helm-make-actions
+               "Insert" (funcall new-action #'insert)
+               "Copy" (funcall new-action #'kill-new))))
+          :buffer "*helm-gitignore-templates*")))
 
 
 ;;; Tools and utilities
@@ -2144,7 +2169,7 @@ This should be add to `find-file-hook'."
     (-let (((url . _title) (grab-mac-link-chrome-1)))
       (eww url)))
   (defun helm-eww-bookmarks ()
-    "Alternative to `eww-list-bookmarks'."
+    "My EWW bookmarks manager using helm."
     (interactive)
     (require 'helm)
     (require 'eww)
@@ -2153,11 +2178,12 @@ This should be add to `find-file-hook'."
             :candidates
             (lambda ()
               (cl-loop for elt in (eww-read-bookmarks)
-                       collect (cons (plist-get elt :title)
-                                     (plist-get elt :url))))
+                       collect
+                       (cons (plist-get elt :title)
+                             (plist-get elt :url))))
             :action (helm-make-actions
-                     "eww" #'eww
-                     "browse-url" #'browse-url
+                     "Eww" #'eww
+                     "Browse-url" #'browse-url
                      "Copy URL" (lambda (url)
                                   (kill-new url)
                                   (message "Copied: %s" url))))
@@ -2342,6 +2368,21 @@ Called with a prefix arg set search provider (default Google)."
   :disabled t
   :ensure t
   :defer t)
+
+(defun helm-music-player ()
+  "My little Music Player using helm."
+  (interactive)
+  (require 'helm)
+  (helm :sources
+        (helm-build-in-buffer-source "Music"
+          :data
+          (split-string
+           (shell-command-to-string "find ~/Music -name '*.mp3'")
+           "\n")
+          :action
+          (lambda (mp3)
+            (shell-command (format "mpg123 '%s' &" mp3))))
+        :buffer "*helm music*"))
 
 
 ;;; Dictionary
