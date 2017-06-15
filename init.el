@@ -3253,6 +3253,9 @@ provides similiar function."
 ;; 临时解决方法，有效但不清楚有没有副作用
 ;; (setq redisplay-dont-pause nil)
 
+(use-package opencc
+  :load-path "~/src/emacs-opencc")
+
 
 ;;; PDF
 
