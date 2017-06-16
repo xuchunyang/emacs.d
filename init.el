@@ -39,6 +39,8 @@
 
 (package-initialize)
 
+;; All right, enough is enough, ALL themes are safe to me.
+(setq custom-safe-themes t)
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file :no-error :no-message)
 
@@ -223,9 +225,6 @@
 
 ;; I change theme periodically so I don't want hard-code it here,
 ;; instead, I use the Custom via 'M-x customize-themes'.
-
-;; All right, enough is enough, ALL themes are safe to me.
-(setq custom-safe-themes t)
 
 (use-package spacemacs-theme
   :ensure t
