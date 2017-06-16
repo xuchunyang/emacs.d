@@ -1246,6 +1246,7 @@ Intended to be added to `isearch-mode-hook'."
 
 (use-package eldoc
   :defer t
+  :diminish eldoc-mode
   :config
   ;; Alternative to `eldoc-minibuffer-message'
   (defun chunyang-eldoc-header-line-message (format-string &rest args)
