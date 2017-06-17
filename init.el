@@ -39,10 +39,7 @@
 
 (package-initialize)
 
-;; All right, enough is enough, ALL themes are safe to me.
-(setq custom-safe-themes t)
 (setq custom-file (locate-user-emacs-file "custom.el"))
-(load custom-file :no-error :no-message)
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
@@ -3291,6 +3288,13 @@ provides similiar function."
   :summary "Add spinners and progress-bars to the mode-line for ongoing operations"
   :ensure t
   :defer t)
+
+
+;;; Load `custom-file' in the end
+
+;; All right, enough is enough, ALL themes are safe to me.
+(setq custom-safe-themes t)
+(load custom-file :no-error :no-message)
 
 
 
