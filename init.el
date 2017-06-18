@@ -2617,6 +2617,16 @@ Called with a prefix arg set search provider (default Google)."
        (save-excursion
          (call-interactively 'info-lookup-symbol)))
       (switch-to-buffer-other-window "*info*")))
+
+  (defun chunyang-org-babel-open-tangle-file ()
+    (interactive)
+    (unless (org-in-src-block-p)
+      (user-error "Point is not in a source code block"))
+    (let* ((spec (car (cdr (car (org-babel-tangle-single-block 1 t)))))
+           (get-spec (lambda (name) (cdr (assoc name (nth 4 spec)))))
+           (tangle (funcall get-spec :tangle)))
+      (when tangle
+        (find-file tangle))))
   :init
   ;; Prefer Org mode from git if available
   (add-to-list 'load-path "~/src/org-mode/lisp")
