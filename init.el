@@ -655,9 +655,6 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 (use-package electric                   ; Electric code layout
   :init (electric-layout-mode))
 
-;; TODO: 支持中文标点（引号等。为什么中文括号默认就支持？）
-;; TODO: 如何删除 pair （paredit 这样的工具有很好的支持，但是非 lisp 环境下怎么办？）
-;; TODO: 如何直接改变 pair (cycle-quotes)
 (use-package elec-pair                  ; Electric pairs
   :init (electric-pair-mode))
 
@@ -666,8 +663,7 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 ;; Configure a reasonable fill column, indicate it in the buffer and
 ;; enable automatic filling
-;; (setq-default fill-column 80)
-;;
+(setq-default fill-column 80)
 ;; or change it interactively via C-x f (`set-fill-column')
 
 ;; I prefer indent long-line code myself
