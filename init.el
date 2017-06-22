@@ -212,10 +212,8 @@
    )
   ('w32
    (set-face-attribute 'default nil :font "Source Code Pro-10"))
-  ('x (dolist (charset '(kana han symbol cjk-misc bopomofo))
-        (set-fontset-font (frame-parameter nil 'font)
-                          charset
-                          (font-spec :family "Noto Sans Mono CJK SC" :size 14)))))
+  ('x
+   (set-face-attribute 'default nil :font "Source Code Pro-10")))
 
 
 ;; Theme
