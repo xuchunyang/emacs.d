@@ -388,7 +388,8 @@
 
 (use-package chunyang-misc
   :commands (chunyang-open-another-emacs
-             chunyang-timer))
+             chunyang-timer
+             chunyang-random-word))
 
 (use-package chunyang-buffers    ; Personal buffer tools
   :config (add-hook 'kill-buffer-query-functions
