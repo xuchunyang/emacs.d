@@ -119,7 +119,7 @@
         mac-option-modifier 'control))
 
 (use-package exec-path-from-shell
-  :if (eq window-system 'ns)       ; Only for the official Cocoa Emacs
+  :if window-system
   :ensure t
   :defer t
   :init
