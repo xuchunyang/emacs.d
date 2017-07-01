@@ -3295,7 +3295,15 @@ provides similiar function."
   :defer t)
 
 
-;;; Load `custom-file' in the end
+;;; Utilities
+
+(use-package restclient
+  :summary "Test HTTP API"
+  :ensure t
+  :defer t)
+
+
+;;; Custom
 
 ;; All right, enough is enough, ALL themes are safe to me.
 (setq custom-safe-themes t)
