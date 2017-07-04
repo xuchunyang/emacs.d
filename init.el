@@ -2111,6 +2111,11 @@ This should be add to `find-file-hook'."
 
   (bind-key "U" #'chunyang-notmuch-update notmuch-hello-mode-map)
 
+  (add-hook 'notmuch-hello-mode-hook
+            (defun chunyang-notmuch-hello-mode-setup ()
+              (add-hook 'window-configuration-change-hook
+                        #'notmuch-refresh-this-buffer nil :local)))
+
   (setq notmuch-search-oldest-first nil)
 
   (setq notmuch-crypto-process-mime t)
