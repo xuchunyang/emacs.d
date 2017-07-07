@@ -32,3 +32,6 @@ ChangeLog
 
 # Org tangle file
 lisp/chunyang-fun.el
+
+# Extra
+/init-extra.el

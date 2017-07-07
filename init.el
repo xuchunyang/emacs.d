@@ -2650,10 +2650,6 @@ Called with a prefix arg set search provider (default Google)."
   :bind (:map org-mode-map ("C-h S" . chunyang-org-info-lookup-symbol))
   :config
 
-  (setq org-directory          "~/Notes"
-        org-default-notes-file (concat org-directory "/notes.org")
-        org-agenda-files       (list org-directory))
-
   ;; Prevent demoting heading also shifting text inside sections
   ;; (setq org-adapt-indentation nil)
 
@@ -3321,5 +3317,8 @@ provides similiar function."
 (load custom-file :no-error :no-message)
 
 
+;;; Extra
+
+(load "init-extra.el" :no-error)
 
 ;;; init.el ends here
