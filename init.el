@@ -3325,6 +3325,6 @@ provides similiar function."
 
 ;;; Extra
 
-(load "init-extra.el" :no-error)
+(load (locate-user-emacs-file "init-extra.el") :no-error)
 
 ;;; init.el ends here
