@@ -95,9 +95,10 @@ If BUFFER is displayed in some window, select that window instead."
                       (other-buffer (current-buffer))))))
   (cond
    ((eq buffer (window-buffer)))
-   (t (if-let ((win (get-buffer-window buffer)))
-          (select-window win)
-        (switch-to-buffer buffer)))))
+   (t (let ((win (get-buffer-window buffer)))
+        (if win
+            (select-window win)
+          (switch-to-buffer buffer))))))
 
 ;; Another solution (which is more general)
 ;;
