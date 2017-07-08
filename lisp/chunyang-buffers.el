@@ -108,6 +108,8 @@ If BUFFER is displayed in some window, select that window instead."
 ;;     (apply orig-fun args)))
 
 
+;;; Copy `buffer-file-name'
+
 (defun chunyang-copy-buffer-file-name (&optional buffer)
   "Save filename of BUFFER is visiting to kill-ring."
   (interactive)
@@ -116,6 +118,30 @@ If BUFFER is displayed in some window, select that window instead."
         (progn (kill-new file)
                (message "Copied: %s" file))
       (user-error "Not visiting a file"))))
+
+
+;;; Reopen last closed file
+
+;; Adapted from https://emacs-china.org/t/topic/3318
+
+(defvar chunyang-last-closed-file-list nil)
+
+(defun chunyang-last-closed-file-track ()
+  (when buffer-file-name
+    (push buffer-file-name chunyang-last-closed-file-list)))
+
+(defun chunyang-last-closed-file-reopen ()
+  (interactive)
+  (if chunyang-last-closed-file-list
+      (find-file (pop chunyang-last-closed-file-list))
+    (user-error "No last closed file to reopen")))
+
+(define-minor-mode chunyang-last-closed-file-mode
+  "Reopen last closed file."
+  :global t
+  (if chunyang-last-closed-file-mode
+      (add-hook 'kill-buffer-hook #'chunyang-last-closed-file-track)
+    (remove-hook 'kill-buffer-hook #'chunyang-last-closed-file-track)))
 
 (provide 'chunyang-buffers)
 ;;; chunyang-buffers.el ends here

@@ -392,8 +392,10 @@
              chunyang-random-word))
 
 (use-package chunyang-buffers    ; Personal buffer tools
-  :config (add-hook 'kill-buffer-query-functions
-                    #'lunaryorn-do-not-kill-important-buffers))
+  :config
+  (add-hook 'kill-buffer-query-functions
+            #'lunaryorn-do-not-kill-important-buffers)
+  (chunyang-last-closed-file-mode))
 
 (bind-key "O"     #'delete-other-windows special-mode-map)
 (bind-key "Q"     #'kill-this-buffer     special-mode-map)
