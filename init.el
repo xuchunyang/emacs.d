@@ -1186,6 +1186,10 @@ Intended to be added to `isearch-mode-hook'."
 
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
+  (add-hook 'emacs-lisp-mode-hook
+            (defun chunyang-flycheck-disable-checkdoc ()
+              (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))))
+
   (defun chunyang-flycheck-toggle-checkdoc ()
     (interactive)
     (setq-local flycheck-disabled-checkers
