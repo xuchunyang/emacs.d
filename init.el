@@ -133,7 +133,8 @@
   :if *is-mac*
   :commands (chunyang-mac-Terminal-send-region
              chunyang-mac-Terminal-cd
-             chunyang-mac-Finder-reveal))
+             chunyang-mac-Finder-reveal
+             chunyang-mac-edit-file-tags))
 
 ;; XXX WIP MacPorts interface (manage ports, discover ports etc)
 (use-package macports

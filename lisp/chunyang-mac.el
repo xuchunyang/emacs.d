@@ -71,5 +71,40 @@
             "end tell")
            (expand-file-name file))))
 
+
+;;; Tags
+
+(declare-function dired-get-filename "dired" (&optional localp no-error-if-not-filep))
+
+(defun chunyang-mac-edit-file-tags (file)
+  "Edit the macOS file Tags of FILE.
+
+For usage of the macOS file Tags, see 
+URL `https://support.apple.com/kb/PH25325?locale=en_US'."
+  (interactive
+   (let* ((default (cond ((eq major-mode 'dired-mode)
+                          (dired-get-filename nil t))
+                         (t (thing-at-point 'filename))))
+          (prompt (if default
+                      (format "File (default %s): " default)
+                    "File: "))
+          (file (read-file-name prompt nil default)))
+     (list file)))
+  (unless (eq system-type 'darwin)
+    (user-error "The OS '%s' is not supported" system-type))
+  (unless (executable-find "tag")
+    (user-error "The program 'tag' is not found"))
+  (let* ((old-tags
+          (with-temp-buffer
+            (call-process "tag" nil t nil "--no-name" file)
+            (goto-char (point-min))
+            (buffer-substring (line-beginning-position) (line-end-position))))
+         (new-tags
+          (read-string
+           (format "Set Tags of '%s': "
+                   (abbreviate-file-name file))
+           old-tags)))
+    (call-process "tag" nil nil nil "--set" new-tags file)))
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
