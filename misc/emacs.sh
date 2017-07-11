@@ -69,3 +69,9 @@ shell_command ()
     cmd=$*
     emacsclient --eval "(shell-command \"$cmd\")" --eval '(open-emacs-window)'
 }
+
+# cd to default-directory of current-buffer of Emacs
+cd_to_emacs ()
+{
+    cd "$( emacsclient --eval '(with-current-buffer (car (buffer-list)) (expand-file-name default-directory))' | tr -d '"' )"
+}
