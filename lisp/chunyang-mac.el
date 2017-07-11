@@ -24,7 +24,7 @@
 ;;; Code:
 
 
-;;; Working with Terminal.app
+;;; Terminal.app
 
 (defun chunyang-mac-escape-quote (s)
   "Convert \" in S into \\\"."
@@ -54,6 +54,27 @@
                      (read-directory-name "cd to: ")
                    default-directory))))
   (chunyang-mac-Terminal-send-string (format "cd '%s'" dir)))
+
+
+;;; iTerm.app
+
+(defun chunyang-mac-iTerm-cd (dir)
+  "Switch to iTerm and change directory there to DIR."
+  (interactive (list
+                ;; Because shell doesn't expand 'dir'
+                (expand-file-name
+                 (if current-prefix-arg
+                     (read-directory-name "cd to: ")
+                   default-directory))))
+  (let ((cmd (format "cd %s" dir)))
+    (do-applescript
+     (concat
+      "tell application \"iTerm\"\n"
+      "    activate\n"
+      "    tell current session of current window\n"
+      "        write text \"" cmd "\"\n"
+      "        end tell\n"
+      "end tell"))))
 
 
 ;;; Finder.app
