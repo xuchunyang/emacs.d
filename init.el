@@ -135,7 +135,9 @@
              chunyang-mac-Terminal-cd
              chunyang-mac-iTerm-cd
              chunyang-mac-Finder-reveal
-             chunyang-mac-edit-file-tags))
+             chunyang-mac-edit-file-tags
+             chunyang-mac-search-tags
+             helm-chunyang-mac-tags))
 
 ;; XXX WIP MacPorts interface (manage ports, discover ports etc)
 (use-package macports

@@ -127,5 +127,45 @@ URL `https://support.apple.com/kb/PH25325?locale=en_US'."
            old-tags)))
     (call-process "tag" nil nil nil "--set" new-tags file)))
 
+(defun chunyang-mac-all-tags ()
+  (require 'seq)
+  (seq-uniq
+   (split-string
+    (shell-command-to-string
+     ;; the short version: tag -f '*' -t -g -N -0
+     "tag --find '*' --tags --garrulous --no-name --nul")
+    "\0" t)))
+
+(defun chunyang-mac-search-tags (tags)
+  (interactive
+   (list (completing-read-multiple "Tags: " (chunyang-mac-all-tags))))
+  (shell-command (concat "tag --find " (mapconcat #'identity tags ","))))
+
+(require 'helm)
+(require 'helm-utils)                   ; `helm-open-dired'
+
+(defun helm-chunyang-mac-tags (tags)
+  (interactive
+   (list
+    (helm-comp-read
+     "Tags: "
+     (chunyang-mac-all-tags)
+     :must-match t
+     :marked-candidates t
+     :fc-transformer 'helm-adaptive-sort
+     :buffer "*helm mac tags*")))
+  (helm :sources
+        (helm-build-in-buffer-source "Tags (mac)"
+          :data (split-string
+                 (shell-command-to-string
+                  (concat "tag --nul --find " (mapconcat #'identity tags ",")))
+                 "\0" t)
+          :action (helm-make-actions
+                   "Open" (lambda (file)
+                            (shell-command (concat "open " (shell-quote-argument file))))
+                   "Reveal with Finder" #'chunyang-mac-Finder-reveal
+                   "Reveal with Dired" #'helm-open-dired))
+        :buffer "*helm find file by tags*"))
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
