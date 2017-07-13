@@ -1,0 +1,15 @@
+#!/usr/bin/env emacs --no-site-file --script
+;;; csv-to-org-table --- Convert CSV to Org mode table  -*- lexical-binding: t; -*-
+(require 'org)
+
+(insert-file-contents "/dev/stdin")
+
+(org-table-convert-region (point-min) (point-max))
+(goto-char (point-min))
+(org-table-insert-hline :above)
+(goto-char (1- (point-max)))
+(org-table-insert-hline)
+
+(princ (buffer-string))
+
+;;; csv-to-org-table ends here
