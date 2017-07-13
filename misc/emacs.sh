@@ -75,3 +75,12 @@ cd_to_emacs ()
 {
     cd "$( emacsclient --eval '(with-current-buffer (car (buffer-list)) (expand-file-name default-directory))' | tr -d '"' )"
 }
+
+recentf ()
+{
+    file=$( emacsclient --eval recentf-save-file | tr --delete '"' )
+    grep --only-matching '".*"' "${file}" |
+        tr --delete '"'                   |
+        peco                              |
+        xargs --delimiter "\n" emacsclient
+}
