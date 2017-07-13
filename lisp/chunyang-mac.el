@@ -155,7 +155,8 @@ URL `https://support.apple.com/kb/PH25325?locale=en_US'."
      :fc-transformer 'helm-adaptive-sort
      :buffer "*helm mac tags*")))
   (helm :sources
-        (helm-build-in-buffer-source "Tags (mac)"
+        (helm-build-in-buffer-source (concat "File with tag "
+                                             (mapconcat #'identity tags ","))
           :data (split-string
                  (shell-command-to-string
                   (concat "tag --nul --find " (mapconcat #'identity tags ",")))
