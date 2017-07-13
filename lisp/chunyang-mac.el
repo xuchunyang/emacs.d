@@ -58,6 +58,17 @@
 
 ;;; iTerm.app
 
+(defun chunyang-mac-iTerm-write-text (text)
+  "Write TEXT into iTerm like user types it with keyboard."
+  (do-applescript
+   (concat
+    "tell application \"iTerm\"\n"
+    "    activate\n"
+    "    tell current session of current window\n"
+    "        write text \"" text "\"\n"
+    "        end tell\n"
+    "end tell")))
+
 (defun chunyang-mac-iTerm-cd (dir)
   "Switch to iTerm and change directory there to DIR."
   (interactive (list
@@ -67,14 +78,7 @@
                      (read-directory-name "cd to: ")
                    default-directory))))
   (let ((cmd (format "cd %s" dir)))
-    (do-applescript
-     (concat
-      "tell application \"iTerm\"\n"
-      "    activate\n"
-      "    tell current session of current window\n"
-      "        write text \"" cmd "\"\n"
-      "        end tell\n"
-      "end tell"))))
+    (chunyang-mac-iTerm-write-text cmd)))
 
 
 ;;; Finder.app
