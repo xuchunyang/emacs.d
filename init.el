@@ -2667,6 +2667,18 @@ Called with a prefix arg set search provider (default Google)."
   ;; Prevent demoting heading also shifting text inside sections
   ;; (setq org-adapt-indentation nil)
 
+  (setq org-agenda-files '("~/org/todo.org"))
+  (setq org-capture-templates '(("t" "Todo [inbox]" entry
+                                 (file+headline "~/org/todo.org" "Inbox")
+                                 "* TODO %i%?")))
+  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)"
+                                      "|"
+                                      "DONE(d)" "CANCELLED(c)")))
+  (setq org-agenda-custom-commands
+        '(("n" "Agenda and all TODOs" ((agenda "") (alltodo "")))
+          ("i" "Inbox" tags-todo "LEVEL=2+CATEGORY=\"inbox\"")
+          ("p" "Project" tags-todo "LEVEL=2+CATEGORY=\"project\"")))
+
   (setq org-src-window-setup 'current-window)
 
   ;; Support link to Manpage, EWW and Notmuch
@@ -3329,10 +3341,5 @@ provides similiar function."
 ;; All right, enough is enough, ALL themes are safe to me.
 (setq custom-safe-themes t)
 (load custom-file :no-error :no-message)
-
-
-;;; Extra
-
-(load (locate-user-emacs-file "init-extra.el") :no-error)
 
 ;;; init.el ends here
