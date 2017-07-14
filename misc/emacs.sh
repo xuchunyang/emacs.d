@@ -8,27 +8,22 @@ magit ()
     (cd ${repo:=`pwd`} && emacsclient --eval '(magit-status)')
 }
 
-info_in_emacs ()
+info-in-emacs ()
 {
     local node=$1
     emacsclient --eval "(shell/info \"$node\")" --eval '(open-emacs-window)'
 }
 
-find_file ()
+find-file ()
 {
     local file=$1
     emacsclient --eval "(find-file \"$file\")" --eval '(open-emacs-window)'
 }
 
-alias ff=find_file
-alias dired=find_file
+alias ff=find-file
+alias dired=find-file
 
-t ()
-{
-    emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda nil \"n\"))"
-}
-
-elisp_repl ()
+elisp-repl ()
 {
     emacs --batch --eval '(while t (message "%s" (eval (read (read-string "> ")))))'
 }
@@ -38,40 +33,40 @@ calc ()
     emacs -Q --batch --eval "(message \"%s\" (calc-eval \"$1\"))"
 }
 
-grep_in_emacs ()
+grep-in-emacs ()
 {
     args=$*
     # For simplicity, prefix with -n/--line-number, -H/--with-filename and --color
     emacsclient --eval "(grep \"grep -nH --color $args\")" --eval '(open-emacs-window)'
 }
 
-rg_in_emacs ()
+rg-in-emacs ()
 {
     pat=$1                      # regexp
     emacsclient --eval "(grep \"rg --smart-case --no-heading --line-number -e $pat\")" \
                 --eval '(open-emacs-window)'
 }
 
-git_grep_in_emacs ()
+git-grep-in-emacs ()
 {
     pat=$1                      # basic regexp like Grep
     emacsclient --eval "(vc-git-grep \"$pat\" \"\" default-directory)" --eval '(open-emacs-window)'
 }
 
-man_in_emacs ()
+man-in-emacs ()
 {
     topic=$1
     emacsclient --eval "(man \"$topic\")" --eval '(open-emacs-window)'
 }
 
-shell_command ()
+shell-command ()
 {
     cmd=$*
     emacsclient --eval "(shell-command \"$cmd\")" --eval '(open-emacs-window)'
 }
 
 # cd to default-directory of current-buffer of Emacs
-cd_to_emacs ()
+cd-to-emacs ()
 {
     cd "$( emacsclient --eval '(with-current-buffer (car (buffer-list)) (expand-file-name default-directory))' | tr -d '"' )"
 }
@@ -83,4 +78,21 @@ recentf ()
         tr --delete '"'                   |
         peco                              |
         xargs --delimiter "\n" emacsclient
+}
+
+org-agenda ()
+{
+    # Default to the Inbox
+    cmdkey=${1-i}
+    # NOTE: Assuming init-org.el has all Org Agenda setup, because loading a
+    # whole init.el is slow
+    emacs --batch --load ~/.emacs.d/init-org.el \
+          --eval "(org-batch-agenda-csv \"$cmdkey\")" |
+        csv-to-org-table
+}
+
+# FIXME: Rewrite this
+t ()
+{
+    emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda nil \"n\"))"
 }
