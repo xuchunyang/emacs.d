@@ -2180,19 +2180,23 @@ This should be add to `find-file-hook'."
     (require 'helm)
     (require 'eww)
     (helm :sources
-          (helm-build-sync-source "EWW Bookmarks"
-            :candidates
-            (lambda ()
-              (cl-loop for elt in (eww-read-bookmarks)
-                       collect
-                       (cons (plist-get elt :title)
-                             (plist-get elt :url))))
-            :action (helm-make-actions
-                     "Eww" #'eww
-                     "Browse-url" #'browse-url
-                     "Copy URL" (lambda (url)
-                                  (kill-new url)
-                                  (message "Copied: %s" url))))
+          (list
+           (helm-build-sync-source "EWW Bookmarks"
+             :candidates
+             (lambda ()
+               (cl-loop for elt in (eww-read-bookmarks)
+                        collect
+                        (cons (plist-get elt :title)
+                              (plist-get elt :url))))
+             :action (helm-make-actions
+                      "Eww" #'eww
+                      "Browse-url" #'browse-url
+                      "Copy URL" (lambda (url)
+                                   (kill-new url)
+                                   (message "Copied: %s" url)))
+             :filtered-candidate-transformer #'helm-adaptive-sort)
+           (helm-build-dummy-source "EWW URL"
+             :action #'eww))
           :buffer "*Helm EWW Bookmarks*"))
 
   (defun chunyang-eww-import-bookmarks (bookmarks-html-file)
