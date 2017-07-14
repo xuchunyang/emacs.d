@@ -88,7 +88,9 @@ org-agenda ()
     # whole init.el is slow
     emacs --batch --load ~/.emacs.d/init-org.el \
           --eval "(org-batch-agenda-csv \"$cmdkey\")" |
-        csv-to-org-table
+        csv-to-org-table                              |
+        # Replace Org link with just the _description_ part
+        sed -E -e 's/\[\[([^][]+)]\[([^][]+)]]/[4m\2[0m/' -e 's/\[\[([^][]+)]]/[4m\1[0m/'
 }
 
 # FIXME: Rewrite this
