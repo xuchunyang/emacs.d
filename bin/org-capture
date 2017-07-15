@@ -1,0 +1,33 @@
+#!/usr/bin/env emacs --no-site-file --script
+;;; org-capture --- Org capture from the command line -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2017  Chunyang Xu
+
+;; Author: Chunyang Xu <mail@xuchunyang.me>
+
+;;; Commentary:
+
+;; Usage:
+;;
+;; ~$ echo do something about the dog | org-capture
+
+;; NOTE The shebang works on macOS since the argument is splited but
+;; not on GNU/Linux, one cah use 'emacs --script /path/to/the/script'
+;; instead.
+
+;; NOTE I decide to use the shell function `org-capture' from
+;; ~/.emacs.d/misc/emacs.sh for now.
+
+;;; Code:
+
+(insert-file-contents "/dev/stdin")
+
+(goto-char (point-min))
+
+(shell-command (format "emacsclient --no-wait \"org-protocol://capture?template=t&body=%s\""
+                       (url-hexify-string (buffer-substring (line-beginning-position)
+                                                            (line-end-position)))))
+
+(shell-command "emacsclient --eval \"(select-frame-set-input-focus (selected-frame))\"")
+
+;;; org-capture ends here
