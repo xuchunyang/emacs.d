@@ -1,121 +1,61 @@
-(setq org-emphasis-regexp-components
-      ;; markup 记号前后允许中文
-      (list (concat " \t('\"{"            "[:nonascii:]")
-            (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
-            " \t\r\n,\"'"
-            "."
-            1))
+;;; chunyang-org.el --- Personal Extension of Org mode  -*- lexical-binding: nil; -*-
 
-;; (with-eval-after-load 'org
-;;   (setq org-match-substring-regexp
-;;         (concat
-;;          ;; 限制上标和下标的匹配范围，org 中对其的介绍见：(org) Subscripts and superscripts
-;;          "\\([0-9a-zA-Zα-γΑ-Ω]\\)\\([_^]\\)\\("
-;;          "\\(?:" (org-create-multibrace-regexp "{" "}" org-match-sexp-depth) "\\)"
-;;          "\\|"
-;;          "\\(?:" (org-create-multibrace-regexp "(" ")" org-match-sexp-depth) "\\)"
-;;          "\\|"
-;;          "\\(?:\\*\\|[+-]?[[:alnum:].,\\]*[[:alnum:]]\\)\\)")))
+;; Copyright (C) 2017  Chunyang Xu
 
-(config org
-  ;; Use org from git repo
-  ;; (add-to-list 'load-path "~/Projects/org-mode/lisp")
-  ;; (add-to-list 'load-path "~/Projects/org-mode/contrib/lisp")
-  ;; (add-to-list 'Info-directory-list "~/Projects/org-mode/doc")
+;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Keywords: org
 
-  ;; Prevent demoting heading also shifting text inside sections
-  ;; (setq org-adapt-indentation nil)
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
 
-  ;; Global keys
-  (bind-keys :map mode-specific-map
-             ("l" . org-store-link)
-             ;; ("L" . org-insert-link-global)
-             ("o" . org-open-at-point-global)
-             ("a" . org-agenda)
-             ("c" . org-capture))
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
 
-  ;; Easy navigation
-  (setq org-use-speed-commands t
-        org-special-ctrl-a/e   t)
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-  (with-eval-after-load 'org
-    (bind-key "C-o" #'helm-org-in-buffer-headings org-mode-map))
+;;; Commentary:
 
-  ;; Agenda
-  (setq org-agenda-files '("~/Notes/todo"))
-  (setq org-agenda-restore-windows-after-quit t)
-  (setq org-agenda-custom-commands
-        '(("i" "Today's TODO" ((tags-todo "+CATEGORY=\"today\"")))))
+;; Notes that this file is under lexical binding because
+;; `chunyang-org-agenda-csv' requires dynamic binding.
 
-  ;; Capture
-  (setq org-default-notes-file "~/Notes/todo")
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline "~/Notes/todo" "Inbox")
-           "* %?\n%i\n%a" :empty-lines 1)
-          ("l" "Today I Learned" entry (file "~/Notes/TIL.org")
-           "* %?\n%u\n%i" :empty-lines 1)
-          ("n" "Quote" entry (file+datetree "~/Notes/quote.org")
-           "* %?\nEntered on %U\n")
-          ("j" "Journal" entry (file+datetree "~/Notes/journal.org")
-           "* %?\nEntered on %U\n%i\n%a")))
+;;; Code:
 
-  ;; Refile
-  (setq org-refile-targets (list (cons nil (cons :maxlevel 2))))
+(require 'org)
+(require 'org-agenda)
 
-  ;; In case this option has been loaded, otherwise `setq' is sufficient
-  (customize-set-variable 'org-babel-load-languages
-                          '((emacs-lisp . t)
-                            (shell      . t)
-                            (ruby       . t)
-                            (python     . t)
-                            (maxima     . t)))
-
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-src-tab-acts-natively t)
-
-  ;; (customize-set-variable 'org-export-backends '(html texinfo))
-
-  ;; For Texinfo export
-  ;; (setenv "LANG" "en_US.UTF-8")
-
-  ;; For Travis-CI SVG badge in HTML exporting
-  (with-eval-after-load 'ox-html
-    (seq-doseq (scheme ["file" "http" "https"])
-      (add-to-list 'org-html-inline-image-rules
-                   (cons scheme "\\.svg\\?branch=master\\'"))))
-  )
-
-(require 'org-protocol)
-
-(use-package org
-  :disabled t
-  :bind (("C-c a"   . org-agenda)
-         ("C-c c"   . org-capture)
-         ("C-c l"   . org-store-link)
-         ("C-c C-o" . org-open-at-point-global))
-  :config
-  ;; Easy navigation
-  (setq org-use-speed-commands t)
-  (setq org-special-ctrl-a/e t)
-  ;; (bind-key "C-o" #'helm-org-headlines org-mode-map)
-  ;; Agenda
-  (setq org-log-done 'time)
-  (setq org-directory           "~/org"
-        org-agenda-files        (list "~/org")
-        org-default-notes-file  "~/org/todo.org")
-  (setq org-agenda-start-with-log-mode t)
-  ;; Capture
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file "~/org/todo.org")
-           "* TODO %?\n  %a\n\n  %i")))
-
-  ;; Dispaly clocking task on OS X menu bar with BitBar
-  (defun chunyang-clocking-task ()
-    (if (and (fboundp 'org-clocking-p)
-             (org-clocking-p))
-        (with-temp-buffer
-          (insert org-mode-line-string)
-          (buffer-substring-no-properties (point-min) (point-max)))
-      "[无所事事]")))
+(defmacro chunyang-org-agenda-csv (cmd-key &rest parameters)
+  "Adapted from `org-batch-agenda-csv'."
+  (org-eval-in-environment (append '((org-agenda-remove-tags t)
+                                     (org-agenda-restore-windows-after-quit t))
+				   (org-make-parameter-alist parameters))
+    (if (> (length cmd-key) 2)
+	(org-tags-view nil cmd-key)
+      (org-agenda nil cmd-key)))
+  (set-buffer org-agenda-buffer-name)
+  (let* ((lines (org-split-string (buffer-string) "\n"))
+	 line
+         (csv ""))
+    (while (setq line (pop lines))
+      (catch 'next
+	(if (not (get-text-property 0 'org-category line)) (throw 'next nil))
+	(setq org-agenda-info
+	      (org-fix-agenda-info (text-properties-at 0 line)))
+        (setq csv
+              (concat
+               csv
+               (mapconcat 'org-agenda-export-csv-mapper
+                          '(org-category txt type todo tags date time extra
+                                         priority-letter priority agenda-day)
+                          ",")
+               "\n"))))
+    (let ((org-agenda-restore-windows-after-quit t))
+      (org-agenda--quit))
+    (substring-no-properties csv)))
 
 (provide 'chunyang-org)
+;;; chunyang-org.el ends here

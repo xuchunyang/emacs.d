@@ -93,8 +93,9 @@ org-agenda ()
         sed -E -e 's/\[\[([^][]+)]\[([^][]+)]]/[4m\2[0m/' -e 's/\[\[([^][]+)]]/[4m\1[0m/'
 }
 
-# FIXME: Rewrite this
-t ()
+org-agenda-via-emacs-server ()
 {
-    emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda nil \"n\"))"
+    # Default to the Inbox
+    cmdkey=${1-i}
+    emacsclient --eval "(chunyang-org-agenda-csv \"$cmdkey\")" | el2sh | csv-to-org-table
 }
