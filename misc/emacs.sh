@@ -99,3 +99,17 @@ org-agenda-via-emacs-server ()
     cmdkey=${1-i}
     emacsclient --eval "(chunyang-org-agenda-csv \"$cmdkey\")" | el2sh | csv-to-org-table
 }
+
+url-escape ()
+{
+    emacs --batch --eval "(princ (url-hexify-string \"$*\"))"
+}
+
+# Usage: org-capture Do something about the dog
+org-capture ()
+{
+    body=$*
+    encoded=$(url-escape $body)
+    emacsclient --no-wait "org-protocol://capture?template=t&body=$encoded"
+    emacsclient --eval '(open-emacs-window)' > /dev/null
+}
