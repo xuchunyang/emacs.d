@@ -1,0 +1,30 @@
+#!/usr/bin/env emacs --no-site-file --script
+;;; el2sh --- Print Emacs Lisp data to Shell  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2017  Chunyang Xu
+
+;; Author: Chunyang Xu <mail@xuchunyang.me>
+
+;;; Commentary:
+
+;; Usage:
+;;
+;; $ emacsclient --eval emacs-version
+;; "25.2.1"
+;; $ emacsclient --eval emacs-version | el2sh
+;; 25.2.1
+;;
+;; And the following is the reason I made this little script.
+;;
+;; $ emacsclient --eval '(chunyang-org-agenda-csv "i")' | el2sh | csv-to-org-table
+
+;; NOTE The shebang works on macOS since the argument is splited but
+;; not on GNU/Linux, one cah use 'emacs --script /path/to/the/script'
+;; instead.
+
+;;; Code:
+
+(insert-file-contents "/dev/stdin")
+(princ (read (current-buffer)))
+
+;;; el2sh ends here
