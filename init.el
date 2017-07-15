@@ -3076,6 +3076,14 @@ provides similiar function."
   :defer t)
 
 
+;;; Clojure
+
+(use-package cider
+  :ensure t
+  :defer t
+  :tips "Type 'M-x cider-jack-in' to start")
+
+
 ;;; Python
 
 (use-package python
