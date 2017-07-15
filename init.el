@@ -2719,6 +2719,9 @@ Called with a prefix arg set search provider (default Google)."
   ;; Or use C-c C-v C-x (`org-babel-do-key-sequence-in-edit-buffer') instead
   (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map))
 
+(use-package chunyang-org
+  :commands chunyang-org-agenda-csv)
+
 (use-package toc-org
   :homepage "https://github.com/snosov1/toc-org"
   :tips "Add TOC tag to a heading then 'M-x toc-org-insert-toc'"
