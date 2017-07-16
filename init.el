@@ -386,8 +386,7 @@
          :map lisp-interaction-mode-map
          ("C-c C-l" . scratch-clear))
   :commands (chunyang-window-click-swap
-             chunyang-abbreviate-file-name-at-point
-             chunyang-expand-file-name-at-point
+             chunyang-cycle-filename
              chunyang-show-number-as-char))
 
 (use-package chunyang-misc

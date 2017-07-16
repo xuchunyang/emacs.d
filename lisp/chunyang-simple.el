@@ -250,23 +250,37 @@ I find the output of 'C-h v help-map' is hard to read."
 
 ;;; Filename
 
-(defun chunyang-abbreviate-file-name-at-point ()
-  (interactive "*")
-  (require 'dash)
-  (--if-let (thing-at-point 'filename)
-      (-let (((beg . end) (bounds-of-thing-at-point 'filename)))
-        (delete-region beg end)
-        (insert (abbreviate-file-name it)))
-    (user-error "No filename at point")))
+(declare-function helm-ffap-guesser "helm-files" ())
 
-(defun chunyang-expand-file-name-at-point ()
+(defun chunyang-cycle-filename ()
+  "Cycle filename at point between absolute, abbreviated and relative path.
+
+Absolute:     /Users/xcy/.emacs.d/init.el
+Abbreviated:  ~/.emacs.d/init.el
+Relative:     ../init.el
+"
   (interactive "*")
-  (require 'dash)
-  (--if-let (thing-at-point 'filename)
-      (-let (((beg . end) (bounds-of-thing-at-point 'filename)))
-        (delete-region beg end)
-        (insert (expand-file-name it)))
-    (user-error "No filename at point")))
+  ;; XXX: Since `ffap-guesser' not work well
+  (let ((filename (helm-ffap-guesser)))
+    (if filename
+        (let* ((beg)
+               (end)
+               (replace
+                (lambda (new-string)
+                  (delete-region beg end)
+                  (insert new-string))))
+          (save-excursion
+            (goto-char (line-beginning-position))
+            (search-forward filename)
+            (setq beg (match-beginning 0)
+                  end (match-end 0)))
+          (cond ((string-prefix-p "/" filename)
+                 (funcall replace (abbreviate-file-name filename)))
+                ((string-prefix-p "~/" filename)
+                 (funcall replace (file-relative-name filename)))
+                (t
+                 (funcall replace (expand-file-name filename)))))
+      (user-error "No filename found at point"))))
 
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
