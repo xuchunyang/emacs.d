@@ -1,0 +1,30 @@
+#+PROPERTY: header-args:emacs-lisp :lexical yes
+
+* L-99: Ninety-Nine Lisp Problems
+
+  #+NAME: progress
+  | Total | Done | Todo |
+  |-------+------+------|
+  |    99 |    1 |   98 |
+  #+TBLFM: $2='(count-matches (rx line-start "*** DONE "))::$3=$1-$2
+
+** Working with lists
+
+*** DONE Find the last box of a list
+
+    #+BEGIN_EXAMPLE
+      Example:
+      (my-last '(a b c d)) => (D)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp :results verbatim
+      (defun my-last (list)
+        (if (cdr list)
+            (my-last (cdr list))
+          list))
+
+      (my-last '(a b c d))
+    #+END_SRC
+
+    #+RESULTS:
+    : (d)
