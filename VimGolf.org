@@ -6,7 +6,7 @@
 | Total | Done |   (%) |
 |-------+------+-------|
 |   345 |  347 | 100.6 |
-#+TBLFM: $2='(count-matches "^* ")::$3=($2/$1)*100;p4
+#+TBLFM: $2='(count-matches "^\\* ")::$3=($2/$1)*100;p4
 
 #+TOC: headlines 1
 
