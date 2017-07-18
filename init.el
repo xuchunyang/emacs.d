@@ -2391,12 +2391,13 @@ Called with a prefix arg set search provider (default Google)."
   (helm :sources
         (helm-build-in-buffer-source "Music"
           :data
-          (split-string
-           (shell-command-to-string "find ~/Music -name '*.mp3'")
-           "\n")
+          (mapcar #'abbreviate-file-name
+                  (split-string
+                   (shell-command-to-string "find ~/Music -name '*.mp3'")
+                   "\n"))
           :action
           (lambda (mp3)
-            (shell-command (format "mpg123 '%s' &" mp3))))
+            (shell-command (format "mpg123 '%s' &" (expand-file-name mp3)))))
         :buffer "*helm music*"))
 
 
