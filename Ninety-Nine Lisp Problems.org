@@ -1,23 +1,22 @@
-#+PROPERTY: header-args:emacs-lisp :lexical yes
+#+PROPERTY: header-args:emacs-lisp :lexical yes :results value verbatim
 
 * L-99: Ninety-Nine Lisp Problems
 
   #+NAME: progress
   | Total | Done | Todo |
   |-------+------+------|
-  |    99 |    1 |   98 |
-  #+TBLFM: $2='(count-matches (rx line-start "*** DONE "))::$3=$1-$2
+  |    99 |    5 |   94 |
+  #+TBLFM: $2='(count-matches (rx line-start "*** "))::$3=$1-$2
 
 ** Working with lists
 
-*** DONE Find the last box of a list
+*** Find the last box of a list
 
     #+BEGIN_EXAMPLE
-      Example:
-      (my-last '(a b c d)) => (D)
+      (my-last '(a b c d)) => (d)
     #+END_EXAMPLE
 
-    #+BEGIN_SRC emacs-lisp :results verbatim
+    #+BEGIN_SRC emacs-lisp
       (defun my-last (list)
         (if (cdr list)
             (my-last (cdr list))
@@ -28,3 +27,70 @@
 
     #+RESULTS:
     : (d)
+
+*** Find the last but one box of a list
+
+    #+BEGIN_EXAMPLE
+      (my-but-last '(a b c d)) => (c d)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-but-last (l)
+        (let ((len (length l)))
+          (if (<= len 2)
+              l
+            (list (nth (- len 2) l)
+                  (nth (- len 1) l)))))
+
+      (my-but-last '(a b c d))
+    #+END_SRC
+
+    #+RESULTS:
+    : (c d)
+
+*** Find the K'th element of a list
+
+    #+BEGIN_EXAMPLE
+    (element-at '(a b c d e) 3) => c
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-element-at (lst idx)
+        (if (= idx 1)
+            (car lst)
+          (my-element-at (cdr lst) (- idx 1))))
+
+      (my-element-at '(a b c d e) 3)
+    #+END_SRC
+
+    #+RESULTS:
+    : c
+
+*** Find the number of elements of a list
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-length (lst)
+        (if (null lst)
+            0
+          (+ 1 (my-length (cdr lst)))))
+
+      (list (my-length '())
+            (my-length '(a b c)))
+    #+END_SRC
+
+    #+RESULTS:
+    : (0 3)
+
+*** Reverse a list
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-reverse (lst)
+        (if (null lst)
+            nil
+          (append (my-reverse (cdr lst)) (list (car lst)))))
+
+      (my-reverse '(1 2 3 4))
+    #+END_SRC
+
+    #+RESULTS:
+    : (4 3 2 1)
