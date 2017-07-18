@@ -2045,7 +2045,9 @@ This should be add to `find-file-hook'."
 
 (use-package lastpass
   :load-path "/Users/xcy/src/lastpass.el"
-  :commands helm-lastpass)
+  :commands (list-lastpass
+             helm-lastpass
+             lastpass-copy-password))
 
 
 ;;; Project
