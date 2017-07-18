@@ -2400,6 +2400,13 @@ Called with a prefix arg set search provider (default Google)."
             (shell-command (format "mpg123 '%s' &" (expand-file-name mp3)))))
         :buffer "*helm music*"))
 
+(defun chunyang-download-lyric (song-name)
+  (interactive "sSong name: ")
+  (shell-command
+   (format
+    "curl -s 'http://gecimi.com/api/lyric/%s' | jq .result[0].lrc | xargs curl -s"
+    song-name)))
+
 
 ;;; Dictionary
 (use-package youdao-dictionary
