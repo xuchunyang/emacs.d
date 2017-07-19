@@ -2650,6 +2650,19 @@ Called with a prefix arg set search provider (default Google)."
            (tangle (funcall get-spec :tangle)))
       (when tangle
         (find-file tangle))))
+
+  (defun chunyang-org-babel-highlight-result ()
+    "Highlight the result of the current source block.
+Adapt from `org-babel-remove-result'."
+    (interactive)
+    (let ((location (org-babel-where-is-src-block-result nil nil)))
+      (when location
+        (save-excursion
+          (goto-char location)
+          (when (looking-at (concat org-babel-result-regexp ".*$"))
+            (pulse-momentary-highlight-region
+             (1+ (match-end 0))
+             (progn (forward-line 1) (org-babel-result-end))))))))
   :init
   ;; Prefer Org mode from git if available
   (add-to-list 'load-path "~/src/org-mode/lisp")
@@ -2724,6 +2737,12 @@ Called with a prefix arg set search provider (default Google)."
      (org        . t)))
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
+
+  ;; Highlight the result of source block
+  (add-hook 'org-babel-after-execute-hook
+            (defun chunyang-org-babel-highlight-result-maybe ()
+              (when (eq this-command 'org-ctrl-c-ctrl-c)
+                (chunyang-org-babel-highlight-result))))
 
   ;; (org) Easy templates
   (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
