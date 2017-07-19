@@ -3350,6 +3350,12 @@ provides similiar function."
   :ensure t
   :defer t)
 
+;; `pulse.el' has the similiar function
+(use-package beacon
+  :summary "Highlight the cursor whenever the window scrolls"
+  :ensure t
+  :defer t)
+
 
 ;;; Utilities
 
