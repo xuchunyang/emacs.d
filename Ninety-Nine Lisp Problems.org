@@ -5,7 +5,7 @@
   #+NAME: progress
   | Total | Done | Doing | Left |
   |-------+------+-------+------|
-  |    99 |   17 |     2 |   80 |
+  |    99 |   22 |     1 |   76 |
   #+TBLFM: $1=99::$2='(count-matches (rx line-start "*** "))::$3='(count-matches (rx line-start "*** TODO"))::$4=$1-$2-$3
 
 ** Working with lists
@@ -334,7 +334,7 @@
     #+RESULTS:
     : (a b d e g h k)
 
-*** TODO Split a list into two parts; the length of the first part is given
+*** Split a list into two parts; the length of the first part is given
 
     Do not use any predefined predicates.
 
@@ -345,5 +345,136 @@
 
     #+BEGIN_SRC emacs-lisp
       (defun my-split (l n)
-        )
+        (loop with head = nil
+              with tail = nil
+              for idx from 1
+              for i in l
+              if (<= idx n)
+              do (push i head)
+              else
+              do (push i tail)
+              finally return (list (nreverse head) (nreverse tail))))
+
+      (my-split '(a b c d e f g h i k) 3)
     #+END_SRC
+
+    #+RESULTS:
+    : ((a b c) (d e f g h i k))
+
+*** Extract a slice from a list
+
+    Given two indices, I and K, the slice is the list containing the elements
+    between the I'th and K'th element of the original list (both limits
+    included). Start counting the elements with 1.
+
+    #+BEGIN_EXAMPLE
+    (slice '(a b c d e f g h i k) 3 7)
+    (c d e f g)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-slice (l from to)
+        (loop for idx from 1
+              for i in l
+              when (<= from idx to)
+              collect i))
+
+      (my-slice '(a b c d e f g h i k) 3 7)
+    #+END_SRC
+
+    #+RESULTS:
+    : (c d e f g)
+
+*** Rotate a list N places to the left
+
+    #+BEGIN_EXAMPLE
+      (rotate '(a b c d e f g h) 3)
+      (D E F G H A B C)
+
+      (rotate '(a b c d e f g h) -2)
+      (G H A B C D E F)
+    #+END_EXAMPLE
+
+    Hint: Use the predefined functions length and append, as well as the result
+    of problem P17.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-rotate (l n)
+        (when (< n 0)
+          (setq n (+ n (length l))))
+        (let ((res (my-split l n)))
+          (append (cadr res) (car res))))
+
+      (my-rotate '(a b c d e f g h) 3)
+      (my-rotate '(a b c d e f g h) -2)
+    #+END_SRC
+
+    #+RESULTS:
+    : (g h a b c d e f)
+
+*** Remove the K'th element from a list
+
+    #+BEGIN_EXAMPLE
+    (remove-at '(a b c d) 2)
+    (a c d)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-remove-at (l n)
+        (if (null l)
+            nil
+          (if (= n 0)
+              (my-remove-at (cdr l) (1- n))
+            (cons (car l) (my-remove-at (cdr l) (1- n))))))
+
+      (my-remove-at '(a b c d) 2)
+    #+END_SRC
+
+    #+RESULTS:
+    : (a b d)
+
+*** Insert an element at a given position into a list
+
+    #+BEGIN_EXAMPLE
+    (insert-at 'alfa '(a b c d) 2)
+    (A ALFA B C D)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-insert-at (item l idx)
+        (if (null l)
+            nil
+          (if (= idx 1)
+              (cons item
+                    (cons (car l)
+                          (my-insert-at item (cdr l) (- idx 1))))
+            (cons (car l)
+                  (my-insert-at item (cdr l) (- idx 1))))))
+
+      (my-insert-at 'alfa '(a b c d) 2)
+    #+END_SRC
+
+    #+RESULTS:
+    : (a alfa b c d)
+
+*** Create a list containing all integers within a given range
+
+    If first argument is smaller than second, produce a list in decreasing
+    order.
+
+    #+BEGIN_EXAMPLE
+      (range 4 9)
+      (4 5 6 7 8 9)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-range (from to)
+        (if (> from to)
+            nil
+          (cons from (my-range (1+ from) to))))
+
+      (my-range 4 9)
+    #+END_SRC
+
+    #+RESULTS:
+    : (4 5 6 7 8 9)
