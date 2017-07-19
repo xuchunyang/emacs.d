@@ -3,10 +3,10 @@
 * L-99: Ninety-Nine Lisp Problems
 
   #+NAME: progress
-  | Total | Done | Todo |
-  |-------+------+------|
-  |    99 |    5 |   94 |
-  #+TBLFM: $2='(count-matches (rx line-start "*** "))::$3=$1-$2
+  | Total | Done | Doing | Left |
+  |-------+------+-------+------|
+  |    99 |   17 |     2 |   80 |
+  #+TBLFM: $1=99::$2='(count-matches (rx line-start "*** "))::$3='(count-matches (rx line-start "*** TODO"))::$4=$1-$2-$3
 
 ** Working with lists
 
@@ -94,3 +94,256 @@
 
     #+RESULTS:
     : (4 3 2 1)
+
+*** Find out whether a list is a palindrome
+
+    A palindrome can be read forward or backward
+
+    #+BEGIN_EXAMPLE
+    (x a m a x).
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-palindrome (lst)
+        (equal (reverse lst) lst))
+
+      (my-palindrome '(x a m a x))
+    #+END_SRC
+
+    #+RESULTS:
+    : t
+
+*** Flatten a nested list structure
+
+    Transform a list, possibly holding lists as elements into a `flat' list by
+    replacing each list with its elements (recursively).
+
+    #+BEGIN_EXAMPLE
+      (my-flatten '(a (b (c d) e))) => (A B C D E)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-flatten (lst)
+        (if (null lst)
+            nil
+          (let ((head (car lst))
+                (rest (cdr lst)))
+            (if (consp head)
+                (append (my-flatten head) (my-flatten rest))
+              (cons head (my-flatten rest))))))
+
+      (my-flatten '(a (b (c d) e)))
+    #+END_SRC
+
+    #+RESULTS:
+    : (a b c d e)
+
+*** Eliminate consecutive duplicates of list elements
+
+    If a list contains repeated elements they should be replaced with a single
+    copy of the element. The order of the elements should not be changed.
+
+    #+BEGIN_EXAMPLE
+    (compress '(a a a a b c c a a d e e e e)) => (a b c a d e)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun compress (lst)
+        (let (result last)
+          (dolist (i lst result)
+            (if (null result)
+                (setq result (list i))
+              (unless (eq i last)
+                (setq result (append result (list i)))))
+            (setq last i))))
+
+      (compress '(a a a a b c c a a d e e e e))
+    #+END_SRC
+
+    #+RESULTS:
+    : (a b c a d e)
+
+*** Pack consecutive duplicates of list elements into sublists
+
+    If a list contains repeated elements they should be placed in separate
+    sublists.
+
+    #+BEGIN_EXAMPLE
+      (pack '(a a a a b c c a a d e e e e))
+      =>
+      ((a a a a) (b) (c c) (a a) (d) (e e e e))
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-pack (l)
+        (let (last res)
+          (dolist (i l (nreverse res))
+            (if (null res)
+                (push (list i) res)
+              (if (eq i last)
+                  (setcar res (push i (car res)))
+                (push (list i) res)))
+            (setq last i))))
+
+      (my-pack '(a a a a b c c a a d e e e e))
+    #+END_SRC
+
+    #+RESULTS:
+    : ((a a a a) (b) (c c) (a a) (d) (e e e e))
+
+*** Run-length encoding of a list
+
+    Use the result of problem P09 to implement the so-called run-length encoding
+    data compression method. Consecutive duplicates of elements are encoded as
+    lists (N E) where N is the number of duplicates of the element E.
+
+    #+BEGIN_EXAMPLE
+    (encode '(a a a a b c c a a d e e e e))
+    =>
+    ((4 a) (1 b) (2 c) (2 a) (1 d) (4 e))
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-encode (l)
+        (let (res)
+          (dolist (i (my-pack l) (nreverse res))
+            (push (list (length i) (car i)) res))))
+
+      (my-encode '(a a a a b c c a a d e e e e))
+    #+END_SRC
+
+    #+RESULTS:
+    : ((4 a) (1 b) (2 c) (2 a) (1 d) (4 e))
+
+*** Modified run-length encoding
+
+    Modify the result of problem P10 in such a way that if an element has no
+    duplicates it is simply copied into the result list. Only elements with
+    duplicates are transferred as (N E) lists.
+
+    #+BEGIN_EXAMPLE
+    (encode-modified '(a a a a b c c a a d e e e e))
+    =>
+    ((4 A) B (2 C) (2 A) D (4 E))
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-encode-modified (l)
+        (let (res)
+          (dolist (i (my-pack l) (nreverse res))
+            (push (if (cdr i)
+                      (list (length i) (car i))
+                    (car i))
+                  res))))
+
+      (my-encode-modified '(a a a a b c c a a d e e e e))
+    #+END_SRC
+
+    #+RESULTS:
+    : ((4 a) b (2 c) (2 a) d (4 e))
+
+*** Decode a run-length encoded list
+
+    Given a run-length code list generated as specified in problem
+    P11. Construct its uncompressed version.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-decode-modified (l)
+        (let (res)
+          (dolist (i l res)
+            (setq res (append res
+                              (if (consp i)
+                                  (make-list (car i) (cadr i))
+                                (list i)))))))
+
+      (my-decode-modified (my-encode-modified '(a a a a b c c a a d e e e e)))
+    #+END_SRC
+
+    #+RESULTS:
+    : (a a a a b c c a a d e e e e)
+
+*** TODO Run-length encoding of a list (direct solution)
+
+    Implement the so-called run-length encoding data compression method
+    directly. I.e.  don't explicitly create the sublists containing the
+    duplicates, as in problem P09, but only count them. As in problem P11,
+    simplify the result list by replacing the singleton lists (1 X) by X.
+
+    #+BEGIN_EXAMPLE
+      Example:
+      (encode-direct '(a a a a b c c a a d e e e e))
+      ((4 A) B (2 C) (2 A) D (4 E))
+    #+END_EXAMPLE
+
+*** Duplicate the elements of a list
+
+    #+BEGIN_EXAMPLE
+      Example:
+      (dupli '(a b c c d))
+      (A A B B C C C C D D)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-dupli (l)
+        (let (res)
+          (dolist (i l (nreverse res))
+            (push i res)
+            (push i res))))
+
+      (my-dupli '(a b c c d))
+    #+END_SRC
+
+    #+RESULTS:
+    : (a a b b c c c c d d)
+
+*** Replicate the elements of a list a given number of times
+
+    #+BEGIN_EXAMPLE
+      (repli '(a b c) 3)
+      (A A A B B B C C C)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-repli (l n)
+        (loop for i in l
+              append (make-list n i)))
+
+      (my-repli '(a b c) 3)
+    #+END_SRC
+
+    #+RESULTS:
+    : (a a a b b b c c c)
+
+*** Drop every N'th element from a list
+
+    #+BEGIN_EXAMPLE
+      (drop '(a b c d e f g h i k) 3)
+      (A B D E G H K)
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-drop (l n)
+        (loop for elt in l
+              for idx from 1
+              unless (zerop (% idx n))
+              collect elt))
+
+      (my-drop '(a b c d e f g h i k) 3)
+    #+END_SRC
+
+    #+RESULTS:
+    : (a b d e g h k)
+
+*** TODO Split a list into two parts; the length of the first part is given
+
+    Do not use any predefined predicates.
+
+    #+BEGIN_EXAMPLE
+    (split '(a b c d e f g h i k) 3)
+    ((A B C) (D E F G H I K))
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-split (l n)
+        )
+    #+END_SRC
