@@ -2751,7 +2751,8 @@ Adapt from `org-babel-remove-result'."
   (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map))
 
 (use-package chunyang-org
-  :commands chunyang-org-agenda-csv)
+  :commands (chunyang-org-agenda-csv
+             helm-org-easy-templates))
 
 (use-package toc-org
   :homepage "https://github.com/snosov1/toc-org"

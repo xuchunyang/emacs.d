@@ -57,5 +57,45 @@
       (org-agenda--quit))
     (substring-no-properties csv)))
 
+
+;;; Org Easy templates
+
+(require 'helm)
+
+(defun helm-org-easy-templates ()
+  "Wrap text in the region or the kill-ring."
+  (interactive "*")
+  (let ((wrap
+         (cond ((use-region-p)
+                (let ((beg (region-beginning))
+                      (end (region-end)))
+                  (prog1 (buffer-substring-no-properties beg end)
+                    (delete-region beg end))))
+               (kill-ring
+                (substring-no-properties (car kill-ring)))
+               (t nil))))
+    (helm :sources
+          (helm-build-sync-source "(org) Easy templates"
+            :candidates
+            (loop for (key template) in org-structure-template-alist
+                  for end = (or (string-match "\n" template) (length template))
+                  for disp = (replace-regexp-in-string
+                              "\n\n" " ... "
+                              (replace-regexp-in-string "\\?" "" template))
+                  collect (cons disp (list key template)))
+            :action `(lambda (cand)
+                       (insert "<" (car cand))
+                       (org-try-structure-completion)
+                       (when ,wrap
+                         (if (= (line-beginning-position)
+                                (line-end-position))
+                             (insert ,wrap)
+                           (when (string-match-p "\n" (cadr cand))
+                             (save-excursion
+                               (forward-line 1)
+                               (when (= (line-beginning-position)
+                                        (line-end-position))
+                                 (insert ,wrap)))))))))))
+
 (provide 'chunyang-org)
 ;;; chunyang-org.el ends here
