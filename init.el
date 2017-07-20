@@ -2187,8 +2187,12 @@ This should be add to `find-file-hook'."
              (lambda ()
                (cl-loop for elt in (eww-read-bookmarks)
                         collect
-                        (cons (plist-get elt :title)
+                        (cons (concat (plist-get elt :title)
+                                      "\n"
+                                      (propertize (plist-get elt :url)
+                                                  'face 'link))
                               (plist-get elt :url))))
+             :multiline t
              :action (helm-make-actions
                       "Eww" #'eww
                       "Browse-url" #'browse-url
