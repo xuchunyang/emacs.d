@@ -392,7 +392,8 @@
 (use-package chunyang-misc
   :commands (chunyang-open-another-emacs
              chunyang-timer
-             chunyang-random-word))
+             chunyang-random-word
+             chunyang-format-as-binary))
 
 (use-package chunyang-buffers    ; Personal buffer tools
   :config

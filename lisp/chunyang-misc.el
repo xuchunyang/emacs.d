@@ -206,21 +206,18 @@ See URL `https://en.wikipedia.org/wiki/Transpose'."
 
 ;;; Format binary number
 
-(defun chunyang-format-as-binary (number)
-  ;; FIXME: It might be better to calculate directly
-  (let ((map '((?0 . "000")
-               (?1 . "001")
-               (?2 . "010")
-               (?3 . "011")
-               (?4 . "100")
-               (?5 . "101")
-               (?6 . "110")
-               (?7 . "111"))))
-    (replace-regexp-in-string
-     "\\`0+" ""
-     (mapconcat #'identity
-                (mapcar (lambda (c) (cdr (assq c map)))
-                        (string-to-list (format "%o" number))) ""))))
+(defun chunyang-format-as-binary (n)
+  "Convert Number N into String in binary format."
+  (let (res)
+    (if (= n 0)
+        (setq res '(0))
+      (while (> n 0)
+        (push (% n 2) res)
+        (setq n (/ n 2))))
+    (concat "#b" (mapconcat #'number-to-string res ""))))
+
+;; (chunyang-format-as-binary #b100)
+;;      => "#b100"
 
 
 ;;; Public IP & Location
