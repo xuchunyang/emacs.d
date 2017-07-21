@@ -4,6 +4,9 @@
 
 (insert-file-contents "/dev/stdin")
 
+(when (zerop (buffer-size))
+  (kill-emacs))
+
 (org-table-convert-region (point-min) (point-max))
 (goto-char (point-min))
 (org-table-insert-hline :above)
