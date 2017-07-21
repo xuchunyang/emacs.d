@@ -440,6 +440,18 @@ KEYWORD-ARGS is same as `make-hash-table'."
 ;; (chunyang-alist-to-plist '((:one . 1) (:two . 2)))
 ;;      ⇒ (:one 1 :two 2)
 
+
+;;; Binary format in C-x C-e
+
+(define-advice eval-expression-print-format (:around (old-fun value) binary)
+  "Show (Binary, Octal, Hex, Char) for numbers."
+  (let ((rtv (funcall old-fun value)))
+    (if rtv
+        (replace-regexp-in-string
+         "(#o"
+         (format "(%s, #o" (chunyang-format-as-binary value))
+         rtv))))
+
 (provide 'chunyang-elisp)
 
 ;;; chunyang-elisp.el ends here
