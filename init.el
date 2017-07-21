@@ -1968,7 +1968,9 @@ See also `describe-function-or-variable'."
       (define-key (current-local-map) [?\C-c ?\C-c] nil)))
 
   (add-hook 'server-switch-hook #'chunyang-server-setup)
-  (add-hook 'server-done-hook #'chunyang-server-cleanup))
+  (add-hook 'server-done-hook #'chunyang-server-cleanup)
+
+  (require 'org-protocol))
 
 (use-package gh-md             :ensure t :defer t)
 
@@ -2753,7 +2755,9 @@ Adapt from `org-babel-remove-result'."
   (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
         do (add-to-list 'org-structure-template-alist al 'append))
   ;; Or use C-c C-v C-x (`org-babel-do-key-sequence-in-edit-buffer') instead
-  (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map))
+  (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map)
+
+  (require 'org-protocol))
 
 (use-package chunyang-org
   :commands (chunyang-org-agenda-csv
