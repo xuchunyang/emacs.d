@@ -5,7 +5,7 @@
   #+NAME: progress
   | Total | Done | Doing | Left |
   |-------+------+-------+------|
-  |    99 |   22 |     1 |   76 |
+  |    99 |   26 |     2 |   71 |
   #+TBLFM: $1=99::$2='(count-matches (rx line-start "*** "))::$3='(count-matches (rx line-start "*** TODO"))::$4=$1-$2-$3
 
 ** Working with lists
@@ -423,7 +423,7 @@
       (defun my-remove-at (l n)
         (if (null l)
             nil
-          (if (= n 0)
+          (if (= n 1)
               (my-remove-at (cdr l) (1- n))
             (cons (car l) (my-remove-at (cdr l) (1- n))))))
 
@@ -431,7 +431,7 @@
     #+END_SRC
 
     #+RESULTS:
-    : (a b d)
+    : (a c d)
 
 *** Insert an element at a given position into a list
 
@@ -478,3 +478,91 @@
 
     #+RESULTS:
     : (4 5 6 7 8 9)
+
+*** Extract a given number of randomly selected elements from a list
+    
+    The selected items shall be returned in a list.
+
+    #+BEGIN_EXAMPLE
+    (rnd-select '(a b c d e f g h) 3)
+    (e d a)
+    #+END_EXAMPLE
+    
+    #+BEGIN_SRC emacs-lisp
+      (defun my-rnd-select (l n)
+        (if (zerop n)
+            nil
+          (let ((i (random (length l))))
+            (cons (nth i l) (my-rnd-select (my-remove-at l (1+ i)) (1- n))))))
+
+      (my-rnd-select '(a b c d e f g h) 3)
+    #+END_SRC
+
+    #+RESULTS:
+    : (g d g)
+
+*** Lotto: Draw N different random numbers from the set 1..M
+
+    The selected numbers shall be returned in a list.
+
+    #+BEGIN_EXAMPLE
+    (lotto-select 6 49)
+    (23 1 17 33 21 37)
+    #+END_EXAMPLE
+
+    Hint: Combine the solutions of problems P22 and P23.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-lotto-select (n m)
+        (my-rnd-select (my-range 1 m) n))
+
+      (my-lotto-select 6 49)
+    #+END_SRC
+
+    #+RESULTS:
+    : (11 36 49 32 30 21)
+
+*** Generate a random permutation of the elements of a list
+
+    #+BEGIN_EXAMPLE
+    (rnd-permu '(a b c d e f))
+    (B A D C E F)
+    #+END_EXAMPLE
+
+    Hint: Use the solution of problem P23.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun my-rnd-permu (l)
+        (my-rnd-select l (length l)))
+
+      (my-rnd-permu '(a b c d e f))
+    #+END_SRC
+
+    #+RESULTS:
+    : (f b e d c a)
+
+*** TODO Generate the combinations of K distinct objects chosen from the N elements of a list
+
+    In how many ways can a committee of 3 be chosen from a group of 12 people?
+    We all know that there are C(12,3) = 220 possibilities (C(N,K) denotes the
+    well-known binomial coefficients). For pure mathematicians, this result may
+    be great. But we want to really generate all the possibilities in a list.
+
+    #+BEGIN_EXAMPLE
+    (combination 3 '(a b c d e f))
+    ((A B C) (A B D) (A B E) ... )
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      ;; C(4, 3) = 6
+      ;; C(12, 3) = 220
+
+      (defun my-combination-count (n k)
+        (/ (apply #'* (number-sequence (1+ (- n k)) n))
+           (apply #'* (number-sequence 1 k))))
+
+      ;; (my-combination-count 4 2)
+      ;; (my-combination-count 12 3)
+
+      (defun my-combination (n k))
+    #+END_SRC
