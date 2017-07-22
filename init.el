@@ -60,7 +60,10 @@
   (defun use-package-handler/:tips (&rest _))
   (add-to-list 'use-package-keywords :summary t)
   (defun use-package-normalize/:summary (&rest _))
-  (defun use-package-handler/:summary (&rest _)))
+  (defun use-package-handler/:summary (&rest _))
+  (add-to-list 'use-package-keywords :info t)
+  (defun use-package-normalize/:info (&rest _))
+  (defun use-package-handler/:info (&rest _)))
 
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
@@ -1783,12 +1786,14 @@ See also `describe-function-or-variable'."
 
 (use-package magit
   :ensure t
-  :bind (("C-x g"   . magit-status)
-         ("C-x M-g" . magit-dispatch-popup))
-  ;; :init (global-git-commit-mode)
-  :config
-  ;; Save files before executing git command for me
-  (setq magit-save-repository-buffers 'dontask))
+  :homepage https://github.com/magit/magit
+  :info (info "(magit) Top")
+  :tips
+  - To launch from shell, use $ emacsclient -e '(magit-status)'
+  - Here is another tip
+  - ...
+  :bind ("C-x C-g" . magit-status)
+  :config (setq magit-save-repository-buffers 'dontask))
 
 (use-package vc
   :defer t
