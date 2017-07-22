@@ -2416,6 +2416,7 @@ Called with a prefix arg set search provider (default Google)."
 
 
 ;;; Dictionary
+
 (use-package youdao-dictionary
   :ensure t
   :load-path "~/src/youdao-dictionary.el"
@@ -3391,6 +3392,19 @@ provides similiar function."
 (use-package restclient
   :summary "Test HTTP API"
   :ensure t
+  :defer t)
+
+(use-package hexl-mode
+  :summary (info "(emacs) Editing Binary Files")
+  :tips
+  - od
+  - hexdump
+  - xxd
+  :commands (hexl-find-file hexl-mode))
+
+(use-package nhexl-mode
+  :ensure t
+  :tips "Unlike `hexl-mode', this is a minor mode"
   :defer t)
 
 
