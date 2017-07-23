@@ -3400,7 +3400,7 @@ provides similiar function."
   :ensure t
   :defer t)
 
-(use-package hexl-mode
+(use-package hexl
   :summary (info "(emacs) Editing Binary Files")
   :tips
   - od
