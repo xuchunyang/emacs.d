@@ -37,5 +37,21 @@
       (Info-menu (car args))
       (setq args (cdr args)))))
 
+(defun helm-bash-history ()
+  "View Bash history."
+  (interactive)
+  (helm :sources
+        (helm-build-in-buffer-source "Bash History"
+          :data (lambda ()
+                  (with-temp-buffer
+                    ;; XXX Assuming all even lines are commands
+                    (call-process "awk" nil t nil
+                                  "NR % 2 == 0"
+                                  (expand-file-name "~/.bash_history"))
+                    (buffer-string)))
+          :action '(("Insert" . insert)
+                    ("Copy"   . kill-new)))
+        :buffer "*helm bash history*"))
+
 (provide 'chunyang-shell)
 ;;; chunyang-shell.el ends here

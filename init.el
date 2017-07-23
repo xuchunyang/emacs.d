@@ -2592,7 +2592,9 @@ Called with a prefix arg set search provider (default Google)."
 ;; 1) Emacs should load `chunyang-shell.el'
 ;; 2) Shell in external Terminal should load misc/linux.sh or misc/mac.sh
 
-(use-package chunyang-shell)
+(use-package chunyang-shell
+  :commands (shell/info                 ; For shell in Terminal (outside Emacs)
+             helm-bash-history))
 
 ;; For "emacsclient --eval EXPR". In EXPR, one has to use `setq' to modify this
 ;; variable temporarily, for example,
