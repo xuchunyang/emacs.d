@@ -2442,36 +2442,29 @@ Called with a prefix arg set search provider (default Google)."
   :ensure t
   :defer t
   :preface
-  (defvar chunyang-google-translate-history nil)
   (defun chunyang-google-translate (query)
+    "Launch Google Translate with Web Browser."
     (interactive
-     (let ((default
-             (or (and (use-region-p)
-                      (buffer-substring
-                       (region-beginning) (region-end)))
-                 (current-word))))
-       (list (read-string (if default
-                              (format "Google Translate (default %s): " default)
-                            "Google Translate: ")
-                          nil
-                          'google-translate-history
-                          default))))
+     (let* ((default (or (and (use-region-p)
+                              (buffer-substring
+                               (region-beginning) (region-end)))
+                         (current-word)))
+            (prompt (if default
+                        (format "Google Translate (default %s): " default)
+                      "Google Translate: ")))
+       (list (read-string prompt nil nil default))))
     (browse-url (format "https://www.google.com/translate_t?text=%s"
                         (url-hexify-string query))))
-  :config
-  ;; translate.google.com -> translate.google.cn
-  ;; Becuase the latter is not blocked in China.
-  (dolist (url '(google-translate--tkk-url
-                 google-translate-base-url
-                 google-translate-listen-url))
-    (set url (replace-regexp-in-string
-              (regexp-quote "translate.google.com")
-              "translate.google.cn"
-              (symbol-value url))))
-
-  ;; For M-x `google-translate-smooth-translate'
-  (setq google-translate-translation-directions-alist
-        '(("en" . "zh-CN") ("zh-CN" . "en"))))
+  :init
+  (eval-after-load 'google-translate-core
+    '(setq google-translate-base-url "http://translate.google.cn/translate_a/single"
+           google-translate-listen-url "http://translate.google.cn/translate_tts"))
+  (eval-after-load 'google-translate-tk
+    '(setq google-translate--tkk-url "http://translate.google.cn/"))
+  (eval-after-load 'google-translate-smooth-ui
+    ;; For M-x `google-translate-smooth-translate'
+    '(setq google-translate-translation-directions-alist
+           '(("en" . "zh-CN") ("zh-CN" . "en")))))
 
 (use-package echo
   :commands echo-mode)
