@@ -2753,6 +2753,11 @@ Adapt from `org-babel-remove-result'."
               (when (eq this-command 'org-ctrl-c-ctrl-c)
                 (chunyang-org-babel-highlight-result))))
 
+  (define-advice org-babel-eval-wipe-error-buffer (:override () kill-buffer)
+    "Just kill the buffer since the buffer/window is useless and annoying."
+    (when (get-buffer org-babel-error-buffer-name)
+      (kill-buffer org-babel-error-buffer-name)))
+
   ;; (org) Easy templates
   (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
         do (add-to-list 'org-structure-template-alist al 'append))
