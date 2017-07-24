@@ -42,12 +42,11 @@
 (advice-add 'eshell/cat :override #'eshell/cat-with-syntax-highlight)
 
 (defun eshell/imgcat (&rest args)
-  "Display image(s)."
-  (let ((elems (eshell-flatten-list args)))
-    (while elems
-      (eshell-printn
-       (propertize " " 'display (create-image (expand-file-name (car elems)))))
-      (setq elems (cdr elems)))))
+  "Display image files."
+  (unless args (error "Usage: imgcat FILE ..."))
+  (dolist (img (eshell-flatten-list args))
+    (eshell-printn
+     (propertize " " 'display (create-image img)))))
 
 ;; Eshell command name completion for tldr man pages <http://tldr-pages.github.io>
 (defvar tldr-commands nil)
