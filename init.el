@@ -1263,10 +1263,12 @@ Intended to be added to `isearch-mode-hook'."
   ;; (setq eldoc-message-function #'chunyang-eldoc-header-line-message)
   )
 
-(cl-defun chunyang-project-root (&optional (dir default-directory))
-  "Return project root in DIR, if no project is found, return DIR."
-  (or (cdr (project-current nil dir))
-      dir))
+(defun chunyang-project-root ()
+  "Return project root. If no project is found, return nil."
+  (cond ((require 'project) (cdr (project-current)))
+        ((require 'projectile) (ignore-errors (projectile-project-root)))
+        (t (error
+            "`project.el' or `projectile.el' is required to locate project root"))))
 
 (use-package compile
   :bind (("C-x c" . compile))
