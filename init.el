@@ -2974,6 +2974,31 @@ Adapt from `org-babel-remove-result'."
   :ensure t
   :defer t)
 
+(use-package racer
+  :ensure t
+  :homepage https://github.com/racer-rust/emacs-racer
+  :tips
+  - $ cargo install racer
+  :after rust-mode
+  :config
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode))
+
+(use-package flycheck-rust     ; The built-in check of Flycheck not working well
+  :ensure t
+  :defer t
+  :after flycheck
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+(use-package ob-rust
+  :ensure t
+  :after org)
+
+(use-package toml-mode
+  :ensure t
+  :defer t)
+
 
 ;;; Common Lisp
 
