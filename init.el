@@ -23,6 +23,14 @@
       (goto-char (point-max)))))
 
 
+;;; Remacs
+
+(defconst *is-remacs*
+  (if window-system
+      (and (string-match "remacs" invocation-directory) t)
+    (string= invocation-name "remacs")))
+
+
 ;;; Start up
 
 (require 'package)
@@ -2960,6 +2968,13 @@ Adapt from `org-babel-remove-result'."
           ("." . browse-url-default-browser))))
 
 
+;;; Rust
+
+(use-package rust-mode
+  :ensure t
+  :defer t)
+
+
 ;;; Common Lisp
 
 (use-package slime
@@ -3035,7 +3050,8 @@ provides similiar function."
   :init (add-hook 'ruby-mode-hook 'ruby-tools-mode))
 
 
-;; For the Programming Languages course
+;;; For the Programming Languages course
+
 (use-package sml-mode
   :ensure t
   :defer t)
@@ -3333,7 +3349,9 @@ provides similiar function."
 
 ;; FIXME: In case Emacs can't find the source (for example, installing Emacs via
 ;;        MacPorts). Remove it someday
-(setq source-directory "~/src/emacs/")
+(setq source-directory (if *is-remacs*
+                           "~/src/remacs/"
+                         "~/src/emacs/"))
 
 
 ;;; Chinese | 中文
