@@ -2720,10 +2720,7 @@ Adapt from `org-babel-remove-result'."
           ("i" "Inbox" tags-todo "LEVEL=2+CATEGORY=\"inbox\"")
           ("p" "Project" tags-todo "LEVEL=2+CATEGORY=\"project\"")))
 
-  (setq org-agenda-window-setup 'only-window)
   (setq org-agenda-restore-windows-after-quit t)
-
-  (setq org-src-window-setup 'current-window)
 
   ;; Support link to Manpage, EWW and Notmuch
   (require 'org-man)
