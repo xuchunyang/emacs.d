@@ -5,6 +5,7 @@
 
 # ELPA
 /elpa*/
+/elpa
 
 # Configuration files and Variable files for various packages
 # This is done via package 'no-littering'
