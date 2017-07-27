@@ -1,13 +1,16 @@
 #!/bin/sh
 # -*- mode: emacs-lisp; -*-
-tail -n +6 "$0" > "/tmp/${0//\//!}"
-exec emacs -Q --script "/tmp/${0//\//!}" -- "$@"
+F=/tmp/$(echo $0 | sed 's|/|!|g') &&
+    tail -n +7 "$0" > "$F" &&
+    exec emacs -Q --script "$F" -- "$@"
 
 ;;; hello --- A "Hello World!" program in Emacs Script -*- lexical-binding: t; -*-
 
 (message "Evaling %s..." load-file-name)
 
 (message "Hello world!")
+
+(message "$F is %s" (getenv "F"))
 
 ;; Command Line Arguments
 (message "Arguments: %S" argv)
