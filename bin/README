@@ -1,6 +1,0 @@
-Some scripts written in Emacs Lisp.
-
-1. Shebang (and how to turn on lexical-binding as well)
-2. Command Line argument / option
-3. Print (message and print etc)
-4. Input (i.e., read a string, password)

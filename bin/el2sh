@@ -1,4 +1,8 @@
-#!/usr/bin/env emacs --no-site-file --script
+#!/bin/sh
+# -*- mode: emacs-lisp; -*-
+tail -n +6 "$0" > "/tmp/${0//\//!}"
+exec emacs -Q --script "/tmp/${0//\//!}" -- "$@"
+
 ;;; el2sh --- Print Emacs Lisp data to Shell  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2017  Chunyang Xu

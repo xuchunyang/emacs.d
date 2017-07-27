@@ -1,4 +1,8 @@
-#!/usr/bin/env emacs --no-site-file --script
+#!/bin/sh
+# -*- mode: emacs-lisp; -*-
+tail -n +6 "$0" > "/tmp/${0//\//!}"
+exec emacs -Q --script "/tmp/${0//\//!}" -- "$@"
+
 ;;; csv-to-org-table --- Convert CSV to Org mode table  -*- lexical-binding: t; -*-
 (require 'org)
 
