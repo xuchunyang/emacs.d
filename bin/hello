@@ -1,35 +1,23 @@
-#!/usr/bin/env emacs --no-site-file --script
-;;; hello --- A demo script in Emacs Lisp  -*- lexical-binding: t; -*-
+#!/bin/sh
+# -*- mode: emacs-lisp; -*-
+tail -n +6 "$0" > "/tmp/${0//\//!}"
+exec emacs -Q --script "/tmp/${0//\//!}" -- "$@"
 
-;; Copyright (C) 2017  Chunyang Xu
+;;; hello --- A "Hello World!" program in Emacs Script -*- lexical-binding: t; -*-
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
-;; URL: https://github.com/xuchunyang/emacs.d
-;; Created: 2017-02-24
-;; Modified: 2017-02-24
+(message "Evaling %s..." load-file-name)
 
-;;; Commentary:
+(message "Hello world!")
 
-;; NOTE The shebang works on macOS since the argument is splited but
-;; not on GNU/Linux, one cah use 'emacs --script /path/to/the/script'
-;; instead.
+;; Command Line Arguments
+(message "Arguments: %S" argv)
+(setq argv nil)
 
-;;; Code:
-
-(message "%s" "Hello, world!")
-
-(terpri)
-
-(message "%s" "Current Environment:")
-(let ((alist `((emacs-version . ,emacs-version )
-               (lexical-binding . ,lexical-binding)
-               (load-path . ,load-path)
-               (exec-path . ,exec-path)
-               (features . ,features))))
-  (pp alist))
-
-;; Local Variables:
-;; time-stamp-pattern: "20/Modified:\\\\?[ \t]+%:y-%02m-%02d\\\\?\n"
-;; End:
+;; Lexical Binding
+(message "lexical-binding: %s" lexical-binding)
+(let ((fn (let ((s "Lexical Binding is working!"))
+            (lambda ()
+              (message s)))))
+  (funcall fn))
 
 ;;; hello ends here
