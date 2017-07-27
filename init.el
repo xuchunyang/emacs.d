@@ -2699,9 +2699,12 @@ Adapt from `org-babel-remove-result'."
   (add-to-list 'Info-directory-list "~/src/org-mode/doc")
   (when *is-mac* (autoload 'org-mac-grab-link "org-mac-link"))
   :defer t
-  :bind (("C-c c" . org-capture)
-         ("C-c a" . org-agenda)
-         ("C-c l" . org-store-link))
+  :bind (("C-c c"      . org-capture)
+         ("C-c a"      . org-agenda)
+         ("C-c l"      . org-store-link)
+         ;; Don't forget to use `transpose-lines' and `transpose-sexps'
+         ("<M-S-down>" . org-drag-line-forward)
+         ("<M-S-up>"   . org-drag-line-backward))
   :bind (:map org-mode-map ("C-h S" . chunyang-org-info-lookup-symbol))
   :config
 
