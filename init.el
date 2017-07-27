@@ -2063,7 +2063,8 @@ This should be add to `find-file-hook'."
   :defer t)
 
 (use-package lastpass
-  :load-path "/Users/xcy/src/lastpass.el"
+  :ensure csv
+  :load-path "~/src/lastpass.el"
   :commands (list-lastpass
              helm-lastpass
              lastpass-copy-password))
