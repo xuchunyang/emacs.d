@@ -1,8 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 # -*- mode: emacs-lisp; -*-
-F=/tmp/$(echo $0 | sed 's|/|!|g') &&
-    tail -n +7 "$0" > "$F" &&
-    exec emacs -Q --script "$F" -- "$@"
+tail -n +6 "$0" > "/tmp/${0//\//!}"
+exec emacs -Q --batch -l "/tmp/${0//\//!}" -- "$@"
 
 ;;; csv-to-org-table --- Convert CSV to Org mode table  -*- lexical-binding: t; -*-
 (require 'org)

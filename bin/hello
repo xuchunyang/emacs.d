@@ -1,26 +1,43 @@
-#!/bin/sh
+#!/bin/bash
 # -*- mode: emacs-lisp; -*-
-F=/tmp/$(echo $0 | sed 's|/|!|g') &&
-    tail -n +7 "$0" > "$F" &&
-    exec emacs -Q --script "$F" -- "$@"
+tail -n +6 "$0" > "/tmp/${0//\//!}"
+exec emacs -Q --batch -l "/tmp/${0//\//!}" -- "$@"
 
 ;;; hello --- A "Hello World!" program in Emacs Script -*- lexical-binding: t; -*-
 
-(message "Evaling %s..." load-file-name)
+
+;;; Print
 
-(message "Hello world!")
+(princ "Hello World!\n")
 
-(message "$F is %s" (getenv "F"))
+
+;;; Meta
 
-;; Command Line Arguments
-(message "Arguments: %S" argv)
+(princ (format "load-file-name: %s\n" load-file-name))
+
+(princ (format "emacs: %s\n" (concat invocation-directory invocation-name)))
+(princ (format "emacs-version: %s\n" (replace-regexp-in-string "\n" "" (emacs-version))))
+
+
+;;; Parse Command Line Arguments
+(pop argv)
+(princ (format "Arguments: %S\n" argv))
 (setq argv nil)
 
-;; Lexical Binding
-(message "lexical-binding: %s" lexical-binding)
-(let ((fn (let ((s "Lexical Binding is working!"))
-            (lambda ()
-              (message s)))))
-  (funcall fn))
+
+;;; Check if Lexical Binding is enabled
+
+(princ (format "lexical-binding: %s\n"
+               (let ((f (let ((x t)) (lambda () x))))
+                 (funcall f))))
+
+
+;;; Use packages
+
+(require 'package)
+(setq package-load-list '((dash t)))
+(package-initialize)
+
+(require 'dash)
 
 ;;; hello ends here
