@@ -48,6 +48,8 @@
                     (call-process "awk" nil t nil
                                   "NR % 2 == 0"
                                   (expand-file-name "~/.bash_history"))
+                    ;; Newest comes first
+                    (reverse-region (point-min) (point-max))
                     (buffer-string)))
           :action '(("Insert" . insert)
                     ("Copy"   . kill-new)))
