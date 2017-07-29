@@ -204,20 +204,17 @@
   ;; since it is soft loaded in `helm-grep'
   :preface
   (use-package wgrep-helm :ensure t :defer t)
-  (defun chunyang/helm-do-grep-ag (arg)
-    "Search current project with ag.
-If with prefix argument, search current directory."
+  (defun chunyang-helm-rg (type)
+    "Search the current project with ripgrep."
     (interactive "P")
-    (let ((dir (or (unless arg
-                     (when-let ((bf buffer-file-name)
-                                (root (vc-git-root bf))
-                                (root (expand-file-name root)))
-                       root))
-                   default-directory)))
-      (helm-grep-ag dir nil)))
+    (let ((default-directory
+            (or (chunyang-project-root)
+                default-directory))
+          (helm-grep-ag-command
+           "rg --color=always --smart-case --no-heading --line-number %s %s %s"))
+      (helm-do-grep-ag type)))
   :defer t
-  :bind (;; ("M-I" . chunyang/helm-do-grep-ag)
-         ("M-I" . helm-do-grep-ag))
+  :bind ("M-I" . chunyang-helm-rg)
   :config
   (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep)
   (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep-ag))
