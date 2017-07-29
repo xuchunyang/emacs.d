@@ -2606,7 +2606,7 @@ Called with a prefix arg set search provider (default Google)."
 ;; emacsclient --eval "(progn (setq server-eval-and-how-to-print 'buffer) (org-agenda-list))"
 ;;
 ;; `let' will not work.
-(defcustom server-eval-and-how-to-print 'supress
+(defcustom server-eval-and-how-to-print nil
   "Custom how to print in `server-eval-and-print'."
   :type '(choice
           (const :tag "Default (that is, print result of evaluation)" nil)
