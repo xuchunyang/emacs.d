@@ -1271,10 +1271,11 @@ Intended to be added to `isearch-mode-hook'."
   ;; (setq eldoc-message-function #'chunyang-eldoc-header-line-message)
   )
 
+(declare-function projectile-project-root "projectile")
 (defun chunyang-project-root ()
   "Return project root. If no project is found, return nil."
-  (cond ((require 'project) (cdr (project-current)))
-        ((require 'projectile) (ignore-errors (projectile-project-root)))
+  (cond ((require 'project nil t) (cdr (project-current)))
+        ((require 'projectile nil t) (ignore-errors (projectile-project-root)))
         (t (error
             "`project.el' or `projectile.el' is required to locate project root"))))
 
@@ -1449,7 +1450,12 @@ See also `describe-function-or-variable'."
   :defer t
   :diminish aggressive-indent-mode
   :init
-  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  :config
+  (push 'chunyang-eval-print-last-sexp
+        aggressive-indent-protected-commands)
+  (push 'chunyang-macroexpand-print-last-sexp
+        aggressive-indent-protected-commands))
 
 (use-package el-search
   :if (version< "25" emacs-version)
@@ -1477,12 +1483,7 @@ See also `describe-function-or-variable'."
              ("C-," . chunyang-macroexpand-print-last-sexp)
              :map lisp-interaction-mode-map
              ("C-j" . chunyang-eval-print-last-sexp)
-             ("C-," . chunyang-macroexpand-print-last-sexp))
-  (with-eval-after-load 'aggressive-indent
-    (push 'chunyang-eval-print-last-sexp
-          aggressive-indent-protected-commands)
-    (push 'chunyang-macroexpand-print-last-sexp
-          aggressive-indent-protected-commands)))
+             ("C-," . chunyang-macroexpand-print-last-sexp)))
 
 (use-package chunyang-package
   :commands chunyang-package-homepage)
@@ -2099,6 +2100,7 @@ This should be add to `find-file-hook'."
 
 (use-package message
   :defer t
+  :functions epa-mail-default-recipients
   :tips
   ((message-elide-region         . "C-c C-e 省略一段冗长的引用")
    (message-mark-inserted-region . "C-c M-m 给一段文字（常常是代码）加上框"))
@@ -2452,8 +2454,9 @@ Called with a prefix arg set search provider (default Google)."
 (use-package google-translate
   :ensure t
   :defer t
+  :defines google-translate-translation-directions-alist
   :preface
-  (defun chunyang-google-translate (query)
+  (defun chunyang-google-translate-web (query)
     "Launch Google Translate with Web Browser."
     (interactive
      (let* ((default (or (and (use-region-p)
@@ -2536,6 +2539,7 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package eshell
   :defer t
+  :functions eshell-get-history
   :preface
   (defun chunyang-eshell-insert-last-arg ()
     "Insert the (rough) last arg of the last command, like ESC-. in shell."
