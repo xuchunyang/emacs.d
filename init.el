@@ -2993,7 +2993,9 @@ Adapt from `org-babel-remove-result'."
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package ob-rust
+  :homepage https://travis-ci.org/micanzhang/ob-rust
   :ensure t
+  :load-path "~/src/ob-rust"
   :after org)
 
 (use-package toml-mode
