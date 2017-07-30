@@ -1352,6 +1352,12 @@ Intended to be added to `isearch-mode-hook'."
 (use-package chunyang-comment
   :commands chunyang-comment-section)
 
+(use-package json-mode
+  :summary Prefer json-mode to js-mode
+  :homepage https://github.com/joshwnj/json-mode
+  :ensure t
+  :defer t)
+
 
 ;;; Generic Lisp
 
