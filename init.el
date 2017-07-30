@@ -2495,6 +2495,16 @@ Called with a prefix arg set search provider (default Google)."
 
 ;;; Shell (including shell-command, shell, term and Eshell)
 
+(use-package flycheck-checkbashisms    ; Don't use Bash-only features in /bin/sh
+  :homepage https://github.com/Gnouc/flycheck-checkbashisms
+  :tips
+  - (executable-find "checkbashisms")
+  - To install checkbashisms, see
+  "https://github.com/Gnouc/flycheck-checkbashisms#install-checkbashisms"
+  :ensure t
+  :after flycheck
+  :config (flycheck-checkbashisms-setup))
+
 (use-package term
   :commands term
   :config
