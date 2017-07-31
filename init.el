@@ -2627,7 +2627,8 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package chunyang-shell
   :commands (shell/info                 ; For shell in Terminal (outside Emacs)
-             helm-bash-history))
+             helm-bash-history
+             chunyang-concat-shell-command))
 
 ;; For "emacsclient --eval EXPR". In EXPR, one has to use `setq' to modify this
 ;; variable temporarily, for example,

@@ -37,6 +37,7 @@
       (Info-menu (car args))
       (setq args (cdr args)))))
 
+(require 'helm)
 (defun helm-bash-history ()
   "View Bash history."
   (interactive)
@@ -54,6 +55,25 @@
           :action '(("Insert" . insert)
                     ("Copy"   . kill-new)))
         :buffer "*helm bash history*"))
+
+(defun chunyang-concat-shell-command (s)
+  "Convert multiline command into oneline format.
+
+E.g.,
+
+$ cd /tmp
+$ pwd
+
+=>
+
+cd /tmp && pwd"
+  (interactive "sMultiline command: ")
+  (let* ((commands (mapcar (lambda (line)
+                             (replace-regexp-in-string "^\\$ " "" line))
+                           (split-string s "\n" t)))
+         (command (mapconcat #'identity commands " && ")))
+    (kill-new command)
+    (message "Killed: %s" command)))
 
 (provide 'chunyang-shell)
 ;;; chunyang-shell.el ends here
