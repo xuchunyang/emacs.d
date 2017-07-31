@@ -216,6 +216,8 @@
   :defer t
   :bind ("M-I" . chunyang-helm-rg)
   :config
+  (setq helm-grep-ag-command
+        "rg --color=always --smart-case --no-heading --line-number %s %s %s")
   (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep)
   (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep-ag))
 
