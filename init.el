@@ -2514,6 +2514,15 @@ Called with a prefix arg set search provider (default Google)."
   :after flycheck
   :config (flycheck-checkbashisms-setup))
 
+(use-package bats-mode
+  :ensure t
+  :defer t
+  :summary "Bash Automated Testing System"
+  :homepage https://github.com/sstephenson/bats
+  :tips
+  - (man "1 bats")
+  - (man "7 bats"))
+
 (use-package term
   :commands term
   :config
