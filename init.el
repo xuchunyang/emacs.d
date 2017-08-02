@@ -3489,6 +3489,11 @@ provides similiar function."
   :notes "Unlike `hexl-mode', this is a minor mode"
   :defer t)
 
+(use-package el2markdown
+  :about Convert Emacs Lisp Commentry section into Markdown
+  :ensure t
+  :defer t)
+
 
 ;;; Custom
 
