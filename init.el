@@ -2308,7 +2308,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 (use-package shr-tag-pre-highlight
   :load-path "~/src/shr-tag-pre-highlight.el"
-  :ensure t
+  :ensure t                             ; for dependency `language-detection'
   :after shr
   :config
   (add-to-list 'shr-external-rendering-functions
