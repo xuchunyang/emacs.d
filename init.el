@@ -60,18 +60,18 @@
 
   ;; Add new keyword
   ;; <https://github.com/jwiegley/use-package#extending-use-package-with-new-or-modified-keywords>
-  (add-to-list 'use-package-keywords :homepage t)
-  (defun use-package-normalize/:homepage (&rest _))
-  (defun use-package-handler/:homepage (&rest _))
-  (add-to-list 'use-package-keywords :tips t)
-  (defun use-package-normalize/:tips (&rest _))
-  (defun use-package-handler/:tips (&rest _))
-  (add-to-list 'use-package-keywords :summary t)
-  (defun use-package-normalize/:summary (&rest _))
-  (defun use-package-handler/:summary (&rest _))
-  (add-to-list 'use-package-keywords :info t)
-  (defun use-package-normalize/:info (&rest _))
-  (defun use-package-handler/:info (&rest _)))
+
+  (defmacro chunyang-use-package-keywords-add (keyword)
+    "Add new keyword as placeholder."
+    `(progn
+       (add-to-list 'use-package-keywords ,keyword t)
+       (defun ,(intern (format "use-package-normalize/%s" keyword)) (&rest _))
+       (defun ,(intern (format "use-package-handler/%s" keyword)) (&rest _))))
+
+  (chunyang-use-package-keywords-add :about)
+  (chunyang-use-package-keywords-add :homepage)
+  (chunyang-use-package-keywords-add :info)
+  (chunyang-use-package-keywords-add :notes))
 
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
@@ -1353,7 +1353,7 @@ Intended to be added to `isearch-mode-hook'."
   :commands chunyang-comment-section)
 
 (use-package json-mode
-  :summary Prefer json-mode to js-mode
+  :about Prefer json-mode to js-mode
   :homepage https://github.com/joshwnj/json-mode
   :ensure t
   :defer t)
@@ -1806,7 +1806,7 @@ See also `describe-function-or-variable'."
   :ensure t
   :homepage https://github.com/magit/magit
   :info (info "(magit) Top")
-  :tips
+  :notes
   - To launch from shell, use $ emacsclient -e '(magit-status)'
   - Here is another tip
   - ...
@@ -2105,7 +2105,7 @@ This should be add to `find-file-hook'."
 (use-package message
   :defer t
   :functions epa-mail-default-recipients
-  :tips
+  :notes
   ((message-elide-region         . "C-c C-e 省略一段冗长的引用")
    (message-mark-inserted-region . "C-c M-m 给一段文字（常常是代码）加上框"))
   :preface
@@ -2504,7 +2504,7 @@ Called with a prefix arg set search provider (default Google)."
 
 (use-package flycheck-checkbashisms    ; Don't use Bash-only features in /bin/sh
   :homepage https://github.com/Gnouc/flycheck-checkbashisms
-  :tips
+  :notes
   - (executable-find "checkbashisms")
   - To install checkbashisms, see
   "https://github.com/Gnouc/flycheck-checkbashisms#install-checkbashisms"
@@ -2515,9 +2515,9 @@ Called with a prefix arg set search provider (default Google)."
 (use-package bats-mode
   :ensure t
   :defer t
-  :summary "Bash Automated Testing System"
+  :about Bash Automated Testing System
   :homepage https://github.com/sstephenson/bats
-  :tips
+  :notes
   - (man "1 bats")
   - (man "7 bats"))
 
@@ -2810,8 +2810,8 @@ Adapt from `org-babel-remove-result'."
              helm-org-easy-templates))
 
 (use-package toc-org
-  :homepage "https://github.com/snosov1/toc-org"
-  :tips "Add TOC tag to a heading then 'M-x toc-org-insert-toc'"
+  :homepage https://github.com/snosov1/toc-org
+  :notes "Add TOC tag to a heading then 'M-x toc-org-insert-toc'"
   :ensure t
   :defer t)
 
@@ -3006,7 +3006,7 @@ Adapt from `org-babel-remove-result'."
 (use-package racer
   :ensure t
   :homepage https://github.com/racer-rust/emacs-racer
-  :tips
+  :notes
   - $ cargo install racer
   :after rust-mode
   :config
@@ -3203,7 +3203,7 @@ provides similiar function."
 (use-package cider
   :ensure t
   :defer t
-  :tips "Type 'M-x cider-jack-in' to start")
+  :notes "Type 'M-x cider-jack-in' to start")
 
 
 ;;; Python
@@ -3445,7 +3445,7 @@ provides similiar function."
   :commands (sl sl-little sl-forever sl-little-forever sl-screen-saver))
 
 (use-package xpm
-  :homepage "http://www.gnuvola.org/software/xpm/"
+  :homepage http://www.gnuvola.org/software/xpm/
   :ensure t
   :defer t)
 
@@ -3458,13 +3458,13 @@ provides similiar function."
   :disabled t)
 
 (use-package spinner
-  :summary "Add spinners and progress-bars to the mode-line for ongoing operations"
+  :about "Add spinners and progress-bars to the mode-line for ongoing operations"
   :ensure t
   :defer t)
 
 ;; `pulse.el' has the similiar function
 (use-package beacon
-  :summary "Highlight the cursor whenever the window scrolls"
+  :about "Highlight the cursor whenever the window scrolls"
   :ensure t
   :defer t)
 
@@ -3472,13 +3472,13 @@ provides similiar function."
 ;;; Utilities
 
 (use-package restclient
-  :summary "Test HTTP API"
+  :about "Test HTTP API"
   :ensure t
   :defer t)
 
 (use-package hexl
-  :summary (info "(emacs) Editing Binary Files")
-  :tips
+  :about (info "(emacs) Editing Binary Files")
+  :notes
   - od
   - hexdump
   - xxd
@@ -3486,7 +3486,7 @@ provides similiar function."
 
 (use-package nhexl-mode
   :ensure t
-  :tips "Unlike `hexl-mode', this is a minor mode"
+  :notes "Unlike `hexl-mode', this is a minor mode"
   :defer t)
 
 
