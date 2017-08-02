@@ -2069,12 +2069,10 @@ This should be add to `find-file-hook'."
   :ensure t
   :defer t)
 
-(use-package lastpass
+(use-package helm-lastpass
   :ensure csv
-  :load-path "~/src/lastpass.el"
-  :commands (list-lastpass
-             helm-lastpass
-             lastpass-copy-password))
+  :load-path "~/src/helm-lastpass"
+  :commands helm-lastpass)
 
 
 ;;; Project
