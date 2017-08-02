@@ -2503,6 +2503,7 @@ Called with a prefix arg set search provider (default Google)."
 ;;; Shell (including shell-command, shell, term and Eshell)
 
 (use-package flycheck-checkbashisms    ; Don't use Bash-only features in /bin/sh
+  :disabled Use ShellCheck instead
   :homepage https://github.com/Gnouc/flycheck-checkbashisms
   :notes
   - (executable-find "checkbashisms")
