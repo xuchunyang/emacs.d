@@ -108,7 +108,9 @@
         (code (delete-and-extract-region beg end)))
     (insert ind "#+BEGIN_SRC " lang "\n"
             code (if (string-suffix-p "\n" code) "" "\n")
-            ind "#+END_SRC\n")))
+            ind "#+END_SRC\n")
+    (goto-char beg)
+    (back-to-indentation)))
 
 (provide 'chunyang-org)
 ;;; chunyang-org.el ends here
