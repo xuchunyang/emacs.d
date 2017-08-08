@@ -2555,6 +2555,7 @@ Called with a prefix arg set search provider (default Google)."
   :defer t
   :functions eshell-get-history
   :preface
+  ;; FIXME: Rework this, it has bugs, e.g., $ ls ~/Library/Application\ Scripts
   (defun chunyang-eshell-insert-last-arg ()
     "Insert the (rough) last arg of the last command, like ESC-. in shell."
     (interactive)
