@@ -3309,15 +3309,19 @@ provides similiar function."
   :init (add-hook 'before-save-hook 'time-stamp))
 
 (use-package autoinsert
-  ;; :emacwiki "https://www.emacswiki.org/emacs/AutoInsertMode"
+  :info (info "(autotype) Autoinserting")
+  :notes https://www.emacswiki.org/emacs/AutoInsertMode
   :defer t
   :config
   ;; Note that the following should not be evaled more than once
   (define-auto-insert
-    '(sh-mode . "Shell Script header")
+    '(sh-mode . "Bash Script header")
     ;; (info "(autotype) Skeleton Language")
     '("Short description: "
-      "#!/bin/sh" \n
+      "#!/usr/bin/env bash\n"
+      "#\n"
+      "# Copyright (C) " (format-time-string "%Y") " " user-full-name \n
+      "#\n"
       "# " (file-name-nondirectory (buffer-file-name)) " - " str \n
       \n \n)))
 
