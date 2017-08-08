@@ -97,5 +97,18 @@
                                         (line-end-position))
                                  (insert ,wrap)))))))))))
 
+;; [[https://emacs-china.org/t/topic/3538/12][针对粘贴代码段的编辑问题 - Emacs-general - Emacs China]]
+(defun chunyang-org-format-region-as-code-block (beg end)
+  (interactive "*r")
+  (let ((lang (read-string "Language: "))
+        (ind (save-excursion
+               (goto-char beg)
+               (back-to-indentation)
+               (buffer-substring (line-beginning-position) (point))))
+        (code (delete-and-extract-region beg end)))
+    (insert ind "#+BEGIN_SRC " lang "\n"
+            code (if (string-suffix-p "\n" code) "" "\n")
+            ind "#+END_SRC\n")))
+
 (provide 'chunyang-org)
 ;;; chunyang-org.el ends here

@@ -2809,7 +2809,8 @@ Adapt from `org-babel-remove-result'."
 
 (use-package chunyang-org
   :commands (chunyang-org-agenda-csv
-             helm-org-easy-templates))
+             helm-org-easy-templates
+             chunyang-org-format-region-as-code-block))
 
 (use-package toc-org
   :homepage https://github.com/snosov1/toc-org
