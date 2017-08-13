@@ -2770,22 +2770,21 @@ Adapt from `org-babel-remove-result'."
 
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((emacs-lisp . t)
-     (shell      . t)
-     (eshell     . t)
-     (ruby       . t)
-     (python     . t)
-     (perl       . t)
-     ;; Common Lisp
-     (lisp       . t)
-     (ditaa      . t)
-     ;; Guile, Racket etc
-     (scheme     . t)
-     ;; C, C++ and D
+   '((awk        . t)
      (C          . t)
+     (ditaa      . t)
+     (emacs-lisp . t)
+     (eshell     . t)
      (latex      . t)
+     (lisp       . t)
+     (org        . t)
+     (perl       . t)
+     (python     . t)
      (R          . t)
-     (org        . t)))
+     (ruby       . t)
+     (scheme     . t)
+     (shell      . t)))
+
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
 
