@@ -358,6 +358,33 @@ picked according to the major-mode."
     (message "Killed: %s" result)
     (insert result)))
 
+;; Quote C-h k in the format of [[notmuch:id:47D77E66-DE07-4D57-AC23-921ADB4537B5@ucsd.edu][Email from Charles Berry: Re: {O} {Feature Request} Prov]]
+(defun chunyang-format-help-on-key (buffer)
+  "Quote the contents of *Help* after calling C-h k."
+  (interactive "bDescribe key in buffer")
+  (let* ((args (eval (cadr (interactive-form #'describe-key))))
+         (key (car args))
+         help-message result)
+    (save-window-excursion
+      (with-current-buffer buffer
+        (apply #'describe-key args))
+      (with-current-buffer "*Help*"
+        (setq help-message
+              (buffer-substring-no-properties (point-min) (point-max))))
+      (with-temp-buffer
+        (insert help-message)
+        (goto-char (point-min))
+        (while (not (eobp))
+          (goto-char (line-beginning-position))
+          (insert "! ")
+          (forward-line))
+        (goto-char (point-min))
+        (insert (format ",----[ C-h k %s ]\n" (key-description key)))
+        (goto-char (point-max))
+        (insert "`----\n")
+        (setq result (buffer-string)))
+      (insert result))))
+
 ;; According to my test ('M-x trace-function undefined'), when I type
 ;; some undefined key, the command `undefined' will be called.
 ;; (define-advice undefined (:after () do-something-when-key-binding-not-defined)
