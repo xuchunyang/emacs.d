@@ -154,8 +154,7 @@
 ;; XXX WIP MacPorts interface (manage ports, discover ports etc)
 (use-package macports
   :if *is-mac*
-  :commands (macports-list-port
-             macports-info-port))
+  :commands (macports-describe-port))
 
 
 ;;; GNU/Linux

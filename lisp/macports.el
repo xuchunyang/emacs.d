@@ -24,19 +24,25 @@
 
 ;;; Code:
 
-(defun macports-list-port ()
-  (interactive)
-  (switch-to-buffer (get-buffer-create "*MacPorts*"))
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (shell-command "port list" (current-buffer))))
+(defvar macports-all-ports nil)
 
-(defun macports-info-port (port)
+(defun macports-all-ports ()
+  (setq macports-all-ports
+        (or macports-all-ports
+            (split-string (shell-command-to-string "port -q search ''")
+                          "\n" t))))
+
+;;;###autoload
+(defun macports-describe-port (port)
   (interactive
-   (list (save-excursion
-           (goto-char (line-beginning-position))
-           (current-word))))
-  (shell-command (concat "port info " port)))
+   (list
+    (completing-read "Describe Port: " (macports-all-ports) nil t)))
+  (with-current-buffer (get-buffer-create "*MacPorts Describe Port*")
+    (erase-buffer)
+    (insert (shell-command-to-string (concat "port info " port)))
+    (goto-char (point-min))
+    ;; XXX: Prettify the output (align, clickable link)
+    (display-buffer (current-buffer))))
 
 (provide 'macports)
 ;;; macports.el ends here
