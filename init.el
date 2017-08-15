@@ -2352,29 +2352,9 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :ensure t
   :commands devdocs-search)
 
-(defun web-search (prefix)
-  "Web search with s (see URL `https://github.com/zquestz/s').
-Called with a prefix arg set search provider (default Google)."
-  (interactive "P")
-  (let* ((provider
-          (if prefix
-              (completing-read
-               "Set search provider: "
-               (split-string (shell-command-to-string "s -l") "\n" t) nil t)))
-         (initial
-          (or (if (region-active-p)
-                  (buffer-substring-no-properties
-                   (region-beginning)
-                   (region-end)))
-              (thing-at-point 'symbol)
-              (thing-at-point 'word)))
-         (query (shell-quote-argument (read-string "Web Search: " initial))))
-    (call-process-shell-command
-     (if provider
-         (format "s -p %s %s" provider query)
-       (format "s %s" query)) nil)))
-
-(bind-key "M-s M-s" #'web-search)
+(use-package web-search
+  :load-path "~/src/web-search.el"
+  :bind ("M-s M-s" . web-search))
 
 
 ;;; Music
