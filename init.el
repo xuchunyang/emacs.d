@@ -114,6 +114,8 @@
 
 ;; Make ~/.emacs.d clean
 (use-package no-littering
+  :load-path "~/src/no-littering"       ; Prefer the local version if available,
+                                        ; just don't forget to update it
   :ensure t)
 
 
