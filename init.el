@@ -2075,6 +2075,14 @@ This should be add to `find-file-hook'."
   :load-path "~/src/helm-lastpass"
   :commands helm-lastpass)
 
+(use-package irfc
+  :about Read RFC within Emacs
+  :notes https://datatracker.ietf.org/
+  :ensure t
+  :defer t
+  :mode ("/rfc[0-9]+\\.txt\\'" . irfc-mode)
+  :commands irfc-visit)
+
 
 ;;; Project
 
