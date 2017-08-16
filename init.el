@@ -3213,7 +3213,7 @@ provides similiar function."
         python-shell-completion-native-enable nil))
 
 
-;; OCaml
+;;; OCaml
 (use-package OCaml
   :disabled t
   :ensure tuareg
@@ -3223,7 +3223,8 @@ provides similiar function."
   :defer t)
 
 
-;; shen <http://shenlanguage.org/>
+;;; Shen http://shenlanguage.org/
+
 (use-package shen-mode
   :ensure t
   :defer t)
@@ -3233,7 +3234,15 @@ provides similiar function."
   :defer t)
 
 
-;; AppleScript
+;;; Dao http://daoscript.org/
+
+(use-package ob-dao
+  :after org
+  :load-path "~/src/ob-dao")
+
+
+;;; AppleScript
+
 (use-package applescript-mode
   ;; Needs build with ns (cocoa) support
   :if (and (eq 'darwin system-type) (eq 'ns window-system))
