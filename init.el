@@ -2779,6 +2779,9 @@ Adapt from `org-babel-remove-result'."
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
 
+  ;; Upcase #+begin_example...#+end_example in the results
+  (setq org-babel-uppercase-example-markers t)
+
   ;; Highlight the result of source block
   (add-hook 'org-babel-after-execute-hook
             (defun chunyang-org-babel-highlight-result-maybe ()
