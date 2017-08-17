@@ -2365,7 +2365,10 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 (use-package web-search
   :load-path "~/src/web-search.el"
-  :bind ("M-s M-s" . web-search))
+  :bind ("M-s M-s" . web-search)
+  :config
+  (add-to-list 'web-search-providers '("JavBus" "https://www.javbus.com/%s" "Jav"))
+  (add-to-list 'web-search-providers '("OneJAV" "https://onejav.com/search/%s" "Jav")))
 
 
 ;;; Music
