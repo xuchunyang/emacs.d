@@ -2170,7 +2170,7 @@ This should be add to `find-file-hook'."
   (setq notmuch-crypto-process-mime t)
 
   ;; Don't save sent mail locally
-  (setq notmuch-fcc-dirs nil)
+  (setq notmuch-fcc-dirs "Sent")
   
   ;; Don't display notmuch logo, it's invisible in dark theme
   (setq notmuch-show-logo nil)
