@@ -2110,7 +2110,8 @@ This should be add to `find-file-hook'."
       user-mail-address    "mail@xuchunyang.me"
       ;; This is required for ~/.authinfo.gpg but not ~/.authinfo
       smtpmail-smtp-user   user-mail-address
-      smtpmail-smtp-server "smtp.exmail.qq.com"
+      smtpmail-smtp-server "smtp.migadu.com"
+      smtpmail-smtp-service 587
       send-mail-function   'smtpmail-send-it)
 
 (use-package message
