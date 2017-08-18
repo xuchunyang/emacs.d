@@ -17,6 +17,11 @@ exec emacs -Q --batch -l "/tmp/${0//\//!}" -- "$@"
 (goto-char (1- (point-max)))
 (org-table-insert-hline)
 
+;; Round corners
+(goto-char (point-min))
+(while (re-search-forward (rx (or "|-" "-|")) nil t)
+  (replace-match (replace-regexp-in-string "|" "+" (match-string 0) t t)))
+
 (princ (buffer-string))
 
 ;;; csv-to-org-table ends here
