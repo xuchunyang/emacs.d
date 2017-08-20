@@ -2772,6 +2772,7 @@ Adapt from `org-babel-remove-result'."
      (eshell     . t)
      (latex      . t)
      (lisp       . t)
+     (lua        . t)
      (org        . t)
      (perl       . t)
      (python     . t)
@@ -3218,6 +3219,7 @@ provides similiar function."
 
 
 ;;; OCaml
+
 (use-package OCaml
   :disabled t
   :ensure tuareg
@@ -3252,6 +3254,19 @@ provides similiar function."
   :if (and (eq 'darwin system-type) (eq 'ns window-system))
   :ensure t
   :mode ("\\.applescript\\'" "\\.scpt\\'"))
+
+
+;;; Lua
+
+(use-package lua-mode
+  :ensure t
+  :defer t)
+
+(use-package company-lua
+  :ensure t
+  :after lua-mode
+  :config
+  (add-to-list 'company-backends 'company-lua))
 
 
 ;;; Math
