@@ -282,5 +282,19 @@ Relative:     ../init.el
                  (funcall replace (expand-file-name filename)))))
       (user-error "No filename found at point"))))
 
+
+;;; Sorting
+
+(defun chunyang-sort-sexps (reverse beg end)
+  "Sort sexps in the Region."
+  (interactive "*P\nr")
+  (save-restriction
+    (narrow-to-region beg end)
+    (goto-char (point-min))
+    (let ((nextrecfun (lambda () (skip-syntax-forward "-.>")))
+          (endrecfun  #'forward-sexp))
+      ;; To ignore case, change `sort-fold-case'´to non-nil
+      (sort-subr reverse nextrecfun endrecfun))))
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
