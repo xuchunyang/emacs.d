@@ -2214,10 +2214,19 @@ This should be add to `find-file-hook'."
     (unless *is-mac*
       (user-error
        "`chunyang-eww-visit-chrome-tab' supports macOS only"))
-    (require 'grab-mac-link)
-    (require 'dash)
-    (-let (((url . _title) (grab-mac-link-chrome-1)))
-      (eww url)))
+    
+    (if (require 'grab-mac-link nil t)
+        (progn
+          (require 'dash)
+          (-let (((url . _title) (grab-mac-link-chrome-1)))
+            (eww url)))
+      (eww
+       (replace-regexp-in-string
+        (rx (or (and string-start ?\")
+                (and ?\" string-end)))
+        ""
+        (do-applescript
+         "tell application \"Google Chrome\" to return URL of active tab of first window")))))
   (defun helm-eww-bookmarks ()
     "My EWW bookmarks manager using helm."
     (interactive)
