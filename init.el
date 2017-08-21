@@ -2713,15 +2713,6 @@ Adapt from `org-babel-remove-result'."
   ;; Prefer Org mode from git if available
   (add-to-list 'load-path "~/src/org-mode/lisp")
   (add-to-list 'load-path "~/src/org-mode/contrib/lisp")
-  ;; Move the directory of `htmlize.el' from Melpa to the beginning of
-  ;; `load-path' to make sure it is used, otherwise one older version
-  ;; at org git repo will be used.
-  (let ((htmlize (cl-find-if
-                  (lambda (path)
-                    (string-prefix-p "htmlize-" (file-name-nondirectory path)))
-                  load-path)))
-    (setq load-path (delete htmlize load-path))
-    (push htmlize load-path))
 
   (add-to-list 'Info-directory-list "~/src/org-mode/doc")
   (when *is-mac* (autoload 'org-mac-grab-link "org-mac-link"))
