@@ -1814,7 +1814,12 @@ See also `describe-function-or-variable'."
   - Here is another tip
   - ...
   :bind ("C-x g" . magit-status)
-  :config (setq magit-save-repository-buffers 'dontask))
+  :config
+  (setq magit-save-repository-buffers 'dontask)
+  ;; M-x `magit-list-repositories'
+  (setq magit-repository-directories
+        '(("~/.emacs.d" . 0)
+          ("~/src"      . 1))))
 
 (use-package vc
   :defer t
