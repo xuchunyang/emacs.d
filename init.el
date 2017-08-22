@@ -151,7 +151,9 @@
              chunyang-mac-Finder-reveal
              chunyang-mac-edit-file-tags
              chunyang-mac-search-tags
-             helm-chunyang-mac-tags))
+             helm-chunyang-mac-tags
+             chunyang-chrome-refresh
+             chunyang-chrome-url))
 
 ;; XXX WIP MacPorts interface (manage ports, discover ports etc)
 (use-package macports
@@ -1247,7 +1249,28 @@ Intended to be added to `isearch-mode-hook'."
     (insert (format "[%s](%s)" title link)))
   ;; :mode ("README\\.md\\'" . gfm-mode)
   :config
-  (setq markdown-command "pandoc --standalone -f markdown -t html"))
+  ;; XXX: Try to to Google Code Prettify, --no-highlight
+  (setq markdown-command "pandoc --standalone -f markdown -t html")
+
+  ;; Live Preview in Chrome
+  (defun chunyang-markdown-preview-in-chrome ()
+    "Export Markdown and preview the result in Chrome.
+This function reuses the current tab of Chrome,
+unlike `markdown-preview'."
+    (interactive)
+    (let ((output (markdown-export)))
+      (if (string-match-p (regexp-quote output) (chunyang-chrome-url))
+          (chunyang-chrome-refresh)
+        (browse-url output))))
+
+  (define-minor-mode chunyang-markdown-preview-in-chrome-mode
+    "Run `chunyang-markdown-preview-in-chrome' on save."
+    :lighter " MD-Preview-in-Chrome"
+    (unless (eq major-mode 'markdown-mode)
+      (user-error "Error: %s is not Markdown Mode" major-mode))
+    (if chunyang-markdown-preview-in-chrome-mode
+        (add-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :append :local)
+      (remove-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :local))))
 
 (use-package yaml-mode :ensure t :defer t)
 

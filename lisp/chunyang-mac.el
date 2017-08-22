@@ -181,5 +181,23 @@ URL `https://support.apple.com/kb/PH25325?locale=en_US'."
                    "Reveal with Dired" #'helm-open-dired))
         :buffer "*helm find file by tags*"))
 
+
+;;; Google Chrome
+
+(defun chunyang-chrome-refresh ()
+  "Refresh the current tab of Chrome."
+  (do-applescript
+   "tell application \"Chrome\" \
+to tell the active tab of its first window to reload"))
+
+(defun chunyang-chrome-url ()
+  "Return the URL of the current tab of Chrome."
+  (replace-regexp-in-string
+   (rx (or (and string-start ?\")
+           (and ?\" string-end)))
+   ""
+   (do-applescript
+    "tell application \"Google Chrome\" to return URL of active tab of first window")))
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
