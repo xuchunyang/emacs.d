@@ -21,9 +21,6 @@
 # ChangeLog (created by C-x 4 a)
 ChangeLog
 
-# HTML (usually created by Org exporting)
-*.html
-
 # Emacs module
 *.o
 *.so

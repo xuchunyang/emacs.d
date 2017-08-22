@@ -112,5 +112,19 @@
     (goto-char beg)
     (back-to-indentation)))
 
+(defun chunyang-org-preview-via-pandoc ()
+  (interactive)
+  (unless (eq 'org-mode major-mode)
+    (user-error "Error: this is not Org mode"))
+  (let ((input (buffer-file-name))
+        (output (org-export-output-file-name ".html")))
+    (shell-command
+     (format "pandoc -s -f org -t html --no-highlight \
+                     -A ~/.emacs.d/misc/include-code-prettify.html %s | \
+              code-prettify > %s"
+             (shell-quote-argument input)
+             (shell-quote-argument output)))
+    (browse-url output)))
+
 (provide 'chunyang-org)
 ;;; chunyang-org.el ends here

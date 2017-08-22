@@ -1249,8 +1249,10 @@ Intended to be added to `isearch-mode-hook'."
     (insert (format "[%s](%s)" title link)))
   ;; :mode ("README\\.md\\'" . gfm-mode)
   :config
-  ;; XXX: Try to to Google Code Prettify, --no-highlight
-  (setq markdown-command "pandoc --standalone -f markdown -t html")
+  (setq markdown-command
+        "pandoc -s -f markdown -t html --no-highlight \
+                -A ~/.emacs.d/misc/include-code-prettify.html | \
+         code-prettify") 
 
   ;; Live Preview in Chrome
   (defun chunyang-markdown-preview-in-chrome ()
@@ -2837,7 +2839,8 @@ Adapt from `org-babel-remove-result'."
 (use-package chunyang-org
   :commands (chunyang-org-agenda-csv
              helm-org-easy-templates
-             chunyang-org-format-region-as-code-block))
+             chunyang-org-format-region-as-code-block
+             chunyang-org-preview-via-pandoc))
 
 (use-package toc-org
   :homepage https://github.com/snosov1/toc-org
