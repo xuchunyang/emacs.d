@@ -1249,6 +1249,9 @@ Intended to be added to `isearch-mode-hook'."
     (insert (format "[%s](%s)" title link)))
   ;; :mode ("README\\.md\\'" . gfm-mode)
   :config
+  (setq markdown-fontify-code-blocks-natively t)
+  ;; Use M-x `markdown-edit-code-block' to edit code in another buffer
+  
   (setq markdown-command
         "pandoc -s -f markdown -t html --no-highlight \
                 -A ~/.emacs.d/misc/include-code-prettify.html | \
