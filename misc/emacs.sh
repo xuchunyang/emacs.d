@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+#
 # emacs.sh --- Terminal.app loves Emacs.app
 #
 # Terminal.app --> emacsclient(1) --> Emacs.app
@@ -112,4 +114,20 @@ org-capture ()
     encoded=$(url-escape $body)
     emacsclient --no-wait "org-protocol://capture?template=t&body=$encoded"
     emacsclient --eval '(open-emacs-window)' > /dev/null
+}
+
+ec () {
+    for arg in "$@"; do
+        shift
+        case "$arg" in
+            --fun*) func=starts && set -- "$@" "--eval" ;;
+            -*) func=ends && set -- "$@" "$arg" ;;
+            *) if [[ "$func" == starts ]]; then
+                   set -- "$@" "($arg)"
+               else
+                   set -- "$@" "$arg"
+               fi
+        esac
+    done
+    emacsclient "$@"
 }
