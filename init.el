@@ -3303,6 +3303,15 @@ provides similiar function."
   (add-to-list 'company-backends 'company-lua))
 
 
+;;; Plot
+
+(use-package asymptote
+  :homepage https://github.com/vectorgraphics/asymptote
+  :load-path "/opt/local/share/asymptote"
+  :defer t
+  :init (load "/opt/local/share/asymptote/asy-init.el" :no-error :no-message))
+
+
 ;;; Math
 
 (use-package Maxima
