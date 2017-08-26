@@ -1249,6 +1249,10 @@ Intended to be added to `isearch-mode-hook'."
     (insert (format "[%s](%s)" title link)))
   ;; :mode ("README\\.md\\'" . gfm-mode)
   :config
+  ;; `emacs-lisp', `elisp' and `el' are all Emacs Lisp
+  (cl-pushnew '("el" . emacs-lisp-mode) markdown-code-lang-modes)
+  (cl-pushnew '("emacs-lisp" . emacs-lisp-mode) markdown-code-lang-modes)
+
   (setq markdown-fontify-code-blocks-natively t)
   ;; Use M-x `markdown-edit-code-block' to edit code in another buffer
   
