@@ -38,8 +38,7 @@
 (setq package-archives
       '(("gnu"    . "http://elpa.emacs-china.org/gnu/")
         ("org"    . "http://elpa.emacs-china.org/org/")
-        ("melpa"  . "http://elpa.emacs-china.org/melpa/")
-        ("user42" . "http://elpa.emacs-china.org/user42/")))
+        ("melpa"  . "http://elpa.emacs-china.org/melpa/")))
 
 ;; Don't share the same elpa accross different versions of Emacs
 (setq package-user-dir
@@ -3000,44 +2999,6 @@ Adapt from `org-babel-remove-result'."
   :init
   (eval-after-load 'flycheck
     '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
-
-;; GTK+
-
-(use-package gtk-look
-  :if (eq system-type 'gnu/linux)
-  :ensure t
-  :defer t
-  :functions gtk-lookup-cache-init
-  :preface
-  (defun devhelp (symbol)
-    (interactive (list (current-word)))
-    (and symbol
-         (start-process "devhelp" nil "devhelp" "-s" symbol)))
-
-  (defvar helm-gtk-lookup-symbol-input-history nil)
-  (defun helm-gtk-lookup-symbol ()
-    (interactive)
-    (helm :sources
-          (helm-build-sync-source "gtk-doc"
-            :candidates (gtk-lookup-cache-init)
-            :action
-            '(("View gtk-doc in eww" .
-               (lambda (entry)
-                 (eww-browse-url
-                  (concat "file://" (nth 1 entry) (nth 0 entry)))))))
-          :input (when (memq major-mode '(c-mode))
-                   (current-word))
-          :buffer "*helm gtk-doc*"
-          :history 'helm-gtk-lookup-symbol-input-history))
-  :init
-  (defun chunyang-c-mode-setup-gtk ()
-    (define-key c-mode-map "\C-h." 'gtk-lookup-symbol))
-  (add-hook 'c-mode-hook 'chunyang-c-mode-setup-gtk)
-  :config
-  ;; Prefer EWW (`browse-url' prefers system's default browser)
-  (setq browse-url-browser-function
-        '(("file:///usr/share" . eww-browse-url)
-          ("." . browse-url-default-browser))))
 
 
 ;;; Rust
