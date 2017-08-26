@@ -40,6 +40,10 @@
            (and (equal (minibuffer-prompt) "Shell command: ")
                 current-prefix-arg
                 (funcall prompt-fn "Shell command and insert output: ")))
+          ((eq this-command 'eshell-command)
+           (and (equal (minibuffer-prompt) "Emacs shell command: ")
+                current-prefix-arg
+                (funcall prompt-fn "Emacs shell command and insert output: ")))
           ((eq this-command 'async-shell-command)
            (and (equal (minibuffer-prompt) "Async shell command: ")
                 current-prefix-arg
@@ -47,9 +51,7 @@
 
 (define-minor-mode prompt-watcher-mode
   "Watch the minibuffer prompt and customize if asking."
-  :init-value nil
   :global t
-  :lighter ""
   (if prompt-watcher-mode
       (add-hook 'minibuffer-setup-hook #'prompt-watcher)
     (remove-hook 'minibuffer-setup-hook #'prompt-watcher)))
