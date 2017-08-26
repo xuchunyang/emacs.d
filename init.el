@@ -3464,6 +3464,7 @@ provides similiar function."
 ;; (setq redisplay-dont-pause nil)
 
 (use-package opencc
+  :ensure t
   :load-path "~/src/emacs-opencc")
 
 
