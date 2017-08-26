@@ -208,31 +208,32 @@
 
 
 ;;; Font
-(cl-case window-system
-  ;; 'mac -> EmacsMac.app Carbon
-  ;; 'ns  -> Emacs.app Cocoa
-  ((mac ns)
-   ;; 等宽: Source Code Pro 13 + STkaiti 16
-   (setq face-font-rescale-alist `(("STkaiti" . ,(/ 16.0 13))))
+(ignore-errors
+  (cl-case window-system
+    ;; 'mac -> EmacsMac.app Carbon
+    ;; 'ns  -> Emacs.app Cocoa
+    ((mac ns)
+     ;; 等宽: Source Code Pro 13 + STkaiti 16
+     (setq face-font-rescale-alist `(("STkaiti" . ,(/ 16.0 13))))
 
-   (set-face-attribute 'default nil :font "Source Code Pro-13")
+     (set-face-attribute 'default nil :font "Source Code Pro-13")
 
-   (set-fontset-font t 'han      (font-spec :family "STkaiti"))
-   (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti"))
+     (set-fontset-font t 'han      (font-spec :family "STkaiti"))
+     (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti"))
 
-   ;; 测试
-   "
+     ;; 测试
+     "
 | 软件      |  版本 | 发布日期     |
 |-----------+-------+--------------|
 | GNU Emacs |  25.1 | 2016 年 9 月 |
 | Org       | 9.9.5 | 2017 年 2 月 |
 "
-   ;; 问题：不等高 Height
-   )
-  ('w32
-   (set-face-attribute 'default nil :font "Source Code Pro-10"))
-  ('x
-   (set-face-attribute 'default nil :font "Source Code Pro-10")))
+     ;; 问题：不等高 Height
+     )
+    ('w32
+     (set-face-attribute 'default nil :font "Source Code Pro-10"))
+    ('x
+     (set-face-attribute 'default nil :font "Source Code Pro-10"))))
 
 
 ;; Theme
