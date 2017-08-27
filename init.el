@@ -22,6 +22,12 @@
                 (line-end-position)))
       (goto-char (point-max)))))
 
+(defun chunyang-init-file-search ()
+  "Search this init file."
+  (interactive)
+  (let ((default-directory user-emacs-directory))
+    (call-interactively #'helm-do-grep-ag)))
+
 
 ;;; Remacs
 
