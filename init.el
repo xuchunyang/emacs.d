@@ -151,7 +151,7 @@
   :if *is-mac*
   :commands (chunyang-mac-Terminal-send-region
              chunyang-mac-Terminal-cd
-             chunyang-mac-iTerm-shell-command
+             chunyang-mac-iTerm-send-region
              chunyang-mac-iTerm-cd
              chunyang-mac-Finder-reveal
              chunyang-mac-edit-file-tags

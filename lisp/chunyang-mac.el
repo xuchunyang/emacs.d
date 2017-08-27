@@ -58,24 +58,20 @@
 
 ;;; iTerm.app
 
-;;;###autoload
-(defun chunyang-mac-iTerm-shell-command (text)
-  "Write TEXT into iTerm like user types it with keyboard."
-  (interactive
-   (list
-    (read-shell-command "Run Shell command in iTerm: "
-                        (when (use-region-p)
-                          (buffer-substring-no-properties
-                           (region-beginning)
-                           (region-end))))))
+(defun chunyang-mac-iTerm-send-string (string)
   (do-applescript
    (concat
     "tell application \"iTerm\"\n"
     "    activate\n"
     "    tell current session of current window\n"
-    "        write text \"" text "\"\n"
+    "        write text \"" string "\"\n"
     "        end tell\n"
     "end tell")))
+
+(defun chunyang-mac-iTerm-send-region (start end)
+  "Send the current region to iTerm.app."
+  (interactive "r")
+  (chunyang-mac-iTerm-send-string (buffer-substring start end)))
 
 ;;;###autoload
 (defun chunyang-mac-iTerm-cd (dir)
@@ -87,7 +83,7 @@
                      (read-directory-name "cd to: ")
                    default-directory))))
   (let ((cmd (format "cd %s" dir)))
-    (chunyang-mac-iTerm-shell-command cmd)))
+    (chunyang-mac-iTerm-send-string cmd)))
 
 
 ;;; Finder.app
