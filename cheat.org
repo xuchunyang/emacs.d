@@ -2,7 +2,10 @@
 
 * wget
 
-Downlaod file and write its contents to STDOUT:
+Download files from the Web.
+Supports HTTP, HTTPS, and FTP.
+
+** Downlaod file and write its contents to STDOUT
 
 #+BEGIN_SRC sh
 wget -O- xuchunyang.me
@@ -11,13 +14,13 @@ wget -O- xuchunyang.me
 #+RESULTS:
 : Under construction...
 
-Download 404 page:
+** Download 404 page
 
 #+BEGIN_SRC sh :results output silent
 wget --content-on-error -qO- xuchunyang.me/file/not/found || [[ $? == 8 ]]
 #+END_SRC
 
-Exectue shell script at URL through pipe:
+** Exectue shell script at URL through pipe
 
 #+BEGIN_SRC sh :results output
 wget -O- https://xuchunyang.me/hello.sh | sh
@@ -26,7 +29,7 @@ wget -O- https://xuchunyang.me/hello.sh | sh
 #+RESULTS:
 : Hello World
 
-Pretend to curl:
+** Pretend to curl
 
 #+BEGIN_SRC sh
 wget -q -O- -U curl/7.55.1 ip.cn
@@ -35,7 +38,7 @@ wget -q -O- -U curl/7.55.1 ip.cn
 #+RESULTS:
 : 当前 IP：221.231.52.191 来自：江苏省盐城市 电信
 
-Use HTTP Proxy:
+** Use HTTP Proxy
 
 #+BEGIN_SRC sh
 http_proxy=http://127.0.0.1:1087 wget -q -O- -U curl/7.55.1 ip.cn
@@ -44,7 +47,7 @@ http_proxy=http://127.0.0.1:1087 wget -q -O- -U curl/7.55.1 ip.cn
 #+RESULTS:
 : 当前 IP：27.0.232.148 来自：香港特别行政区 OneProvider
 
-Resume an interrupted download previously started by wget itself:
+** Resume an interrupted download previously started by wget itself
 
 #+BEGIN_SRC sh
 wget -c https://mirrors.tuna.tsinghua.edu.cn/gnu/emacs/emacs-25.2.tar.gz
@@ -52,7 +55,10 @@ wget -c https://mirrors.tuna.tsinghua.edu.cn/gnu/emacs/emacs-25.2.tar.gz
 
 * curl
 
-Follow redirection:
+Transfers data from or to a server.
+Supports most protocols, including HTTP, FTP, and POP3.
+
+** Follow redirection
 
 #+BEGIN_SRC sh
 curl -L xuchunyang.me
@@ -61,7 +67,7 @@ curl -L xuchunyang.me
 #+RESULTS:
 : Under construction...
 
-Print header only:
+** Print header only
 
 #+BEGIN_SRC sh :results output
 curl -I xuchunyang.me
@@ -81,7 +87,7 @@ Server: Netlify
 
 #+END_EXAMPLE
 
-HTTP proxy:
+** HTTP proxy
 
 #+BEGIN_SRC sh
 # no proxy
@@ -97,7 +103,7 @@ curl -x http://127.0.0.1:1087 ip.cn
 | 当前 | IP：27.0.232.148   | 来自：香港特别行政区 | OneProvider |
 | 当前 | IP：27.0.232.148   | 来自：香港特别行政区 | OneProvider |
 
-Socks proxy:
+** Socks proxy
 
 #+BEGIN_SRC sh
 curl -x socks5://127.0.0.1:1086 ip.cn
@@ -106,7 +112,7 @@ curl -x socks5://127.0.0.1:1086 ip.cn
 #+RESULTS:
 : 当前 IP：27.0.232.148 来自：香港特别行政区 OneProvider
 
-Exectue shell script at URL through pipe:
+** Exectue shell script at URL through pipe
 
 #+BEGIN_SRC sh
 curl -sSf https://xuchunyang.me/hello.sh | sh
@@ -114,3 +120,74 @@ curl -sSf https://xuchunyang.me/hello.sh | sh
 
 #+RESULTS:
 : Hello World
+
+* diff
+
+Compare files and directories.
+
+** Diff the output of two commands via =(info "(bash) Process Substitution")=
+
+#+BEGIN_SRC bash :results output
+diff -u <(echo foo bar) <(echo foo baz) || [[ $? == 1 ]]
+#+END_SRC
+
+#+RESULTS:
+: --- /dev/fd/63	2017-08-28 20:01:05.250831000 +0800
+: +++ /dev/fd/62	2017-08-28 20:01:05.251107000 +0800
+: @@ -1 +1 @@
+: -foo bar
+: +foo baz
+
+** Diff the output of a command with some text
+
+#+BEGIN_SRC bash :results output
+diff -u <(pwd) - <<< $HOME || [[ $? == 1 ]]
+#+END_SRC
+
+#+RESULTS:
+: --- /dev/fd/63	2017-08-28 20:06:56.728148000 +0800
+: +++ -	2017-08-28 20:06:56.733910000 +0800
+: @@ -1 +1 @@
+: -/Users/xcy/.emacs.d
+: +/Users/xcy
+
+* cat
+
+concatenate files and print on the standard output
+
+** Here document:
+
+#+BEGIN_SRC sh :results output
+cat << EOF
+\$ Working dir "$PWD" `pwd`
+EOF
+#+END_SRC
+
+#+RESULTS:
+: $ Working dir "/Users/xcy/.emacs.d" /Users/xcy/.emacs.d
+
+** Here strings (Bash/Zsh only)
+
+#+BEGIN_SRC sh
+cat <<< $HOME
+cat <<< `pwd`
+#+END_SRC
+
+#+RESULTS:
+| /Users/xcy          |
+| /Users/xcy/.emacs.d |
+
+* tee
+
+Read from standard input and write to standard output and files.
+
+** Copy standard input to each FILE, and also to standard output
+
+#+BEGIN_SRC sh :results output
+curl -L xuchunyang.me/hello.sh | tee hello.sh
+#+END_SRC
+
+#+RESULTS:
+: #!/bin/sh
+: 
+: echo Hello World
