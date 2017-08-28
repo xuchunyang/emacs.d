@@ -1,0 +1,116 @@
+#+STARTUP: hideblocks
+
+* wget
+
+Downlaod file and write its contents to STDOUT:
+
+#+BEGIN_SRC sh
+wget -O- xuchunyang.me
+#+END_SRC
+
+#+RESULTS:
+: Under construction...
+
+Download 404 page:
+
+#+BEGIN_SRC sh :results output silent
+wget --content-on-error -qO- xuchunyang.me/file/not/found || [[ $? == 8 ]]
+#+END_SRC
+
+Exectue shell script at URL through pipe:
+
+#+BEGIN_SRC sh :results output
+wget -O- https://xuchunyang.me/hello.sh | sh
+#+END_SRC
+
+#+RESULTS:
+: Hello World
+
+Pretend to curl:
+
+#+BEGIN_SRC sh
+wget -q -O- -U curl/7.55.1 ip.cn
+#+END_SRC
+
+#+RESULTS:
+: 当前 IP：221.231.52.191 来自：江苏省盐城市 电信
+
+Use HTTP Proxy:
+
+#+BEGIN_SRC sh
+http_proxy=http://127.0.0.1:1087 wget -q -O- -U curl/7.55.1 ip.cn
+#+END_SRC
+
+#+RESULTS:
+: 当前 IP：27.0.232.148 来自：香港特别行政区 OneProvider
+
+Resume an interrupted download previously started by wget itself:
+
+#+BEGIN_SRC sh
+wget -c https://mirrors.tuna.tsinghua.edu.cn/gnu/emacs/emacs-25.2.tar.gz
+#+END_SRC
+
+* curl
+
+Follow redirection:
+
+#+BEGIN_SRC sh
+curl -L xuchunyang.me
+#+END_SRC
+
+#+RESULTS:
+: Under construction...
+
+Print header only:
+
+#+BEGIN_SRC sh :results output
+curl -I xuchunyang.me
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXAMPLE
+HTTP/1.1 301 Moved Permanently
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 38
+Content-Type: text/plain
+Date: Mon, 28 Aug 2017 11:31:00 GMT
+Location: https://xuchunyang.me/
+Age: 160
+Connection: keep-alive
+Server: Netlify
+
+#+END_EXAMPLE
+
+HTTP proxy:
+
+#+BEGIN_SRC sh
+# no proxy
+curl ip.cn
+# use environment variable
+http_proxy=http://127.0.0.1:1087 curl ip.cn
+# or use cli option -x/--proxy
+curl -x http://127.0.0.1:1087 ip.cn
+#+END_SRC
+
+#+RESULTS:
+| 当前 | IP：221.231.52.191 | 来自：江苏省盐城市   | 电信        |
+| 当前 | IP：27.0.232.148   | 来自：香港特别行政区 | OneProvider |
+| 当前 | IP：27.0.232.148   | 来自：香港特别行政区 | OneProvider |
+
+Socks proxy:
+
+#+BEGIN_SRC sh
+curl -x socks5://127.0.0.1:1086 ip.cn
+#+END_SRC
+
+#+RESULTS:
+: 当前 IP：27.0.232.148 来自：香港特别行政区 OneProvider
+
+Exectue shell script at URL through pipe:
+
+#+BEGIN_SRC sh
+curl -sSf https://xuchunyang.me/hello.sh | sh
+#+END_SRC
+
+#+RESULTS:
+: Hello World
