@@ -419,11 +419,15 @@
   :bind ("M-y" . helm-show-kill-ring))
 
 (use-package ivy
+  :homepage https://github.com/abo-abo/swiper
+  :info (info "(ivy) Top")
   :ensure t
   :diminish ivy-mode
   :notes
-  - To insert current candidate into buffer, type "M-o" then "i"
-  - To insert word at point into minibuffer, type "M-i" 'ivy-yank-word'
+  - To insert the current candidate into buffer, type "M-o" then "i"
+  - To insert word at point into minibuffer, type "M-i" (ivy-yank-word)
+  - To select the current input, not candidate, type "C-M-j" (ivy-immediate-done)
+  - Can't mark multiple candidates, type "M-C-m" (ivy-call) or "C-M-o" (ivy-dispatching-call)
   :init (setq ivy-mode-map nil) ;; Leave C-x b `switch-to-buffer'
   :bind (("C-c C-r" . ivy-resume)
          (("M-l"    . ivy-switch-buffer)))
@@ -434,7 +438,8 @@
 (use-package swiper
   :ensure t
   :after ivy
-  :notes To put candidates into a new buffer, use "C-c C-o" 'ivy-occur'
+  :notes
+  - To put the candidates into a new buffer, use "C-c C-o" (ivy-occur)
   :bind ("M-i" . swiper))
 
 (use-package ivy-hydra
