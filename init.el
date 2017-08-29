@@ -411,7 +411,45 @@
 
 (define-key minibuffer-local-map "\C-w" #'chunyang-minibuffer-yank-word)
 
-(use-package chunyang-helm)
+(use-package chunyang-helm
+  :disabled t)
+
+(use-package helm-ring
+  :ensure helm
+  :bind ("M-y" . helm-show-kill-ring))
+
+(use-package ivy
+  :ensure t
+  :diminish ivy-mode
+  :notes
+  - To insert current candidate into buffer, type "M-o" then "i"
+  - To insert word at point into minibuffer, type "M-i" 'ivy-yank-word'
+  :init (setq ivy-mode-map nil) ;; Leave C-x b `switch-to-buffer'
+  :bind (("C-c C-r" . ivy-resume)
+         (("M-l"    . ivy-switch-buffer)))
+  :config
+  (setq ivy-count-format "")
+  (ivy-mode))
+
+(use-package swiper
+  :ensure t
+  :after ivy
+  :notes To put candidates into a new buffer, use "C-c C-o" 'ivy-occur'
+  :bind ("M-i" . swiper))
+
+(use-package ivy-hydra
+  :ensure t
+  :defer t)
+
+(use-package counsel
+  :ensure t
+  :after ivy
+  :bind (("M-x"     . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("M-I"     . counsel-ag)
+         ("C-o"     . counsel-imenu)
+         ("C-h f"   . counsel-describe-function)
+         ("C-h v"   . counsel-describe-variable)))
 
 
 ;;; Buffers, Windows and Frames
