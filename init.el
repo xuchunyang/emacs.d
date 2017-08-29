@@ -181,6 +181,19 @@
   :commands grab-x-link
   :load-path "/home/xcy/src/grab-x-link")
 
+(use-package exwm
+  :homepage https://github.com/ch11ng/exwm/wiki
+  :ensure t
+  :if *is-gnu-linux*
+  :defer t
+  :init (autoload #'exwm-enable "exwm")
+  :config
+  (defun exwm-M-x (command)
+    "Launch application via shell COMMAND."
+    (interactive (list (read-shell-command "EXWM M-x: ")))
+    (start-process-shell-command command nil command))
+  (exwm-input-set-key (kbd "s-x") #'exwm-M-x))
+
 
 ;;; User Interface
 
