@@ -191,3 +191,16 @@ curl -L xuchunyang.me/hello.sh | tee hello.sh
 : #!/bin/sh
 : 
 : echo Hello World
+
+* dd
+
+Convert and copy a file.
+
+** Create Arch Linux Installer USB drive on macOS
+
+#+BEGIN_SRC sh :results silent output
+diskutil list
+diskutil unmountDisk /dev/disk2
+# Note this dd is from GNU Coreutils, not the preinstalld one
+sudo dd bs=4M if=~/Downloads/archlinux-2017.08.01-x86_64.iso of=/dev/rdisk2 status=progress && sync
+#+END_SRC
