@@ -356,20 +356,16 @@
   (savehist-mode))
 
 (use-package recentf                    ; Recent files
-  :init
+  :config
   (setq recentf-max-saved-items 512
         recentf-exclude (list "/\\.git/.*\\'"      ; Git contents
                               "/\\.emacs\\.d/elpa" ; ELPA
-                              "/etc/.*\\'" ; Package configuration
-                              "/var/.*\\'" ; Package data
+                              "/etc/.*\\'"         ; Package configuration
+                              "/var/.*\\'"         ; Package data
                               ".*\\.gz\\'"
                               "TAGS"
                               ".*-autoloads\\.el\\'"))
-  ;; FIXME:
-  ;; Not sure why use-package gives a warnning about this on only
-  ;; Emacs 26.0.50. It is OK since helm will enable it automatically.
-  ;; :config (recentf-mode)
-  :defer t)
+  (recentf-mode))
 
 (use-package recentb
   :disabled t                    ; Disable for now to reduce init time
@@ -432,6 +428,8 @@
   :bind (("C-c C-r" . ivy-resume)
          (("M-l"    . ivy-switch-buffer)))
   :config
+  ;; Show also recentf in `ivy-switch-buffer' like `helm-mini'
+  (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "")
   (ivy-mode))
 
@@ -444,7 +442,8 @@
 
 (use-package ivy-hydra
   :ensure t
-  :defer t)
+  :defer t
+  :after ivy)
 
 (use-package counsel
   :ensure t
