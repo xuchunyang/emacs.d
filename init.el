@@ -456,6 +456,12 @@
          ("C-h f"   . counsel-describe-function)
          ("C-h v"   . counsel-describe-variable)))
 
+(use-package smex
+  :about Sorting commands by frequency
+  :homepage "https://github.com/abo-abo/swiper/wiki/FAQ#sorting-commands-by-frequency"
+  :ensure t
+  :defer t)
+
 
 ;;; Buffers, Windows and Frames
 
