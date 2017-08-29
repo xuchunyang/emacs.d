@@ -203,7 +203,11 @@
 
   (exwm-input-set-key (kbd "s-x") #'chunyang-exwm-M-x)
   (exwm-input-set-key (kbd "s-t") #'exwm-input-toggle-keyboard)
-  (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch))
+  (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
+
+  ;; Undo the Fcitx hack
+  (when (string= (getenv "LC_CTYPE") "zh_CN.UTF-8")
+    (setenv "LC_CTYPE")))
 
 
 ;;; User Interface
