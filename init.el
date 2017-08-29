@@ -188,11 +188,22 @@
   :defer t
   :init (autoload #'exwm-enable "exwm")
   :config
-  (defun exwm-M-x (command)
+  (defun chunyang-exwm-M-x (command)
     "Launch application via shell COMMAND."
     (interactive (list (read-shell-command "EXWM M-x: ")))
     (start-process-shell-command command nil command))
-  (exwm-input-set-key (kbd "s-x") #'exwm-M-x))
+
+  (defun chunyang-exwm-rename-buffer ()
+    "Make class name the buffer name."
+    (exwm-workspace-rename-buffer exwm-class-name))
+
+  (setq exwm-workspace-number 2)
+
+  (add-hook 'exwm-update-class-hook #'chunyang-exwm-rename-buffer)
+
+  (exwm-input-set-key (kbd "s-x") #'chunyang-exwm-M-x)
+  (exwm-input-set-key (kbd "s-t") #'exwm-input-toggle-keyboard)
+  (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch))
 
 
 ;;; User Interface
@@ -915,6 +926,8 @@ See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 (use-package page-break-lines           ; Turn page breaks into lines
   :ensure t
+  ;; XXX Doesn't look nice on GTK+ Emacs
+  :if (not *is-gnu-linux*)
   :diminish page-break-lines-mode
   :defer t
   :preface
