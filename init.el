@@ -205,6 +205,17 @@
   (exwm-input-set-key (kbd "s-t") #'exwm-input-toggle-keyboard)
   (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
 
+  (exwm-input-set-key (kbd "M-o") #'chunyang-ace-window)
+  (exwm-input-set-key (kbd "M-l") #'ivy-switch-buffer)
+
+  ;; Disable clipboard
+  (setq select-enable-clipboard nil)
+
+  ;; Disable pluse on M-. and M-,
+  (with-eval-after-load 'xref
+    (remove-hook 'xref-after-jump-hook   #'xref-pulse-momentarily)
+    (remove-hook 'xref-after-return-hook #'xref-pulse-momentarily))
+  
   ;; Undo the Fcitx hack
   (when (string= (getenv "LC_CTYPE") "zh_CN.UTF-8")
     (setenv "LC_CTYPE")))
