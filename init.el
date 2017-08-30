@@ -215,7 +215,10 @@
   (with-eval-after-load 'xref
     (remove-hook 'xref-after-jump-hook   #'xref-pulse-momentarily)
     (remove-hook 'xref-after-return-hook #'xref-pulse-momentarily))
-  
+
+  (with-eval-after-load 'ace-window
+    (setq aw-scope 'frame))
+
   ;; Undo the Fcitx hack
   (when (string= (getenv "LC_CTYPE") "zh_CN.UTF-8")
     (setenv "LC_CTYPE")))
