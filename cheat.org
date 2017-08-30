@@ -204,3 +204,52 @@ diskutil unmountDisk /dev/disk2
 # Note this dd is from GNU Coreutils, not the preinstalld one
 sudo dd bs=4M if=~/Downloads/archlinux-2017.08.01-x86_64.iso of=/dev/rdisk2 status=progress && sync
 #+END_SRC
+
+* pacman
+
+** Install
+
+#+BEGIN_SRC sh
+pacman -S zsh
+#+END_SRC
+
+** Uninstall
+
+#+BEGIN_SRC sh
+pacman -Rs vim
+#+END_SRC
+
+** Upgrade
+
+#+BEGIN_SRC sh
+pacman -Syu
+#+END_SRC
+
+** Search
+
+#+BEGIN_SRC sh
+# Search package name & description
+pacman -Ss vim
+# Search package name
+pacman -Sqs | grep vim$
+#+END_SRC
+
+** Cheak if a package is installed
+
+#+BEGIN_SRC sh
+pacman -Si zsh
+pacman -Qi zsh
+pacman -Qs zsh
+#+END_SRC
+
+** List files provided by a package
+
+#+BEGIN_SRC sh
+pacman -Qql zsh
+#+END_SRC
+
+** Check a file is provided by which package
+
+#+BEGIN_SRC sh
+pacman -Qo /bin/awk
+#+END_SRC
