@@ -446,8 +446,6 @@
   :bind (("C-c C-r" . ivy-resume)
          (("M-l"    . ivy-switch-buffer)))
   :config
-  ;; Show also recentf in `ivy-switch-buffer' like `helm-mini'
-  (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "")
   (ivy-mode))
 
@@ -468,6 +466,8 @@
   :after ivy
   :bind (("M-x"     . counsel-M-x)
          ("C-x C-f" . counsel-find-file)
+         ;; C-x f runs `set-fill-column' by default
+         ("C-x f"   . counsel-recentf)
          ("M-I"     . counsel-ag)
          ("C-o"     . counsel-imenu)
          ("C-h f"   . counsel-describe-function)
