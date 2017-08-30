@@ -1379,7 +1379,16 @@ unlike `markdown-preview'."
         (add-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :append :local)
       (remove-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :local))))
 
-(use-package yaml-mode :ensure t :defer t)
+(use-package bbcode-mode
+  :homepage https://en.wikipedia.org/wiki/BBCode
+  :about Lightweight Markup Language used by phpBB forumss
+  :ensure t
+  :defer t)
+
+(use-package mediawiki
+  :homepage https://www.mediawiki.org/wiki/MediaWiki
+  :ensure t
+  :commands mediawiki-mode)
 
 
 ;;; Programming utilities
@@ -1489,6 +1498,8 @@ unlike `markdown-preview'."
   :homepage https://github.com/joshwnj/json-mode
   :ensure t
   :defer t)
+
+(use-package yaml-mode :ensure t :defer t)
 
 
 ;;; Generic Lisp
@@ -2076,10 +2087,21 @@ See also `describe-function-or-variable'."
            (zerop (call-process-shell-command "netstat -aon | grep 64292")))))
   :config
   (setq atomic-chrome-url-major-mode-alist
-        '(("github\\.com"        . gfm-mode)
-          ("emacs-china\\.org"   . gfm-mode)
-          ("stackexchange\\.com" . gfm-mode)
-          ("stackoverflow\\.com" . gfm-mode)))
+        '(
+          ;; [[https://guides.github.com/features/mastering-markdown/][Mastering Markdown · GitHub Guides]]
+          ("github\\.com"             . gfm-mode)
+          ;; [[https://stackoverflow.com/editing-help][Markdown Editing Help - Stack Overflow]]
+          ("stackoverflow\\.com"      . markdown-mode)
+          ("stackexchange\\.com"      . markdown-mode)
+          ;; [[http://commonmark.org/help/][Markdown Reference]] (Discourse)
+          ("emacs-china\\.org"        . markdown-mode)
+          ("meta\\.discoursecn\\.org" . markdown-mode)
+          ("0x00sec\\.org"            . markdown-mode)
+          ;; [[https://en.wikipedia.org/wiki/Help:Wiki_markup][Help:Wiki markup - Wikipedia]] (MediaWiki)
+          ("wiki\\.archlinux\\.org"   . mediawiki-mode)
+          ;; [[https://en.wikipedia.org/wiki/BBCode][BBCode - Wikipedia]] (phpBB)
+          ("bbs\\.archlinux\\.org"    . bbcode-mode)
+          ("bbs\\.archlinuxcn\\.org"  . bbcode-mode)))
 
   (defun chunyang-atomic-chrome-mode-setup ()
     (setq header-line-format
