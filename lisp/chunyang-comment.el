@@ -105,5 +105,20 @@
 ;; comment-box ;;
 ;;;;;;;;;;;;;;;;;
 
+
+
+(defun chunyang-insert-comment-section (name)
+  ;; TODO: Preview the result while typing!!!
+  (interactive "sComment section: ")
+  (unless (eq major-mode 'sh-mode)
+    (user-error "FIXME: Unsupported Major Mode"))
+  ;; #-- [ hello ] --#
+  (let* ((len (- (/ (- fill-column (length name)) 2) 4))
+         (padding (make-string len ?-)))
+    (insert (format "#%s [ %s ] %s#"
+                    padding
+                    name
+                    padding))))
+
 (provide 'chunyang-comment)
 ;;; chunyang-comment.el ends here

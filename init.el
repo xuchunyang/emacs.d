@@ -1478,7 +1478,8 @@ unlike `markdown-preview'."
   :defer t)
 
 (use-package chunyang-comment
-  :commands chunyang-comment-section)
+  :commands (chunyang-comment-section
+             chunyang-insert-comment-section))
 
 (use-package json-mode
   :about Prefer json-mode to js-mode
