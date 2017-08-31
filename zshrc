@@ -66,4 +66,10 @@ autoload -Uz run-help-svn
 alias ls="command ls --color"
 alias grep="command grep --color"
 
+#-------------------------- [ Environment Variable ] --------------------------#
+export PATH="$HOME/bin:$PATH"
+
+# Enable CJK work-around of Xapina for Notmuch/Mu4e
+export XAPIAN_CJK_NGRAM=1
+
 # .zshrc ends here
