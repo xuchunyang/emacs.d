@@ -470,6 +470,7 @@
          ("C-x f"   . counsel-recentf)
          ("M-I"     . counsel-ag)
          ("C-o"     . counsel-imenu)
+         ("C-c f l" . counsel-find-library)
          ("C-h f"   . counsel-describe-function)
          ("C-h v"   . counsel-describe-variable)))
 
@@ -2242,6 +2243,11 @@ This should be add to `find-file-hook'."
   :defer t
   :mode ("/rfc[0-9]+\\.txt\\'" . irfc-mode)
   :commands irfc-visit)
+
+;; XXX: Try `firestarter' (Run shell command on save) instead
+(use-package symbolic-link-on-save
+  :about Create Symbolic Link on save
+  :config (symbolic-link-on-save-mode))
 
 
 ;;; Project
