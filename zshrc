@@ -40,9 +40,18 @@ SAVEHIST=$HISTSIZE
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
 
+setopt appendhistory
+setopt sharehistory
+setopt incappendhistory
+
 #---------------------------------- [ fzf ] ----------------------------------#
-_source_maybe /usr/share/fzf/key-bindings.zsh
+# Arch
 _source_maybe /usr/share/fzf/completion.zsh
+_source_maybe /usr/share/fzf/key-bindings.zsh
+
+# Mac
+_source_maybe ~/src/fzf/shell/completion.zsh
+_source_maybe ~/src/fzf/shell/key-bindings.zsh
 
 #---------------------------- [ Change Directory ] ----------------------------#
 setopt autocd
