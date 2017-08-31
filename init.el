@@ -2087,9 +2087,11 @@ See also `describe-function-or-variable'."
                                         ; package is from Chrome
   :preface
   (defun chunyang-atomic-chrome-server-running-p ()
-    (cond ((executable-find "lsof")
+    (cond ((executable-find "ss")       ; iproute2
+           (zerop (call-process-shell-command "ss -tna | grep 64292")))
+          ((executable-find "lsof")     ; lsof
            (zerop (call-process "lsof" nil nil nil "-i" ":64292")))
-          ((executable-find "netstat")  ; Windows
+          ((executable-find "netstat")  ; net-tools
            (zerop (call-process-shell-command "netstat -aon | grep 64292")))))
   :config
   (setq atomic-chrome-url-major-mode-alist
