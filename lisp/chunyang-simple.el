@@ -260,6 +260,7 @@ Abbreviated:  ~/.emacs.d/init.el
 Relative:     ../init.el
 "
   (interactive "*")
+  (require 'helm-files)
   ;; XXX: Since `ffap-guesser' not work well
   (let ((filename (helm-ffap-guesser)))
     (if filename
