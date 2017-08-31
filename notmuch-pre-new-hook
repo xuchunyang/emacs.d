@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2017 Chunyang Xu
+#
+# notmuch-pre-new-hook - Get mail before notmuch new
+
+mbsync -a -V
+
+# Local Variables:
+# firestarter: "[[ -f ~/.mail/.notmuch/hooks/pre-new ]] || { mkdir -p ~/.mail/.notmuch/hooks && cp %f ~/.mail/.notmuch/hooks/pre-new }"
+# End:
