@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 # -*- symbolic-link-on-save-linkname: "~/.zshrc"; -*-
 
+# XXX: Add Imenu Support for these sections
+
 #-------------------------- [ Environment Variable ] --------------------------#
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
@@ -87,5 +89,8 @@ chunyang-proxy () {
     export http_proxy=http://127.0.0.1:1087
     export https_proxy=http://127.0.0.1:1087
 }
+
+#--------------------------------- [ Emacs ] ---------------------------------#
+source ~/.emacs.d/misc/emacs.sh 
 
 # .zshrc ends here
