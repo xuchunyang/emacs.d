@@ -2249,10 +2249,15 @@ This should be add to `find-file-hook'."
   :mode ("/rfc[0-9]+\\.txt\\'" . irfc-mode)
   :commands irfc-visit)
 
-;; XXX: Try `firestarter' (Run shell command on save) instead
 (use-package symbolic-link-on-save
   :about Create Symbolic Link on save
   :config (symbolic-link-on-save-mode))
+
+(use-package firestarter
+  :about Execute (shell) commands on save
+  :homepage https://github.com/wasamasa/firestarter
+  :ensure t
+  :config (firestarter-mode))
 
 
 ;;; Project

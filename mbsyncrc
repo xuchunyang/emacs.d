@@ -1,0 +1,25 @@
+# -*- mode: conf; firestarter: "[[ -f ~/.mbsyncrc ]] || cp %f ~/.mbsyncrc"; -*-
+
+# This is a ~/.mbsyncrc template.
+
+IMAPAccount main
+Host imap.migadu.com
+User mail@xuchunyang.me
+# The 'netrc' gem is required.
+PassCmd "ruby -r netrc -e 'print (Netrc.read(File.expand_path(\"~/.authinfo.gpg\"))[\"imap.migadu.com\"]).password'"
+SSLType IMAPS
+CertificateFile /opt/local/share/curl/curl-ca-bundle.crt
+
+IMAPStore main-remote
+Account main
+
+MaildirStore main-local
+Path ~/.mail/
+Inbox ~/.mail/Inbox
+
+Channel main
+Master :main-remote:
+Slave :main-local:
+Patterns *
+Create Both
+SyncState *
