@@ -188,8 +188,11 @@
   :defer t
   :init (autoload #'exwm-enable "exwm")
   :config
+  ;; TODO: Write a command to take screenshot?
+
   (defun chunyang-exwm-M-x (command)
     "Launch application via shell COMMAND."
+    ;; XXX: Better Completion?
     (interactive (list (read-shell-command "EXWM M-x: ")))
     (start-process-shell-command command nil command))
 
@@ -197,16 +200,37 @@
     "Make class name the buffer name."
     (exwm-workspace-rename-buffer exwm-class-name))
 
-  (setq exwm-workspace-number 2)
-
   (add-hook 'exwm-update-class-hook #'chunyang-exwm-rename-buffer)
 
-  (exwm-input-set-key (kbd "s-x") #'chunyang-exwm-M-x)
+  (exwm-input-set-key (kbd "s-r") #'exwm-reset)
   (exwm-input-set-key (kbd "s-t") #'exwm-input-toggle-keyboard)
-  (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
 
+  (exwm-input-set-key (kbd "s-x") #'chunyang-exwm-M-x)
+  ;; XXX `ace-window' doesn't show in non-Emacs buffer, try to use Minibuffer instead
   (exwm-input-set-key (kbd "M-o") #'chunyang-ace-window)
+  ;; XXX This key is strange
+  ;; (exwm-input-set-key (kbd "M-TAB") #'chunyang-ace-window)
   (exwm-input-set-key (kbd "M-l") #'ivy-switch-buffer)
+
+  ;; Line-editing shortcuts
+  (exwm-input-set-simulation-keys
+   '(([?\C-b] . left)
+     ([?\C-f] . right)
+     ([?\C-p] . up)
+     ([?\C-n] . down)
+     ([?\C-a] . home)
+     ([?\C-e] . end)
+     ([?\M-v] . prior)
+     ([?\C-v] . next)
+     ([?\C-d] . delete)
+     ([?\C-k] . (S-end delete))))
+
+  (defun chunyang-exwm-disable-simulation-keys ()
+    (when (and exwm-class-name
+               (string-prefix-p "Xfce4-terminal" exwm-class-name))
+      (exwm-input-set-local-simulation-keys nil)))
+
+  (add-hook 'exwm-manage-finish-hook #'chunyang-exwm-disable-simulation-keys)
 
   ;; Disable clipboard
   (setq select-enable-clipboard nil)
@@ -2081,6 +2105,7 @@ See also `describe-function-or-variable'."
   ;; Disable auto scroll on RET (like Eshell)
   (setq comint-scroll-show-maximum-output nil))
 
+;; XXX: Not working under EXWM
 (use-package atomic-chrome
   :ensure t                             ; To install its dependencies
   :defer 7                              ; since the entry of this
