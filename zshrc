@@ -1,6 +1,12 @@
 #!/usr/bin/env zsh
 # -*- symbolic-link-on-save-linkname: "~/.zshrc"; -*-
 
+#-------------------------- [ Environment Variable ] --------------------------#
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+# Enable CJK work-around of Xapina for Notmuch/Mu4e
+export XAPIAN_CJK_NGRAM=1
+
 #--------------------------------- [ Helper ] ---------------------------------#
 
 _source_maybe () {
@@ -74,11 +80,5 @@ autoload -Uz run-help-svn
 #--------------------------------- [ Alias ] ---------------------------------#
 alias ls="command ls --color"
 alias grep="command grep --color"
-
-#-------------------------- [ Environment Variable ] --------------------------#
-export PATH="$HOME/bin:$PATH"
-
-# Enable CJK work-around of Xapina for Notmuch/Mu4e
-export XAPIAN_CJK_NGRAM=1
 
 # .zshrc ends here
