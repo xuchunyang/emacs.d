@@ -219,6 +219,11 @@
   (with-eval-after-load 'ace-window
     (setq aw-scope 'frame))
 
+  ;; Fix pinentry-gtk2, refer
+  ;; https://github.com/ch11ng/exwm/issues/288#issuecomment-322023887
+  (with-eval-after-load 'epa
+    (setq epa-pinentry-mode 'loopback))
+  
   ;; Undo the Fcitx hack
   (when (string= (getenv "LC_CTYPE") "zh_CN.UTF-8")
     (setenv "LC_CTYPE")))
