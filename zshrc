@@ -81,4 +81,11 @@ autoload -Uz run-help-svn
 alias ls="command ls --color"
 alias grep="command grep --color"
 
+#--------------------------------- [ Proxy ] ---------------------------------#
+chunyang-proxy () {
+    setopt XTRACE
+    export http_proxy=http://127.0.0.1:1087
+    export https_proxy=http://127.0.0.1:1087
+}
+
 # .zshrc ends here
