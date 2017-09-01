@@ -526,7 +526,8 @@
          ("C-o"     . counsel-imenu)
          ("C-c f l" . counsel-find-library)
          ("C-h f"   . counsel-describe-function)
-         ("C-h v"   . counsel-describe-variable)))
+         ("C-h v"   . counsel-describe-variable))
+  :config (setq counsel-find-file-at-point t))
 
 (use-package smex
   :about Sorting commands by frequency
