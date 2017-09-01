@@ -2260,6 +2260,28 @@ See also `describe-function-or-variable'."
   - (find-file "/sudo::/etc/hosts")
   - (find-file "/ssh:xcy@arch|sudo:root@arch:/etc/hosts")
   :preface
+  ;; Alternative to `sudo-edit', for the case that sudo is not possible
+  ;;
+  ;; XXX: Maybe support local as well, but now I don't need it, since I can
+  ;; use sudo in all my local computers
+  ;;
+  ;; (find-file "/ssh:xcy@elpa:/etc/hosts")
+  ;; ==>
+  ;; (find-file "/ssh:root@elpa:/etc/hosts")
+  (defun chunyang-edit-file-as-root ()
+    "Edit the current remote file as root."
+    (interactive)
+    (let ((file buffer-file-name))
+      (and file
+           (file-remote-p file)
+           (not (string= "root" (file-remote-p file 'user)))
+           (find-alternate-file
+            (tramp-make-tramp-file-name
+             (file-remote-p file 'method)
+             "root"
+             (file-remote-p file 'host)
+             (file-remote-p file 'localname))))))
+
   (defun chunyang-sudo-edit-notify ()
     "Notify myself when edit a file owned by root.
 This should be add to `find-file-hook'."
