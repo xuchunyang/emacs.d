@@ -232,9 +232,10 @@
 
   (add-hook 'exwm-manage-finish-hook #'chunyang-exwm-disable-simulation-keys)
 
-  ;; Disable clipboard
-  (setq select-enable-clipboard nil)
-
+  ;; Disable the clipboard and use the primary selection
+  (setq select-enable-clipboard nil
+        select-enable-primary t)
+  
   ;; Disable pluse on M-. and M-,
   (with-eval-after-load 'xref
     (remove-hook 'xref-after-jump-hook   #'xref-pulse-momentarily)
