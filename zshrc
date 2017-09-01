@@ -3,18 +3,18 @@
 
 # XXX: Add Imenu Support for these sections
 
+#--------------------------------- [ Helper ] ---------------------------------#
+_source_maybe () {
+    [[ -f "$1" ]] && source "$1"
+}
+
 #-------------------------- [ Environment Variable ] --------------------------#
 export PATH="$HOME/bin:$HOME/src/scripts:$HOME/.emacs.d/bin:$HOME/.local/bin:$PATH"
 
 # Enable CJK work-around of Xapina for Notmuch/Mu4e
 export XAPIAN_CJK_NGRAM=1
 
-#--------------------------------- [ Helper ] ---------------------------------#
-
-_source_maybe () {
-    [[ -f "$1" ]] && source "$1"
-}
-
+#------------------------------ [ Extra files ] ------------------------------#
 for file in ~/.{path,exports,aliases,functions,extra}; do
     _source_maybe "$file"
 done
@@ -64,8 +64,17 @@ _source_maybe ~/src/fzf/shell/key-bindings.zsh
 #---------------------------- [ Change Directory ] ----------------------------#
 setopt autocd
 
+# z - https://github.com/rupa/z
+if [[ $OSTYPE == darwin* ]]; then
+    source /opt/local/etc/profile.d/z.sh
+elif [[ $OSTYPE == linux* ]]; then
+    # XXX Install z from https://aur.archlinux.org/packages/z
+    :
+fi
+
 #-------------------------- [ "Command not found" ] --------------------------#
-_source_maybe /usr/share/doc/pkgfile/command-not-found.zsh
+# Install pkgfile on Arch
+[[ $OSTYPE == linux* ]] && source /usr/share/doc/pkgfile/command-not-found.zsh
 
 #---------------------------------- [ Help ] ----------------------------------#
 # Use "run-help", or type M-h or ESC-h
@@ -92,5 +101,19 @@ chunyang-proxy () {
 
 #--------------------------------- [ Emacs ] ---------------------------------#
 source ~/.emacs.d/misc/emacs.sh 
+
+#---------------------------------- [ Misc ] ----------------------------------#
+local-ip () {
+    if [[ Linux == "$(uname -s)" ]]; then
+        # Strip the tailing space
+        hostname --ip-addresses | awk '{ print $1 }'
+    else
+        ipconfig getifaddr en0
+    fi
+}
+
+public-ip () {
+    dig +short myip.opendns.com @resolver1.opendns.com
+}
 
 # .zshrc ends here
