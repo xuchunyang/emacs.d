@@ -548,7 +548,7 @@
 (bind-key "C-x K" #'kill-buffer)
 
 (use-package ibuffer
-  :defer t
+  :bind ("C-x C-b" . ibuffer)           ; was `list-buffers'
   :config
   ;; Since I used to M-o
   (unbind-key "M-o" ibuffer-mode-map))
