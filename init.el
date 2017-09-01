@@ -188,13 +188,31 @@
   :defer t
   :init (autoload #'exwm-enable "exwm")
   :config
-  ;; TODO: Write a command to take screenshot?
-
   (defun chunyang-exwm-M-x (command)
     "Launch application via shell COMMAND."
     ;; XXX: Better Completion?
     (interactive (list (read-shell-command "EXWM M-x: ")))
     (start-process-shell-command command nil command))
+
+  (defun xfce4-terminal ()
+    "My termainl emulator."
+    (interactive)
+    (chunyang-exwm-M-x "xfce4-terminal"))
+
+  (defun chromium ()
+    "My web browser."
+    (interactive)
+    (chunyang-exwm-M-x "chromium --proxy-server=localhost:1087"))
+
+  (defun thunar ()
+    "My file manager."
+    (interactive)
+    (chunyang-exwm-M-x "thunar"))
+
+  (defun gnome-screenshot ()
+    (interactive)
+    ;; XXX: support -w/-a/-a/-f etc, see gnome-screenshot --help
+    (chunyang-exwm-M-x "gnome-screenshot"))
 
   (defun chunyang-exwm-rename-buffer ()
     "Make class name the buffer name."
@@ -231,6 +249,12 @@
       (exwm-input-set-local-simulation-keys nil)))
 
   (add-hook 'exwm-manage-finish-hook #'chunyang-exwm-disable-simulation-keys)
+
+  ;; Shrink fringes to 1 pixel
+  ;; (fringe-mode 1)
+
+  ;; Disable dialog boxes since they are unusable in EXWM
+  (setq use-dialog-box nil)
 
   ;; Disable the clipboard and use the primary selection
   (setq select-enable-clipboard nil
@@ -1384,11 +1408,11 @@ Intended to be added to `isearch-mode-hook'."
 
   (setq markdown-fontify-code-blocks-natively t)
   ;; Use M-x `markdown-edit-code-block' to edit code in another buffer
-  
+
   (setq markdown-command
         "pandoc -s -f markdown -t html --no-highlight \
                 -A ~/.emacs.d/misc/include-code-prettify.html | \
-         code-prettify") 
+         code-prettify")
 
   ;; Live Preview in Chrome
   (defun chunyang-markdown-preview-in-chrome ()
