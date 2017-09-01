@@ -251,5 +251,8 @@ pacman -Qql zsh
 ** Check a file is provided by which package
 
 #+BEGIN_SRC sh
-pacman -Qo /bin/awk
+pacman -Qo awk
 #+END_SRC
+
+#+RESULTS:
+: /usr/bin/awk is owned by gawk 4.1.4-2
