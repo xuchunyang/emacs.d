@@ -2252,21 +2252,14 @@ See also `describe-function-or-variable'."
   ;; By default, Tramp re-computes directory every 10s.
   (setq tramp-completion-reread-directory-timeout nil))
 
-(use-package chunyang-sudo-edit
-  :no-require t
+(use-package sudo-edit
+  :ensure t
   :defer t
+  :notes
+  ;; Tramp syntax with sudo
+  - (find-file "/sudo::/etc/hosts")
+  - (find-file "/ssh:xcy@arch|sudo:root@arch:/etc/hosts")
   :preface
-  ;; Wow, Tramp makes it possible to edit local file as "sudo", see
-  ;; (info "(tramp) Default Method")
-  (defun chunyang-sudo-edit ()
-    (interactive)
-    (let ((buf (current-buffer))
-          (fn (buffer-file-name))
-          (pt (point)))
-      (find-file (concat "/sudo::" fn))
-      (goto-char pt)
-      (kill-buffer buf)))
-
   (defun chunyang-sudo-edit-notify ()
     "Notify myself when edit a file owned by root.
 This should be add to `find-file-hook'."
@@ -2278,7 +2271,7 @@ This should be add to `find-file-hook'."
                  (not (file-remote-p (buffer-file-name))))
         (message "%s, %s"
                  old-msg
-                 "use M-x chunyang-sudo-edit RET to edit as sudo"))))
+                 "use M-x sudo-edit RET to edit via sudo"))))
 
   :init (add-hook 'find-file-hook #'chunyang-sudo-edit-notify))
 
