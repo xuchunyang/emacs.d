@@ -4,7 +4,7 @@
 # XXX: Add Imenu Support for these sections
 
 #-------------------------- [ Environment Variable ] --------------------------#
-export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+export PATH="$HOME/bin:$HOME/src/scripts:$HOME/.emacs.d/bin:$HOME/.local/bin:$PATH"
 
 # Enable CJK work-around of Xapina for Notmuch/Mu4e
 export XAPIAN_CJK_NGRAM=1
