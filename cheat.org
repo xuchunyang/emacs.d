@@ -1,5 +1,3 @@
-#+STARTUP: hideblocks
-
 * wget
 
 Download files from the Web.
@@ -256,3 +254,33 @@ pacman -Qo awk
 
 #+RESULTS:
 : /usr/bin/awk is owned by gawk 4.1.4-2
+
+* port
+
+The interface for MacPorts
+
+** List files provided by a package
+
+#+BEGIN_SRC sh :results output
+port -q contents tree
+#+END_SRC
+
+#+RESULTS:
+:   /opt/local/bin/tree
+:   /opt/local/share/doc/tree/CHANGES
+:   /opt/local/share/doc/tree/LICENSE
+:   /opt/local/share/doc/tree/README
+:   /opt/local/share/man/man1/tree.1.gz
+
+** Check a file is provided by which package
+
+#+BEGIN_SRC sh
+which git | xargs port provide
+#+END_SRC
+
+#+RESULTS:
+: /opt/local/bin/git is provided by: git
+
+* TODO xargs
+
+* TODO find
