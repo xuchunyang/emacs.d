@@ -1756,6 +1756,21 @@ See also `describe-function-or-variable'."
   :ensure t
   :defer t)
 
+(use-package ert
+  :about The built-in library for write tests for Emacs Lisp
+  :info (info "(ert) Top")
+  :defer t)
+
+(use-package testcover                  ; XXX: Try this
+  :about Visual code-coverage tool
+  :info (info "(elisp) Test Coverage")
+  :defer t)
+
+(use-package undercover                 ; XXX: Try this
+  :about Test coverage library for Emacs Lisp
+  :ensure t
+  :defer t)
+
 
 ;;; Help & Info
 
