@@ -107,6 +107,11 @@
 
 
 
+;; TODO: Write this style
+;; # ----------------------------
+;; # Subroutine to echo the usage
+;; # ----------------------------
+
 (defun chunyang-insert-comment-section (name)
   ;; TODO: Preview the result while typing!!!
   (interactive "sComment section: ")
