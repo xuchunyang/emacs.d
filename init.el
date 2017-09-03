@@ -181,6 +181,7 @@
   :commands grab-x-link
   :load-path "/home/xcy/src/grab-x-link")
 
+;; XXX: Drag & Drop not working
 (use-package exwm
   :homepage https://github.com/ch11ng/exwm/wiki
   :ensure t
@@ -229,6 +230,8 @@
   ;; XXX This key is strange
   ;; (exwm-input-set-key (kbd "M-TAB") #'chunyang-ace-window)
   (exwm-input-set-key (kbd "M-l") #'ivy-switch-buffer)
+  (exwm-input-set-key [C-M-left] #'previous-buffer)
+  (exwm-input-set-key [C-M-right] #'next-buffer)
 
   ;; Line-editing shortcuts
   (exwm-input-set-simulation-keys
