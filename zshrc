@@ -66,10 +66,11 @@ setopt autocd
 
 # z - https://github.com/rupa/z
 if [[ $OSTYPE == darwin* ]]; then
+    # MacPorts
     source /opt/local/etc/profile.d/z.sh
 elif [[ $OSTYPE == linux* ]]; then
-    # XXX Install z from https://aur.archlinux.org/packages/z
-    :
+    # AUR https://aur.archlinux.org/packages/z
+    source /usr/share/z/z.sh
 fi
 
 #-------------------------- [ "Command not found" ] --------------------------#
