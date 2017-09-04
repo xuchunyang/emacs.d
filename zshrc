@@ -117,4 +117,13 @@ public-ip () {
     dig +short myip.opendns.com @resolver1.opendns.com
 }
 
+# For EXWM, later Emacs can set default-directory with it
+precmd_set_terminal_title () {
+    print -Pn "\e]2;$PWD\a"
+}
+
+if [[ $OSTYPE == linux* ]]; then
+    precmd_functions=($precmd_functions precmd_set_terminal_title)
+fi
+
 # .zshrc ends here

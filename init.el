@@ -253,6 +253,14 @@
 
   (add-hook 'exwm-manage-finish-hook #'chunyang-exwm-disable-simulation-keys)
 
+  (defun chunyang-exwm-xfce4-terminal-update-default-directory ()
+    "Update `default-directory' according to the terminal window title."
+    (and exwm-class-name
+         (string-prefix-p "Xfce4-terminal" exwm-class-name)
+         (setq default-directory (expand-file-name exwm-title))))
+
+  (add-hook 'exwm-update-title-hook #'chunyang-exwm-xfce4-terminal-update-default-directory)
+  
   ;; Shrink fringes to 1 pixel
   ;; (fringe-mode 1)
 
