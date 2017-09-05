@@ -284,3 +284,16 @@ which git | xargs port provide
 * TODO xargs
 
 * TODO find
+
+* shuf
+
+Generate random permutations.
+
+** Get a random line from a file
+
+#+BEGIN_SRC sh
+seq 100 | shuf -n 1
+#+END_SRC
+
+#+RESULTS:
+: 42
