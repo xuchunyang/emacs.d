@@ -132,20 +132,16 @@
 ;;; Random
 
 (defun chunyang-random-word ()
-  "Pick a randome English word."
+  "Pick a randome English word from /usr/share/dict/words."
   (interactive)
-  (unless (executable-find "jot")
-    (user-error "jot is not found. \
-On Debian system, run 'sudo apt install athena-jot' to install it"))
-  (let ((word
-         (string-trim-right
-          (shell-command-to-string
-           ;; NOTE: jot(1) is avaiable on BSD (such as Mac OS X). An alternative
-           ;; is shuf(1) from GNU coreuilts.
-           "LINE=$( wc -l /usr/share/dict/words | awk '{print $1}' | xargs -I {} jot -r 1 1 {} ) && tail -n $LINE /usr/share/dict/words | head -n 1"))))
-    (prog1 word
-      (kill-new word)
-      (message "Saved to kill-ring: %s" word))))
+  (with-temp-buffer
+    (if (zerop (call-process-shell-command
+                "shuf -n 1 /usr/share/dict/words" nil t))
+        (let ((word (buffer-substring (point-min) (1- (point-max)))))
+          (prog1 word
+            (kill-new word)
+            (message "Saved to kill-ring: %s" word)))
+      (error "%s" (buffer-string)))))
 
 (defun chunyang-goto-random-line ()
   (interactive)
