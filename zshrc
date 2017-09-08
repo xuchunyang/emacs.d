@@ -30,15 +30,19 @@ PROMPT='%F{blue}%~%f $ '
 [[ $TERM = "dumb" ]] && unsetopt zle && PROMPT='$ '
 
 #------------------------------- [ Completion ] -------------------------------#
-autoload -Uz compinit promptinit
+autoload -U compinit
 compinit
-promptinit
 
 # Menu
 zstyle ':completion:*' menu select
+# Shift+Tab
+zmodload zsh/complist
+bindkey -M menuselect '^[[Z' reverse-menu-complete
 
 # Persistent rehash
 zstyle ':completion:*' rehash true
+
+compdef _gnu_generic emacs emacsclient
 
 #-------------------------------- [ History ] --------------------------------#
 HISTSIZE=10000
