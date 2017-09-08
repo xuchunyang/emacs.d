@@ -3403,16 +3403,16 @@ provides similiar function."
                ("C-h ."   . geiser-doc-symbol-at-point)
                ("C-h C-." . geiser-doc-look-up-manual)))
   :config
-  (setq geiser-default-implementation 'guile)
-  ;; See (info "(geiser) Must needs") for URLs to them
-  (setq geiser-active-implementations '(guile racket chicken chez))
+  (setq geiser-default-implementation 'racket)
 
   (add-hook 'geiser-mode-hook #'chunyang-geiser-setup)
 
   ;; Yes, use ParEdit in the REPL too
   (add-hook 'geiser-repl-mode-hook #'paredit-mode))
 
-(add-hook 'scheme-mode-hook #'paredit-mode)
+(use-package scheme
+  :defer t
+  :config (add-hook 'scheme-mode-hook #'paredit-mode))
 
 (use-package racket-mode
   :disabled t
