@@ -2459,6 +2459,7 @@ This should be add to `find-file-hook'."
   :config (ace-link-notmuch-setup))
 
 (use-package helm-notmuch
+  :load-path "~/src/helm-notmuch"
   :ensure t
   :defer t)
 
