@@ -2421,6 +2421,9 @@ This should be add to `find-file-hook'."
   ;; brew install mu --with-emacs
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
   :config
+  ;; 为了搜索中文, 'XAPIAN_CJK_NGRAM' 必须在 'mu index' 前设置
+  ;; (同样的，不要忘记在给 Shell 也做同样的设置）
+  (setenv "XAPIAN_CJK_NGRAM" "1")
   (setq mu4e-get-mail-command "offlineimap")
   (setq mu4e-maildir       "~/Maildir"
         mu4e-sent-folder   "/Sent"
