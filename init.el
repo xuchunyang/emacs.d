@@ -2402,11 +2402,31 @@ This should be add to `find-file-hook'."
 
 (use-package gnus
   :defer t
-  :config (setq gnus-select-method
-                '(nnimap "mail"
-                         (nnimap-address "imap.yandex.com")
-                         (nnimap-server-port 993)
-                         (nnimap-stream ssl))))
+  :config
+  (setq gnus-select-method
+        '(nnimap "mail"
+                 (nnimap-address "imap.yandex.com")
+                 (nnimap-server-port 993)
+                 (nnimap-stream ssl)))
+  ;; Local IMAP server
+  ;; (setq gnus-select-method
+  ;;       '(nnimap "LocalMail"
+  ;;                (nnimap-address "localhost")
+  ;;                (nnimap-stream network)
+  ;;                (nnimap-server-port 143)))
+  )
+
+(use-package mu4e
+  :commands mu4e
+  ;; brew install mu --with-emacs
+  :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
+  :config
+  (setq mu4e-get-mail-command "offlineimap")
+  (setq mu4e-maildir       "~/Maildir"
+        mu4e-sent-folder   "/Sent"
+        mu4e-drafts-folder "/Drafts"
+        mu4e-trash-folder  "/Trash"
+        mu4e-refile-folder "/Archive"))
 
 (use-package notmuch
   ;; Installed notmuch from Git on macOS with:
