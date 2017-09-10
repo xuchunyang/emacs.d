@@ -71,7 +71,9 @@ setopt autocd
 # z - https://github.com/rupa/z
 if [[ $OSTYPE == darwin* ]]; then
     # MacPorts
-    source /opt/local/etc/profile.d/z.sh
+    # source /opt/local/etc/profile.d/z.sh
+    # Homebrew
+    . /usr/local/etc/profile.d/z.sh
 elif [[ $OSTYPE == linux* ]]; then
     # AUR https://aur.archlinux.org/packages/z
     source /usr/share/z/z.sh

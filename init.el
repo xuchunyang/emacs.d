@@ -2359,17 +2359,9 @@ This should be add to `find-file-hook'."
 
 ;;; Project
 
-;; (use-package projectile :disabled t)
-
-
-;;; GPG | GnuPG
-
-;; XXX I have GnuPG 2.0.30 installed via MacPorts, but Emacs requires
-;; 2.1.6 according to `epg-config--program-alist'. However, if I set
-;; `epg-gpg-program' manually, it will owrks for me. What will not
-;; work?
-(when *is-mac*
-  (custom-set-variables '(epg-gpg-program  "gpg2")))
+(use-package projectile
+  :ensure t
+  :defer t)
 
 
 ;;; Web & IRC & Email & RSS
@@ -2381,8 +2373,9 @@ This should be add to `find-file-hook'."
       user-mail-address    "mail@xuchunyang.me"
       ;; This is required for ~/.authinfo.gpg but not ~/.authinfo
       smtpmail-smtp-user   user-mail-address
-      smtpmail-smtp-server "smtp.migadu.com"
-      smtpmail-smtp-service 587
+      smtpmail-smtp-server "smtp.yandex.com"
+      smtpmail-smtp-service 465
+      smtpmail-stream-type 'ssl
       send-mail-function   'smtpmail-send-it)
 
 (use-package message
@@ -2406,6 +2399,14 @@ This should be add to `find-file-hook'."
   (setq message-kill-buffer-on-exit t)
   (setq message-directory (locate-user-emacs-file "var/Mail"))
   (setq message-signature 'chunyang-message-signature))
+
+(use-package gnus
+  :defer t
+  :config (setq gnus-select-method
+                '(nnimap "mail"
+                         (nnimap-address "imap.yandex.com")
+                         (nnimap-server-port 993)
+                         (nnimap-stream ssl))))
 
 (use-package notmuch
   ;; Installed notmuch from Git on macOS with:
@@ -2874,15 +2875,13 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 
   (use-package eshell-git-prompt
-    :load-path "~/src/eshell-git-prompt"
+    :after eshell
     :ensure t
-    :init
+    :load-path "~/src/eshell-git-prompt"
+    ;; :init
     ;; Needed at least for `eshell-git-prompt'?
     ;; (setq eshell-highlight-prompt nil)
-    :config
-    ;; Type "use-theme" in Eshell to change theme
-    ;; (eshell-git-prompt-use-theme 'simple)
-    )
+    :config (eshell-git-prompt-use-theme 'powerline))
 
   (use-package chunyang-eshell-ext))
 
