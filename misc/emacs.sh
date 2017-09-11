@@ -10,6 +10,11 @@ magit ()
     (cd ${repo:=`pwd`} && emacsclient --eval '(magit-status)')
 }
 
+eshell ()
+{
+    emacsclient --eval '(eshell)' --eval '(open-emacs-window)'
+}
+
 info-in-emacs ()
 {
     local node=$1
