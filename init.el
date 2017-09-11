@@ -2418,8 +2418,10 @@ This should be add to `find-file-hook'."
 
 (use-package mu4e
   :commands mu4e
-  ;; brew install mu --with-emacs
+  ;; macOS/Homebrew via "brew install mu --with-emacs"
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
+  ;; Arch/Pacman via "pacman -S mu"
+  :load-path "/usr/share/emacs/site-lisp/mu4e"
   :config
   ;; 为了搜索中文, 'XAPIAN_CJK_NGRAM' 必须在 'mu index' 前设置
   ;; (同样的，不要忘记在给 Shell 也做同样的设置）
