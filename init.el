@@ -2450,6 +2450,7 @@ This should be add to `find-file-hook'."
         mu4e-refile-folder "/Archive"))
 
 (use-package notmuch
+  :disabled t
   ;; Installed notmuch from Git on macOS with:
   ;; ./configure && make && sudo make install
   :load-path "/usr/local/share/emacs/site-lisp"
