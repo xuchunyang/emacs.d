@@ -466,6 +466,9 @@
 
 ;;; Minibuffer
 
+(defconst chunyang-completing-read-style
+  (if *is-gnu-linux* 'ivy 'helm))
+
 ;; Give useful pormpt during M-! (`shell-command') etc
 (use-package prompt-watcher
   :config (prompt-watcher-mode))
@@ -491,13 +494,14 @@
 (define-key minibuffer-local-map "\C-w" #'chunyang-minibuffer-yank-word)
 
 (use-package chunyang-helm
-  :disabled t)
+  :if (eq chunyang-completing-read-style 'helm))
 
 (use-package helm-ring
   :ensure helm
   :bind ("M-y" . helm-show-kill-ring))
 
 (use-package ivy
+  :if (eq chunyang-completing-read-style 'ivy)
   :homepage https://github.com/abo-abo/swiper
   :info (info "(ivy) Top")
   :ensure t
@@ -515,6 +519,7 @@
   (ivy-mode))
 
 (use-package swiper
+  :if (eq chunyang-completing-read-style 'ivy)
   :ensure t
   :after ivy
   :notes
@@ -522,11 +527,13 @@
   :bind ("M-i" . swiper))
 
 (use-package ivy-hydra
+  :if (eq chunyang-completing-read-style 'ivy)
   :ensure t
   :defer t
   :after ivy)
 
 (use-package counsel
+  :if (eq chunyang-completing-read-style 'ivy)
   :ensure t
   :after ivy
   :bind (("M-x"     . counsel-M-x)
@@ -541,6 +548,7 @@
   :config (setq counsel-find-file-at-point t))
 
 (use-package smex
+  :if (eq chunyang-completing-read-style 'ivy)
   :about Sorting commands by frequency
   :homepage "https://github.com/abo-abo/swiper/wiki/FAQ#sorting-commands-by-frequency"
   :ensure t
