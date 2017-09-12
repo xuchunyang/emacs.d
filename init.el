@@ -8,6 +8,14 @@
 ;;; Code:
 
 
+;;; Disable Enriched mode code execution (https://bugs.gnu.org/28350)
+
+(eval-after-load 'enriched
+  '(and (fboundp 'enriched-decode-display-prop)
+        (defun enriched-decode-display-prop (start end &optional param)
+          (list start end))))
+
+
 ;;; Debug init file
 
 (defun chunyang-quit-init-el ()
