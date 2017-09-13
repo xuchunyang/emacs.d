@@ -288,6 +288,7 @@
   (helm-descbinds-mode))
 
 (use-package helm-open-github
+  :disabled t
   :ensure t
   :commands (helm-open-github-from-file ; Use the region for selecting specfic lines
              helm-open-github-from-issues
