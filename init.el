@@ -2923,7 +2923,14 @@ Note that this will OVERRIDE the existing EWW bookmarks."
     ;; :init
     ;; Needed at least for `eshell-git-prompt'?
     ;; (setq eshell-highlight-prompt nil)
-    :config (eshell-git-prompt-use-theme 'powerline))
+    ;; :config (eshell-git-prompt-use-theme 'powerline)
+    )
+
+  (use-package eshell-prompt-extras
+    :load-path "~/src/eshell-prompt-extras"
+    :config
+    (setq eshell-highlight-prompt nil
+          eshell-prompt-function 'epe-theme-lambda))
 
   (use-package chunyang-eshell-ext))
 
