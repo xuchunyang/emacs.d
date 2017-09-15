@@ -3444,13 +3444,18 @@ provides similiar function."
   :defer t
   :defines geiser-mode-map
   :preface
+  (defun chunyang-geiser-eval-print-last-sexp ()
+    (interactive)
+    (let ((res (geiser-eval-last-sexp nil)))
+      (insert "\n" "     " res "\n")))
   ;; Important keys:
   ;; C-c C-z - Switch between source and REPL
   ;; C-z C-a - Switch to REPL with current module
   (defun chunyang-geiser-setup ()
     (bind-keys :map geiser-mode-map
                ("C-h ."   . geiser-doc-symbol-at-point)
-               ("C-h C-." . geiser-doc-look-up-manual)))
+               ("C-h C-." . geiser-doc-look-up-manual)
+               ("C-j"     . chunyang-geiser-eval-print-last-sexp)))
   :config
   (setq geiser-default-implementation 'racket)
 
