@@ -675,6 +675,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
       (set-frame-height frame 36)
       (set-frame-position frame 337 104)))
   :bind (("C-c t F" . toggle-frame-fullscreen)
+         ("M-RET"   . toggle-frame-fullscreen)
          ("C-c t m" . toggle-frame-maximized)
          ("C-c w f" . toggle-frame-maximized)
          ("C-c w l" . chunyang-frame-left-half)
