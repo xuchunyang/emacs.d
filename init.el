@@ -3283,6 +3283,15 @@ Adapt from `org-babel-remove-result'."
   (eval-after-load 'flycheck
     '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
 
+;; Install GNU libc info manual on macOS
+(when *is-mac*
+  ;; mkdir ~/Documents/libc-info
+  ;; cd ~/Documents/libc-info
+  ;; curl -O https://www.gnu.org/software/libc/manual/info/libc-info.tar.gz
+  ;; tar xzvf libc-info.tar.gz
+  ;; install-info libc.info dir
+  (add-to-list 'Info-directory-list "~/Documents/libc-info" t))
+
 
 ;;; Rust
 
