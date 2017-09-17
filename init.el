@@ -168,11 +168,6 @@
              chunyang-chrome-refresh
              chunyang-chrome-url))
 
-;; XXX WIP MacPorts interface (manage ports, discover ports etc)
-(use-package macports
-  :if *is-mac*
-  :commands (macports-describe-port))
-
 
 ;;; GNU/Linux
 
@@ -1878,25 +1873,6 @@ See also `describe-function-or-variable'."
 (use-package info
   :defer t
   :config
-  ;; NOTE: MacPorts doesn't take care of info documentation, thus
-  ;; don't forget to install them via install-info(1) manually
-
-  ;; Prefer MacPorts's Info Manual over system builtin
-  (when *is-mac*
-    (let ((pos (1- (min (seq-position Info-directory-list "/usr/local/share/info/")
-                        (seq-position Info-directory-list "/usr/share/info/")))))
-      ;; Let's insert a new path at POS
-      (let ((tail (nthcdr pos Info-directory-list)))
-        (setcdr tail (cons "/opt/local/share/info/" (cdr tail))))))
-
-  ;; IDEA Track info browse history
-  ;; (defvar chunyang-Info-visited-nodes nil)
-  ;; (defun chunyang-Info-track-history ()
-  ;;   (list (file-name-nondirectory Info-current-file)
-  ;;         Info-current-node)
-  ;;   (message "todo..."))
-  ;; (add-hook 'Info-selection-hook 'chunyang-Info-track-history)
-
   ;; Get HTML link
   ;; (emacs) Echo Area
   ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Echo-Area.html
@@ -1926,7 +1902,6 @@ See also `describe-function-or-variable'."
                                       (match-string 0))))
 
                         (format "http://www.nongnu.org/geiser/geiser_%s.html#%s" number node)))))
-      ;; Hmm, macOS (or MacPorts) doesn't like GNU either
       ("gawk" . "https://www.gnu.org/software/tar/manual/html_node/%s")
       ;; GNU info documents.  Taken from my memory or see https://www.gnu.org/software/
       (("awk" "sed" "tar" "make" "m4" "grep" "coreutils" "guile" "screen"
@@ -3708,9 +3683,9 @@ provides similiar function."
   :commands (fortune fortune-message)
   :config
   (cond (*is-mac*
-         ;; On macOS, fortune is installed via MacPorts
-         (setq fortune-dir  "/opt/local/share/games/fortune/"
-               fortune-file "/opt/local/share/games/fortune/fortunes"))
+         ;; On macOS, fortune is installed via Homebrew
+         (setq fortune-dir  "/usr/local/share/games/fortunes/"
+               fortune-file "/usr/local/share/games/fortunes/fortunes"))
         (*is-gnu-linux*
          (setq fortune-dir  "/usr/share/games/fortunes/"
                fortune-file "/usr/share/games/fortunes/fortunes"))))
@@ -3741,8 +3716,6 @@ provides similiar function."
 
 ;;; Emacs
 
-;; FIXME: In case Emacs can't find the source (for example, installing Emacs via
-;;        MacPorts). Remove it someday
 (setq source-directory (if *is-remacs*
                            "~/src/remacs/"
                          "~/src/emacs/"))
