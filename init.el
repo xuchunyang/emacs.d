@@ -135,6 +135,7 @@
 ;;; macOS
 
 (defconst *is-mac* (eq system-type 'darwin))
+(defconst *is-mac-port* (boundp 'mac-carbon-version-string))
 
 (use-package ns-win
   :if *is-mac*
@@ -143,6 +144,10 @@
   :init
   (setq mac-command-modifier 'meta
         mac-option-modifier 'control))
+
+(use-package mac-win
+  :if *is-mac-port*
+  :config (mac-auto-ascii-mode))
 
 (use-package exec-path-from-shell
   :if window-system
@@ -686,10 +691,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;; NOTE: Commenting this out because `no-littering.el' is doing this for me
 ;; (setq backup-directory-alist `((".*" . ,(locate-user-emacs-file ".backup")))
 ;;       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-
-(defconst *is-mac-port* (boundp 'mac-carbon-version-string)
-  "Is running the Emacs Mac Port?
-See URL `https://bitbucket.org/mituharu/emacs-mac'.")
 
 ;; For Cocoa Emacs.app, trashing just means move file to
 ;; ~/.local/share/Trash/, which is not very useful, so don't enable
@@ -3716,9 +3717,10 @@ provides similiar function."
 
 ;;; Emacs
 
-(setq source-directory (if *is-remacs*
-                           "~/src/remacs/"
-                         "~/src/emacs/"))
+(setq source-directory
+      (cond (*is-remacs*   "~/src/remacs")
+            (*is-mac-port* "~/src/emacs-mac")
+            (t             "~/src/emacs")))
 
 
 ;;; Chinese | 中文
