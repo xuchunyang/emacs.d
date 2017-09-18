@@ -3315,6 +3315,7 @@ Adapt from `org-babel-remove-result'."
 ;; TODO eldoc support (`sly-autodoc-mode') is not working
 ;; TODO Is completion working? (best with Company support, usually it should work out of box)
 (use-package sly
+  :disabled t   ; Since I don't write Common Lisp and this package updates a lot
   :ensure t
   :defer t
   :preface
