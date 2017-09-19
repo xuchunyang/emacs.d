@@ -297,5 +297,22 @@ Relative:     ../init.el
       ;; To ignore case, change `sort-fold-case'´to non-nil
       (sort-subr reverse nextrecfun endrecfun))))
 
+
+;;; Defer M-x
+
+(defvar chunyang-defer-M-x-cmd nil)
+
+(defun chunyang-defer-M-x-run ()
+  ;; XXX Prefix argument
+  (unless (eq this-command 'chunyang-defer-M-x)
+    (call-interactively chunyang-defer-M-x-cmd)
+    (remove-hook 'post-command-hook #'chunyang-defer-M-x-run)))
+
+(defun chunyang-defer-M-x ()
+  (interactive)
+  ;; XXX Mode line string
+  (setq chunyang-defer-M-x-cmd (read-command "defer M-x "))
+  (add-hook 'post-command-hook #'chunyang-defer-M-x-run))
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
