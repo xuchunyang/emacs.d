@@ -2603,6 +2603,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
                  'file-exists-p
                  `("~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"
                    "~/.config/chromium/Default/Bookmarks")))))
+      (require 'json)
       (chunyang-eww-import-bookmarks-from-chrome-1
        (json-read-file bookmark-file)))
     (eww-write-bookmarks))
