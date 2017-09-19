@@ -303,15 +303,16 @@ Relative:     ../init.el
 (defvar chunyang-defer-M-x-cmd nil)
 
 (defun chunyang-defer-M-x-run ()
-  ;; XXX Prefix argument
+  ;; (message "=> %s %s" this-command this-original-command)
   (unless (eq this-command 'chunyang-defer-M-x)
-    (call-interactively chunyang-defer-M-x-cmd)
+    ;; XXX Prefix argument
+    (command-execute chunyang-defer-M-x-cmd)
+    (setq chunyang-defer-M-x-cmd nil)
     (remove-hook 'post-command-hook #'chunyang-defer-M-x-run)))
 
-(defun chunyang-defer-M-x ()
-  (interactive)
-  ;; XXX Mode line string
-  (setq chunyang-defer-M-x-cmd (read-command "defer M-x "))
+(defun chunyang-defer-M-x (command)
+  (interactive "Cdefer M-x ")
+  (setq chunyang-defer-M-x-cmd command)
   (add-hook 'post-command-hook #'chunyang-defer-M-x-run))
 
 (provide 'chunyang-simple)
