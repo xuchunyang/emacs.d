@@ -3468,6 +3468,53 @@ provides similiar function."
 
 ;;; Web
 
+(use-package web-mode
+  :homepage http://web-mode.org
+  :ensure t
+  :defer t
+  :config
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset    2
+        web-mode-code-indent-offset   2))
+
+(use-package emmet-mode
+  :homepage https://github.com/smihica/emmet-mode
+  :about Unfold CSS-selector-like expressions to markup
+  :ensure t
+  :defer t)
+
+(use-package js
+  :defer t
+  :config (setq js-indent-level 2))
+
+(use-package js2-mode
+  :homepage https://github.com/mooz/js2-mode/
+  :ensure t
+  :mode "\\.js\\'")
+
+(use-package tern
+  :homepage http://ternjs.net/
+  :ensure t
+  :defer t)
+
+(use-package Indium
+  :homepage https://github.com/NicolasPetton/indium
+  :about A JavaScript development environment for Emacs
+  :info (info "(Indium) Top")
+  :ensure t
+  :defer t)
+
+(use-package skewer-mode
+  :about live browser JavaScript, CSS, and HTML interaction
+  :homepage https://github.com/skeeto/skewer-mode
+  :disabled t
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'js2-mode-hook 'skewer-mode)
+  (add-hook 'css-mode-hook 'skewer-css-mode)
+  (add-hook 'html-mode-hook 'skewer-html-mode))
+
 (use-package css-mode
   :defer t
   :config (setq css-indent-offset 2))
