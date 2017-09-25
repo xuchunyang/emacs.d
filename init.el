@@ -3502,7 +3502,7 @@ provides similiar function."
   :about A JavaScript development environment for Emacs
   :info (info "(Indium) Top")
   :ensure t
-  :defer t)
+  :commands indium-run-node)
 
 (use-package skewer-mode
   :about live browser JavaScript, CSS, and HTML interaction
