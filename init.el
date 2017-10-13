@@ -374,24 +374,6 @@
   :defer t)
 
 ;; Mode line
-(setq-default mode-line-format
-              '("%e" mode-line-front-space
-                ;; Standard info about the current buffer
-                mode-line-mule-info
-                mode-line-client
-                mode-line-modified
-                mode-line-remote
-                mode-line-frame-identification
-                mode-line-buffer-identification "    " mode-line-position
-                ;; For debug some elisp program
-                ;; (:eval (format "%-5d" (point)))
-                (projectile-mode projectile-mode-line)
-                (vc-mode (:propertize (:eval vc-mode) face italic))
-                (helm-alive-p
-                 (:eval (when (eq (current-buffer) helm-current-buffer)
-                          (propertize " Helm-current " 'face 'bold))))
-                ;; Other modes
-                " " mode-line-modes mode-line-misc-info mode-line-end-spaces))
 
 (column-number-mode)
 (size-indication-mode)
