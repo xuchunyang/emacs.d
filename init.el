@@ -2518,6 +2518,7 @@ This should be add to `find-file-hook'."
     "My EWW bookmarks manager using helm."
     (interactive)
     (require 'helm)
+    (require 'helm-adaptive)
     (require 'eww)
     (helm :sources
           (list
