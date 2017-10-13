@@ -384,7 +384,7 @@
   :defer t
   :config
   ;; M-x display-time-world
-  (add-to-list 'display-time-world-list '("Asia/Shanghai" "上海")))
+  (add-to-list 'zoneinfo-style-world-list '("Asia/Shanghai" "Shanghai")))
 
 
 ;; Prefer the old fashion (< Emacs 25) `quote' in *Help* & *Messages*
