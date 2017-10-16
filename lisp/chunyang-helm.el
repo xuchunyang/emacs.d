@@ -15,28 +15,18 @@
   (define-minor-mode chunyang-helm-window-hack-mode
     "Hack helm window display."
     :global t
-    :init-value t
-    (if chunyang-helm-window-hack-mode
-        (progn
-          ;; Display helm's buffer in one bottom widnow
-          ;; NOTE: This will make, C-h m, C-t and full-frame etc, not working!
-          (add-to-list 'display-buffer-alist
-                       '("\\` ?\\*helm.*\\*\\'"
-                         (display-buffer-in-side-window)
-                         (window-height . 0.4)))
-          (setq helm-display-function #'display-buffer))
-      (setq display-buffer-alist
-            (delete '("\\` ?\\*helm.*\\*\\'"
-                      (display-buffer-in-side-window)
-                      (window-height . 0.4)) display-buffer-alist))
-      (let ((standard-value (eval (car (get 'helm-display-function 'standard-value)))))
-        (setq helm-display-function standard-value))))
-  (chunyang-helm-window-hack-mode)
-
-  ;; This is for sanityinc-tomorrow-eighties theme
-  ;; (face-spec-set 'helm-visible-mark
-  ;;                '((t (:background "#494949"))))
-  )
+    (let ((action '("\\`\\*helm"
+                    (display-buffer-in-side-window)
+                    (window-height . 0.4))))
+      (if chunyang-helm-window-hack-mode
+          (progn
+            (add-to-list 'display-buffer-alist action)
+            (setq helm-display-function #'display-buffer))
+        (setq display-buffer-alist
+              (delete action display-buffer-alist))
+        (let ((standard-value (eval (car (get 'helm-display-function 'standard-value)))))
+          (setq helm-display-function standard-value)))))
+  (chunyang-helm-window-hack-mode))
 
 ;;; Setup of Helm's Sub-packages
 
