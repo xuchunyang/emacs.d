@@ -3480,7 +3480,7 @@ provides similiar function."
   :ensure t
   :defer t)
 
-(use-package Indium
+(use-package indium
   :homepage https://github.com/NicolasPetton/indium
   :about A JavaScript development environment for Emacs
   :info (info "(Indium) Top")
