@@ -429,6 +429,13 @@
   (savehist-mode))
 
 (use-package recentf                    ; Recent files
+  :defer t
+  :preface
+  (defun chunyang-recentf-enable ()
+    (recentf-mode)
+    (remove-hook 'find-file-hook #'chunyang-recentf-enable))
+  :init
+  (add-hook 'find-file-hook #'chunyang-recentf-enable)
   :config
   (setq recentf-max-saved-items 512
         recentf-exclude (list "/\\.git/.*\\'"      ; Git contents
@@ -437,8 +444,7 @@
                               "/var/.*\\'"         ; Package data
                               ".*\\.gz\\'"
                               "TAGS"
-                              ".*-autoloads\\.el\\'"))
-  (recentf-mode))
+                              ".*-autoloads\\.el\\'")))
 
 (use-package recentb
   :disabled t                    ; Disable for now to reduce init time
