@@ -3093,7 +3093,8 @@ Adapt from `org-babel-remove-result'."
   :commands (chunyang-org-agenda-csv
              helm-org-easy-templates
              chunyang-org-format-region-as-code-block
-             chunyang-org-preview-via-pandoc))
+             chunyang-org-preview-via-pandoc
+             chunyang-org-babel-tangle))
 
 (use-package toc-org
   :homepage https://github.com/snosov1/toc-org

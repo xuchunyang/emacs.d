@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; Notes that this file is under lexical binding because
+;; Notes that this file is not under lexical binding because
 ;; `chunyang-org-agenda-csv' requires dynamic binding.
 
 ;;; Code:
@@ -125,6 +125,14 @@
              (shell-quote-argument input)
              (shell-quote-argument output)))
     (browse-url output)))
+
+(defun chunyang-org-babel-tangle (file)
+  "Tangle code block at point to FILE.
+
+Not using `org-babel-tangle' because I don't want to write
+:tangle-file."
+  (interactive "FFile: ")
+  (org-babel-tangle '(4) file))
 
 (provide 'chunyang-org)
 ;;; chunyang-org.el ends here
