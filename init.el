@@ -1292,6 +1292,16 @@ Intended to be added to `isearch-mode-hook'."
         ;; Easy navigation to candidates with M-<n>
         company-show-numbers t))
 
+(use-package company-clang
+  :defer t
+  :config
+  ;; XXX: candidates menu will prepend an leading space for each
+  (define-advice company-clang--annotation (:filter-return (ann) one-space)
+    "Prefer foo (arg) over foo(arg) in GNU coding style."
+    (if (and ann (equal c-indentation-style "gnu"))
+        (concat " " ann)
+      ann)))
+
 (use-package auto-complete
   :disabled t
   :ensure t
