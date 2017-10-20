@@ -3790,6 +3790,11 @@ provides similiar function."
   :ensure t
   :load-path "~/src/emacs-opencc")
 
+(use-package scws
+  :about "SCWS 的 Emacs Module | 中文分词"
+  :load-path "~/src/emacs-scws"
+  :commands (scws scws-word-at-point))
+
 
 ;;; PDF
 
