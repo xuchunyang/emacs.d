@@ -58,7 +58,8 @@
 (setq package-user-dir
       (locate-user-emacs-file (concat "elpa-" emacs-version)))
 
-(package-initialize)
+(let ((total (car (benchmark-run 1 (package-initialize)))))
+  (message "(package-initialize): %fs" total))
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
