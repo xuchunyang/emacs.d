@@ -3863,6 +3863,11 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package ip2region
+  :about "IP 地址定位"
+  :load-path "~/src/emacs-ip2region"
+  :commands ip2region)
+
 
 ;;; Custom
 
