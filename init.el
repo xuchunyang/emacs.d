@@ -3868,6 +3868,11 @@ provides similiar function."
   :load-path "~/src/emacs-ip2region"
   :commands ip2region)
 
+(use-package cmark
+  :about "Markdown parser"
+  :load-path "~/src/emacs-cmark"
+  :commands cmark-markdown-to-html)
+
 
 ;;; Custom
 
