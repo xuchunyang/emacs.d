@@ -304,5 +304,19 @@ For testing / debugging Emacs init file."
       ;; Remove the final newline
       (message "%s" (substring res 0 -1)))))
 
+(defun chunyang-qrdecode (png)
+  "Decode QR Code in PNG image."
+  (let ((res (shell-command-to-string
+              (concat "qrdecode " png))))
+    (unless (string= res "")
+      (substring res 0 -1))))
+
+(defun chunyang-qrencode (string png)
+  "Encode STRING in a QR Code and save as PNG."
+  (with-temp-buffer
+    (unless (zerop (call-process "qrencode" nil t nil string "-o"
+                                 (expand-file-name png)))
+      (error "%s" (buffer-string)))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here

@@ -576,7 +576,11 @@
   :commands (chunyang-open-another-emacs
              chunyang-timer
              chunyang-random-word
-             chunyang-format-as-binary))
+             chunyang-format-as-binary
+             ;; QR Code
+             chunyang-scan-qr-code-from-screen
+             chunyang-qrdecode
+             chunyang-qrencode))
 
 (use-package chunyang-buffers    ; Personal buffer tools
   :config
