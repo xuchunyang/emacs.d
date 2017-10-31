@@ -293,5 +293,16 @@ For testing / debugging Emacs init file."
              (current-time-string t2)
              (float-time (time-subtract t2 t1)))))
 
+
+;;; QR Code
+
+(defun chunyang-scan-qr-code-from-screen ()
+  (interactive)
+  (let ((res (shell-command-to-string
+              "scan-qr-code-from-screen")))
+    (unless (string= res "")
+      ;; Remove the final newline
+      (message "%s" (substring res 0 -1)))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
