@@ -318,5 +318,30 @@ For testing / debugging Emacs init file."
                                  (expand-file-name png)))
       (error "%s" (buffer-string)))))
 
+
+;;; 迅雷链接 thunder://
+
+(defun chunyang-decode-thunder-link (link)
+  "Decode thunder:// LINK."
+  (unless (string-prefix-p "thunder://" link)
+    (error "%s is not a thunder:// link" link))
+  (let ((s (base64-decode-string (substring link (length "thunder://")))))
+    (unless (and (string-prefix-p "AA" s)
+                 (string-suffix-p "ZZ" s))
+      (error "%s is not started with 'AA' or ended with 'ZZ'"))
+    (substring s 2 -2)))
+     => chunyang-decode-thunder-link
+
+(defun chunyang-encode-thunder-link (link)
+  "Encode LINK into thunder:// link."
+  (concat "thunder://" (base64-encode-string (concat "AA" link "ZZ"))))
+
+;; (chunyang-encode-thunder-link "http://example.com/index.html")
+;;      => "thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vaW5kZXguaHRtbFpa"
+
+;; (chunyang-decode-thunder-link
+;;  "thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vaW5kZXguaHRtbFpa")
+;;      => "http://example.com/index.html"
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
