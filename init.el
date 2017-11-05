@@ -2754,7 +2754,25 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 (use-package bing-dict
   :ensure t
-  :defer t)
+  :defer t
+  :preface
+  (defun bing-dict-eldoc-documentation-function ()
+    (let ((word (word-at-point)))
+      ;; 太短的单词不查
+      (when (and word (> (length word) 4))
+        (bing-dict-brief word))
+      nil))
+
+  ;; 注意一次只有一个 eldoc mode backend 生效
+  (define-minor-mode bing-dict-eldoc-mode
+    "Use bing-dict as backend of eldoc."
+    :lighter " Bing Dict"
+    (if bing-dict-eldoc-mode
+        (progn (setq-local eldoc-documentation-function
+                           #'bing-dict-eldoc-documentation-function)
+               (eldoc-mode +1))
+      (setq-local eldoc-documentation-function #'ignore)
+      (eldoc-mode -1))))
 
 (use-package google-translate
   :ensure t
