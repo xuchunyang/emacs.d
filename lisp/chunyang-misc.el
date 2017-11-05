@@ -328,7 +328,7 @@ For testing / debugging Emacs init file."
   (let ((s (base64-decode-string (substring link (length "thunder://")))))
     (unless (and (string-prefix-p "AA" s)
                  (string-suffix-p "ZZ" s))
-      (error "%s is not started with 'AA' or ended with 'ZZ'"))
+      (error "%s is not started with 'AA' or ended with 'ZZ'" link))
     (substring s 2 -2)))
 
 (defun chunyang-encode-thunder-link (link)
