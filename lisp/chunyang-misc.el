@@ -330,7 +330,6 @@ For testing / debugging Emacs init file."
                  (string-suffix-p "ZZ" s))
       (error "%s is not started with 'AA' or ended with 'ZZ'"))
     (substring s 2 -2)))
-     => chunyang-decode-thunder-link
 
 (defun chunyang-encode-thunder-link (link)
   "Encode LINK into thunder:// link."
