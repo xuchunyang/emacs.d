@@ -159,5 +159,42 @@
   :global t
   :lighter " Chinese")
 
+
+;;; Search Chinese via Pinyin
+
+(defvar chunyang-pinyin-map nil)
+
+(defun chunyang-pinyin-map ()
+  (unless chunyang-pinyin-map
+    (setq chunyang-pinyin-map
+          (with-temp-buffer
+            (insert-file-contents "~/src/emacs/leim/MISC-DIC/pinyin.map")
+            (goto-char (point-min))
+            (re-search-forward "^[^%]")
+            (let (al)
+              (while (not (eobp))
+                (push (split-string (buffer-substring-no-properties
+                                     (line-beginning-position)
+                                     (line-end-position)))
+                      al)
+                (forward-line))
+              (nreverse al)))))
+  chunyang-pinyin-map)
+
+(defun chunyang-pinyin-build-regexp (pinyin)
+  (mapconcat (lambda (s)
+               (let ((chars (cadr (assoc s (chunyang-pinyin-map)))))
+                 (if chars
+                     (concat "[" chars "]")
+                   (error "不合法的拼音 %s" s))))
+             (split-string pinyin)
+             ""))
+
+;;;###autoload
+(defun chunyang-pinyin-occur (pinyin)
+  "用拼音搜索对应的中文."
+  (interactive "s拼音 (用空格隔开): ")
+  (occur (chunyang-pinyin-build-regexp pinyin)))
+
 (provide 'chunyang-chinese)
 ;;; chunyang-chinese.el ends here
