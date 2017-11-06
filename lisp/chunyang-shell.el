@@ -75,5 +75,22 @@ cd /tmp && pwd"
     (kill-new command)
     (message "Killed: %s" command)))
 
+;; XXX This is a easy solution but can be surprising and confusing
+;;
+;; (define-advice shell-command (:filter-args (r) delete-trailing-newline)
+;;   (if (and (eq this-command 'shell-command)
+;;            current-prefix-arg)
+;;       (list (concat (car r) " | head --bytes=-1")
+;;             (cadr r)
+;;             (caddr r))
+;;     r))
+
+(define-advice shell-command (:after (&rest _) exchange-point-and-mark)
+  "Move point to the end of the inserted output.
+Because I usualy want to delete the final trailing newline."
+  (when (and (eq this-command 'shell-command)
+             current-prefix-arg)
+    (exchange-point-and-mark t)))
+
 (provide 'chunyang-shell)
 ;;; chunyang-shell.el ends here
