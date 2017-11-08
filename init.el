@@ -3477,6 +3477,14 @@ provides similiar function."
   ;; Yes, use ParEdit in the REPL too
   (add-hook 'geiser-repl-mode-hook #'paredit-mode))
 
+(use-package ob-scheme
+  :defer t
+  :config
+  (define-advice org-babel-scheme-get-repl (:around (old-fun &rest args) dont-switch-buffer)
+    "Work-around for URL `https://github.com/jaor/geiser/issues/107'."
+    (cl-letf (((symbol-function 'geiser-repl--switch-to-buffer) #'set-buffer))
+      (apply old-fun args))))
+
 (use-package scheme
   :defer t
   :config (add-hook 'scheme-mode-hook #'paredit-mode))
