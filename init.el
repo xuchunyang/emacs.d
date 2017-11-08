@@ -3472,6 +3472,17 @@ provides similiar function."
   ;; see (info "(geiser) The source and the REPL")
   (setq geiser-active-implementations '(racket chicken))
 
+  ;; XXX With scheme src block in Org, `scheme-mode' is called from time to
+  ;; time, then `geiser-mode' is called, but it can't figure out the scheme
+  ;; implementation.
+  ;;
+  ;; 1. In the Org mode, there is no need to enable `geiser-mode'.
+  ;; 2. In C-c ' (`org-src-mode'), `geiser-mode' should be on and with correct
+  ;;    scheme implementation.
+  ;;
+  ;; Ok, for now, just use the fallback.
+  (setq geiser-default-implementation 'chicken)
+
   (add-hook 'geiser-mode-hook #'chunyang-geiser-setup)
 
   ;; Yes, use ParEdit in the REPL too
