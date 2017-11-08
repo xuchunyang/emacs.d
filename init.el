@@ -3468,7 +3468,9 @@ provides similiar function."
                ("C-h C-." . geiser-doc-look-up-manual)
                ("C-j"     . chunyang-geiser-eval-print-last-sexp)))
   :config
-  (setq geiser-default-implementation 'racket)
+  ;; To learn how Geiser chooses Scheme implementation,
+  ;; see (info "(geiser) The source and the REPL")
+  (setq geiser-active-implementations '(racket chicken))
 
   (add-hook 'geiser-mode-hook #'chunyang-geiser-setup)
 
