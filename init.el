@@ -3161,6 +3161,7 @@ Adapt from `org-babel-remove-result'."
 (use-package htmlize                    ; Enable src block syntax
                                         ; highlightting during
                                         ; exporting from org to html
+  :disabled t
   :ensure t
   :defer t
   ;; :init (setq org-html-htmlize-output-type 'css)
