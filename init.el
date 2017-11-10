@@ -2946,9 +2946,15 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 ;;; Emacs + Shell
 
+(define-advice shell-command (:after (&rest _) exchange-point-and-mark)
+  "Move point to the end of the inserted output.
+Because I usualy want to delete the final trailing newline."
+  (when (and (eq this-command 'shell-command)
+             current-prefix-arg)
+    (exchange-point-and-mark t)))
+
 ;; 1) Emacs should load `chunyang-shell.el'
 ;; 2) Shell in external Terminal should load misc/linux.sh or misc/mac.sh
-
 (use-package chunyang-shell
   :commands (shell/info                 ; For shell in Terminal (outside Emacs)
              helm-bash-history
