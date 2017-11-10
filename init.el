@@ -3817,10 +3817,11 @@ provides similiar function."
 
 ;;; Emacs
 
-(setq source-directory
-      (cond (*is-remacs*   "~/src/remacs")
-            (*is-mac-port* "~/src/emacs-mac")
-            (t             "~/src/emacs")))
+(unless source-directory
+  (setq source-directory
+        (cond (*is-remacs*   "~/src/remacs")
+              (*is-mac-port* "~/src/emacs-mac")
+              (t             "~/src/emacs"))))
 
 
 ;;; Chinese | 中文
