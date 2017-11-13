@@ -3209,7 +3209,8 @@ Adapt from `org-babel-remove-result'."
       (unless (file-exists-p "Makefile")
         (setq-local compile-command
                     (let ((fn (file-name-nondirectory buffer-file-name)))
-                      (format "cc %s -o %s -std=c99 -Wall"
+                      ;; https://gcc.gnu.org/onlinedocs/gcc-4.8.4/gcc/Warning-Options.html
+                      (format "cc -std=c99 -Wall -Wpedantic %s -o %s"
                               (shell-quote-argument fn)
                               (shell-quote-argument (file-name-sans-extension fn)))))))
     (define-key c-mode-map "\C-c\C-c" 'recompile))
