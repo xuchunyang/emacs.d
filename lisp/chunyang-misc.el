@@ -323,6 +323,7 @@ For testing / debugging Emacs init file."
 
 (defun chunyang-decode-thunder-link (link)
   "Decode thunder:// LINK."
+  (interactive "s迅雷链接: ")
   (unless (string-prefix-p "thunder://" link)
     (error "%s is not a thunder:// link" link))
   (let ((s (base64-decode-string (substring link (length "thunder://")))))
@@ -333,6 +334,7 @@ For testing / debugging Emacs init file."
 
 (defun chunyang-encode-thunder-link (link)
   "Encode LINK into thunder:// link."
+  (interactive "s链接: ")
   (concat "thunder://" (base64-encode-string (concat "AA" link "ZZ"))))
 
 ;; (chunyang-encode-thunder-link "http://example.com/index.html")

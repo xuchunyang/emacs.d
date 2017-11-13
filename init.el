@@ -580,7 +580,10 @@
              ;; QR Code
              chunyang-scan-qr-code-from-screen
              chunyang-qrdecode
-             chunyang-qrencode))
+             chunyang-qrencode
+             ;; 迅雷
+             chunyang-decode-thunder-link
+             chunyang-encode-thunder-link))
 
 (use-package chunyang-buffers    ; Personal buffer tools
   :config
