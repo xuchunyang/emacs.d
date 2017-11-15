@@ -3862,11 +3862,15 @@ provides similiar function."
 ;;; PDF
 
 (use-package pdf-tools
-  :disabled t
-  :if *is-gnu-linux*
   :ensure t
-  ;; XXX defer loading this
-  :init (pdf-tools-install))
+  :homepage https://github.com/politza/pdf-tools
+  :notes
+  - This package is VERY cool
+  - poppler and automake is required when installing
+  - Do not open large file such as larger than 1MB
+  :defer t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config (pdf-tools-install))
 
 
 ;;; Fun
