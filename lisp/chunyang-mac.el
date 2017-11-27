@@ -195,5 +195,18 @@ to tell the active tab of its first window to reload"))
    (do-applescript
     "tell application \"Google Chrome\" to return URL of active tab of first window")))
 
+
+;;; Misc
+
+;; [[https://stackoverflow.com/questions/16064957/how-to-check-in-applescript-if-an-app-is-running-without-launching-it-via-osa][osx - How to check in AppleScript if an app is running, without launching it - via osascript utility - Stack Overflow]]
+(defun chunyang-mac-app-running-p (app)
+  "Return non-nil if APP is running."
+  (do-applescript
+   (format (concat "if application \"%s\" is running then\n"
+                   "	return \"Running!\"\n"
+                   "end if")
+           app)))
+
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
