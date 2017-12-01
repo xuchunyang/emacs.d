@@ -3594,11 +3594,9 @@ provides similiar function."
 ;;; Python
 
 (use-package python
-  :disabled t
   :defer t
-  :init
-  (setq python-shell-interpreter "python3"
-        python-shell-completion-native-enable nil))
+  :config
+  (setq python-shell-interpreter "python3"))
 
 
 ;;; OCaml
