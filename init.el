@@ -3130,9 +3130,6 @@ Adapt from `org-babel-remove-result'."
     (when (get-buffer org-babel-error-buffer-name)
       (kill-buffer org-babel-error-buffer-name)))
 
-  ;; (org) Easy templates
-  (loop for al in '(("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
-        do (add-to-list 'org-structure-template-alist al 'append))
   ;; Or use C-c C-v C-x (`org-babel-do-key-sequence-in-edit-buffer') instead
   (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map)
 
