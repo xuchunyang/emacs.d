@@ -3064,16 +3064,14 @@ Adapt from `org-babel-remove-result'."
          ("<M-S-up>"   . org-drag-line-backward))
   :bind (:map org-mode-map ("C-h S" . chunyang-org-info-lookup-symbol))
   :config
-
-  ;; Prevent demoting heading also shifting text inside sections
-  (setq org-adapt-indentation nil)
-  ;; Prevent indenting code in src block
-  (setq org-src-preserve-indentation t)
-
   (setq org-agenda-files '("~/org/todo.org"))
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline "~/org/todo.org" "Inbox")
-                                 "* TODO %i%?")))
+  (setq org-capture-templates
+        '(("t" "Todo [inbox]" entry
+           (file+headline "~/org/todo.org" "Inbox")
+           "* TODO %i%?")
+          ("l" "Link (Google Chrome)" entry
+           (file "~/org/links.org")
+           "* %?%(grab-mac-link 'chrome 'org)\n  %U")))
   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)"
                                       "|"
                                       "DONE(d)" "CANCELLED(c)")))
