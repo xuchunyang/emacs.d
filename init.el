@@ -270,7 +270,7 @@
          (setq default-directory (expand-file-name (concat exwm-title "/")))))
 
   (add-hook 'exwm-update-title-hook #'chunyang-exwm-xfce4-terminal-update-default-directory)
-  
+
   ;; Shrink fringes to 1 pixel
   ;; (fringe-mode 1)
 
@@ -280,7 +280,7 @@
   ;; Disable the clipboard and use the primary selection
   (setq select-enable-clipboard nil
         select-enable-primary t)
-  
+
   ;; Disable pluse on M-. and M-,
   (with-eval-after-load 'xref
     (remove-hook 'xref-after-jump-hook   #'xref-pulse-momentarily)
@@ -293,7 +293,7 @@
   ;; https://github.com/ch11ng/exwm/issues/288#issuecomment-322023887
   (with-eval-after-load 'epa
     (setq epa-pinentry-mode 'loopback))
-  
+
   ;; Undo the Fcitx hack
   (when (string= (getenv "LC_CTYPE") "zh_CN.UTF-8")
     (setenv "LC_CTYPE")))
@@ -2469,7 +2469,7 @@ This should be add to `find-file-hook'."
 
   ;; Don't save sent mail locally
   (setq notmuch-fcc-dirs "Sent")
-  
+
   ;; Don't display notmuch logo, it's invisible in dark theme
   (setq notmuch-show-logo nil)
 
@@ -2501,14 +2501,14 @@ This should be add to `find-file-hook'."
     (setq shr-inhibit-images (not shr-inhibit-images))
     (eww-reload)
     (message "Image is now %s"
-             (if shr-inhibit-images "off" "on")))  
+             (if shr-inhibit-images "off" "on")))
   (defun chunyang-eww-visit-chrome-tab ()
     "EWW URL of the current Chrome Tab."
     (interactive)
     (unless *is-mac*
       (user-error
        "`chunyang-eww-visit-chrome-tab' supports macOS only"))
-    
+
     (if (require 'grab-mac-link nil t)
         (progn
           (require 'dash)
