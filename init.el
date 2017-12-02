@@ -2515,12 +2515,9 @@ This should be add to `find-file-hook'."
           (-let (((url . _title) (grab-mac-link-chrome-1)))
             (eww url)))
       (eww
-       (replace-regexp-in-string
-        (rx (or (and string-start ?\")
-                (and ?\" string-end)))
-        ""
-        (do-applescript
-         "tell application \"Google Chrome\" to return URL of active tab of first window")))))
+       (do-applescript
+        "tell application \"Google Chrome\" \
+to return URL of active tab of first window"))))
   (defun helm-eww-bookmarks ()
     "My EWW bookmarks manager using helm."
     (interactive)
