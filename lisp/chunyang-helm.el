@@ -138,7 +138,7 @@
 
   (setq helm-mini-default-sources
 	'(helm-source-buffers-list
-	  helm-source-ivy-view
+	  ;; helm-source-ivy-view
 	  helm-source-recentf
 	  helm-source-buffer-not-found))
 
