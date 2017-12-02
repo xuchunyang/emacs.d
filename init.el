@@ -3602,8 +3602,12 @@ provides similiar function."
 
 (use-package python
   :defer t
+  :preface
+  (defun chunyang-python-mode-setup ())
   :config
-  (setq python-shell-interpreter "python3"))
+  (add-hook 'python-mode-hook #'chunyang-python-mode-setup)
+  (setq python-shell-interpreter "python3")
+  (setq python-indent-guess-indent-offset-verbose nil))
 
 
 ;;; OCaml
