@@ -2612,6 +2612,16 @@ Note that this will OVERRIDE the existing EWW bookmarks."
       (chunyang-eww-import-bookmarks-from-chrome-1
        (json-read-file bookmark-file)))
     (eww-write-bookmarks))
+
+  ;; http://acidwords.com/posts/2017-12-01-distraction-free-eww-surfing.html
+  (defun sanel-eww-more-readable ()
+    "Makes eww more pleasant to use. Run it after eww buffer is loaded."
+    (interactive)
+    (setq eww-header-line-format nil)   ; removes page title
+    (setq mode-line-format nil)         ; removes mode-line
+    (set-window-margins (get-buffer-window) 20 20) ; increases size of margins
+    (redraw-display)                    ; apply mode-line changes
+    (eww-reload))                       ; apply eww-header changes
   :config
   (bind-key "M" #'chunyang-eww-toggle-image eww-mode-map)
   ;; Sync bookmarks every time from Chrome
