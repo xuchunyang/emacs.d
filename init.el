@@ -1113,12 +1113,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;;
 ;; See also (info "(emacs) Grep Searching")
 
-(use-package grep
-  :defer t
-  :config
-  (nconc grep-find-ignored-files
-         '("TAGS" "GTAGS" "GRTAGS" "GSYMS" "GPATH" "GTAGSROOT"))
-  (use-package wgrep :ensure t :defer t))
+(use-package grep :defer t)
+(use-package wgrep :ensure t :defer t)
 
 ;; Notes that isearch is not a package and it is loaded from the very
 ;; beginning
