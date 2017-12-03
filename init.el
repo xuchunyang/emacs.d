@@ -3619,6 +3619,13 @@ provides similiar function."
   :after python
   :init (setq info-python-files '("python3")))
 
+(use-package helm-pydoc :ensure t :defer t)
+
+;; Or just type M-! pydoc print
+(use-package pydoc
+  :load-path "~/src/pydoc"
+  :commands pydoc)
+
 
 ;;; OCaml
 
