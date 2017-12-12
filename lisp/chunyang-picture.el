@@ -21,12 +21,11 @@
 ;;; Commentary:
 
 ;; - Download photo on Bing's homepage <http://www.bing.com/>
-;; - Download Honey Select picture from https://www.zodgame.us/forum.php
 
 ;;; Code:
 
 ;;;###autoload
-(defun chunyang-download-bing-picture (&optional directory filename resolution)
+(defun chunyang-picture-bing (&optional directory filename resolution)
   "下载 Bing 首页图片.
 用 DIRECTORY 指定下载目录，省略或 nil 用当前路径.
 用 FILENAME 指定文件名，省略或 nil 用服务器提供的.
@@ -67,61 +66,6 @@
         (unless (file-exists-p pic-file)
           (url-copy-file pic-url pic-file))
         pic-file))))
-
-;;;###autoload
-(defun chunyang-about-honey-select (&optional dir)
-  "Fetch a picture on Honey Select to DIR and display in *About GNU Emacs*.
-Argument nil or omitted means save to `default-directory'."
-  (interactive)
-  (unless dir
-    (setq dir (let ((default "~/Pictures/Honey Select"))
-                (if (file-exists-p default)
-                    default
-                  default-directory))))
-  (let ((default-directory dir)
-        (process-environment (append '("LC_ALL=C") process-environment))
-        buf proc)
-    (setq buf (get-buffer-create "*wget*"))
-    (setq proc (get-buffer-process buf))
-    (when proc (kill-process proc))
-    (with-current-buffer buf
-      (setq proc (start-process
-                  "wget" buf "wget"
-                  "--server-response"
-                  "--content-disposition"
-                  "--no-clobber"
-                  "http://signavatar.com/50020_s.gif"))
-      (require 'shell)
-      (shell-mode)
-      (display-buffer buf)
-      (set-process-sentinel
-       proc
-       (lambda (_proc event)
-         (cond ((string= event "finished\n")
-                (with-current-buffer buf
-                  (save-excursion
-                    (goto-char (point-min))
-                    (re-search-forward "  Location: \\(.+\\)$")
-                    (setq fancy-splash-image
-                          (expand-file-name (file-name-nondirectory (match-string 1))))
-                    (kill-buffer)
-                    (delete-other-windows)))
-                (about-emacs)))))
-      ;; Use the comint filter for proper handling of carriage motion
-      ;; (see `comint-inhibit-carriage-motion'),.
-      (set-process-filter proc 'comint-output-filter))))
-
-(defun chunyanb-about-emacs-refresh ()
-  "Choose another picture randomly to display in *About GNU Emacs*."
-  (interactive)
-  (let ((default-directory "~/Pictures/Honey Select/")
-        file)
-    (assert (file-exists-p default-directory))
-    (setq file (shell-command-to-string "find . -type f -name '*.png' | shuf -n1 | tr -d '\n'"))
-    (assert file)
-    (setq file (expand-file-name file))
-    (setq fancy-splash-image file)
-    (about-emacs)))
 
 (provide 'chunyang-picture)
 ;;; chunyang-picture.el ends here
