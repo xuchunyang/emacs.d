@@ -1708,10 +1708,11 @@ See also `describe-function-or-variable'."
 
 (use-package chunyang-elisp
   :after elisp-mode
-  :defer t
   :commands (chunyang-format-command-on-key
-             chunyang-format-help-on-key)
-  :config
+             chunyang-format-help-on-key
+             chunyang-eval-print-last-sexp
+             chunyang-macroexpand-print-last-sexp)
+  :init
   (bind-keys :map emacs-lisp-mode-map
              ("C-j" . chunyang-eval-print-last-sexp)
              ("C-," . chunyang-macroexpand-print-last-sexp)
