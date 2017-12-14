@@ -3134,6 +3134,11 @@ Adapt from `org-babel-remove-result'."
   ;; Or use C-c C-v C-x (`org-babel-do-key-sequence-in-edit-buffer') instead
   (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map)
 
+  ;; [[https://emacs-china.org/t/topic/4540][rg搜索文字并跳转后如何自动展开上下文？ - Spacemacs - Emacs China]]
+  (add-hook 'next-error-hook
+            (defun chunyang-org-reveal-after-next-error ()
+              (and (derived-mode-p 'org-mode) (org-reveal))))
+
   (require 'org-protocol))
 
 (use-package ox-html
