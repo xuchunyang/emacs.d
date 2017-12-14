@@ -77,8 +77,15 @@
 (use-package helm-buffers
   :defer t
   :config
-  (push (rx string-start "TAGS" string-end) helm-boring-buffer-regexp-list)
-  (push (rx string-start "*tramp")          helm-boring-buffer-regexp-list)
+  (setq helm-boring-buffer-regexp-list
+        (append helm-boring-buffer-regexp-list
+                (list
+                 ;; C-h e
+                 (rx string-start "*Messages*" string-end)
+                 ;; C-h t
+                 (rx string-start "*scratch*" string-end)
+                 ;; C-h h
+                 (rx string-start "*Help*" string-end))))
 
   (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window)
 
