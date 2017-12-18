@@ -3185,7 +3185,13 @@ Adapt from `org-babel-remove-result'."
 (use-package orglink
   :load-path "~/src/orglink"
   :commands (orglink-mode global-orglink-mode)
-  :init (add-hook 'prog-mode-hook #'orglink-mode)
+  :preface
+  ;; XXX To fix "funcall-interactively: Text is read-only" error, when
+  ;; entering pattern after M-x el-search-pattern
+  (defun chunyang-orglink-turn-on-maybe ()
+    (unless (minibufferp)
+      (orglink-mode)))
+  :init (add-hook 'prog-mode-hook #'chunyang-orglink-turn-on-maybe)
   :config (setq orglink-mode-lighter nil))
 
 ;; TODO: Learn more about this package
