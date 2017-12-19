@@ -3433,51 +3433,23 @@ provides similiar function."
   :init (add-hook 'ruby-mode-hook 'ruby-tools-mode))
 
 
-;;; For the Programming Languages course
+;;; Standard ML
 
 (use-package sml-mode
   :ensure t
   :defer t)
 
 (use-package sml-eldoc
+  :disabled t                           ; Not working
   :commands sml-eldoc-turn-on
   :init (add-hook 'sml-mode-hook 'sml-eldoc-turn-on))
 
 (use-package ob-sml
   :ensure t
-  :defer t
-  :init (with-eval-after-load 'org
-          (require 'ob-sml)))
+  :after org)
 
-(use-package skalpel
-  :disabled t
-  :load-path "~/skalpel/front-ends/emacs/"
-  :init
-  (defvar skalpel-emacs-directory "~/skalpel/front-ends/emacs/")
-  (defvar skalpel-bin-directory "~/skalpel/analysis-engines/standard-ml/bin/")
-  (defvar skalpel-lib-directory "~/skalpel/lib/")
-  (defvar skalpel-sources-directory "~/skalpel/analysis-engines/standard-ml/")
-  (with-eval-after-load 'sml-mode
-    (load "skalpel-config.el")))
-
-;; [Don't copy-paste on the Extra Practice Problems page](https://www.coursera.org/learn/programming-languages/discussions/weeks/2/threads/_k7m9FTgEeaslgpY-vgBqw
-(defun convert-MathJax-Unicode-to-ASCII (beg end)
-  "Convert [0-9a-zA-Z] in Unicode to their ASCII in the region."
-  (interactive "r")
-  (insert (mapconcat (lambda (c)
-                       (char-to-string
-                        (cond
-                         ((<= ?𝟶 c ?𝟿) (+ ?0 (- c ?𝟶)))
-                         ((<= ?𝚊 c ?𝚣) (+ ?a (- c ?𝚊)))
-                         ((<= ?𝙰 c ?𝚉) (+ ?A (- c ?𝙰)))
-                         (t c))))
-                     (delete-and-extract-region beg end) "")))
-;; Testing
-;;
-;; Before:
-;; EXAMPLE: 𝚞𝚗𝚏𝚘𝚕𝚍 (𝚏𝚗 𝚡 => 𝚒𝚏 𝚡 > 𝟹 𝚝𝚑𝚎𝚗 𝙽𝙾𝙽𝙴 𝚎𝚕𝚜𝚎 𝚂𝙾𝙼𝙴 (𝚡 + 𝟷, 𝚡)) 𝟶 = [𝟶, 𝟷, 𝟸, 𝟹]
-;; After:
-;; EXAMPLE: unfold (fn x => if x > 3 then NONE else SOME (x + 1, x)) 0 = [0, 1, 2, 3]
+
+;;; Scheme
 
 (use-package geiser                     ; For Scheme
   :ensure t
@@ -3530,7 +3502,7 @@ provides similiar function."
   :config (add-hook 'scheme-mode-hook #'paredit-mode))
 
 (use-package racket-mode
-  :disabled t
+  :disabled t                           ; Use geiser
   :ensure t
   :defer t
   :init
