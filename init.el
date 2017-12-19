@@ -8,43 +8,6 @@
 ;;; Code:
 
 
-;;; Disable Enriched mode code execution (https://bugs.gnu.org/28350)
-
-(eval-after-load 'enriched
-  '(and (fboundp 'enriched-decode-display-prop)
-        (defun enriched-decode-display-prop (start end &optional param)
-          (list start end))))
-
-
-;;; Debug init file
-
-(defun chunyang-quit-init-el ()
-  "Call it from init file to quit loading immediately."
-  (when load-in-progress
-    (with-current-buffer " *load*"
-      (message "%s:%s:%s"
-               load-file-name
-               (line-number-at-pos)
-               (buffer-substring-no-properties
-                (line-beginning-position)
-                (line-end-position)))
-      (goto-char (point-max)))))
-
-(defun chunyang-init-file-search ()
-  "Search this init file."
-  (interactive)
-  (let ((default-directory user-emacs-directory))
-    (call-interactively #'helm-do-grep-ag)))
-
-
-;;; Remacs
-
-(defconst *is-remacs*
-  (if window-system
-      (and (string-match "remacs" invocation-directory) t)
-    (string= invocation-name "remacs")))
-
-
 ;;; Start up
 
 (require 'package)
@@ -3823,10 +3786,7 @@ provides similiar function."
 ;;; Emacs
 
 (unless source-directory
-  (setq source-directory
-        (cond (*is-remacs*   "~/src/remacs")
-              (*is-mac-port* "~/src/emacs-mac")
-              (t             "~/src/emacs"))))
+  (setq source-directory "~/src/emacs"))
 
 
 ;;; Chinese | 中文
