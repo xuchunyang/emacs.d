@@ -3962,6 +3962,11 @@ provides similiar function."
   :load-path "~/src/emacs-cmark"
   :commands cmark-markdown-to-html)
 
+(use-package parsec
+  :about "A parser combinator library"
+  :ensure t
+  :defer t)
+
 
 ;;; Custom
 
