@@ -344,5 +344,46 @@ For testing / debugging Emacs init file."
 ;;  "thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vaW5kZXguaHRtbFpa")
 ;;      => "http://example.com/index.html"
 
+
+;;; Markup Links
+
+(defun chunyang-markdown-link-parse (link)
+  "A simple parser of Markdown link.
+
+(chunyang-markdown-link-parse \"[Example Domain](https://example.com)\")
+     => (\"Example Domain\" \"https://example.com\")
+"
+  (if (string-match (rx "[" (group (0+ anything)) "]"
+                        "(" (group (0+ anything)) ")")
+                    link)
+      (list (match-string 1 link)
+            (match-string 2 link))
+    (error "Cannot parse %s as Markdown link" link)))
+
+(defun chunyang-markdown-link-make (text link)
+  (format "[%s](%s)" text link))
+
+(defun chunyang-org-link-parse (link)
+  "A simple parser of Org link.
+
+(chunyang-org-link-parse \"[[https://emacs-china.org/][Emacs China]]\")
+     => (\"https://emacs-china.org/\" \"Emacs China\")
+"
+  (if (string-match
+       (rx "[[" (group (0+ anything)) "][" (group (0+ anything)) "]]")
+       link)
+      (list (match-string 1 link)
+            (match-string 2 link))
+    (error ("Cannot parse %s as Org link" link))))
+
+(defun chunyang-org-link-make (text link)
+  (format "[[%s][%s]]" link text))
+
+(defun chunyang-markdown-link->org-link (markdown)
+  (apply #'chunyang-org-link-make (chunyang-markdown-link-parse markdown)))
+
+(defun chunyang-org-link->markdown-link (org)
+  (apply #'chunyang-markdown-link-make (chunyang-org-link-parse org)))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
