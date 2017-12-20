@@ -454,6 +454,9 @@
 
 (define-key minibuffer-local-map "\C-w" #'chunyang-minibuffer-yank-word)
 
+(use-package chunyang-edit-minibuffer
+  :bind (:map minibuffer-local-map ("C-c '" . chunyang-edit-minibuffer)))
+
 (use-package chunyang-helm
   :if (eq chunyang-completing-read-style 'helm))
 
