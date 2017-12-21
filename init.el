@@ -3897,8 +3897,19 @@ provides similiar function."
   :load-path "~/src/emacs-cmark"
   :commands cmark-markdown-to-html)
 
+
+;;; Other Emacs Lisp libraries
+
+;; dash, seq, thunk, stream, ewoc, cl-lib, widget, tree-widget
+
 (use-package parsec
   :about "A parser combinator library"
+  :ensure t
+  :defer t)
+
+(use-package hierarchy
+  :about "Library to create and display hierarchy structures"
+  :homepage https://github.com/DamienCassou/hierarchy
   :ensure t
   :defer t)
 
