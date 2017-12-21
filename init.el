@@ -2107,6 +2107,9 @@ See also `describe-function-or-variable'."
                "Copy" (funcall new-action #'kill-new))))
           :buffer "*helm-gitignore-templates*")))
 
+(use-package chunyang-git
+  :commands chunyang-git-tree)
+
 
 ;;; Tools and utilities
 
