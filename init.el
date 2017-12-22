@@ -2062,9 +2062,8 @@ See also `describe-function-or-variable'."
     (chunyang-git-gutter-apply-on-region beg end 'git-gutter:stage-hunk)))
 
 (use-package diff-hl
-  :disabled t
   :ensure t
-  :init (global-diff-hl-mode))
+  :defer t)
 
 (use-package git-messenger
   :ensure t
