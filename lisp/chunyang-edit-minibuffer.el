@@ -36,7 +36,16 @@
    (lambda ()
      (pcase (minibuffer-prompt)
        ;; Used by `el-search-pattern' and `eval-expression'
-       ((or "El-search pattern: " "Eval: ")
+       ((or
+         ;; `el-search-pattern'
+         "El-search pattern: "
+         ;; `el-search-query-replace'
+         "Query replace pattern: "
+         "Replace with result of evaluation of: "
+         ;; `eval-expression'  and `pp-eval-expression'
+         "Eval: "
+         ;; `pp-macroexpand-expression'
+         "Macroexpand: ")
         (emacs-lisp-mode)))))
   "Hook to run just before enabling `chunyang-edit-minibuffer-mode'.
 This hook provides an opportunity to enable a custom major mode
