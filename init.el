@@ -27,9 +27,10 @@
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
 ;; Bootstrap `use-package'
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(let ((pkgs (seq-remove #'package-installed-p '(use-package diminish))))
+  (when pkgs
+    (package-refresh-contents)
+    (mapc #'package-install pkgs)))
 
 ;; use-package.el is no longer needed at runtime
 (eval-when-compile
