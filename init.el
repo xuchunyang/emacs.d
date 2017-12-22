@@ -3903,7 +3903,8 @@ provides similiar function."
 
 ;;; Other Emacs Lisp libraries
 
-;; dash, seq, thunk, stream, ewoc, cl-lib, widget, tree-widget
+;; dash, seq, thunk, stream, ewoc, cl-lib, widget, tree-widget, let-alist, map
+;; ring, radix-tree
 
 (use-package parsec
   :about "A parser combinator library"
