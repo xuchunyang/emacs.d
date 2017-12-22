@@ -1,0 +1,166 @@
+#+TITLE: Pattern Matching with pcase
+
+* References
+
+- [[help:pcase][C-h f pcase]] :: docstring
+- [[info:elisp#Pattern%20matching%20case%20statement][info:elisp#Pattern matching case statement]] :: manual
+- [[http://newartisans.com/2016/01/pattern-matching-with-pcase/][Emacs: Pattern Matching with pcase]] :: 注意文中代码有几处有误
+- [[http://www.wilfred.me.uk/blog/2017/03/19/pattern-matching-in-emacs-lisp/][Pattern Matching in Emacs Lisp – Wilfred Hughes::Blog]] :: 跟 cl-destructuring-bind, dash.el, shadchen.el 的比较
+- [[https://www.emacswiki.org/emacs/PatternMatching][EmacsWiki: Pattern Matching]] :: 一些例子
+
+* Examples
+
+** Hello World
+
+#+begin_src emacs-lisp
+  (pcase '(1 2 (4 . 5) "Hello")
+    (`(1 2 (4 . 5) ,(pred stringp))
+     (message "It matched!")))
+#+end_src
+
+#+RESULTS:
+: It matched!
+
+** Match any list
+
+#+begin_src emacs-lisp
+(pcase '(a b c)
+  ((and x (pred listp)) (message "Match List: %s" x)))
+#+end_src
+
+#+RESULTS:
+: Match List: (a b c)
+
+Notes that ~`(,_ . ,_)~ match any cons cell, i.e., any list except nil
+
+#+begin_src emacs-lisp
+  (pcase '(a b c)
+    ('nil "Match nil (empty list)")
+    (`(,foo . ,bar)
+     (message "Match non-empty list with car = %s and cdr = %s" foo bar)))
+#+end_src
+
+#+RESULTS:
+: Match non-empty list with car = a and cdr = (b c)
+
+** Repeated elements
+
+By default, ~eq~ is used for testing:
+
+#+begin_quote
+If a SYMBOL is used twice in the same pattern the second occurrence
+becomes an ‘eq’uality test.
+#+end_quote
+
+#+begin_src emacs-lisp
+  (pcase '(1 1)
+    (`(,x ,x) (format-spec "Matching (%x %x) where %x eq %x" `((?x . ,x)))))
+#+end_src
+
+#+RESULTS:
+: Matching (1 1) where 1 eq 1
+
+Here is an example of ~equal~
+
+#+begin_src emacs-lisp
+(pcase '("1" "1")
+  (`(,x ,(and y (guard (equal x y))))
+   "Matching (%x %y) where %x equal %y"   
+   (format-spec "Matching (%x %y) where %x equal %y"
+                `((?x . ,(pp-to-string x)) (?y . ,(pp-to-string y))))))
+#+end_src
+
+#+RESULTS:
+: Matching ("1" "1") where "1" equal "1"
+
+** ~(let UPATTERN EXPRESSION)~
+
+#+begin_src emacs-lisp
+  (pcase '(1 2 3)
+    (`(1 2 ,(and foo (let 3 foo)))
+     (message "A weird way of matching (1 2 3)")))
+#+end_src
+
+#+RESULTS:
+: A weird way of matching (1 2 3)
+
+Fallback
+
+#+begin_src emacs-lisp
+  (pcase-let (((or `(:key . ,val) (let val 42))
+               (cons :key 123)))
+    val)
+#+end_src
+
+#+RESULTS:
+: 123
+
+#+begin_src emacs-lisp
+(pcase-let (((or `(:key . ,val) (let val 42))
+             nil))
+  val)
+#+end_src
+
+#+RESULTS:
+: 42
+
+** pcase-dolist
+
+#+begin_src emacs-lisp
+  (let (result)
+    (pcase-dolist (`(,k . ,v) '((one . 1) (two . 2) (three . 3)))
+      (push (list k v) result))
+    result)
+#+end_src
+
+#+RESULTS:
+| three | 3 |
+| two   | 2 |
+| one   | 1 |
+
+** pcase-lambda
+
+#+begin_src emacs-lisp
+  (funcall
+   (pcase-lambda (`(,x . ,y))
+     (message "car = %S, cdr = %S" x y))
+   '(1 . 2))
+#+end_src
+
+#+RESULTS:
+: car = 1, cdr = 2
+
+** TODO (app FUN PAT)
+
+** (seq &rest ARGS)
+
+Defined by seq.el so ~(require 'seq)~ is required before using it.
+
+List, vector, string are all sequences.
+
+#+begin_src emacs-lisp
+  (pcase "hello"
+    ((seq first second) (string first second)))
+#+end_src
+
+#+RESULTS:
+: he
+
+#+begin_src emacs-lisp
+(pcase [1 2 3]
+  ((seq first second) (list first second)))
+#+end_src
+
+#+RESULTS:
+| 1 | 2 |
+
+** (rx &rest REGEXPS)
+
+#+begin_src emacs-lisp
+(pcase "  42  "
+  ((rx (* blank) (let result (1+ (in "0-9"))) (* blank))
+   result))
+#+end_src
+
+#+RESULTS:
+: 42
