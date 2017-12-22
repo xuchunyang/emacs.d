@@ -1672,6 +1672,14 @@ See also `describe-function-or-variable'."
   (with-eval-after-load 'el-search
     (define-key el-search-read-expression-map [(control ?S)] #'exit-minibuffer)))
 
+(use-package emr
+  :about "Emacs Refactor (EMR) is a framework for providing
+  language-specific refactoring in Emacs. It includes refactoring
+  commands for a variety of languages, including elisp itself!"
+  :homepage https://github.com/Wilfred/emacs-refactor
+  :ensure t
+  :commands emr-show-refactor-menu)
+
 (use-package chunyang-elisp
   :after elisp-mode
   :commands (chunyang-format-command-on-key
