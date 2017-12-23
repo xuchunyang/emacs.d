@@ -1693,6 +1693,12 @@ See also `describe-function-or-variable'."
       (kbd "C-S-s")
       #'el-search-dired-marked-files)))
 
+(use-package lispy
+  :ensure t
+  :homepage https://github.com/abo-abo/lispy
+  :commands (lispy-alt-multiline        ; Format lisp code
+             lispy-oneline))
+
 (use-package emr
   :about "Emacs Refactor (EMR) is a framework for providing
   language-specific refactoring in Emacs. It includes refactoring
