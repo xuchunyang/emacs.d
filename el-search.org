@@ -67,7 +67,111 @@ Notes that dostring is also considered as *string*.
 ->
 `(foo ,b ,a . ,rest)
 #+end_src
+* if -> when/unless/cond
 
-* TODO mapc -> dolist
+Change
 
-* TODO mapcar -> --map
+#+begin_src emacs-lisp
+(if x 100)
+
+(if (not x) 100)
+
+(if (< x 0)
+    "x < 0"
+  (if (= x 0) "x = 0" "x > 0"))
+#+end_src
+
+into
+
+#+begin_src emacs-lisp
+(when x 100)
+
+(unless x 100)
+
+(cond ((< x 0) "x < 0")
+      ((= x 0) "x = 0")
+      (t "x > 0"))
+#+end_src
+
+via
+
+#+begin_src emacs-lisp
+(iffy-if repl) -> repl
+#+end_src
+* push -> add-to-list
+
+For example, to replace
+
+#+begin_src emacs-lisp
+(push '("\\.rkt[dl]?\\'" . racket-mode) auto-mode-alist)
+#+end_src
+
+with
+
+#+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.rkt[dl]?\\'" . racket-mode))
+#+end_src
+
+use
+
+#+begin_src emacs-lisp
+`(push ,elt ,lst) -> `(add-to-list ',lst ,elt)
+#+end_src
+
+* mapc -> dolist
+
+For example, to change
+
+#+begin_src emacs-lisp
+(mapc
+ (lambda (x)
+   (message "%s" (+ x 100)))
+ '(1 2 3))
+#+end_src
+
+into
+
+#+begin_src emacs-lisp
+(dolist (x '(1 2 3))
+  (message "%s" (+ x 100)))
+#+end_src
+
+use
+
+#+begin_src emacs-lisp
+`(mapc (lambda (,var) . ,body) ,list)
+->
+`(dolist (,var ,list) . ,body)
+#+end_src
+
+* mapcar -> --map
+
+For example, to change
+
+#+begin_src emacs-lisp
+(mapcar (lambda (x) (* x x)) '(1 2 3))
+#+end_src
+
+into
+
+#+begin_src emacs-lisp
+(--map (* it it) '(1 2 3))
+#+end_src
+
+use
+
+#+begin_src emacs-lisp
+(defun transform-lambda-form-for---map (lambda-form)
+  (pcase-let ((`(lambda (,var) . ,body) lambda-form))
+    (macroexpand-1
+     `(cl-symbol-macrolet ((,var it))
+        ,@body))))
+#+end_src
+
+and
+
+#+begin_src emacs-lisp
+`(mapcar ,lambda-form ,list)
+ ->
+`(--map ,(transform-lambda-form-for---map lambda-form) ,list)
+#+end_src
