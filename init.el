@@ -21,8 +21,10 @@
 (setq package-user-dir
       (locate-user-emacs-file (concat "elpa-" emacs-version)))
 
-(let ((total (car (benchmark-run 1 (package-initialize)))))
-  (message "(package-initialize): %fs" total))
+;; Here `benchmark-elapse' is better, but it is not autoloaded.
+(pcase-let ((`(,total)
+             (benchmark-run (package-initialize))))
+  (message "(package-initialize) takes %f seconds" total))
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
