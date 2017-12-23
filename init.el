@@ -3830,6 +3830,9 @@ provides similiar function."
 ;;; PDF
 
 (use-package pdf-tools
+  ;; Disable for Travis-CI, to fix
+  ;; https://travis-ci.org/xuchunyang/emacs.d/jobs/320338600#L6965
+  :if (not noninteractive)
   :ensure t
   :homepage https://github.com/politza/pdf-tools
   :notes
