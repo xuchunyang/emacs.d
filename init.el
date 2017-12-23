@@ -1659,19 +1659,39 @@ See also `describe-function-or-variable'."
 (use-package el-search
   :if (version< "25" emacs-version)
   :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'elisp-mode
-    (define-key emacs-lisp-mode-map [(control ?S)] #'el-search-pattern)
-    (define-key emacs-lisp-mode-map [(control ?%)] #'el-search-query-replace)
-    (define-key lisp-interaction-mode-map [(control ?S)] #'el-search-pattern)
-    (define-key lisp-interaction-mode-map [(control ?%)] #'el-search-query-replace))
+  :after elisp-mode
+  :config
+  (require 'el-search-x)                ; Extra patterns
 
-  (with-eval-after-load 'isearch
-    (define-key isearch-mode-map [(control ?S)] #'el-search-search-from-isearch)
-    (define-key isearch-mode-map [(control ?%)] #'el-search-replace-from-isearch))
-  (with-eval-after-load 'el-search
-    (define-key el-search-read-expression-map [(control ?S)] #'exit-minibuffer)))
+  ;; The following key bindings is based on `el-search-install-shift-bindings'
+  ;;
+  ;; Because`lisp-interaction-mode-map' doesn't inherit `emacs-lisp-mode-map'
+  (dolist (map (list emacs-lisp-mode-map lisp-interaction-mode-map))
+    (define-key map (kbd "C-S-s") #'el-search-pattern)
+    (define-key map (kbd "C-%") #'el-search-query-replace)
+    (define-key map (kbd "C-S-h") #'el-search-this-sexp))
+
+  (define-key global-map (kbd "C-S-o") #'el-search-occur)
+  
+  (define-key el-search-read-expression-map (kbd "C-S-s") #'exit-minibuffer)
+  (define-key el-search-read-expression-map (kbd "C-S-r") #'exit-minibuffer)
+  (define-key el-search-read-expression-map (kbd "C-S-o") #'el-search-set-occur-flag-exit-minibuffer)
+  
+  (define-key isearch-mode-map (kbd "C-S-s") #'el-search-search-from-isearch)
+  (define-key isearch-mode-map (kbd "C-S-r") #'el-search-search-backwards-from-isearch)
+  (define-key isearch-mode-map (kbd "C-%") #'el-search-replace-from-isearch)
+  (define-key isearch-mode-map (kbd "C-S-o") #'el-search-occur-from-isearch)
+
+  (define-key global-map (kbd "C-S-e") #'el-search-emacs-elisp-sources)
+  (define-key global-map (kbd "C-S-l") #'el-search-load-path)
+  (define-key global-map (kbd "C-S-b") #'el-search-buffers)
+
+  (defvar dired-mode-map)
+
+  (with-eval-after-load 'dired
+    (define-key dired-mode-map
+      (kbd "C-S-s")
+      #'el-search-dired-marked-files)))
 
 (use-package emr
   :about "Emacs Refactor (EMR) is a framework for providing
