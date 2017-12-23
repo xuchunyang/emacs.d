@@ -120,15 +120,17 @@ Fallback
 
 ** pcase-lambda
 
+当函数参数是一个 List 时，用 pcase-lambda 能够在参数表里分解它，类似 pcase-let。
+
 #+begin_src emacs-lisp
   (funcall
-   (pcase-lambda (`(,x . ,y))
-     (message "car = %S, cdr = %S" x y))
-   '(1 . 2))
+   (pcase-lambda (`(,first ,second . ,rest))
+     (message "(%s %s . %s)" first second rest))
+   '(1 2 3 4 5))
 #+end_src
 
 #+RESULTS:
-: car = 1, cdr = 2
+: (1 2 . (3 4 5))
 
 ** TODO (app FUN PAT)
 
