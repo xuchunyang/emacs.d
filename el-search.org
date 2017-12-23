@@ -1,0 +1,73 @@
+#+TITLE: el-search.el
+
+* Find undocumented defvar
+
+#+begin_src emacs-lisp
+`(defvar ,_ ,_)
+#+end_src
+
+* Find unnecessary lambda such as (lambda (x) (f x))
+
+#+begin_src emacs-lisp
+`(lambda (,arg) (,fun ,arg))
+#+end_src
+
+* Find callers
+
+For example, to find all (likely) callers of =pcase-let=, use =M-x
+el-search-load-path= with:
+
+#+begin_src emacs-lisp
+`(pcase-let . ,_)
+#+end_src
+
+Try the package elisp-refs.
+
+* Replace key into kbd such as [?\C-x ?l] or "\C-xl" into (kbd "C-x l")
+
+[[info:elisp#Key%20Sequences][info:elisp#Key Sequences]]
+
+To replace
+
+#+begin_src emacs-lisp
+(define-key (current-global-map) [?\C-x ?l] #'count-lines-page)
+(define-key (current-global-map) "\C-xl"    #'count-lines-page)
+#+end_src
+
+into
+
+#+begin_src emacs-lisp
+(define-key (current-global-map) (kbd "C-x l") #'count-lines-page)
+#+end_src
+
+use
+
+#+begin_src emacs-lisp
+  M-x el-search-query-replace RET
+
+  `(define-key ,map ,(and key (or (pred vectorp) (pred stringp))) ,cmd)
+  ->
+  `(define-key ,map (kbd ,(key-description key)) ,cmd)
+
+  RET
+#+end_src
+
+* Find string in code
+
+#+begin_src emacs-lisp
+(pred stringp)
+#+end_src
+
+Notes that dostring is also considered as *string*.
+
+* Swap function arguments such as (foo a b c) into (foo b a c)
+
+#+begin_src emacs-lisp
+`(foo ,a ,b . ,rest)
+->
+`(foo ,b ,a . ,rest)
+#+end_src
+
+* TODO mapc -> dolist
+
+* TODO mapcar -> --map
