@@ -1712,21 +1712,24 @@ See also `describe-function-or-variable'."
   :commands emr-show-refactor-menu)
 
 (use-package chunyang-elisp
-  :after elisp-mode
   :commands (chunyang-format-command-on-key
              chunyang-format-help-on-key
              chunyang-eval-print-last-sexp
              chunyang-macroexpand-print-last-sexp)
   :init
-  (bind-keys :map emacs-lisp-mode-map
-             ("C-j" . chunyang-eval-print-last-sexp)
-             ("C-," . chunyang-macroexpand-print-last-sexp)
-             :map lisp-interaction-mode-map
-             ("C-j" . chunyang-eval-print-last-sexp)
-             ("C-," . chunyang-macroexpand-print-last-sexp)))
+  (with-eval-after-load 'elisp-mode
+    (bind-keys :map emacs-lisp-mode-map
+               ("C-j" . chunyang-eval-print-last-sexp)
+               ("C-," . chunyang-macroexpand-print-last-sexp)
+               :map lisp-interaction-mode-map
+               ("C-j" . chunyang-eval-print-last-sexp)
+               ("C-," . chunyang-macroexpand-print-last-sexp))))
 
 (use-package chunyang-package
-  :commands chunyang-package-homepage)
+  :after package
+  :config
+  (when (>= emacs-major-version 25)
+    (advice-add 'describe-package-1 :after #'describe-package--add-melpa-link)))
 
 (use-package ielm
   :defer t
