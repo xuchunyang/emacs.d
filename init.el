@@ -1671,6 +1671,10 @@ See also `describe-function-or-variable'."
     (define-key map (kbd "C-%") #'el-search-query-replace)
     (define-key map (kbd "C-S-h") #'el-search-this-sexp))
 
+  (define-key global-map (kbd "C-S-j") #'el-search-jump-to-search-head)
+  (define-key global-map (kbd "C-S-a") #'el-search-from-beginning)
+  (define-key global-map (kbd "C-S-d") #'el-search-skip-directory)
+  (define-key global-map (kbd "C-S-n") #'el-search-continue-in-next-buffer)
   (define-key global-map (kbd "C-S-o") #'el-search-occur)
   
   (define-key el-search-read-expression-map (kbd "C-S-s") #'exit-minibuffer)
