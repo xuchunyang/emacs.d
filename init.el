@@ -89,6 +89,25 @@
 
 (setq initial-major-mode 'fundamental-mode)
 
+(use-package chunyang-scratch
+  :preface
+  (defun chunyang-scratch-save ()
+    (ignore-errors
+      (with-current-buffer "*scratch*"
+        (write-region nil nil "~/.emacs.d/var/scratch"))))
+
+  (defun chunyang-scratch-restore ()
+    (let ((f "~/.emacs.d/var/scratch"))
+      (when (file-exists-p f)
+        (with-current-buffer "*scratch*"
+          (erase-buffer)
+          (insert-file-contents f)))))
+  :init
+  (add-hook 'kill-emacs-hook #'chunyang-scratch-save)
+  (add-hook 'after-init-hook #'chunyang-scratch-restore)
+  ;; This is not a real package so don't load it
+  :defer t)
+
 ;; Load personal information
 ;; (load "~/.private.el" :no-error)
 
