@@ -3080,6 +3080,13 @@ Adapt from `org-babel-remove-result'."
          ("<M-S-up>"   . org-drag-line-backward))
   :bind (:map org-mode-map ("C-h S" . chunyang-org-info-lookup-symbol))
   :config
+  ;; Don't indent text under headings
+  (setq org-adapt-indentation nil)
+  ;; Keep indentation in src block on export
+  (setq org-src-preserve-indentation t)
+  ;; Fix TAB when point is on src block
+  (setq org-src-tab-acts-natively t)
+
   (setq org-agenda-files '("~/org/todo.org"))
   (setq org-capture-templates
         '(("t" "Todo [inbox]" entry
