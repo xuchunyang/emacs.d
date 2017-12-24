@@ -1,0 +1,41 @@
+#+TITLE: Journal on Emacs and Emacs Lisp
+
+* 分别用 let/pcase-let/seq-let/-let 实现同样的需求
+Entered on [2017-12-24 Sun 14:08]
+
+#+begin_src emacs-lisp
+(let* ((l (benchmark-run (sleep-for .2)))
+       (total (nth 0 l))
+       (gc (nth 1 l))
+       (gc-total (nth 2 l)))
+  (list total gc gc-total))
+#+end_src
+
+#+RESULTS:
+| 0.20749 | 0 | 0.0 |
+
+#+begin_src emacs-lisp
+(pcase-let ((`(,total ,gc ,gc-total)
+             (benchmark-run (sleep-for .2))))
+  (list total gc gc-total))
+#+end_src
+
+#+RESULTS:
+| 0.20612 | 0 | 0.0 |
+
+#+begin_src emacs-lisp
+(seq-let (total gc gc-total) (benchmark-run (sleep-for .2))
+  (list total gc gc-total))
+#+end_src
+
+#+RESULTS:
+| 0.203467 | 0 | 0.0 |
+
+#+begin_src emacs-lisp
+(-let (((total gc gc-total)
+        (benchmark-run (sleep-for .2))))
+  (list total gc gc-total))
+#+end_src
+
+#+RESULTS:
+| 0.205723 | 0 | 0.0 |
