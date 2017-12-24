@@ -1739,6 +1739,7 @@ See also `describe-function-or-variable'."
              chunyang-macroexpand-print-last-sexp)
   :init
   (with-eval-after-load 'elisp-mode
+    (require 'chunyang-elisp)
     (bind-keys :map emacs-lisp-mode-map
                ("C-j" . chunyang-eval-print-last-sexp)
                ("C-," . chunyang-macroexpand-print-last-sexp)
