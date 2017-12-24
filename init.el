@@ -3094,7 +3094,10 @@ Adapt from `org-babel-remove-result'."
            "* TODO %i%?")
           ("l" "Link (Google Chrome)" entry
            (file "~/org/links.org")
-           "* %?%(grab-mac-link 'chrome 'org)\n  %U")))
+           "* %?%(grab-mac-link 'chrome 'org)\n%U")
+          ("e" "Journal on Emacs and Emacs Lisp" entry
+           (file "~/.emacs.d/emacs-and-emacs-lisp.org")
+           "* %?\nEntered on %U\n")))
   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)"
                                       "|"
                                       "DONE(d)" "CANCELLED(c)")))
