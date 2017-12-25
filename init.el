@@ -1681,6 +1681,27 @@ See also `describe-function-or-variable'."
   :if (version< "25" emacs-version)
   :ensure t
   :after elisp-mode
+  :preface
+  (defun chunyang-el-search-git-repo (pattern)
+    "Search all elisp files in git repo for PATTERN."
+    (interactive
+     (list (progn (require 'el-search)
+                  (el-search--read-pattern-for-interactive
+                   "Search git repo for pattern: "))))
+    (require 'magit)
+    (unless (magit-toplevel)
+      (user-error "Not a Git repository"))
+    (let ((topdir (magit-toplevel)))
+      (el-search-setup-search
+       pattern
+       (lambda ()
+         (stream
+          (seq-filter (lambda (s) (string-suffix-p ".el" s))
+                      (let ((default-directory topdir))
+                        (mapcar #'expand-file-name (magit-tracked-files))))))
+       (lambda (search)
+         (setf (alist-get 'description (el-search-object-properties search))
+               (concat "Search the git repo in " (abbreviate-file-name topdir)))))))
   :config
   (require 'el-search-x)                ; Extra patterns
 
