@@ -39,3 +39,40 @@ Entered on [2017-12-24 Sun 14:08]
 
 #+RESULTS:
 | 0.205723 | 0 | 0.0 |
+
+* 一个简单的 [[info:elisp#Generic%20Functions][Generic Functions]] 例子
+Entered on [2017-12-25 Mon 11:43]
+
+根据参数的类型自动选择不同的方法。
+
+#+begin_src emacs-lisp
+(cl-defgeneric foo-size (x)
+  "Return the size of x.")
+
+(cl-defmethod foo-size ((s string))
+  "Return the size of the string S."
+  (length s))
+
+(cl-defmethod foo-size ((b buffer))
+  "Return the size of the buffer B."
+  (buffer-size b))
+#+end_src
+
+#+RESULTS:
+: foo-size
+
+#+begin_src emacs-lisp
+(foo-size "hello")
+#+end_src
+
+#+RESULTS:
+: 5
+
+#+begin_src emacs-lisp
+(with-temp-buffer
+  (insert "hello")
+  (foo-size (current-buffer)))
+#+end_src
+
+#+RESULTS:
+: 5
