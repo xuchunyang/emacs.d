@@ -175,3 +175,24 @@ and
  ->
 `(--map ,(transform-lambda-form-for---map lambda-form) ,list)
 #+end_src
+
+* 'fun -> #'fun
+
+#+begin_src emacs-lisp
+(add-hook 'before-save-hook 'time-stamp)
+(add-hook 'before-save-hook #'time-stamp)
+
+`(add-hook ,hook (quote ,f))
+->
+`(add-hook ,hook (function ,f))
+#+end_src
+
+#+begin_src emacs-lisp
+(define-key term-mode-map [?\C-c ?\C-j] 'term-char-mode)
+(define-key term-mode-map [?\C-c ?\C-j] #'term-char-mode)
+
+`(define-key ,m ,k (quote ,f))
+->
+`(define-key ,m ,k (function ,f))
+#+end_src
+
