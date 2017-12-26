@@ -1705,6 +1705,42 @@ See also `describe-function-or-variable'."
   :config
   (require 'el-search-x)                ; Extra patterns
 
+  (defun el-search--docstring-p (s)
+    ;; XXX Check the index of current string in parent list to see if it
+    ;; is docstring, for example, if it is defun, move point to fourth
+    ;; element and compare with the last point, if they are the same, it
+    ;; is docstring.
+    (save-excursion
+      (backward-up-list)
+      (pcase (read (current-buffer))
+        (`(,(or 'defun
+                'defmacro
+                'defcustom
+                'defgroup
+                'cl-defun
+                'cl-defmacro
+                'cl-defgeneric
+                'cl-defmethod
+                'el-search-defpattern)
+           ,_ ,_ ,(and (pred stringp) (pred (string= s))) . ,_)
+         t)
+        (`(,(or 'defvar
+                'defvar-local)
+           ,_ ,_ ,(and (pred stringp) (pred (string= s))))
+         t)
+        (`(define-minor-mode ,_ ,(and (pred stringp) (pred (string= s))) . ,_)
+         t)
+        (`(define-derived-mode ,_ ,_ ,_ ,(and (pred stringp) (pred (string= s))) . ,_)
+         t))))
+
+  (el-search-defpattern docstring (&rest regexps)
+    "Like string but including only docstring."
+    `(and (string ,@regexps) s (guard (el-search--docstring-p s))))
+
+  (el-search-defpattern s (&rest regexps)
+    "Like string but excluding docstring."
+    `(and (string ,@regexps) s (guard (not (el-search--docstring-p s)))))
+
   ;; The following key bindings is based on `el-search-install-shift-bindings'
   ;;
   ;; Because`lisp-interaction-mode-map' doesn't inherit `emacs-lisp-mode-map'
