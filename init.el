@@ -2808,7 +2808,11 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   (add-hook 'emms-player-seeked-functions #'chunyang-emms-indicate-seek 'append))
 
 (use-package bongo
-  :disabled t
+  :ensure t
+  :defer t
+  :config (setq bongo-default-directory "~/Music/网易云音乐/"))
+
+(use-package volume
   :ensure t
   :defer t)
 
