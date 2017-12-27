@@ -34,3 +34,6 @@ lisp/chunyang-fun.el
 # Extra
 /init-extra.el
 /init-org.el
+
+# Cask
+/.cask/
