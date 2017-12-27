@@ -4040,7 +4040,7 @@ provides similiar function."
 ;;; Other Emacs Lisp libraries
 
 ;; dash, seq, thunk, stream, ewoc, cl-lib, widget, tree-widget, let-alist, map
-;; ring, radix-tree
+;; ring, radix-tree, dict-tree, trie, heap, avl-tree
 
 (use-package parsec
   :about "A parser combinator library"
