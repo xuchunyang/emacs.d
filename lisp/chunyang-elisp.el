@@ -81,23 +81,6 @@
   :lighter (:eval (format " [%d]" (point))))
 
 
-;; Display function's short docstring along side with args in eldoc
-(when (>= emacs-major-version 25)
-  (define-advice elisp-get-fnsym-args-string (:around (orig-fun &rest r) append-func-doc)
-    (concat
-     (apply orig-fun r)
-     (let* ((f (car r))
-            (fdoc
-             (and (fboundp f)
-                  (documentation f 'raw)))
-            (fdoc-one-line
-             (and fdoc
-                  (substring fdoc 0 (string-match "\n" fdoc)))))
-       (when (and fdoc-one-line
-                  (not (string= "" fdoc-one-line)))
-         (concat "  |  " (propertize fdoc-one-line 'face 'italic)))))))
-
-
 ;; Byte-code, disassemble
 
 (define-advice disassemble (:after (object &rest _) revert-buffer)
@@ -252,35 +235,6 @@ picked according to the major-mode."
 ;;            (propertize (key-description (this-single-command-keys))
 ;;                        'face 'error))
 ;;   )
-
-
-;;; Remove advice in the Help buffer
-
-(defun describe-function@advice-remove-button (&rest _r)
-  "Add a button to remove advice."
-  (require 'subr-x)
-  (when-let ((buf (get-buffer "*Help*")))
-    (with-current-buffer buf
-      (save-excursion
-        (goto-char (point-min))
-        (while (re-search-forward "^:[-a-z]* advice: .\\(.*\\).$" nil t)
-          (let* ((fun (nth 1 help-xref-stack-item))
-                 (advice (intern (match-string 1)))
-                 (button-fun (lambda (_)
-                               (message "Removing %s from %s" advice fun)
-                               ;; FIXME Not working for lambda, maybe
-                               ;; https://emacs.stackexchange.com/questions/33020/how-can-i-remove-an-unnamed-advice
-                               ;; can help
-                               (advice-remove fun advice)
-                               (save-excursion (revert-buffer nil t))))
-                 (inhibit-read-only t))
-            (insert " » ")
-            (insert-text-button "Remove" 'action button-fun 'follow-link t)))))))
-
-(advice-add 'describe-function :after #'describe-function@advice-remove-button)
-;; The following is not needed since it calls `describe-function' (I guess)
-;; (advice-add 'describe-symbol   :after #'describe-function@advice-remove-button)
-(advice-add 'describe-key      :after #'describe-function@advice-remove-button)
 
 
 ;;; Hash Table

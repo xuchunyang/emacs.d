@@ -22,25 +22,22 @@
       (locate-user-emacs-file (concat "elpa-" emacs-version)))
 
 ;; Here `benchmark-elapse' is better, but it is not autoloaded.
-(pcase-let ((`(,total)
-             (benchmark-run (package-initialize))))
-  (message "(package-initialize) takes %f seconds" total))
+(package-initialize)
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
 ;; Bootstrap `use-package'
-(let ((pkgs (seq-remove #'package-installed-p '(use-package diminish))))
-  (when pkgs
-    (package-refresh-contents)
-    (mapc #'package-install pkgs)))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-;; use-package.el is no longer needed at runtime
-(eval-when-compile
-  (require 'use-package)
+(use-package use-package
+  :config
+  (use-package diminish :ensure t)
+  (setq use-package-verbose t)
 
   ;; Add new keyword
   ;; <https://github.com/jwiegley/use-package#extending-use-package-with-new-or-modified-keywords>
-
   (defmacro chunyang-use-package-keywords-add (keyword)
     "Add new keyword as placeholder."
     `(progn
@@ -53,8 +50,6 @@
   (chunyang-use-package-keywords-add :info)
   (chunyang-use-package-keywords-add :notes))
 
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)                ;; if you use any :bind variant
 
 ;; My private packages
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -136,15 +131,11 @@
   :config (mac-auto-ascii-mode))
 
 (use-package exec-path-from-shell
-  :if window-system
   :ensure t
-  :defer t
-  :init
-  (let ((path (eval-when-compile
-                (require 'exec-path-from-shell)
-                (exec-path-from-shell-getenv "PATH"))))
-    (setenv "PATH" path)
-    (setq exec-path (append (parse-colon-path path) (list exec-directory)))))
+  :if window-system
+  :config
+  (setq exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-initialize))
 
 (use-package chunyang-mac
   :if *is-mac*
@@ -178,6 +169,7 @@
 
 ;; XXX: Drag & Drop not working
 (use-package exwm
+  :disabled t
   :homepage https://github.com/ch11ng/exwm/wiki
   :ensure t
   :if *is-gnu-linux*
@@ -444,7 +436,7 @@
   (setq bookmark-save-flag 1))
 
 (use-package saveplace                  ; Save point position in files
-  :init (add-hook 'after-init-hook #'save-place-mode))
+  :config (save-place-mode))
 
 
 ;;; Minibuffer
@@ -454,10 +446,45 @@
 
 ;; Give useful pormpt during M-! (`shell-command') etc
 (use-package prompt-watcher
-  :config (prompt-watcher-mode))
+  :preface
+  (defun prompt-watcher ()
+    (let ((prompt-fn
+           (lambda (prompt)
+             (let ((inhibit-read-only t)
+                   (props (text-properties-at (point-min))))
+               (erase-buffer)
+               (insert prompt)
+               (set-text-properties (point-min) (point-max) props)))))
+      (cond ((eq this-command 'shell-command-on-region)
+             (and (equal (minibuffer-prompt) "Shell command on region: ")
+                  current-prefix-arg
+                  (funcall prompt-fn "Shell command on region and replace: ")))
+            ((eq this-command 'shell-command)
+             (and (equal (minibuffer-prompt) "Shell command: ")
+                  current-prefix-arg
+                  (funcall prompt-fn "Shell command and insert output: ")))
+            ((eq this-command 'eshell-command)
+             (and (equal (minibuffer-prompt) "Emacs shell command: ")
+                  current-prefix-arg
+                  (funcall prompt-fn "Emacs shell command and insert output: ")))
+            ((eq this-command 'async-shell-command)
+             (and (equal (minibuffer-prompt) "Async shell command: ")
+                  current-prefix-arg
+                  (funcall prompt-fn "Async shell command and insert output: "))))))
+
+  (define-minor-mode prompt-watcher-mode
+    "Watch the minibuffer prompt and customize if asking."
+    :global t
+    (if prompt-watcher-mode
+        (add-hook 'minibuffer-setup-hook #'prompt-watcher)
+      (remove-hook 'minibuffer-setup-hook #'prompt-watcher)))
+  :init (prompt-watcher-mode)
+  ;; This is not a real package so don't load it
+  :defer t)
 
 ;; NOTE Try this for a while. Disable if not like
 (use-package minibuf-eldef ; Only show defaults in prompts when applicable
+  :defer 1.2               ; To save 0.136sec
   :init
   ;; Must be set before minibuf-eldef is loaded
   (setq minibuffer-eldef-shorten-default t)
@@ -543,13 +570,12 @@
 
 ;;; Buffers, Windows and Frames
 
-(use-package uniquify            ; Make buffer names unique (turn on by default)
+(use-package uniquify  ; Make buffer names unique (turn on by default)
   :defer t
   :config (setq uniquify-buffer-name-style 'forward))
 
-(use-package autorevert                 ; Auto-revert buffers of changed files
-  :diminish auto-revert-mode
-  :init (global-auto-revert-mode))
+(use-package autorevert         ; Auto-revert buffers of changed files
+  :config (global-auto-revert-mode))
 
 (use-package chunyang-simple
   :bind (("C-x 3" . chunyang-split-window-right)
@@ -575,11 +601,10 @@
              chunyang-decode-thunder-link
              chunyang-encode-thunder-link))
 
-(use-package chunyang-buffers    ; Personal buffer tools
-  :config
-  (add-hook 'kill-buffer-query-functions
-            #'lunaryorn-do-not-kill-important-buffers)
-  (chunyang-last-closed-file-mode))
+(use-package chunyang-buffers
+  :commands lunaryorn-do-not-kill-important-buffers
+  :init
+  (add-hook 'kill-buffer-query-functions #'lunaryorn-do-not-kill-important-buffers))
 
 (bind-key "O"     #'delete-other-windows special-mode-map)
 (bind-key "Q"     #'kill-this-buffer     special-mode-map)
@@ -941,8 +966,9 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (use-package pin :disabled t)
 
 (use-package ace-link
+  :disabled t ; XXX This takes 0.4 seconds, do it manually instead of `ace-link-setup-default'
   :ensure t
-  :init (ace-link-setup-default))
+  :config (ace-link-setup-default))
 
 (use-package zop-to-char                ; alternative to `zap-to-char'
   :ensure t
@@ -1163,6 +1189,7 @@ Intended to be added to `isearch-mode-hook'."
   :init (region-state-mode))
 
 (use-package swap-regions
+  :disabled t                       ; Make it easier to use or give up it
   :ensure t
   :bind ("C-c C-t" . swap-regions)
   :commands swap-regions-mode
@@ -1279,8 +1306,7 @@ Intended to be added to `isearch-mode-hook'."
 (use-package company                    ; Graphical (auto-)completion
   :ensure t
   :diminish company-mode
-  :commands company-complete
-  :init (global-company-mode)
+  :defer t
   :config
   ;; Use Company for completion C-M-i
   (bind-key [remap completion-at-point] #'company-complete company-mode-map)
@@ -1668,6 +1694,21 @@ See also `describe-function-or-variable'."
            2)))
 
   (when (version< emacs-version "25")
+    ;; Display function's short docstring along side with args in eldoc
+    (define-advice elisp-get-fnsym-args-string (:around (orig-fun &rest r) append-func-doc)
+      (concat
+       (apply orig-fun r)
+       (let* ((f (car r))
+              (fdoc
+               (and (fboundp f)
+                    (documentation f 'raw)))
+              (fdoc-one-line
+               (and fdoc
+                    (substring fdoc 0 (string-match "\n" fdoc)))))
+         (when (and fdoc-one-line
+                    (not (string= "" fdoc-one-line)))
+           (concat "  |  " (propertize fdoc-one-line 'face 'italic))))))
+
     (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
 
 (use-package aggressive-indent
@@ -1684,9 +1725,8 @@ See also `describe-function-or-variable'."
         aggressive-indent-protected-commands))
 
 (use-package el-search
-  :if (version< "25" emacs-version)
   :ensure t
-  :after elisp-mode
+  :defer t
   :preface
   (defun chunyang-el-search-git-repo (pattern)
     "Search all elisp files in git repo for PATTERN."
@@ -1708,8 +1748,9 @@ See also `describe-function-or-variable'."
        (lambda (search)
          (setf (alist-get 'description (el-search-object-properties search))
                (concat "Search the git repo in " (abbreviate-file-name topdir)))))))
+
   :config
-  (require 'el-search-x)                ; Extra patterns
+  (require 'el-search-x)
 
   ;; FIXME: Update this list every time el-search starts. How?
   (defvar el-search--symbols-with-doc-string
@@ -1721,7 +1762,7 @@ See also `describe-function-or-variable'."
               (push sym symbols))))
       symbols)
     "A list of symbols which support doc-string.")
-  
+
   (defun el-search--doc-string-p ()
     "Return t if point is at docstring."
     (pcase (save-excursion
@@ -1746,23 +1787,25 @@ See also `describe-function-or-variable'."
     "Match any string (excluding doc string) that is matched by all REGEXPS"
     `(and (string ,@regexps) (guard (not (el-search--doc-string-p)))))
 
-  ;; The following key bindings is based on `el-search-install-shift-bindings'
-  ;;
-  ;; Because`lisp-interaction-mode-map' doesn't inherit `emacs-lisp-mode-map'
-  (dolist (map (list emacs-lisp-mode-map lisp-interaction-mode-map))
-    (define-key map (kbd "C-S-s") #'el-search-pattern)
-    (define-key map (kbd "C-%") #'el-search-query-replace)
-    (define-key map (kbd "C-S-h") #'el-search-this-sexp))
+  (define-key el-search-read-expression-map (kbd "C-S-s") #'exit-minibuffer)
+  (define-key el-search-read-expression-map (kbd "C-S-r") #'exit-minibuffer)
+  (define-key el-search-read-expression-map (kbd "C-S-o") #'el-search-set-occur-flag-exit-minibuffer)
+
+  :init
+  (defvar emacs-lisp-mode-map)
+  (defvar lisp-interaction-mode-map)
+  (with-eval-after-load 'elisp-mode
+    ;; Because`lisp-interaction-mode-map' doesn't inherit `emacs-lisp-mode-map'
+    (dolist (map (list emacs-lisp-mode-map lisp-interaction-mode-map))
+      (define-key map (kbd "C-S-s") #'el-search-pattern)
+      (define-key map (kbd "C-%") #'el-search-query-replace)
+      (define-key map (kbd "C-S-h") #'el-search-this-sexp)))
 
   (define-key global-map (kbd "C-S-j") #'el-search-jump-to-search-head)
   (define-key global-map (kbd "C-S-a") #'el-search-from-beginning)
   (define-key global-map (kbd "C-S-d") #'el-search-skip-directory)
   (define-key global-map (kbd "C-S-n") #'el-search-continue-in-next-buffer)
   (define-key global-map (kbd "C-S-o") #'el-search-occur)
-  
-  (define-key el-search-read-expression-map (kbd "C-S-s") #'exit-minibuffer)
-  (define-key el-search-read-expression-map (kbd "C-S-r") #'exit-minibuffer)
-  (define-key el-search-read-expression-map (kbd "C-S-o") #'el-search-set-occur-flag-exit-minibuffer)
   
   (define-key isearch-mode-map (kbd "C-S-s") #'el-search-search-from-isearch)
   (define-key isearch-mode-map (kbd "C-S-r") #'el-search-search-backwards-from-isearch)
@@ -1801,7 +1844,6 @@ See also `describe-function-or-variable'."
              chunyang-macroexpand-print-last-sexp)
   :init
   (with-eval-after-load 'elisp-mode
-    (require 'chunyang-elisp)
     (bind-keys :map emacs-lisp-mode-map
                ("C-j" . chunyang-eval-print-last-sexp)
                ("C-," . chunyang-macroexpand-print-last-sexp)
@@ -1810,8 +1852,8 @@ See also `describe-function-or-variable'."
                ("C-," . chunyang-macroexpand-print-last-sexp))))
 
 (use-package chunyang-package
-  :after package
-  :config
+  :commands describe-package--add-melpa-link
+  :init
   (when (>= emacs-major-version 25)
     (advice-add 'describe-package-1 :after #'describe-package--add-melpa-link)))
 
@@ -1941,12 +1983,37 @@ See also `describe-function-or-variable'."
                  is-symbol-p
                  t))))
       (describe-symbol sym)))
+  (defun describe-function@advice-remove-button (&rest _r)
+    "Add a button to remove advice."
+    (require 'subr-x)
+    (when-let ((buf (get-buffer "*Help*")))
+      (with-current-buffer buf
+        (save-excursion
+          (goto-char (point-min))
+          (while (re-search-forward "^:[-a-z]* advice: .\\(.*\\).$" nil t)
+            (let* ((fun (nth 1 help-xref-stack-item))
+                   (advice (intern (match-string 1)))
+                   (button-fun (lambda (_)
+                                 (message "Removing %s from %s" advice fun)
+                                 ;; FIXME Not working for lambda, maybe
+                                 ;; https://emacs.stackexchange.com/questions/33020/how-can-i-remove-an-unnamed-advice
+                                 ;; can help
+                                 (advice-remove fun advice)
+                                 (save-excursion (revert-buffer nil t))))
+                   (inhibit-read-only t))
+              (insert " » ")
+              (insert-text-button "Remove" 'action button-fun 'follow-link t)))))))
   :bind (("C-h ." . chunyang-describe-symbol-at-point)
          ("C-h h" . view-help-buffer)
          :map help-mode-map
          ("b" . help-go-back)
          ("f" . help-go-forward)
-         ("i" . help-info-lookup-symbol)))
+         ("i" . help-info-lookup-symbol))
+  :config
+  (advice-add 'describe-function :after #'describe-function@advice-remove-button)
+  ;; The following is not needed since it calls `describe-function' (I guess)
+  ;; (advice-add 'describe-symbol   :after #'describe-function@advice-remove-button)
+  (advice-add 'describe-key      :after #'describe-function@advice-remove-button))
 
 (use-package info-look
   :defer t
@@ -2439,13 +2506,13 @@ This should be add to `find-file-hook'."
 
 (use-package symbolic-link-on-save
   :about Create Symbolic Link on save
-  :config (symbolic-link-on-save-mode))
+  :commands symbolic-link-on-save-mode)
 
 (use-package firestarter
   :about Execute (shell) commands on save
   :homepage https://github.com/wasamasa/firestarter
   :ensure t
-  :config (firestarter-mode))
+  :defer t)
 
 
 ;;; Project
@@ -2572,7 +2639,6 @@ This should be add to `find-file-hook'."
   (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full))
 
 (use-package ace-link-notmuch
-  :ensure ace-link
   :after notmuch
   :config (ace-link-notmuch-setup))
 
@@ -3116,7 +3182,6 @@ Because I usualy want to delete the final trailing newline."
   :defer t)
 
 (use-package org
-  :ensure org-plus-contrib
   :preface
   (defun chunyang-org-info-lookup-symbol ()
     "Call `info-lookup-symbol' within a source edit buffer if needed."
@@ -3291,6 +3356,7 @@ Adapt from `org-babel-remove-result'."
   )
 
 (use-package orglink
+  :disabled t
   :load-path "~/src/orglink"
   :commands (orglink-mode global-orglink-mode)
   :preface
@@ -3681,6 +3747,7 @@ provides similiar function."
 ;;; Clojure
 
 (use-package cider
+  :disabled t
   :ensure t
   :defer t
   :notes "Type 'M-x cider-jack-in' to start")
@@ -3733,6 +3800,7 @@ provides similiar function."
 ;;; Shen http://shenlanguage.org/
 
 (use-package shen-mode
+  :disabled t
   :ensure t
   :defer t)
 
@@ -3949,8 +4017,8 @@ provides similiar function."
 ;; (setq redisplay-dont-pause nil)
 
 (use-package opencc
-  :ensure t
-  :load-path "~/src/emacs-opencc")
+  :load-path "~/src/emacs-opencc"
+  :commands opencc-message)
 
 (use-package scws
   :about "SCWS 的 Emacs Module | 中文分词"
@@ -3961,6 +4029,7 @@ provides similiar function."
 ;;; PDF
 
 (use-package pdf-tools
+  :disabled t
   ;; Disable for Travis-CI, to fix
   ;; https://travis-ci.org/xuchunyang/emacs.d/jobs/320338600#L6965
   :if (not noninteractive)
@@ -4046,6 +4115,11 @@ provides similiar function."
   :about "Browse the Emacsmirror package database"
   :info (info "(epkg) Top")
   :notes M-x epkg-describe-package is very impressive
+  :ensure t
+  :defer t)
+
+(use-package esup
+  :about "the Emacs StartUp Profiler"
   :ensure t
   :defer t)
 

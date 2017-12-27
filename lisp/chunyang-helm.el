@@ -2,14 +2,8 @@
 
 ;;; Code:
 
-(setq helm-command-prefix-key "C-c h")
-
-;; FIXME but also install helm from elpa
-(use-package helm :ensure t :defer t)
-
-(require 'helm-config)
-
 (use-package helm
+  :ensure t
   :defer t
   :config
   (define-minor-mode chunyang-helm-window-hack-mode
@@ -32,7 +26,7 @@
 
 (use-package helm-mode                ; Use helm completing everywhere
   :diminish helm-mode
-  :defer t
+  :after helm
   :preface
   (defun helm-completing-read-el-search-history (&rest _)
     (helm
@@ -53,7 +47,8 @@
   (add-to-list 'helm-completing-read-handlers-alist
                '(org-insert-link . nil))
   (add-to-list 'helm-completing-read-handlers-alist
-               '(el-search-jump-to-search-head . helm-completing-read-el-search-history)))
+               '(el-search-jump-to-search-head . helm-completing-read-el-search-history))
+  (helm-mode))
 
 ;;; key bindings, M-0 to M-9
 ;; (progn
@@ -205,7 +200,6 @@
     :commands helm-fuzzy-find))
 
 (use-package helm-color                 ; Input colors with Helm
-  :ensure helm
   :bind ("C-c i C" . helm-colors))
 
 (use-package helm-unicode               ; Unicode input with Helm
@@ -280,12 +274,6 @@
            ("M-i"     . helm-occur)
            ("C-o"     . helm-semantic-or-imenu))
 
-(bind-keys :map helm-command-map
-           ("g"   . helm-chrome-bookmarks)
-           ("z"   . helm-complex-command-history)
-           ("C-/" . helm-fuzzy-find)
-           ("G"   . helm-github-stars))
-
 (use-package helm-ag
   :disabled t
   :ensure t
@@ -294,11 +282,12 @@
          ("C-c C-s" . helm-do-ag-project-root)))
 
 (use-package helm-descbinds
-  :defer t
   :ensure t
+  :defer t
+  :commands helm-descbinds
   :init
   (setq helm-descbinds-window-style 'split-window)
-  (helm-descbinds-mode))
+  (advice-add 'describe-bindings :override #'helm-descbinds))
 
 (use-package helm-open-github
   :disabled t
@@ -331,7 +320,6 @@
 (use-package helm-zhihu-daily    :ensure t :defer t)
 
 (use-package helm-org
-  :ensure helm
   :defer t
   :config (setq helm-org-headings-fontify t))
 
