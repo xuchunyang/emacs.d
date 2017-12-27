@@ -4042,6 +4042,13 @@ provides similiar function."
   :load-path "~/src/emacs-cmark"
   :commands cmark-markdown-to-html)
 
+(use-package epkg
+  :about "Browse the Emacsmirror package database"
+  :info (info "(epkg) Top")
+  :notes M-x epkg-describe-package is very impressive
+  :ensure t
+  :defer t)
+
 
 ;;; Other Emacs Lisp libraries
 
