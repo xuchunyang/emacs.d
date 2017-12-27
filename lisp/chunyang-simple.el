@@ -210,26 +210,22 @@ If LIST is empty or has only one element, return t."
 
 
 
-(defun chunyang-show-number-as-char (undo)
-  "Show number in the region as character, for example, C-x for 24.
-If no usable region, the whole current buffer will be used.
+(defun chunyang-display-number-as-char (&optional undo)
+  "Display number as character, for example, display 24 as C-x.
 
-I find the output of 'C-h v help-map' is hard to read."
+Why? Becuase I find the output of 'C-h v help-map' is hard to
+read."
   (interactive "P")
   (if undo
       (remove-overlays nil nil 'chunyang-show-number-as-char t)
-    (seq-let (beg end) (if (use-region-p)
-                           (list (region-beginning) (region-end))
-                         (list (point-min) (point-max)))
-      (save-excursion
-        (goto-char beg)
-        (let ((count 0)
-              ov)
-          (while (re-search-forward "[0-9]+" end :no-error)
-            (setq ov (make-overlay (match-beginning 0) (match-end 0)))
-            (overlay-put ov 'display (single-key-description
-                                      (string-to-number (match-string 0))))
-            (overlay-put ov 'chunyang-show-number-as-char t)))))))
+    (save-excursion
+      (goto-char (point-min))
+      (let (ov)
+        (while (re-search-forward "[0-9]+" nil :no-error)
+          (setq ov (make-overlay (match-beginning 0) (match-end 0)))
+          (overlay-put ov 'display (single-key-description
+                                    (string-to-number (match-string 0))))
+          (overlay-put ov 'chunyang-show-number-as-char t))))))
 
 
 ;;; Pairs
