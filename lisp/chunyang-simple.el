@@ -315,5 +315,19 @@ Relative:     ../init.el
   (setq chunyang-defer-M-x-cmd command)
   (add-hook 'post-command-hook #'chunyang-defer-M-x-run))
 
+
+;; Or simply use M-x el-search-pattern RET (top-level) RET
+(defun chunyang-count-top-level-expression ()
+  "Count toplevel expressions."
+  (interactive)
+  (save-excursion
+    (let ((count 0) op)
+      (goto-char (point-min))
+      (while (setq op (scan-sexps (point) 1))
+        (goto-char op)
+        (cl-incf count))
+      (message "Buffer has %s expressions" count)
+      count)))
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here

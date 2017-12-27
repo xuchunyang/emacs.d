@@ -559,7 +559,8 @@
          ("C-c C-l" . scratch-clear))
   :commands (chunyang-window-click-swap
              chunyang-cycle-filename
-             chunyang-show-number-as-char))
+             chunyang-show-number-as-char
+             chunyang-count-top-level-expression))
 
 (use-package chunyang-misc
   :commands (chunyang-open-another-emacs
