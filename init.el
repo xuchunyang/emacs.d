@@ -817,6 +817,11 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :ensure t
   :defer t)
 
+(use-package dired-sidebar      ; Show dired in tree using side window
+  :homepage https://github.com/jojojames/dired-sidebar
+  :ensure t
+  :defer t)
+
 
 ;;; Basic Editing
 
