@@ -1705,41 +1705,40 @@ See also `describe-function-or-variable'."
   :config
   (require 'el-search-x)                ; Extra patterns
 
-  (defun el-search--docstring-p (s)
-    ;; XXX Check the index of current string in parent list to see if it
-    ;; is docstring, for example, if it is defun, move point to fourth
-    ;; element and compare with the last point, if they are the same, it
-    ;; is docstring.
-    (save-excursion
-      (backward-up-list)
-      (pcase (read (current-buffer))
-        (`(,(or 'defun
-                'defmacro
-                'defcustom
-                'defgroup
-                'cl-defun
-                'cl-defmacro
-                'cl-defgeneric
-                'cl-defmethod
-                'el-search-defpattern)
-           ,_ ,_ ,(and (pred stringp) (pred (string= s))) . ,_)
-         t)
-        (`(,(or 'defvar
-                'defvar-local)
-           ,_ ,_ ,(and (pred stringp) (pred (string= s))))
-         t)
-        (`(define-minor-mode ,_ ,(and (pred stringp) (pred (string= s))) . ,_)
-         t)
-        (`(define-derived-mode ,_ ,_ ,_ ,(and (pred stringp) (pred (string= s))) . ,_)
-         t))))
+  ;; FIXME: Update this list every time el-search starts. How?
+  (defvar el-search--symbols-with-doc-string
+    (let (symbols)
+      (mapatoms
+       (lambda (sym)
+         (and (fboundp sym)
+              (get sym 'doc-string-elt)
+              (push sym symbols))))
+      symbols)
+    "A list of symbols which support doc-string.")
+  
+  (defun el-search--doc-string-p ()
+    "Return t if point is at docstring."
+    (pcase (save-excursion
+             (backward-up-list)
+             (read (current-buffer)))
+      (`(,(and symbol (guard (memq symbol el-search--symbols-with-doc-string)))
+         ,_ . ,_)
+       (let ((op (point)))
+         (save-excursion
+           (backward-up-list)
+           (forward-char)
+           (ignore-errors
+             (forward-sexp (1+ (get symbol 'doc-string-elt)))
+             (backward-sexp)
+             (= op (point))))))))
 
-  (el-search-defpattern docstring (&rest regexps)
-    "Like string but including only docstring."
-    `(and (string ,@regexps) s (guard (el-search--docstring-p s))))
+  (el-search-defpattern doc-string (&rest regexps)
+    "Match any documentation string that is matched by all REGEXPS."
+    `(and (string ,@regexps) (guard (el-search--doc-string-p))))
 
   (el-search-defpattern s (&rest regexps)
-    "Like string but excluding docstring."
-    `(and (string ,@regexps) s (guard (not (el-search--docstring-p s)))))
+    "Match any string (excluding doc string) that is matched by all REGEXPS"
+    `(and (string ,@regexps) (guard (not (el-search--doc-string-p)))))
 
   ;; The following key bindings is based on `el-search-install-shift-bindings'
   ;;
