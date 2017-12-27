@@ -1691,7 +1691,7 @@ See also `describe-function-or-variable'."
     "Search all elisp files in git repo for PATTERN."
     (interactive
      (list (progn (require 'el-search)
-                  (el-search--read-pattern-for-interactive
+                  (el-search-read-pattern-for-interactive
                    "Search git repo for pattern: "))))
     (require 'magit)
     (unless (magit-toplevel)
