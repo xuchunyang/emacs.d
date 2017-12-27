@@ -76,3 +76,18 @@ Entered on [2017-12-25 Mon 11:43]
 
 #+RESULTS:
 : 5
+* Use =M-x ediff-regions-wordwise= to diff sexps (list)
+Entered on [2017-12-27 Wed 14:52]
+
+#+begin_example
+(bar baz qux quux corge grault garply waldo fred plugh)
+(bar baz qux quux corge thud grault garply waldo fred xyzzy plugh)
+#+end_example
+
+and ignore white spaces can be userful
+
+#+begin_src emacs-lisp
+(setq ediff-diff-options "-w")
+#+end_src
+
+[[https://emacs.stackexchange.com/questions/22313/sexp-diff-like-mode-for-elisp-source-diffing][Sexp-diff like mode for elisp source diffing - Emacs Stack Exchange]]
