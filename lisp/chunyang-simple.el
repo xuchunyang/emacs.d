@@ -80,7 +80,7 @@ With ARG, put *scratch* buffer right."
 ;;; Download stuffs
 
 (defun chunyang-string-url-p (string)
-  "Test STRING is url. "
+  "Return non-nil if STRING is a URL."
   (with-temp-buffer
     (insert string)
     (thing-at-point 'url)))
@@ -99,8 +99,8 @@ With ARG, put *scratch* buffer right."
           (file (read-file-name
                  "Save to: " nil nil nil default-file)))
      (list url file)))
-  (unless (require 'spinner nil t)
-    (error "Package `spinner' not found."))
+  (defvar spinner-types)
+  (require 'spinner)
   (unless (alist-get 'download spinner-types)
     (push '(download . ["下" "载" "中"]) spinner-types))
   (let* ((spinner-stop-func (spinner-start 'download 3))
@@ -108,7 +108,7 @@ With ARG, put *scratch* buffer right."
          (proc (start-process "curl" output-buffer
                               "curl" url "-o" file)))
     (set-process-sentinel
-     proc (lambda (proced event)
+     proc (lambda (_proced event)
             (unwind-protect
                 (if (string-equal event "finished\n")
                     (progn
@@ -124,7 +124,7 @@ With ARG, put *scratch* buffer right."
   "Holds the function that stops the spinner.")
 
 (defun chunyang-git-clone (repo dir)
-  "Git clone asynchronously."
+  "Clone REPO into DIR asynchronously."
   (interactive
    (let* ((default (or (gui-selection-value) (car kill-ring)))
           (prompt (if default (format "Repo URL (\"%s\"): " default)
@@ -141,7 +141,7 @@ With ARG, put *scratch* buffer right."
          (proc (start-process-shell-command "git-clone" output-buffer command)))
     (set-process-sentinel
      proc
-     (lambda (process event)
+     (lambda (_process event)
        (unwind-protect
            (if (string-equal event "finished\n")
                (progn
@@ -156,6 +156,7 @@ With ARG, put *scratch* buffer right."
            (setq chunyang-git--spinner-stop nil)))))))
 
 (defun chunyang-switch-scratch ()
+  "Switch to *scratch*."
   (interactive)
   (switch-to-buffer "*scratch*"))
 
@@ -168,48 +169,8 @@ With ARG, put *scratch* buffer right."
                (eval (car (get 'initial-scratch-message 'standard-value)))))
           (erase-buffer)
           (insert (substitute-command-keys standard-value))))))
-
-(defun my-list-setnth (list n new-elt)
-  (setcar (nthcdr n list) new-elt))
-
-(defun chunyang-list-equals (list pred)
-  "Return t if all elements in LIST is equal, test using PRED.
-If LIST is empty or has only one element, return t."
-  (cl-loop for x on list
-           for a = (car x)
-           when (cdr x)
-           unless (funcall pred a (car it)) return nil
-           finally return t))
-
-(defun key-equal-p (key1 key2)
-  (when (stringp key1)
-    (setq key1 (read-kbd-macro key1 t)))
-  (when (stringp key2)
-    (setq key2 (read-kbd-macro key2 t)))
-  (cl-assert (vectorp key1))
-  (cl-assert (vectorp key2))
-  (equal key1 key2))
-
-(defun keys-equal-p (&rest keys)
-  (chunyang-list-equals keys 'key-equal-p))
 
 
-(defmacro remap-key (from-key-name to-key-name)
-  ;; Assuming `global-map' and ignoring prefix arg for simplicity
-  (let ((cmd `(lambda (&optional arg)
-                (interactive "p")
-                (execute-kbd-macro (read-kbd-macro ,from-key-name)))))
-    `(define-key (current-global-map) (read-kbd-macro ,to-key-name) ,cmd)))
-;; (remap-key "C-e RET" "C-o")
-
-(defmacro define-command-from-key (cmd-name key-name)
-  `(defun ,cmd-name (&optional arg)
-     (interactive "p")
-     (execute-kbd-macro (read-kbd-macro ,key-name))))
-;; (define-command-from-key foo "C-e RET")
-
-
-
 (defun chunyang-display-number-as-char (&optional undo)
   "Display number as character, for example, display 24 as C-x.
 
