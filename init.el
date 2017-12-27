@@ -1308,6 +1308,8 @@ Intended to be added to `isearch-mode-hook'."
   :ensure t
   :diminish company-mode
   :defer t
+  :init
+  (add-hook 'prog-mode-hook #'company-mode)
   :config
   ;; Use Company for completion C-M-i
   (bind-key [remap completion-at-point] #'company-complete company-mode-map)
