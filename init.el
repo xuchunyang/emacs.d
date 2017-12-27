@@ -575,6 +575,7 @@
   :config (setq uniquify-buffer-name-style 'forward))
 
 (use-package autorevert         ; Auto-revert buffers of changed files
+  :disabled t   ; See (info "(magit) Risk of Reverting Automatically")
   :config (global-auto-revert-mode))
 
 (use-package chunyang-simple
