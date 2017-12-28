@@ -2569,13 +2569,13 @@ This should be add to `find-file-hook'."
                  (nnimap-address "imap.yandex.com")
                  (nnimap-server-port 993)
                  (nnimap-stream ssl)))
-  ;; Local IMAP server
-  ;; (setq gnus-select-method
-  ;;       '(nnimap "LocalMail"
-  ;;                (nnimap-address "localhost")
-  ;;                (nnimap-stream network)
-  ;;                (nnimap-server-port 143)))
-  )
+
+  (setq gnus-thread-hide-subtree t)
+  (setq gnus-thread-sort-functions '(not gnus-thread-sort-by-number))
+
+  (setq gnus-use-cache t)
+  ;; XXX To avoid a warnning
+  (setq gnus-use-byte-compile nil))
 
 (use-package mu4e
   :commands mu4e
