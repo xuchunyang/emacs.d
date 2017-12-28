@@ -3808,6 +3808,7 @@ provides similiar function."
   :defer t)
 
 (use-package shen-elisp
+  :disabled t
   :ensure t
   :defer t)
 
