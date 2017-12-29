@@ -76,6 +76,7 @@ Entered on [2017-12-25 Mon 11:43]
 
 #+RESULTS:
 : 5
+
 * Use =M-x ediff-regions-wordwise= to diff sexps (list)
 Entered on [2017-12-27 Wed 14:52]
 
@@ -91,3 +92,56 @@ and ignore white spaces can be userful
 #+end_src
 
 [[https://emacs.stackexchange.com/questions/22313/sexp-diff-like-mode-for-elisp-source-diffing][Sexp-diff like mode for elisp source diffing - Emacs Stack Exchange]]
+
+* cl-block and cl-return
+Entered on [2017-12-29 Fri 21:41]
+
+cl-block/cl-return is like catch/throw
+
+#+begin_src emacs-lisp
+(catch 'found
+  1
+  2
+  (throw 'found 100)
+  3)
+#+end_src
+
+#+RESULTS:
+: 100
+
+#+begin_src emacs-lisp
+(cl-block nil
+  1
+  2
+  (cl-return 100)
+  3)
+#+end_src
+
+#+RESULTS:
+: 100
+
+cl-defun/cl-dotimes/etc implies cl-block
+
+#+begin_src emacs-lisp
+(cl-defun foo ()
+  1
+  2
+  (cl-return-from foo 100)
+  3)
+(foo)
+#+end_src
+
+#+RESULTS:
+: 100
+
+#+begin_src emacs-lisp
+(let (res)
+  (cl-dotimes (i 10000)
+    (if (< i 4)
+        (push i res)
+      (cl-return)))
+  (nreverse res))
+#+end_src
+
+#+RESULTS:
+| 0 | 1 | 2 | 3 |
