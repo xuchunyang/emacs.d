@@ -2034,8 +2034,11 @@ See also `describe-function-or-variable'."
                ("(org) Variable Index"             nil "['`‘]" "['’]")
                ("(org) Command and Function Index" nil "['`‘(]" "['’)]")
                ;; Magit
-               ("(magit) Command Index"            nil "(['`‘]" "['’])")
-               ("(magit) Variable Index"           nil "^ -+ .*: " "\\( \\|$\\)"))))
+               ("(magit) Variable Index"           nil "^ -+ .*: " "\\( \\|$\\)")
+               ("(magit) Command Index"            nil "^ -+ .*: " "\\( \\|$\\)")
+               ("(magit) Function Index"           nil nil nil)
+               ;; Gnus
+               ("(gnus) Index"                     nil "['`‘]" "['’]"))))
 
 (use-package info
   :defer t
