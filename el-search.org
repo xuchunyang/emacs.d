@@ -12,7 +12,7 @@
 `(lambda (,arg) (,fun ,arg))
 #+end_src
 
-* Find callers
+* Find references
 
 For example, to find all (likely) callers of =pcase-let=, use =M-x
 el-search-load-path= with:
@@ -196,3 +196,11 @@ and
 `(define-key ,m ,k (function ,f))
 #+end_src
 
+* Search nested list such as (catch ... (throw ...))
+
+such as cl-block/cl-return, catch/throw, pcase/app etc
+
+#+begin_src emacs-lisp
+(el-search-emacs-elisp-sources '(l ^ 'catch __ (contains (l ^ 'throw))))
+(el-search-emacs-elisp-sources '(l ^ 'pcase __ (contains (l ^ 'app))))
+#+end_src
