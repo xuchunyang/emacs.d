@@ -55,11 +55,6 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 
-;;; Emacs Compatibility
-
-(use-package chunyang-emacs-compatibility)
-
-
 ;;; Require helper libraries
 
 ;; Make sure `seq.el' is installed for Emacs 24
@@ -1696,23 +1691,20 @@ See also `describe-function-or-variable'."
                    "\\s-+\\(" sym-regexp "\\)")
            2)))
 
-  (when (version< emacs-version "25")
-    ;; Display function's short docstring along side with args in eldoc
-    (define-advice elisp-get-fnsym-args-string (:around (orig-fun &rest r) append-func-doc)
-      (concat
-       (apply orig-fun r)
-       (let* ((f (car r))
-              (fdoc
-               (and (fboundp f)
-                    (documentation f 'raw)))
-              (fdoc-one-line
-               (and fdoc
-                    (substring fdoc 0 (string-match "\n" fdoc)))))
-         (when (and fdoc-one-line
-                    (not (string= "" fdoc-one-line)))
-           (concat "  |  " (propertize fdoc-one-line 'face 'italic))))))
-
-    (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
+  ;; Display function's short docstring along side with args in eldoc
+  (define-advice elisp-get-fnsym-args-string (:around (orig-fun &rest r) append-func-doc)
+    (concat
+     (apply orig-fun r)
+     (let* ((f (car r))
+            (fdoc
+             (and (fboundp f)
+                  (documentation f 'raw)))
+            (fdoc-one-line
+             (and fdoc
+                  (substring fdoc 0 (string-match "\n" fdoc)))))
+       (when (and fdoc-one-line
+                  (not (string= "" fdoc-one-line)))
+         (concat "  |  " (propertize fdoc-one-line 'face 'italic)))))))
 
 (use-package aggressive-indent
   :disabled t
