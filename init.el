@@ -4127,6 +4127,27 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package lsp-mode
+  :about "Minor mode for Language Server Protocol"
+  :homepage https://github.com/emacs-lsp/lsp-mode
+  :notes
+  - https://github.com/Microsoft/language-server-protocol/
+  - http://langserver.org/
+  :defer t
+  :config
+  ;; XXX The face `lsp-face-highlight-textual' (background yellow) is ugly
+  (setq lsp-highlight-symbol-at-point nil))
+
+(use-package cquery
+  :disabled "Just give it a try"
+  :homepage https://github.com/jacobdufault/cquery
+  :load-path "~/src/cquery/emacs/"
+  :commands lsp-cquery-enable
+  :init
+  (add-hook 'c-mode-hook #'lsp-cquery-enable)
+  (add-hook 'c++-mode-hook #'lsp-cquery-enable)
+  (add-hook 'objc-mode-hook #'lsp-cquery-enable))
+
 
 ;;; Other Emacs Lisp libraries
 
