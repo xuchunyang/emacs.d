@@ -21,8 +21,6 @@
 (setq package-user-dir
       (locate-user-emacs-file (concat "elpa-" emacs-version)))
 
-;; Here `benchmark-elapse' is better, but it is not autoloaded.
-
 (package-initialize)
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
@@ -50,7 +48,6 @@
   (chunyang-use-package-keywords-add :homepage)
   (chunyang-use-package-keywords-add :info)
   (chunyang-use-package-keywords-add :notes))
-
 
 ;; My private packages
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
