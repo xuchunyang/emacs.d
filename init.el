@@ -8,7 +8,7 @@
 ;;; Code:
 
 
-;;; Start up
+;;; Startup
 
 (require 'package)
 
@@ -22,6 +22,7 @@
       (locate-user-emacs-file (concat "elpa-" emacs-version)))
 
 ;; Here `benchmark-elapse' is better, but it is not autoloaded.
+
 (package-initialize)
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
@@ -31,13 +32,13 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(use-package diminish
+  :ensure t)
+
 (use-package use-package
   :config
-  (use-package diminish :ensure t)
   (setq use-package-verbose t)
 
-  ;; Add new keyword
-  ;; <https://github.com/jwiegley/use-package#extending-use-package-with-new-or-modified-keywords>
   (defmacro chunyang-use-package-keywords-add (keyword)
     "Add new keyword as placeholder."
     `(progn
@@ -57,9 +58,13 @@
 
 ;;; Require helper libraries
 
-;; Make sure `seq.el' is installed for Emacs 24
-(use-package seq
-  :ensure t
+(use-package subr-x                     ; 24.4
+  :defer t
+  :config
+  (put 'if-let   'byte-obsolete-info nil)
+  (put 'when-let 'byte-obsolete-info nil))
+
+(use-package seq                        ; 25.1
   :defer t)
 
 (use-package dash
@@ -431,7 +436,12 @@
   (setq bookmark-save-flag 1))
 
 (use-package saveplace                  ; Save point position in files
-  :config (save-place-mode))
+  :defer t
+  :init
+  (defun chunyang-save-place-mode-setup ()
+    (save-place-mode)
+    (remove-hook 'find-file-hook #'chunyang-save-place-mode-setup))
+  (add-hook 'find-file-hook #'chunyang-save-place-mode-setup))
 
 
 ;;; Minibuffer
@@ -570,8 +580,8 @@
   :config (setq uniquify-buffer-name-style 'forward))
 
 (use-package autorevert         ; Auto-revert buffers of changed files
-  :disabled t   ; See (info "(magit) Risk of Reverting Automatically")
-  :config (global-auto-revert-mode))
+  :defer t
+  :diminish auto-revert-mode)
 
 (use-package chunyang-simple
   :bind (("C-x 3" . chunyang-split-window-right)
@@ -652,7 +662,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :ensure t
   :disabled t
   :init (shackle-mode)
-  :config (setq shackle-rules '(("\\‘\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.4))))
+  :config
+  (setq shackle-rules '(("\\‘\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.4))))
 
 ;; Frames
 (setq frame-resize-pixelwise t)         ; Resize by pixels
@@ -864,10 +875,12 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
       save-interprogram-paste-before-kill t)
 
 (use-package electric                   ; Electric code layout
+  :disabled t
   :init (electric-layout-mode))
 
 (use-package elec-pair                  ; Electric pairs
-  :init (electric-pair-mode))
+  :defer t
+  :init (add-hook 'prog-mode-hook #'electric-pair-local-mode))
 
 ;; I have used 'M-l' to run `helm-mini' for a long time
 (define-key global-map "\M-L" #'downcase-dwim)
@@ -1184,8 +1197,7 @@ Intended to be added to `isearch-mode-hook'."
 
 (use-package region-state
   :ensure t
-  :commands region-state-mode
-  :init (region-state-mode))
+  :config (region-state-mode))
 
 (use-package swap-regions
   :disabled t                       ; Make it easier to use or give up it
@@ -1210,7 +1222,7 @@ Intended to be added to `isearch-mode-hook'."
   :bind ("C-c t L" . hl-line-mode))
 
 (use-package paren                      ; Highlight paired delimiters
-  :init (show-paren-mode))
+  :config (show-paren-mode))
 
 (use-package rainbow-delimiters         ; Highlight delimiters by depth
   :ensure t
@@ -1695,7 +1707,8 @@ See also `describe-function-or-variable'."
            2)))
 
   ;; Display function's short docstring along side with args in eldoc
-  (define-advice elisp-get-fnsym-args-string (:around (orig-fun &rest r) append-func-doc)
+  (define-advice elisp-get-fnsym-args-string
+      (:around (orig-fun &rest r) append-func-doc)
     (concat
      (apply orig-fun r)
      (let* ((f (car r))
@@ -2583,11 +2596,52 @@ This should be add to `find-file-hook'."
                  (nnimap-server-port 993)
                  (nnimap-stream ssl)))
 
-  (setq gnus-thread-hide-subtree t)
-  (setq gnus-thread-sort-functions '(not gnus-thread-sort-by-number))
+  (setq gnus-message-archive-group "nnimap:Sent"
+        gnus-gcc-mark-as-read t)
 
   (setq gnus-use-cache t)
-  ;; XXX To avoid a warnning
+  (setq gnus-cache-enter-articles '(ticked dormant))
+  (setq gnus-cache-remove-articles nil)
+  (setq gnus-keep-backlog nil)
+
+  (with-eval-after-load 'gnus-agent
+    (defun chunyang-gnus-article-old-p ()
+      "Return t if an article is old."
+      (< (time-to-days (date-to-time (mail-header-date gnus-headers)))
+         (- (time-to-days nil) 2)))
+
+    (setq gnus-category-predicate-alist
+          (append gnus-category-predicate-alist
+                  '((old . chunyang-gnus-article-old-p)))))
+
+  (setq gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B %s%)\n"
+        gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
+        gnus-group-line-format "%M%S%p%P%5y:%B %G\n")
+
+  (setq gnus-sum-thread-tree-false-root ""
+        gnus-sum-thread-tree-indent " "
+        gnus-sum-thread-tree-leaf-with-other "├► "
+        gnus-sum-thread-tree-root ""
+        gnus-sum-thread-tree-single-leaf "╰► "
+        gnus-sum-thread-tree-vertical "│")
+
+  (setq gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date))
+  (setq gnus-thread-hide-subtree t)
+  (setq gnus-summary-display-arrow nil)
+  (setq gnus-auto-select-first nil)
+
+  (with-eval-after-load 'gnus-art
+    (setq gnus-visible-headers
+          (cons "^User-Agent:"
+                (split-string (car (get 'gnus-visible-headers 'standard-value))
+                              (regexp-quote "\\|")))))
+  (setq gnus-treat-display-smileys nil)
+
+  ;; XXX I don't understand what "Scoring" means in Gnus
+  (setq gnus-use-scoring nil)
+
+  ;; XXX To avoid a byte-compile warnning, should figure out the
+  ;; course or report a bug
   (setq gnus-use-byte-compile nil))
 
 (use-package mu4e
