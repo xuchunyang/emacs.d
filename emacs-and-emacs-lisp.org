@@ -145,3 +145,11 @@ cl-defun/cl-dotimes/etc implies cl-block
 
 #+RESULTS:
 | 0 | 1 | 2 | 3 |
+
+* Copy the prompt of the MiniBuffer
+Entered on [2017-12-30 Sat 14:13]
+
+Like shell/eshell/comint, find a way to move point (for example, ~C-b~
+(~backward-char~)) within the prompt then mark-copy as usual.
+
+[[https://emacs.stackexchange.com/questions/15198/how-to-copy-minibuffer-contents][echo area - How to copy minibuffer contents? - Emacs Stack Exchange]]
