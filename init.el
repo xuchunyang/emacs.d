@@ -655,10 +655,13 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :config (setq shackle-rules '(("\\‘\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.4))))
 
 ;; Frames
-(setq frame-resize-pixelwise t          ; Resize by pixels
-      frame-title-format
-      '(:eval (if (buffer-file-name)
-                  (abbreviate-file-name (buffer-file-name)) "%b")))
+(setq frame-resize-pixelwise t)         ; Resize by pixels
+;; The default is buffer name like "%b" and I'm fine with it
+;; (setq frame-title-format
+;;       '(:eval (if (buffer-file-name)
+;;                   (abbreviate-file-name (buffer-file-name))
+;;                 "%b")))
+
 
 (use-package frame
   :preface
