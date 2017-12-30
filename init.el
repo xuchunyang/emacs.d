@@ -1747,6 +1747,21 @@ See also `describe-function-or-variable'."
          (setf (alist-get 'description (el-search-object-properties search))
                (concat "Search the git repo in " (abbreviate-file-name topdir)))))))
 
+  (defun chunyang-el-search-package (pattern package)
+    "Search pattern in directory of PACKAGE (a symbol) recursively.
+PACKAGE should not be a built-in package."
+    (interactive
+     (list (el-search-read-pattern-for-interactive
+            "Search package for pattern: ")
+           (intern
+            (completing-read
+             "el-search package: "
+             (mapcar 'car package-alist) nil t))))
+    (let ((pkgdir
+           (package-desc-dir
+            (cadr (assq package package-alist)))))
+      (el-search-directory pattern pkgdir t)))
+
   :config
   (require 'el-search-x)
 
