@@ -1,6 +1,6 @@
 ;;; init.el --- Chunyang Xu's Emacs Configuration  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015-2017  Chunyang Xu
+;; Copyright (C) 2015-2018  Chunyang Xu
 
 ;; Author: Chunyang Xu <mail@xuchunyang.me>
 ;; URL: https://github.com/xuchunyang/emacs.d
