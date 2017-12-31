@@ -10,6 +10,8 @@
 
 ;;; Startup
 
+(setq load-prefer-newer t)
+
 (require 'package)
 
 (setq package-archives
