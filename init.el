@@ -11,29 +11,28 @@
 ;;; Startup
 
 (setq load-prefer-newer t)
+(setq custom-file "~/.emacs.d/custom.el")
 
-(require 'package)
+
+;;; Package Manager
 
-(setq package-archives
-      '(("gnu"    . "http://elpa.emacs-china.org/gnu/")
-        ("org"    . "http://elpa.emacs-china.org/org/")
-        ("melpa"  . "http://elpa.emacs-china.org/melpa/")))
+(setq straight-use-package-version 'ensure)
+(let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
+      (bootstrap-version 2))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+(straight-use-package 'use-package)
+;; Because of how `straight-use-package-mode' is implemented
+(require 'use-package)
 
-;; Don't share the same elpa accross different versions of Emacs
-(setq package-user-dir
-      (locate-user-emacs-file (concat "elpa-" emacs-version)))
-
-(package-initialize)
-
-(setq custom-file (locate-user-emacs-file "custom.el"))
-
-;; Bootstrap `use-package'
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(use-package diminish
-  :ensure t)
+
+;;; `use-package'
 
 (use-package use-package
   :config
@@ -51,7 +50,13 @@
   (chunyang-use-package-keywords-add :info)
   (chunyang-use-package-keywords-add :notes))
 
-;; My private packages
+;; To support `:diminish'
+(use-package diminish
+  :ensure t)
+
+
+;;; My private packages
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 
@@ -2522,9 +2527,8 @@ This should be add to `find-file-hook'."
   :defer t)
 
 (use-package helm-lastpass
-  :ensure csv
-  :load-path "~/src/helm-lastpass"
-  :commands helm-lastpass)
+  :ensure (helm-lastpass :local-repo "~/src/helm-lastpass")
+  :defer t)
 
 (use-package irfc
   :about Read RFC within Emacs

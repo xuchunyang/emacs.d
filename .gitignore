@@ -37,3 +37,6 @@ lisp/chunyang-fun.el
 
 # Cask
 /.cask/
+
+# Straight
+/straight/
