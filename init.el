@@ -273,21 +273,23 @@
     (setenv "LC_CTYPE")))
 
 
+;;; Windows
+
+(defconst *is-windows* (eq system-type 'windows-nt))
+
+
 ;;; User Interface
 
 ;; It's possible that Emacs is not built with Tool Bar and Scroll Bar
-;; support, so we need to test firstly
+;; support, so we need to test first
 (and (bound-and-true-p tool-bar-mode)
      (tool-bar-mode -1))
 (and (bound-and-true-p scroll-bar-mode)
      (scroll-bar-mode -1))
 
-(defconst *is-windows* (eq system-type 'windows-nt))
-
-;; Disable `menu-bar-mode' except macOS & Windows
-(unless (or *is-mac*
-            ;; I don't familiar with Windows, thus that menu bar helps
-            *is-windows*)
+;; macOS has a global menu bar, disable `menu-bar-mode' will not save
+;; any space.
+(unless (memq window-system '(ns mac))
   (menu-bar-mode -1))
 
 ;; Type M-x `about-emacs' to see it
@@ -3906,29 +3908,6 @@ provides similiar function."
   (add-to-list 'company-backends 'company-lua))
 
 
-;;; Plot
-
-(use-package asymptote
-  :homepage https://github.com/vectorgraphics/asymptote
-  :load-path "/opt/local/share/asymptote"
-  :defer t
-  :init (load "/opt/local/share/asymptote/asy-init.el" :no-error :no-message))
-
-
-;;; Math
-
-(use-package Maxima
-  :disabled t
-  :load-path "/usr/local/Cellar/maxima/5.37.2/share/maxima/5.37.2/emacs"
-  :mode ("\\.ma[cx]" . maxima-mode)
-  :init
-  (autoload 'maxima-mode "maxima"  "Maxima mode"                            t)
-  (autoload 'imaxima     "imaxima" "Frontend for maxima with Image support" t)
-  (autoload 'maxima      "maxima"  "Maxima interaction"                     t)
-  (autoload 'imath-mode  "imath"   "Imath mode for math formula input"      t)
-  (setq imaxima-use-maxima-mode-flag t))
-
-
 ;;; Misc
 
 ;; Socks5 proxy setting for `url.el'
@@ -3997,7 +3976,6 @@ provides similiar function."
 
 (use-package package-utils :ensure t :defer t)
 
-;; See [[https://xuchunyang.me/Logs/upgrade-packages-then-restart-emacs.html][升级 Emacs Package 然后重启 Emacs]]
 (defun chunyang-upgrade-packages-then-restart-emacs ()
   (interactive)
   (package-utils-upgrade-all)
