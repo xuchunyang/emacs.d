@@ -1743,7 +1743,7 @@ See also `describe-function-or-variable'."
         aggressive-indent-protected-commands))
 
 (use-package el-search
-  :ensure t
+  :ensure (el-search :local-repo "~/src/elpa" :files ("packages/el-search/*.el"))
   :defer t
   :preface
   (defun chunyang-el-search-git-repo (pattern)
