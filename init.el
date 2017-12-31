@@ -827,6 +827,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   ;; loaded by default.
   :bind (("C-x C-j"   . dired-jump)
          ("C-x 4 C-j" . dired-jump-other-window))
+  :init (eval-after-load 'dired '(require 'dired-x))
   :config
 
   ;; On macOS, use open(1) as guess shell command for some files
