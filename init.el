@@ -16,7 +16,6 @@
 
 ;;; Package Manager
 
-(setq straight-use-package-version 'ensure)
 (let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
       (bootstrap-version 2))
   (unless (file-exists-p bootstrap-file)
@@ -28,20 +27,22 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 (straight-use-package 'use-package)
-;; Because of how `straight-use-package-mode' is implemented
-(require 'use-package)
 
 
 ;;; `use-package'
 
-(use-package use-package
+(use-package use-package-core
   :config
   (setq use-package-verbose t)
+
+  (defalias 'use-package-handler/:ensure #'use-package-handler/:straight)
+  (defalias 'use-package-normalize/:ensure #'use-package-normalize/:straight)
+  (add-to-list 'use-package-keywords :ensure)
 
   (defmacro chunyang-use-package-keywords-add (keyword)
     "Add new keyword as placeholder."
     `(progn
-       (add-to-list 'use-package-keywords ,keyword t)
+       (add-to-list 'use-package-keywords ,keyword 'append)
        (defun ,(intern (format "use-package-normalize/%s" keyword)) (&rest _))
        (defun ,(intern (format "use-package-handler/%s" keyword)) (&rest _))))
 
