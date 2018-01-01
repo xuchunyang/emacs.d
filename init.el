@@ -887,8 +887,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :init (electric-layout-mode))
 
 (use-package elec-pair                  ; Electric pairs
-  :defer t
-  :init (add-hook 'prog-mode-hook #'electric-pair-local-mode))
+  :config (electric-pair-mode))
 
 ;; I have used 'M-l' to run `helm-mini' for a long time
 (define-key global-map "\M-L" #'downcase-dwim)
@@ -947,12 +946,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
             (defun visual-fill-column-toggle ()
               (visual-fill-column-mode (or visual-line-mode -1)))))
 
-;; NOTE: `visual-line-mode' 似乎假定了字与字之间使用空格隔开的！？所以处理中文应该有问题吧！
-;;       好像有没问题！我不是 100% 确定到底有没有问题，至少目前没发现问题。
-(with-eval-after-load 'org
-  ;; (add-hook 'org-mode-hook 'visual-line-mode)
-  )
-
 (use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
   :disabled t
   :ensure t
@@ -986,7 +979,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (use-package pin :disabled t)
 
 (use-package ace-link
-  :disabled t ; XXX This takes 0.4 seconds, do it manually instead of `ace-link-setup-default'
   :ensure t
   :config (ace-link-setup-default))
 
