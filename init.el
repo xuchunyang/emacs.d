@@ -109,12 +109,10 @@
   :defer t)
 
 ;; Load personal information
-;; (load "~/.private.el" :no-error)
+(load "~/.private.el" :no-error)
 
 ;; Make ~/.emacs.d clean
 (use-package no-littering
-  :load-path "~/src/no-littering"       ; Prefer the local version if available,
-                                        ; just don't forget to update it
   :ensure t)
 
 
@@ -166,11 +164,10 @@
   :commands chunyang-linux-gnome-terminal-cd
   :bind (("<S-insert>" . insert-x11-primary-selection)))
 
-(use-package grab-x-link
-  :if *is-gnu-linux*
-  :no-require t               ; Silence byte-compile warnning on macOS
-  :commands grab-x-link
-  :load-path "/home/xcy/src/grab-x-link")
+(when *is-gnu-linux*
+  (use-package grab-x-link
+    :ensure t
+    :defer t))
 
 ;; XXX: Drag & Drop not working
 (use-package exwm
@@ -1182,12 +1179,8 @@ Intended to be added to `isearch-mode-hook'."
   (bind-key "M-%" 'anzu-query-replace)
   (bind-key "C-M-%" 'anzu-query-replace-regexp))
 
-;; TODO: Consider adding `:todo' keyword to `use-package', just for some fun,
-;;       it's ok that it's not necessary and useful
-;; TODO: Errors on {her,his} -> chunyang
 (use-package plur
   :ensure t
-  :load-path "~/src/plur"
   :bind ("C-c M-%" . plur-query-replace)
   :config (define-key isearch-mode-map "\M-{" #'plur-isearch-query-replace))
 
@@ -1204,7 +1197,7 @@ Intended to be added to `isearch-mode-hook'."
 
 (use-package clear-text
   :disabled t
-  :load-path "~/src/clear-text.el"
+  :ensure t
   :commands (clear-text-mode global-clear-text-mode))
 
 (use-package pinyin-search
@@ -2431,8 +2424,8 @@ PACKAGE should not be a built-in package."
 
 (use-package github-notifier
   :disabled t
-  :load-path "~/src/github-notifier.el"
-  :commands github-notifier)
+  :ensure t
+  :defer t)
 
 (use-package chunyang-github
   :ensure ghub                          ; Dependency
@@ -2856,8 +2849,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   (setq eww-search-prefix "https://www.bing.com/search?q="))
 
 (use-package shr-tag-pre-highlight
-  :load-path "~/src/shr-tag-pre-highlight.el"
-  :ensure t                             ; for dependency `language-detection'
+  :ensure t
   :after shr
   :config
   (add-to-list 'shr-external-rendering-functions
@@ -3006,13 +2998,12 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 (use-package youdao-dictionary
   :ensure t
-  :load-path "~/src/youdao-dictionary.el"
   :bind (("C-c y" . youdao-dictionary-search)
          ("C-c Y" . youdao-dictionary-search-at-point+)))
 
 (use-package osx-dictionary
   :if *is-mac*
-  :load-path "~/src/osx-dictionary.el"
+  :ensure t
   :bind ("C-c d" . osx-dictionary-search-pointer))
 
 (use-package bing-dict
@@ -3130,8 +3121,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 (use-package eshell-z
   :ensure t
-  :commands eshell-z
-  :load-path "~/src/eshell-z")
+  :defer t)
 
 (use-package eshell
   :defer t
@@ -3180,9 +3170,8 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 
   (use-package eshell-git-prompt
-    :after eshell
     :ensure t
-    :load-path "~/src/eshell-git-prompt"
+    :defer t
     ;; :init
     ;; Needed at least for `eshell-git-prompt'?
     ;; (setq eshell-highlight-prompt nil)
@@ -3190,7 +3179,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
     )
 
   (use-package eshell-prompt-extras
-    :load-path "~/src/eshell-prompt-extras"
+    :ensure t
     :config
     (setq eshell-highlight-prompt nil
           eshell-prompt-function 'epe-theme-lambda))
@@ -3199,7 +3188,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 (use-package eshell-did-you-mean
   :disabled t
-  :load-path "~/src/eshell-did-you-mean"
+  :ensure t
   :defer t
   :init
   (autoload 'eshell-did-you-mean-setup "eshell-did-you-mean")
@@ -3429,7 +3418,6 @@ Adapt from `org-babel-remove-result'."
 (use-package grab-mac-link
   :if *is-mac*
   :ensure t
-  :load-path "~/src/grab-mac-link"
   :commands grab-mac-link
   :init
   (defun chunyang-grab-mac-link-from-chrome-as-org ()
@@ -3614,7 +3602,6 @@ Adapt from `org-babel-remove-result'."
 (use-package ob-rust
   :homepage https://travis-ci.org/micanzhang/ob-rust
   :ensure t
-  :load-path "~/src/ob-rust"
   :after org)
 
 (use-package toml-mode
@@ -4044,11 +4031,9 @@ provides similiar function."
 ;;; IM
 
 (use-package gitter
-  :load-path "~/src/gitter.el"
   :ensure t
   :defer t
-  :commands gitter
-  :init
+  :config
   (setq gitter--debug t))
 
 
@@ -4085,10 +4070,11 @@ provides similiar function."
 ;; (setq redisplay-dont-pause nil)
 
 (use-package opencc
-  :load-path "~/src/emacs-opencc"
-  :commands opencc-message)
+  :ensure t
+  :defer t)
 
 (use-package scws
+  :if module-file-suffix
   :about "SCWS 的 Emacs Module | 中文分词"
   :load-path "~/src/emacs-scws"
   :commands (scws scws-word-at-point))
@@ -4116,8 +4102,7 @@ provides similiar function."
 
 (use-package sl
   :ensure t
-  :load-path "~/src/sl.el"
-  :commands (sl sl-little sl-forever sl-little-forever sl-screen-saver))
+  :defer t)
 
 (use-package xpm
   :homepage http://www.gnuvola.org/software/xpm/
@@ -4171,11 +4156,13 @@ provides similiar function."
 
 (use-package ip2region
   :about "IP 地址定位"
+  :if module-file-suffix
   :load-path "~/src/emacs-ip2region"
   :commands ip2region)
 
 (use-package cmark
   :about "Markdown parser"
+  :if module-file-suffix
   :load-path "~/src/emacs-cmark"
   :commands cmark-markdown-to-html)
 
