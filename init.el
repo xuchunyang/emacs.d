@@ -2946,7 +2946,33 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package bongo
   :ensure t
   :defer t
-  :config (setq bongo-default-directory "~/Music/网易云音乐/"))
+  :config
+  (setq bongo-default-directory "~/Music/网易云音乐/")
+  (defun chunyang-bongo-library-setup ()
+    (run-at-time
+     0.1
+     nil
+     (lambda ()
+       ;; Insert files into library
+       (let ((bongo-insert-whole-directory-trees t))
+         (bongo-insert-file bongo-default-directory))
+       ;; Switch to playlist
+       (with-current-buffer (bongo-playlist)
+         ;; Random mode
+         (bongo-sprinkle-mode)))))
+  (add-hook 'bongo-library-mode-hook #'chunyang-bongo-library-setup)
+  ;; Hide logo
+  (setq bongo-logo nil)
+  ;; Disable mode line
+  (setq bongo-mode-line-indicator-mode nil)
+  ;; Disable header line due to https://github.com/dbrock/bongo/issues/49
+  (setq bongo-header-line-mode nil)
+  ;; Hide these buffers, type M-x `bongo'
+  (setq bongo-default-library-buffer-name " *Bongo Library*"
+        bongo-default-playlist-buffer-name " *Bongo Playlist*")
+  (defun bongo-kill-buffers ()
+    (interactive)
+    (mapc #'kill-buffer (bongo-buffers))))
 
 (use-package volume
   :ensure t
