@@ -1025,14 +1025,14 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
-(use-package nlinum                     ; Line numbers in display margin
+(use-package nlinum                   ; Line numbers in display margin
   :ensure t
   :bind (("C-c t l" . nlinum-mode)))
 
 
 ;;; Whitespace - Highlight and Manage Whitespaces
 
-(use-package whitespace                 ; Highlight bad whitespace (tab)
+(use-package whitespace               ; Highlight bad whitespace (tab)
   :diminish " Whitespace"
   ;; TODO: Consider turn on this mode by default
   :bind ("C-c t w" . whitespace-mode)
@@ -1040,15 +1040,16 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   ;; Specify which kind of blank is visualized
   (setq whitespace-style
         '(face
+          ;; trailing blanks
           trailing
           ;; empty lines at beginning and/or end of buffer
           ;; empty
-          ;; line is longer `fill-column'
+          ;; line is longer `whitespace-line-column'
           lines-tail
-          ;; If `indent-tabs-mode' on, visualize spaces at the beginning of the
-          ;; line, otherwise, visualize tabs.
+          ;; tab or space at the beginning of the line according to
+          ;; `indent-tabs-mode'
           indentation
-          ;; Visualize TAB
+          ;; show tab as » (see `whitespace-display-mappings')
           tab-mark))
   ;; Use `fill-column'
   (setq whitespace-line-column nil))
