@@ -873,11 +873,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (setq-default indent-tabs-mode nil
               tab-width 8)
 
-;; Indicate empty lines at the end of a buffer in the fringe, but require a
-;; final new line
-(setq indicate-empty-lines t
-      require-final-newline t)
-
 (setq kill-ring-max 200                 ; More killed items
       ;; Save the contents of the clipboard to kill ring before killing
       save-interprogram-paste-before-kill t)
