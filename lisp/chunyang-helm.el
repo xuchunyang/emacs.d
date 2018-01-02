@@ -289,6 +289,12 @@
   (setq helm-descbinds-window-style 'split-window)
   (advice-add 'describe-bindings :override #'helm-descbinds))
 
+(use-package gh
+  ;; Disable autoloads to reduce Emacs startup time, see
+  ;; https://github.com/sigma/gh.el/issues/95
+  :ensure (gh :type git :host github :repo "sigma/gh.el" :no-autoloads t)
+  :defer t)
+
 (use-package helm-open-github
   :ensure t
   :commands (helm-open-github-from-file ; Use the region for selecting specfic lines
