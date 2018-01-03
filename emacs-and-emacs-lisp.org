@@ -153,3 +153,120 @@ Like shell/eshell/comint, find a way to move point (for example, ~C-b~
 (~backward-char~)) within the prompt then mark-copy as usual.
 
 [[https://emacs.stackexchange.com/questions/15198/how-to-copy-minibuffer-contents][echo area - How to copy minibuffer contents? - Emacs Stack Exchange]]
+* Hash Table in Emacs Lisp
+Entered on [2018-01-04 Thu 00:58]
+
+** Create Hash Table
+
+Use ~make-hash-table~
+
+#+begin_src emacs-lisp
+(make-hash-table :test #'equal)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ())
+
+Use the printed representation
+
+#+begin_src emacs-lisp
+#s(hash-table test equal data (:one 1 :two 2))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (:one 1 :two 2))
+
+** Access Hash Table
+
+Add and lookup
+
+#+begin_src emacs-lisp
+(let ((hash (make-hash-table :test #'eq)))
+  (puthash :one 1 hash)
+  (puthash :two 2 hash)
+  (list :one (gethash :one hash)
+        :two (gethash :two hash)))
+#+end_src
+
+#+RESULTS:
+| :one | 1 | :two | 2 |
+
+Remove
+
+#+begin_src emacs-lisp
+(let ((hash #s(hash-table test eq data (:one 1 :two 2))))
+  (remhash :one hash)
+  hash)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data ( :two 2))
+
+Clear (remove all)
+
+#+begin_src emacs-lisp
+(let ((hash #s(hash-table test eq data (:one 1 :two 2))))
+  (clrhash hash)
+  hash)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eq rehash-size 1.5 rehash-threshold 0.8125 data ())
+
+Lookup all
+
+#+begin_src emacs-lisp
+(let (alist)
+  (maphash
+   (lambda (key value)
+     (push (cons key value) alist))
+   #s(hash-table data (:one 1 :two 2)))
+  alist)
+#+end_src
+
+#+RESULTS:
+: ((:two . 2) (:one . 1))
+
+Count
+
+#+begin_src emacs-lisp
+(hash-table-count #s(hash-table data (a 1 b 2)))
+#+end_src
+
+#+RESULTS:
+: 2
+
+Keys & Values (hash-table-keys and hash-table-values is defined by subr-x.el)
+
+#+begin_src emacs-lisp
+(hash-table-keys #s(hash-table data (one 1 two 2 three 3)))
+#+end_src
+
+#+RESULTS:
+| one | two | three |
+
+#+begin_src emacs-lisp
+(hash-table-values #s(hash-table data (one 1 two 2 three 3)))
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 |
+
+Performance (vs Alist)
+
+#+begin_src emacs-lisp
+(let ((alist nil)
+      (hash (make-hash-table :test #'eq)))
+  (mapatoms
+   (lambda (symbol)
+     (let ((key symbol)
+           (val (length (symbol-name symbol))))
+       (push (cons key val) alist)
+       (puthash key val hash))))
+  (let ((t1 (car (benchmark-run 1000 (assq 'length alist))))
+        (t2 (car (benchmark-run 1000 (gethash 'length hash)))))
+    (message "Alist takes %.5fs, Hash Table takes %.5fs" t1 t2)))
+#+end_src
+
+#+RESULTS:
+: Alist takes 1.97789s, Hash Table takes 0.00017s
