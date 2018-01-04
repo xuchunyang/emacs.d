@@ -1,8 +1,8 @@
 ;;; chunyang-lib.el --- Library of Emacs Lisp  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: algorithm
 
 ;;; Commentary:

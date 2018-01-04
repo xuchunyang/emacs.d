@@ -1,8 +1,8 @@
 ;;; eim.el --- Eshell IMproved                       -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Chunyang Xu
+;; Copyright (C) 2016  Xu Chunyang
 
-;; Author: Chunyang Xu <xuchunyang56@gmail.com>
+;; Author: Xu Chunyang <xuchunyang56@gmail.com>
 ;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify

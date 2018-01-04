@@ -1,8 +1,8 @@
 ;;; sml-eldoc.el --- sml-mode support for eldoc   -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Chunyang Xu
+;; Copyright (C) 2016  Xu Chunyang
 
-;; Author: Chunyang Xu <xuchunyang.me@gmail.com>
+;; Author: Xu Chunyang <xuchunyang.me@gmail.com>
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

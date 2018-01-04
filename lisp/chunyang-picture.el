@@ -1,8 +1,8 @@
 ;;; chunyang-picture.el --- Fetch some picture from Web  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: picture
 
 ;; This program is free software; you can redistribute it and/or modify

@@ -6,9 +6,9 @@ F=/tmp/$(echo $0 | sed 's|/|!|g') &&
 
 ;;; org-capture --- Org capture from the command line -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 
 ;;; Commentary:
 

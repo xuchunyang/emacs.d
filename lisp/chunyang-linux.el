@@ -1,8 +1,8 @@
 ;;; chunyang-linux.el --- GNU/Linux Supports  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Chunyang Xu
+;; Copyright (C) 2016  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: linux
 
 ;; This program is free software; you can redistribute it and/or modify

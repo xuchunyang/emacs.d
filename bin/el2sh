@@ -6,9 +6,9 @@ F=/tmp/$(echo $0 | sed 's|/|!|g') &&
 
 ;;; el2sh --- Print Emacs Lisp data to Shell  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 
 ;;; Commentary:
 

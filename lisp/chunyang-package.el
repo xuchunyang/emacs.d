@@ -1,8 +1,8 @@
 ;;; chunyang-package.el --- Hacks on package.el      -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Chunyang Xu
+;; Copyright (C) 2016  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 
 ;;; Commentary:
 

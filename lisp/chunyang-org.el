@@ -1,8 +1,8 @@
 ;;; chunyang-org.el --- Personal Extension of Org mode  -*- lexical-binding: nil; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: org
 
 ;; This program is free software; you can redistribute it and/or modify

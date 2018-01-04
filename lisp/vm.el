@@ -1,8 +1,8 @@
 ;;; vm.el --- Simple Virtual Machine                 -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: lisp
 
 ;; This program is free software; you can redistribute it and/or modify

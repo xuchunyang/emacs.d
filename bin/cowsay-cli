@@ -1,8 +1,8 @@
 ;;; cowsay-cli --- CLI interface for cowsay.el  -*- mode: emacs-lisp; lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: cowsay
 ;; Version: 2017-03-07
 

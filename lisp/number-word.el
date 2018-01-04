@@ -1,12 +1,12 @@
 ;;; number-word.el --- Convert Numbers to Words, and vice versa  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; URL: https://github.com/xuchunyang/emacs.d
 ;; Keywords: number
 ;; Created: 2017-03-02
-;; Modified: 2017-03-02
+;; Modified: 2018-01-04
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

@@ -1,8 +1,8 @@
 ;;; ace-link-notmuch.el --- ace-link support for notmuch  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Package-Requires: ((avy "0.2.0"))
 ;; Keywords: notmuch, link
 

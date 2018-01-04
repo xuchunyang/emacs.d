@@ -1,8 +1,8 @@
 ;;; eval-before-load.el --- Like `eval-after-load' but s/after/before  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015  Chunyang Xu
+;; Copyright (C) 2015  Xu Chunyang
 
-;; Author: Chunyang Xu <xuchunyang56@gmail.com>
+;; Author: Xu Chunyang <xuchunyang56@gmail.com>
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

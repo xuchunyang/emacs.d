@@ -1,8 +1,8 @@
 ;;; chunyang-dired.el --- Dired hacks  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify

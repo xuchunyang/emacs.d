@@ -1,8 +1,8 @@
 ;;; chunyang-mac.el --- macOS Supports  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015, 2017  Chunyang Xu
+;; Copyright (C) 2015, 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

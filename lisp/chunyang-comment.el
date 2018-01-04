@@ -1,8 +1,8 @@
 ;;; chunyang-comment.el --- Insert fancy comments (section/box)  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Chunyang Xu
+;; Copyright (C) 2017  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: comment
 
 ;; This program is free software; you can redistribute it and/or modify

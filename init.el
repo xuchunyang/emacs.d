@@ -1,8 +1,8 @@
-;;; init.el --- Chunyang Xu's Emacs Configuration  -*- lexical-binding: t; -*-
+;;; init.el --- Xu Chunyang's Emacs Configuration  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015-2018  Chunyang Xu
+;; Copyright (C) 2015-2018  Xu Chunyang
 
-;; Author: Chunyang Xu <mail@xuchunyang.me>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; URL: https://github.com/xuchunyang/emacs.d
 
 ;;; Code:
@@ -2544,7 +2544,7 @@ This should be add to `find-file-hook'."
 ;; Just by providing the following, Emacs can already send emails
 ;;
 ;; Password is provided in ~/.authinfo file (this file should be encrypted via gpg)
-(setq user-full-name       "Chunyang Xu"
+(setq user-full-name       "Xu Chunyang"
       user-mail-address    "mail@xuchunyang.me"
       ;; This is required for ~/.authinfo.gpg but not ~/.authinfo
       smtpmail-smtp-user   user-mail-address
