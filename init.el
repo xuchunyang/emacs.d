@@ -26,6 +26,7 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
 (straight-use-package 'use-package)
 
 
@@ -296,6 +297,32 @@
 ;; any space.
 (unless (memq window-system '(ns mac))
   (menu-bar-mode -1))
+
+(when (and *is-mac* (version<= "26" emacs-version))
+  (setq initial-frame-alist
+        '(
+          ;; macOS Dark theme when using an Emacs theme with a dark
+          ;; background
+          (ns-appearance . dark)
+          ;; Set background of titlebar to match the Emacs background
+          ;; color
+          (ns-transparent-titlebar . t))))
+
+;; (info "(elisp) Font and Color Parameters")
+(defun chunyang-alpha-param-adjust ()
+  "调节当前 Frame 的透明度.
+
+参考 Info node `(elisp) Font and Color Parameters' 中的 \\='alpha 参数."
+  (interactive)
+  (let ((alpha (or (frame-parameter nil 'alpha) 100)))
+    (while (pcase (read-key (format "%d%%, use +,-,0 for further adjustment" alpha))
+             ((or ?+ ?=) (setq alpha (1+ alpha)))
+             (?- (setq alpha (1- alpha)))
+             (?0 (setq alpha 100))
+             (_  nil))
+      (cond ((> alpha 100) (setq alpha 100))
+            ((< alpha 0) (setq alpha 0)))
+      (modify-frame-parameters nil `((alpha . ,alpha))))))
 
 ;; Type M-x `about-emacs' to see it
 (setq inhibit-startup-screen t)
