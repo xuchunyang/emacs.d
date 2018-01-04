@@ -1,6 +1,6 @@
 ;;; number-word.el --- Convert Numbers to Words, and vice versa  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Xu Chunyang
+;; Copyright (C) 2017, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; URL: https://github.com/xuchunyang/emacs.d

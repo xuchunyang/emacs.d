@@ -1,6 +1,6 @@
 ;;; cowsay.el --- Implement cowsay(1) in Emacs Lisp  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Xu Chunyang
+;; Copyright (C) 2017, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Created: 2017-03-05

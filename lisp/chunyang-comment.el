@@ -1,6 +1,6 @@
 ;;; chunyang-comment.el --- Insert fancy comments (section/box)  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Xu Chunyang
+;; Copyright (C) 2017, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: comment

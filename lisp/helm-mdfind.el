@@ -1,6 +1,6 @@
 ;;; helm-mdfind.el --- Helm interface for Mac OS X's mdfind(1)  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015  Xu Chunyang
+;; Copyright (C) 2015, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <xuchunyang56@gmail.com>
 ;; Keywords: convenience

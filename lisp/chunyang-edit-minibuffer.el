@@ -1,6 +1,6 @@
 ;;; chunyang-edit-minibuffer.el --- Edit Minibuffer in separate buffer  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Xu Chunyang
+;; Copyright (C) 2017, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords:

@@ -1,6 +1,6 @@
 ;;; eval-before-load.el --- Like `eval-after-load' but s/after/before  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015  Xu Chunyang
+;; Copyright (C) 2015, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <xuchunyang56@gmail.com>
 

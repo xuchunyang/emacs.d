@@ -1,6 +1,6 @@
 ;;; ls-tree.el --- List directory contents in a tree-like format like tree(1)  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Xu Chunyang
+;; Copyright (C) 2016, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords: files

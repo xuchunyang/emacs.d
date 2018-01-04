@@ -37,7 +37,7 @@
 #+BEGIN_SRC emacs-lisp
 ;;; chunyang-fun.el --- For fun                      -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016-2017  Xu Chunyang
+;; Copyright (C) 2016-2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <mail@xuchunyang.me>
 

@@ -1,6 +1,6 @@
 ;;; chunyang-buffers.el --- Utilities for buffers    -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015  Xu Chunyang
+;; Copyright (C) 2015, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <xuchunyang56@gmail.com>
 

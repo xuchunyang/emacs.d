@@ -1,6 +1,6 @@
 ;;; nian.el --- A DateTime library                   -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Xu Chunyang
+;; Copyright (C) 2016, 2018  Xu Chunyang
 
 ;; Author: Xu Chunyang <mail@xuchunyang.me>
 ;; Keywords:
