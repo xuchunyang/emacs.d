@@ -204,3 +204,13 @@ such as cl-block/cl-return, catch/throw, pcase/app etc
 (el-search-emacs-elisp-sources '(l ^ 'catch __ (contains (l ^ 'throw))))
 (el-search-emacs-elisp-sources '(l ^ 'pcase __ (contains (l ^ 'app))))
 #+end_src
+
+* 对于同时存在函数和变量的符号，只搜索变量
+
+比如 ~auto-insert~ 这个符号函数定义和变量定义同时存在。
+
+排除掉函数调用以及一些定义：
+
+#+begin_src emacs-lisp
+(l (pred (lambda (x) (not (memq x '(quote defun defgroup defcustom))))) __ 'auto-insert __)
+#+end_src
