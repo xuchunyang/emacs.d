@@ -1424,9 +1424,12 @@ Intended to be added to `isearch-mode-hook'."
                         "~/src/LanguageTool-*/languagetool-commandline.jar")))))
 
 (use-package checkdoc
-  :disabled t                           ; Not working anyway
-  :config (setq checkdoc-arguments-in-order-flag nil
-                checkdoc-force-docstrings-flag nil))
+  :defer t
+  :config
+  (setq
+   checkdoc-force-docstrings-flag nil
+   ;; This is the default since Emacs-26.1
+   checkdoc-arguments-in-order-flag nil))
 
 (use-package flycheck
   :ensure t
