@@ -166,3 +166,17 @@ List, vector, string are all sequences.
 
 #+RESULTS:
 : 42
+
+#+begin_src emacs-lisp
+(pcase "a 1 2 3 3 2 1 b"
+  ((rx (let x digit) space
+       (let y digit) space
+       (let z digit) space
+       (backref z)   space
+       (backref 2)   space
+       (backref 1)   space)
+   (list x y z)))
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 |
