@@ -1413,15 +1413,19 @@ Intended to be added to `isearch-mode-hook'."
     (define-key flyspell-mode-map [?\C-.] #'flyspell-popup-correct)
     (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
 
-;; NOTE: Goto https://www.languagetool.org/ to install the command
-;; line tool.  Java (JDK) is required.
-(use-package langtool                ; English Style and Grammar Check
+
+(use-package langtool       ; LanguageTool <https://languagetool.org/>
+  :homepage https://github.com/mhayashi1120/Emacs-langtool
   :ensure t
   :defer t
   :config
   (setq langtool-language-tool-jar
-        (car (nreverse (file-expand-wildcards
-                        "~/src/LanguageTool-*/languagetool-commandline.jar")))))
+        ;; Find newest version
+        (car
+         (sort
+          (file-expand-wildcards
+           "~/src/LanguageTool-*/languagetool-commandline.jar")
+          #'string>))))
 
 (use-package checkdoc
   :defer t
