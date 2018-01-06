@@ -75,10 +75,11 @@
       (unless (chunyang-current-line-empty-p) (terpri)))))
 
 
-(define-minor-mode display-pos-mode
-  "Display position in mode line mainly for testing and debugging."
+
+(define-minor-mode chunyang-display-mark-and-pos-mode
+  "Display [mark, point] in mode line for testing and debugging."
   :global t
-  :lighter (:eval (format " [%d]" (point))))
+  :lighter (:eval (format " [%s, %d]" (mark) (point))))
 
 
 ;; Byte-code, disassemble
