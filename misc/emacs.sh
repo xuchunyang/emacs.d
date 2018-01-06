@@ -136,3 +136,20 @@ ec () {
     done
     emacsclient "$@"
 }
+
+# FIXME Escape special characters like Quotes, see
+# https://qntm.org/bash
+M-! () {
+    emacsclient --eval "(select-frame-set-input-focus (selected-frame))" \
+                --eval "(shell-command \"$*\")"
+}
+
+M-x () {
+    emacsclient --eval "(select-frame-set-input-focus (selected-frame))" \
+                --eval "(call-interactively '$*)"
+}
+
+M-: () {
+    emacsclient --eval "(select-frame-set-input-focus (selected-frame))" \
+                --eval "(eval-expression '$*)"
+}
