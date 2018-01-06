@@ -270,3 +270,73 @@ Performance (vs Alist)
 
 #+RESULTS:
 : Alist takes 1.97789s, Hash Table takes 0.00017s
+
+* setf
+Entered on [2018-01-07 Sun 01:54]
+
+Modify element of list
+
+#+begin_src emacs-lisp :results pp
+(let ((l '(0 1 2 3 4 5 6)))
+  (setf (nth 3 l) 100)
+  l)
+#+end_src
+
+#+RESULTS:
+: (0 1 2 100 4 5 6)
+
+#+begin_src emacs-lisp :results pp
+(let ((l '(0 1 2 3 4 5 6)))
+  (setcar (nthcdr 3 l) 100)
+  l)
+#+end_src
+
+#+RESULTS:
+: (0 1 2 100 4 5 6)
+
+Move point
+
+#+begin_src emacs-lisp :results pp
+(macroexpand '(setf (point) (point-min)))
+#+end_src
+
+#+RESULTS:
+: (goto-char
+:  (point-min))
+
+cl-callf
+
+#+begin_src emacs-lisp :results pp
+(let ((l '(0 1 2 3 4 5 6)))
+  (cl-callf + (nth 3 l) 100)
+  l)
+#+end_src
+
+#+RESULTS:
+: (0 1 2 103 4 5 6)
+
+#+begin_src emacs-lisp :results pp
+(let ((alist '((one . 1)
+               (two . 2)
+               (thr . 3)
+               (fou . 4))))
+  (setf (alist-get 'one alist) 100)
+  (cl-callf + (alist-get 'two alist) -2)
+  alist)
+#+end_src
+
+#+RESULTS:
+: ((one . 100)
+:  (two . 0)
+:  (thr . 3)
+:  (fou . 4))
+
+Define new setf form
+
+#+begin_src emacs-lisp :results pp
+(gv-define-setter length (val x) `(substring ,x 0 ,val))
+(setf (length "hello") 2)
+#+end_src
+
+#+RESULTS:
+: "he"
