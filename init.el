@@ -733,7 +733,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
          ("C-c w f" . toggle-frame-maximized)
          ("C-c w l" . chunyang-frame-left-half)
          ("C-c w r" . chunyang-frame-right-half)
-         ("C-c w c" . chunyang-frame-center))
+         ("C-c w c" . chunyang-frame-center)
+         ("M-`"     . other-frame))
   :config
   ;; (add-to-list 'initial-frame-alist '(maximized . fullscreen))
   (unbind-key "C-x C-z"))
