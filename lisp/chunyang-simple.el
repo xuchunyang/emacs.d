@@ -288,6 +288,8 @@ Relative:     ../init.el
 
 
 (defun chunyang-swap-regions ()
+  "Swap contents in two regions."
+  (declare (interactive-only t))
   (interactive)
   (let ((hint
          (substitute-command-keys
@@ -295,8 +297,9 @@ Relative:     ../init.el
         buf-A reg-A-beg reg-A-end reg-A-str
         buf-B reg-B-beg reg-B-end reg-B-str)
     ;; Select the first region
-    (message "Select the first region (%s)" hint)
-    (recursive-edit)
+    (unless (use-region-p)
+      (message "Select the first region (%s)" hint)
+      (recursive-edit))
     (setq buf-A (current-buffer)
           reg-A-beg (region-beginning)
           reg-A-end (region-end)
