@@ -340,3 +340,26 @@ Define new setf form
 
 #+RESULTS:
 : "he"
+
+* Recursive Editing
+Entered on [2018-01-07 Sun 15:55]
+
+[[info:elisp#Recursive%20Editing][info:elisp#Recursive Editing]]
+
+在 Emacs command loop 中运行另外一个 command loop，比如 ~ediff-regions-wordwise~ 中间需要让用户选中两个区域，就可以用 ~recursive-edit~ ，Debug 和 Isearch 等地方也有用到。
+
+举个例子，我需要让用户从 Dired 中选中一个文件来处理：
+
+#+begin_src emacs-lisp
+(defun foo ()
+  (interactive)
+  (dired ".")
+  (message
+   (substitute-command-keys
+    "When done, type \\[exit-recursive-edit]. Use \\[abort-recursive-edit] to quit"))
+  (recursive-edit)
+  (message "You have picked '%s'" (dired-get-filename)))
+#+end_src
+
+#+RESULTS:
+: foo
