@@ -623,7 +623,8 @@
   :commands (chunyang-window-click-swap
              chunyang-cycle-filename
              chunyang-display-number-as-char
-             chunyang-count-top-level-expression))
+             chunyang-count-top-level-expression
+             chunyang-swap-regions))
 
 (use-package chunyang-misc
   :commands (chunyang-open-another-emacs
