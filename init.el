@@ -1761,8 +1761,12 @@ See also `describe-function-or-variable'."
         aggressive-indent-protected-commands))
 
 (use-package el-search
-  :ensure (el-search :local-repo "~/src/elpa" :files ("packages/el-search/*.el"))
+  :ensure (el-search
+           :type git
+           :repo "https://git.savannah.gnu.org/git/emacs/elpa.git"
+           :files ("packages/el-search/*.el"))
   :defer t
+  :commands el-search-this-sexp         ; upstream doesn't autoload it
   :preface
   (defun chunyang-el-search-git-repo (pattern)
     "Search all elisp files in git repo for PATTERN."
@@ -2547,7 +2551,7 @@ This should be add to `find-file-hook'."
   :defer t)
 
 (use-package helm-lastpass
-  :ensure (helm-lastpass :local-repo "~/src/helm-lastpass")
+  :ensure t
   :defer t)
 
 (use-package irfc
