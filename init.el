@@ -3296,7 +3296,9 @@ Adapt from `org-babel-remove-result'."
            "* %?%(grab-mac-link 'chrome 'org)\n%U")
           ("e" "Journal on Emacs and Emacs Lisp" entry
            (file "~/.emacs.d/emacs-and-emacs-lisp.org")
-           "* %?\nEntered on %U\n")))
+           "* %?\nEntered on %U\n"
+           :empty-lines-before 1
+           :jump-to-captured t)))
   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)"
                                       "|"
                                       "DONE(d)" "CANCELLED(c)")))
