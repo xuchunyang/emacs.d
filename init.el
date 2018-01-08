@@ -680,10 +680,12 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 (use-package winner
-  :disabled t
-  :bind (("M-N" . winner-redo)
-         ("M-P" . winner-undo))
-  :config (winner-mode))
+  :init (setq winner-dont-bind-my-keys t)
+  :config
+  (bind-keys :map winner-mode-map
+             ("M-N" . winner-redo)
+             ("M-P" . winner-undo))
+  (winner-mode))
 
 (use-package eyebrowse
   :disabled t
