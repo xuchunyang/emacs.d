@@ -3230,6 +3230,7 @@ Because I usualy want to delete the final trailing newline."
   :defer t)
 
 (use-package org
+  :ensure (org :local-repo nil)
   :preface
   (defun chunyang-org-info-lookup-symbol ()
     "Call `info-lookup-symbol' within a source edit buffer if needed."
@@ -3405,9 +3406,7 @@ Adapt from `org-babel-remove-result'."
   )
 
 (use-package orglink
-  :disabled t
-  :load-path "~/src/orglink"
-  :commands (orglink-mode global-orglink-mode)
+  :ensure t
   :preface
   ;; XXX To fix "funcall-interactively: Text is read-only" error, when
   ;; entering pattern after M-x el-search-pattern
