@@ -2437,7 +2437,11 @@ PACKAGE should not be a built-in package."
   ;; (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   ;; or --unified, more compact context, see
   ;; (info "(diffutils) Unified Format")
-  (setq ediff-custom-diff-options "-u"))
+  (setq ediff-custom-diff-options "-u")
+  ;; Restore previous Window Configuration
+  ;; https://emacs.stackexchange.com/questions/7482/restoring-windows-and-layout-after-an-ediff-session/7486
+  ;; (setq ediff-quit-hook '(ediff-cleanup-mess winner-undo))
+  (add-hook 'ediff-quit-hook #'winner-undo 'append))
 
 (use-package server
   :defer 3
