@@ -1766,7 +1766,6 @@ See also `describe-function-or-variable'."
            :repo "https://git.savannah.gnu.org/git/emacs/elpa.git"
            :files ("packages/el-search/*.el"))
   :defer t
-  :commands el-search-this-sexp         ; upstream doesn't autoload it
   :preface
   (defun chunyang-el-search-git-repo (pattern)
     "Search all elisp files in git repo for PATTERN."
@@ -1853,6 +1852,7 @@ PACKAGE should not be a built-in package."
     ;; Because`lisp-interaction-mode-map' doesn't inherit `emacs-lisp-mode-map'
     (dolist (map (list emacs-lisp-mode-map lisp-interaction-mode-map))
       (define-key map (kbd "C-S-s") #'el-search-pattern)
+      (define-key map (kbd "C-S-r") #'el-search-pattern-backwards)
       (define-key map (kbd "C-%") #'el-search-query-replace)
       (define-key map (kbd "C-S-h") #'el-search-this-sexp)))
 
