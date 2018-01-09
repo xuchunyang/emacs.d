@@ -363,3 +363,35 @@ Entered on [2018-01-07 Sun 15:55]
 
 #+RESULTS:
 : foo
+
+* Protect form from =(recursive-edit)=
+Entered on [2018-01-09 Tue 16:56]
+
+#+begin_src emacs-lisp
+(progn
+  (unwind-protect
+      (recursive-edit)
+    (message-box "Always run"))
+  (message-box "Only run with 'C-M-c' ('exit-recursive-edit')")
+  nil)
+#+end_src
+
+#+begin_src emacs-lisp
+(progn
+  (condition-case nil
+      (recursive-edit)
+    (quit (message-box "Only run with 'C-]' ('abort-recursive-edit')")))
+  (message-box "Always run")
+  nil)
+#+end_src
+
+#+begin_src emacs-lisp
+(progn
+  (condition-case err
+      (recursive-edit)
+    (quit
+     (message-box "Only run with 'C-]' ('abort-recursive-edit')")
+     (signal (car err) (cdr err))))
+  (message-box "Only run with 'C-M-c' ('exit-recursive-edit')")
+  nil)
+#+end_src
