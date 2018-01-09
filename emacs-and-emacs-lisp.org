@@ -395,3 +395,48 @@ Entered on [2018-01-09 Tue 16:56]
   (message-box "Only run with 'C-M-c' ('exit-recursive-edit')")
   nil)
 #+end_src
+
+* 一次性去掉所有的 Advice
+Entered on [2018-01-09 Tue 21:29]
+
+添加：
+
+#+begin_src emacs-lisp :results silent
+(advice-add #'emacs-version :filter-return #'upcase)
+(advice-add #'emacs-version :filter-return #'nreverse)
+(advice-add #'emacs-version :filter-return (lambda (x) (concat "=> " x)))
+#+end_src
+
+检查：
+
+#+begin_src emacs-lisp :results pp
+(defun chunyang-function-advices (symbol)
+  (let (advices)
+    (advice-mapc
+     (lambda (f _)
+       (push f advices))
+     symbol)
+    (nreverse advices)))
+
+(chunyang-function-advices 'emacs-version)
+#+end_src
+
+#+RESULTS:
+: ((lambda
+:    (x)
+:    (concat "=> " x))
+:  nreverse upcase)
+
+删除：
+
+#+begin_src emacs-lisp :results pp
+(advice-mapc
+ (lambda (f _)
+   (advice-remove 'emacs-version f))
+ 'emacs-version)
+
+(chunyang-function-advices 'emacs-version)
+#+end_src
+
+#+RESULTS:
+: nil
