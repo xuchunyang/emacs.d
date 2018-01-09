@@ -295,7 +295,8 @@ Relative:     ../init.el
          (substitute-command-keys
           "When done, type \\[exit-recursive-edit]. Use \\[abort-recursive-edit] to abort"))
         buf-A reg-A-beg reg-A-end reg-A-str
-        buf-B reg-B-beg reg-B-end reg-B-str)
+        buf-B reg-B-beg reg-B-end reg-B-str
+        buf-A-overlay)
     ;; Select the first region
     (unless (use-region-p)
       (message "Select the first region (%s)" hint)
@@ -305,9 +306,12 @@ Relative:     ../init.el
           reg-A-end (region-end)
           reg-A-str (buffer-substring reg-A-beg reg-A-end))
     (deactivate-mark)
+    (setq buf-A-overlay (make-overlay reg-A-beg reg-A-end))
+    (overlay-put buf-A-overlay 'face 'region)
     ;; Select the second region
     (message "Select the second region (%s)" hint)
-    (recursive-edit)
+    (unwind-protect (recursive-edit)
+      (delete-overlay buf-A-overlay))
     (setq buf-B (current-buffer)
           reg-B-beg (region-beginning)
           reg-B-end (region-end)
