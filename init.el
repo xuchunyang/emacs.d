@@ -34,8 +34,9 @@
 
 ;;; `use-package'
 
-(use-package use-package-core
-  :config
+(eval-when-compile
+  (require 'use-package)
+
   (setq use-package-verbose t)
 
   (defalias 'use-package-handler/:ensure #'use-package-handler/:straight)
@@ -53,6 +54,8 @@
   (chunyang-use-package-keywords-add :homepage)
   (chunyang-use-package-keywords-add :info)
   (chunyang-use-package-keywords-add :notes))
+
+(require 'bind-key)
 
 ;; To support `:diminish'
 (use-package diminish
@@ -544,8 +547,174 @@
 (use-package chunyang-edit-minibuffer
   :bind (:map minibuffer-local-map ("C-c '" . chunyang-edit-minibuffer)))
 
-(use-package chunyang-helm
-  :if (eq chunyang-completing-read-style 'helm))
+(use-package helm
+  :ensure t
+  :defer t
+  :preface
+  (define-minor-mode chunyang-helm-window-hack-mode
+    "Hack helm window display."
+    :global t
+    (let ((action '("\\`\\*helm"
+                    (display-buffer-in-side-window)
+                    (window-height . 0.4))))
+      (if chunyang-helm-window-hack-mode
+          (progn
+            (add-to-list 'display-buffer-alist action)
+            (setq helm-display-function #'display-buffer))
+        (setq display-buffer-alist
+              (delete action display-buffer-alist))
+        (let ((standard-value (eval (car (get 'helm-display-function 'standard-value)))))
+          (setq helm-display-function standard-value)))))
+  :init
+  ;; Set up shorter key bindings
+  (bind-keys ("M-x"     . helm-M-x)
+             ("C-c M-x" . execute-extended-command)
+             ("C-x C-f" . helm-find-files)
+             ;; ("C-x f"   . helm-recentf)
+             ("C-x C-d" . helm-browse-project)
+             ("M-l"     . helm-mini)
+             ("M-y"     . helm-show-kill-ring)
+             ("C-z"     . helm-resume)
+             ("C-x r j" . helm-register)
+             ("C-h a"   . helm-apropos)
+             ("M-i"     . helm-occur)
+             ("C-o"     . helm-semantic-or-imenu))
+  :config
+  (chunyang-helm-window-hack-mode)
+  ;; Defaults to 15, not working correctly in helm-occur, so disable it :(
+  (setq helm-highlight-matches-around-point-max-lines 0)
+  (setq helm-window-prefer-horizontal-split t))
+
+(use-package helm-mode                ; Use helm completing everywhere
+  :diminish helm-mode
+  :after helm
+  :preface
+  (defun helm-completing-read-el-search-history (&rest _)
+    (helm
+     :sources (helm-build-sync-source "Resum El-search"
+                :candidates (let (result)
+                              (dotimes (i (ring-length el-search-history) (nreverse result))
+                                (push
+                                 (cons (el-search--get-search-description-string
+                                        (ring-ref el-search-history i)
+                                        t)
+                                       (prin1-to-string i))
+                                 result)))
+                :multiline t)
+     :buffer "*helm resum El-search*"))
+  :config
+  (add-to-list 'helm-completing-read-handlers-alist
+               '(where-is . helm-completing-read-symbols))
+  (add-to-list 'helm-completing-read-handlers-alist
+               '(org-insert-link . nil))
+  (add-to-list 'helm-completing-read-handlers-alist
+               '(el-search-jump-to-search-head . helm-completing-read-el-search-history))
+  (helm-mode))
+
+(use-package helm-command               ; helm-M-x
+  :defer t
+  :config (setq helm-M-x-always-save-history t))
+
+(use-package helm-buffers
+  :defer t
+  :config
+  (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window)
+  ;; It can be very slow by checking remote files (Tramp)
+  (setq helm-buffer-skip-remote-checking t))
+
+(use-package helm-files
+  :defer t
+  :config
+  (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
+
+  (define-key helm-find-files-map [?\M-o] #'helm-ff-run-switch-other-window)
+  (define-key helm-generic-files-map [?\M-o] #'helm-ff-run-switch-other-window))
+
+(use-package helm-grep
+  ;; Must make sure `wgrep-helm' is available first and do NOT load it
+  ;; since it is soft loaded in `helm-grep'
+  :preface
+  (use-package wgrep-helm :ensure t :defer t)
+  (defun chunyang-helm-rg (type)
+    "Search the current project with ripgrep."
+    (interactive "P")
+    (let ((default-directory
+            (or (chunyang-project-root)
+                default-directory))
+          (helm-grep-ag-command
+           "rg --color=always --smart-case --no-heading --line-number %s %s %s"))
+      (helm-do-grep-ag type)))
+  :defer t
+  :bind ("M-I" . chunyang-helm-rg)
+  :config
+  (setq helm-grep-ag-command
+        "rg --color=always --smart-case --no-heading --line-number %s %s %s")
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep)
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-grep-ag))
+
+(use-package helm-regexp
+  :defer t
+  :init (bind-key "M-i" #'helm-occur-from-isearch isearch-mode-map)
+  :config
+  (defun isearch-from-helm-occur ()
+    (interactive)
+    (helm-run-after-exit
+     (lambda (initial)
+       (isearch-forward nil t)
+       (isearch-yank-string initial))
+     helm-pattern))
+  (define-key helm-moccur-map "\C-s" #'isearch-from-helm-occur))
+
+(use-package helm-ring
+  :defer t
+  :config
+  (add-to-list 'helm-kill-ring-actions
+               '("Yank(s)" .
+                 (lambda (_candidate)
+                   (helm-kill-ring-action
+                    (mapconcat #'identity (helm-marked-candidates) "\n"))))))
+
+(use-package helm-man
+  :defer t
+  :config
+  ;; helm needs a relatively new man version, which is not provided on even
+  ;; latest OS X (10.10) and also not available on MacPorts
+  (setq helm-man-format-switches "%s"))
+
+(use-package helm-elisp                 ; Helm commands for Emacs Lisp
+  :bind ("C-c f l" . helm-locate-library))
+
+(use-package helm-ls-git
+  :ensure t
+  :defer t
+  :config
+  (setq helm-ls-git-default-sources
+        (delq 'helm-source-ls-git-status helm-ls-git-default-sources)))
+
+(use-package helm-descbinds
+  :ensure t
+  :defer t
+  :commands helm-descbinds
+  :init
+  (setq helm-descbinds-window-style 'split-window)
+  (advice-add 'describe-bindings :override #'helm-descbinds))
+
+(use-package gh
+  ;; Disable autoloads to reduce Emacs startup time, see
+  ;; https://github.com/sigma/gh.el/issues/95
+  :ensure (gh :type git :host github :repo "sigma/gh.el" :no-autoloads t)
+  :defer t)
+
+(use-package helm-open-github
+  :ensure t
+  :commands (helm-open-github-from-file ; Use the region for selecting specfic lines
+             helm-open-github-from-issues
+             helm-open-github-from-commit
+             helm-open-github-from-pull-requests))
+
+(use-package helm-zhihu-daily
+  :ensure t
+  :defer t)
 
 (use-package helm-ring
   :ensure helm
