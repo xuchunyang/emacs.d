@@ -2248,11 +2248,8 @@ PACKAGE should not be a built-in package."
   :ensure t
   :homepage https://github.com/magit/magit
   :info (info "(magit) Top")
-  :notes
-  - To launch from shell, use $ emacsclient -e '(magit-status)'
-  - Here is another tip
-  - ...
-  :bind ("C-x g" . magit-status)
+  :bind (("C-x g"   . magit-status)
+         ("C-x M-g" . magit-dispatch-popup))
   :config
   (setq magit-save-repository-buffers 'dontask)
   ;; M-x `magit-list-repositories'
