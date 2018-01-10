@@ -532,18 +532,6 @@
   :config
   (minibuffer-electric-default-mode))
 
-;; Inspired by isearch's C-w `isearch-yank-word-or-char'.
-(defun chunyang-minibuffer-yank-word ()
-  "Yank word at point in the buffer when entering minibuffer into minibuffer."
-  (interactive)
-  (require 'subr-x)
-  (with-selected-window (minibuffer-selected-window)
-    (when-let ((word (current-word)))
-      (with-selected-window (active-minibuffer-window)
-        (insert word)))))
-
-(define-key minibuffer-local-map "\C-w" #'chunyang-minibuffer-yank-word)
-
 (use-package chunyang-edit-minibuffer
   :bind (:map minibuffer-local-map ("C-c '" . chunyang-edit-minibuffer)))
 
