@@ -792,9 +792,20 @@
              chunyang-encode-thunder-link))
 
 (use-package chunyang-buffers
-  :commands lunaryorn-do-not-kill-important-buffers
+  :preface
+  (defun chunyang-dont-kill-important-buffers ()
+    "Inhibit killing of important buffers.
+
+Add this to `kill-buffer-query-functions'."
+    (pcase (buffer-name)
+      ((and bufname (or "*scratch*" "*Messages*"))
+       (message "Not allowed to kill %s, burying instead" bufname)
+       (bury-buffer))
+      (_ t)))
   :init
-  (add-hook 'kill-buffer-query-functions #'lunaryorn-do-not-kill-important-buffers))
+  (add-hook 'kill-buffer-query-functions #'chunyang-dont-kill-important-buffers)
+  :config
+  (chunyang-last-closed-file-mode))
 
 (bind-key "O"     #'delete-other-windows special-mode-map)
 (bind-key "Q"     #'kill-this-buffer     special-mode-map)

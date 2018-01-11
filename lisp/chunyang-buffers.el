@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2015, 2018  Xu Chunyang
 
-;; Author: Xu Chunyang <xuchunyang56@gmail.com>
+;; Author: Xu Chunyang <mail@xuchunyang.me>
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,23 +21,7 @@
 
 ;; Provide additional functions to manage buffers.
 
-;; Base on code from https://gihub.com/lunaryorn/.emacs.d
-
 ;;; Code:
-
-;; Don't kill the important buffers
-(defconst lunaryorn-do-not-kill-buffer-names '("*scratch*" "*Messages*")
-  "Names of buffers that should not be killed.")
-
-(defun lunaryorn-do-not-kill-important-buffers ()
-  "Inhibit killing of important buffers.
-
-Add this to `kill-buffer-query-functions'."
-  (if (not (member (buffer-name) lunaryorn-do-not-kill-buffer-names))
-      t
-    (message "Not allowed to kill %s, burying instead" (buffer-name))
-    (bury-buffer)
-    nil))
 
 
 ;;; Library
