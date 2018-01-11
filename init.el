@@ -29,16 +29,13 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'use-package)
-
 
 ;;; `use-package'
 
-(eval-when-compile
-  (require 'use-package)
+(straight-use-package 'use-package)
 
-  (setq use-package-verbose t)
-
+(use-package use-package
+  :config
   (defalias 'use-package-handler/:ensure #'use-package-handler/:straight)
   (defalias 'use-package-normalize/:ensure #'use-package-normalize/:straight)
   (add-to-list 'use-package-keywords :ensure)
@@ -55,11 +52,7 @@
   (chunyang-use-package-keywords-add :info)
   (chunyang-use-package-keywords-add :notes))
 
-(require 'bind-key)
-
-;; To support `:diminish'
-(use-package diminish
-  :ensure t)
+(use-package diminish :ensure t)
 
 
 ;;; My private packages
@@ -139,12 +132,12 @@
   :if *is-mac-port*
   :config (mac-auto-ascii-mode))
 
-(use-package exec-path-from-shell
-  :ensure t
-  :if window-system
-  :config
-  (setq exec-path-from-shell-arguments '("-l"))
-  (exec-path-from-shell-initialize))
+(when (memq window-system '(mac ns))
+  (use-package exec-path-from-shell
+    :ensure t
+    :config
+    (setq exec-path-from-shell-arguments '("-l"))
+    (exec-path-from-shell-initialize)))
 
 (use-package chunyang-mac
   :if *is-mac*
