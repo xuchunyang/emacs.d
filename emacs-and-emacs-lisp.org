@@ -440,3 +440,56 @@ Entered on [2018-01-09 Tue 21:29]
 
 #+RESULTS:
 : nil
+
+* Structure
+Entered on [2018-01-11 Thu 17:42]
+
+#+begin_src emacs-lisp
+  ;; * Define structure
+  (cl-defstruct person
+    name
+    age
+    sex)
+       => person
+
+  ;; * Make object of structure
+  (setq P (make-person :name (rot13-string user-full-name)
+                       :age 99
+                       :sex "TWFsZQ=="))
+       => #s(person "Kh Puhalnat" 99 "TWFsZQ==")
+
+  ;; * Access slots
+
+  (person-name P)
+       => "Kh Puhalnat"
+
+  (person-age P)
+       => 99
+
+  (person-sex P)
+       => "TWFsZQ=="
+
+  ;; * Change slots
+
+  (cl-callf + (person-age P) 100)
+       => 142
+
+  (person-age P)
+       => 142
+
+  (setf (person-name P) (md5 user-full-name))
+       => "670a835cea7294c07ccb015c6ec651dd"
+
+  (person-name P)
+       => "670a835cea7294c07ccb015c6ec651dd"
+
+  ;; * Type Check
+
+  (person-p P)
+       => t
+
+  ;; * Create object using printd representation
+  (let ((not-me #s(person "某某" 22 "Unknown")))
+    (person-p not-me))
+       => t
+#+end_src
