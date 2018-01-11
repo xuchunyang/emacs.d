@@ -493,3 +493,52 @@ Entered on [2018-01-11 Thu 17:42]
     (person-p not-me))
        => t
 #+end_src
+
+* Swap multiple variables at a time
+Entered on [2018-01-11 Thu 18:47]
+
+#+begin_src emacs-lisp
+  (let ((x1 +1) (x2 +2) (x3 +3)
+        (y1 -1) (y2 -2) (y3 -3))
+    (cl-psetq x1 y1
+              y1 x1
+              x2 y2
+              y2 x2
+              x3 y3
+              y3 x3)
+    (list (list x1 x2 x3) (list y1 y2 y3)))
+#+end_src
+
+#+RESULTS:
+| -1 | -2 | -3 |
+|  1 |  2 |  3 |
+
+#+BEGIN_SRC emacs-lisp
+  (let ((a 1) (b 2) (c 3)
+        (x -1) (y -2) (z -3))
+    (cl-rotatef a x)
+    (cl-rotatef b y)
+    (cl-rotatef c z)
+    (list (list a b c) (list x y z)))
+#+END_SRC
+
+#+RESULTS:
+| -1 | -2 | -3 |
+|  1 |  2 |  3 |
+
+#+begin_src emacs-lisp
+(defmacro chunyang-swap-varsf (vars-1 vars-2)
+  (cons 'cl-psetf
+        (cl-loop for x in vars-1
+                 for y in vars-2
+                 append (list x y y x))))
+
+(let ((a 1) (b 2) (c 3)
+      (x -1) (y -2) (z -3))
+  (chunyang-swap-varsf (a b c) (x y z))
+  (list (list a b c) (list x y z)))
+#+end_src
+
+#+RESULTS:
+| -1 | -2 | -3 |
+|  1 |  2 |  3 |
