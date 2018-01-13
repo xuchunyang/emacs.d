@@ -775,8 +775,7 @@
   :commands (chunyang-window-click-swap
              chunyang-cycle-filename
              chunyang-display-number-as-char
-             chunyang-count-top-level-expression
-             chunyang-swap-regions))
+             chunyang-count-top-level-expression))
 
 (use-package chunyang-misc
   :commands (chunyang-open-another-emacs
@@ -1381,11 +1380,8 @@ Intended to be added to `isearch-mode-hook'."
   :config (region-state-mode))
 
 (use-package swap-regions
-  :disabled t                       ; Make it easier to use or give up it
   :ensure t
-  :bind ("C-c C-t" . swap-regions)
-  :commands swap-regions-mode
-  :init (swap-regions-mode))
+  :bind ("C-c C-t" . swap-regions))
 
 (use-package clear-text
   :disabled t

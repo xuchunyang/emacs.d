@@ -286,55 +286,5 @@ Relative:     ../init.el
       (message "Buffer has %s expressions" count)
       count)))
 
-
-(defun chunyang-swap-regions ()
-  "Swap contents in two regions."
-  (declare (interactive-only t))
-  (interactive)
-  (let ((hint
-         (substitute-command-keys
-          "When done, type \\[exit-recursive-edit]. Use \\[abort-recursive-edit] to abort"))
-        buf-A reg-A-beg reg-A-end reg-A-str
-        buf-B reg-B-beg reg-B-end reg-B-str
-        buf-A-overlay)
-    ;; Select the first region
-    (unless (use-region-p)
-      (message "Select the first region (%s)" hint)
-      (recursive-edit))
-    (setq buf-A (current-buffer)
-          reg-A-beg (region-beginning)
-          reg-A-end (region-end)
-          reg-A-str (buffer-substring reg-A-beg reg-A-end))
-    (deactivate-mark)
-    (setq buf-A-overlay (make-overlay reg-A-beg reg-A-end))
-    (overlay-put buf-A-overlay 'face 'region)
-    ;; Select the second region
-    (message "Select the second region (%s)" hint)
-    (unwind-protect (recursive-edit)
-      (delete-overlay buf-A-overlay))
-    (setq buf-B (current-buffer)
-          reg-B-beg (region-beginning)
-          reg-B-end (region-end)
-          reg-B-str (buffer-substring reg-B-beg reg-B-end))
-    (deactivate-mark)
-    ;; Swap these two regions
-    (when (< reg-B-beg reg-A-beg)
-      (cl-psetq buf-A buf-B
-                reg-A-beg reg-B-beg
-                reg-A-end reg-B-end
-                reg-A-str reg-B-str
-                buf-B buf-A
-                reg-B-beg reg-A-beg
-                reg-B-end reg-A-end
-                reg-B-str reg-A-str))
-    (with-current-buffer buf-B
-      (delete-region reg-B-beg reg-B-end)
-      (goto-char reg-B-beg)
-      (insert reg-A-str))
-    (with-current-buffer buf-A
-      (delete-region reg-A-beg reg-A-end)
-      (goto-char reg-A-beg)
-      (insert reg-B-str))))
-
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
