@@ -2416,6 +2416,11 @@ PACKAGE should not be a built-in package."
         '(("~/.emacs.d" . 0)
           ("~/src"      . 1))))
 
+(use-package magithub
+  :ensure t
+  :after magit
+  :config (magithub-feature-autoinject t))
+
 (use-package vc
   :defer t
   :init
