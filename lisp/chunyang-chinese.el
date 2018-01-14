@@ -41,11 +41,11 @@
         (helm-build-sync-source "中文标点符号"
           :candidates
           (lambda ()
-            (loop for (k v) in chunyang-chinese-marks
-                  collect (cons (format "%-12s\t%s"
-                                        (substring (symbol-name k) 1)
-                                        v)
-                                v)))
+            (cl-loop for (k v) in chunyang-chinese-marks
+                     collect (cons (format "%-12s\t%s"
+                                           (substring (symbol-name k) 1)
+                                           v)
+                                   v)))
           :action
           (helm-make-actions
            "Insert Mark"
@@ -94,9 +94,9 @@
   (let ((str (thing-at-point 'word))
         (nth (- (point) (car (bounds-of-thing-at-point 'word)))))
     (let ((word
-           (loop for s in (mark-chinese-word--substrings str nth)
-                 when (member (car s) mark-chinese-word--words)
-                 return s)))
+           (cl-loop for s in (mark-chinese-word--substrings str nth)
+                    when (member (car s) mark-chinese-word--words)
+                    return s)))
       (if word
           (progn (set-mark (- (point) (cadr word)))
                  (goto-char (+ (point) (cddr word))))
@@ -137,19 +137,19 @@
 (defvar chinese-punctuation-mode-map
   (let ((map (make-sparse-keymap)))
     (dolist (prefix '("C-x " "C-c " "C-" "M-"))
-      (loop for (i . j) in chinese-punctuation-alist
-            for k1 = (concat prefix i)
-            for k2 = (concat prefix j)
-            do (define-key map (kbd k1)
-                 `(lambda ()
-                    (interactive)
-                    (let ((func (key-binding ,(kbd k2))))
-                      (cond ((null func)
-                             (call-interactively 'undefined))
-                            ((keymapp func)
-                             (error "I don't know how to deal with keymap (yet)"))
-                            (t
-                             (call-interactively func))))))))
+      (cl-loop for (i . j) in chinese-punctuation-alist
+               for k1 = (concat prefix i)
+               for k2 = (concat prefix j)
+               do (define-key map (kbd k1)
+                    `(lambda ()
+                       (interactive)
+                       (let ((func (key-binding ,(kbd k2))))
+                         (cond ((null func)
+                                (call-interactively 'undefined))
+                               ((keymapp func)
+                                (error "I don't know how to deal with keymap (yet)"))
+                               (t
+                                (call-interactively func))))))))
     map))
 
 (define-minor-mode chinese-punctuation-mode

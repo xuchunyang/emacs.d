@@ -255,10 +255,10 @@ picked according to the major-mode."
   "Create and return a new hash table from ALIST.
 
 KEYWORD-ARGS is same as `make-hash-table'."
-  (loop with hash-table = (apply 'make-hash-table keyword-args)
-        for (k . v) in alist
-        do (puthash k v hash-table)
-        finally return hash-table))
+  (cl-loop with hash-table = (apply 'make-hash-table keyword-args)
+           for (k . v) in alist
+           do (puthash k v hash-table)
+           finally return hash-table))
 
 ;; (chunyang-hash-table-to-alist
 ;;  (chunyang-make-hash-table-from-alist
@@ -266,21 +266,22 @@ KEYWORD-ARGS is same as `make-hash-table'."
 ;;      ⇒ (("one" . 1) ("two" . 2))
 
 (defun chunyang-plist-to-alist (plist)
-  (loop for x on plist by #'cddr
-        collect (cons (car x) (cadr x))))
+  (cl-loop for x on plist by #'cddr
+           collect (cons (car x) (cadr x))))
 
 ;; (chunyang-plist-to-alist '(:one 1 :two 2))
 ;;      ⇒ ((:one . 1) (:two . 2))
 
 (defun chunyang-alist-to-plist (alist)
-  (loop for (k . v) in alist
-        append (list k v)))
+  (cl-loop for (k . v) in alist
+           append (list k v)))
 
 ;; (chunyang-alist-to-plist '((:one . 1) (:two . 2)))
 ;;      ⇒ (:one 1 :two 2)
 
 
 ;;; Binary format in C-x C-e
+(declare-function chunyang-format-as-binary "chunyang-misc")
 
 (define-advice eval-expression-print-format (:around (old-fun value) binary)
   "Show (Binary, Octal, Hex, Char) for numbers."

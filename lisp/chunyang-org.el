@@ -77,12 +77,12 @@
     (helm :sources
           (helm-build-sync-source "(org) Easy templates"
             :candidates
-            (loop for (key template) in org-structure-template-alist
-                  for end = (or (string-match "\n" template) (length template))
-                  for disp = (replace-regexp-in-string
-                              "\n\n" " ... "
-                              (replace-regexp-in-string "\\?" "" template))
-                  collect (cons disp (list key template)))
+            (cl-loop for (key template) in org-structure-template-alist
+                     for end = (or (string-match "\n" template) (length template))
+                     for disp = (replace-regexp-in-string
+                                 "\n\n" " ... "
+                                 (replace-regexp-in-string "\\?" "" template))
+                     collect (cons disp (list key template)))
             :action `(lambda (cand)
                        (insert "<" (car cand))
                        (org-try-structure-completion)

@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(require 'eshell)
+
 (defun eshell/cat-with-syntax-highlight (filename)
   "Like cat(1) but with syntax highlighting."
   (let ((existing-buffer (get-file-buffer filename))

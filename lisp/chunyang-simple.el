@@ -99,7 +99,9 @@ With ARG, put *scratch* buffer right."
           (file (read-file-name
                  "Save to: " nil nil nil default-file)))
      (list url file)))
+  ;; Avoid byte compiler warnings
   (defvar spinner-types)
+  (declare-function spinner-start "spinner")
   (require 'spinner)
   (unless (alist-get 'download spinner-types)
     (push '(download . ["下" "载" "中"]) spinner-types))

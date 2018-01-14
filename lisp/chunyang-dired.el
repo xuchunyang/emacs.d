@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(require 'dired)
+
 (defun git-ls-files-dired (dir)
   (interactive
    (list (read-directory-name "Run git ls-files in directory: "

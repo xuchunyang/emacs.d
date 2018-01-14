@@ -4,6 +4,10 @@
 
 ;;; Code:
 
+(require 'seq)
+(require 'rx)
+(require 'cl-lib)
+
 
 ;;; Format Emacs Lisp
 
@@ -57,6 +61,7 @@
 
 
 ;;; Increase and Decrease number at point
+(require 'thingatpt)
 
 (defun chunyang-increase-number-at-point (prefix)
   "增加光标下数字以 prefix argument (默认为 1)."
@@ -99,6 +104,7 @@
 
 
 ;;; Redirect shell command output to Emacs buffer
+(require 'filenotify)
 
 (defun redirect-shell-output-setup ()
   "Redirect shell command ouput to /tmp/emacs will appear in the buffer *Shell Command Ouput*."
@@ -145,7 +151,8 @@
 
 (defun chunyang-goto-random-line ()
   (interactive)
-  (goto-line (1+ (random (line-number-at-pos (point-max))))))
+  (goto-char (point-min))
+  (forward-line (random (line-number-at-pos (point-max)))))
 
 
 ;;; Timestamps
@@ -165,24 +172,9 @@ See URL `https://github.com/JuanitoFatas/Computer-Science-Glossary'."
   (interactive)
   (let ((data-file
          "~/src/Computer-Science-Glossary/dict.textile"))
-    (assert (file-exists-p data-file))
+    (cl-assert (file-exists-p data-file))
+    (declare-function helm-do-grep-1 "helm-grep")
     (helm-do-grep-1 (list data-file))))
-
-
-;;; Change http to https in `package-archives'
-
-(defun chunyang-package-archives-use-https ()
-  (setq package-archives
-        (mapcar (lambda (archive)
-                  (cons (car archive)
-                        (replace-regexp-in-string
-                         "\\`http://"
-                         "https://"
-                         (cdr archive)))
-                  archive)
-                package-archives)))
-
-;; (chunyang-package-archives-use-https)
 
 
 ;;; 转置矩阵 - Transpose
@@ -259,6 +251,7 @@ With prefix argument, IP is prompted."
 For testing / debugging Emacs init file."
   (interactive)
   ;; XXX: Make it work under other environment ?
+  (defvar *is-mac*)
   (unless (and *is-mac* (display-graphic-p))
     (user-error "Unsupported platform or situation."))
   (let ((app (replace-regexp-in-string
@@ -374,7 +367,7 @@ For testing / debugging Emacs init file."
        link)
       (list (match-string 1 link)
             (match-string 2 link))
-    (error ("Cannot parse %s as Org link" link))))
+    (error "Cannot parse %s as Org link" link)))
 
 (defun chunyang-org-link-make (text link)
   (format "[[%s][%s]]" link text))

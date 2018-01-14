@@ -45,7 +45,7 @@
 (defvar vm-stack nil)
 
 (defun vm-eval (instruction)
-  (case instruction
+  (cl-case instruction
     (PSH (push (pop vm-program) vm-stack))
     (POP (pop vm-stack))
     (ADD (push (+ (pop vm-stack) (pop vm-stack)) vm-stack))

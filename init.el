@@ -2335,10 +2335,10 @@ PACKAGE should not be a built-in package."
            (html (if (string= node "Top")
                      ""
                    (concat (chunyang-org-info-map-anchor-url node) ".html")))
-           (baseurl (loop for (k . v) in chunyang-Info-html-alist
-                          when (cond ((stringp k) (equal file k))
-                                     ((listp k) (member file k)))
-                          return (if (stringp v) v (funcall v file)))))
+           (baseurl (cl-loop for (k . v) in chunyang-Info-html-alist
+                             when (cond ((stringp k) (equal file k))
+                                        ((listp k) (member file k)))
+                             return (if (stringp v) v (funcall v file)))))
       ;; Maybe it's a good idea to assuming GNU softwares in this case
       (cl-assert baseurl nil "Unsupported info document '%s'" file)
       (format baseurl html)))
@@ -2917,17 +2917,17 @@ your Emacs doesn't have libxml2 support"))
     (with-temp-buffer
       (insert-file-contents bookmarks-html-file)
       (setq eww-bookmarks
-            (loop with dom = (libxml-parse-html-region (point-min) (point-max))
-                  for a in (dom-by-tag dom 'a)
-                  for url = (dom-attr a 'href)
-                  for title = (dom-text a)
-                  for time = (current-time-string
-                              (seconds-to-time
-                               (string-to-number
-                                (dom-attr a 'add_date))))
-                  collect (list :url url
-                                :title title
-                                :time time)))
+            (cl-loop with dom = (libxml-parse-html-region (point-min) (point-max))
+                     for a in (dom-by-tag dom 'a)
+                     for url = (dom-attr a 'href)
+                     for title = (dom-text a)
+                     for time = (current-time-string
+                                 (seconds-to-time
+                                  (string-to-number
+                                   (dom-attr a 'add_date))))
+                     collect (list :url url
+                                   :title title
+                                   :time time)))
       (eww-write-bookmarks)))
 
   (defun chunyang-eww-import-bookmarks-from-chrome-1 (json)

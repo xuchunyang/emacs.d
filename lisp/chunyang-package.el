@@ -11,6 +11,7 @@
 ;;; Code:
 
 (require 'subr-x)                       ; `if-let' and `when-let'
+(require 'package)
 
 (defun chunyang-package-homepage (pkg)
   "Return homepage of package PKG (a symbol), or nil if none."

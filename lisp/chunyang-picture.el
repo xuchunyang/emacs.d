@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(require 'json)
+
 ;;;###autoload
 (defun chunyang-picture-bing (&optional directory filename resolution)
   "下载 Bing 首页图片.
