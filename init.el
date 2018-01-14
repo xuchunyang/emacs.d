@@ -1594,45 +1594,59 @@ Intended to be added to `isearch-mode-hook'."
 
 (use-package checkdoc
   :defer t
-  :config
-  (setq
-   checkdoc-force-docstrings-flag nil
-   ;; This is the default since Emacs-26.1
-   checkdoc-arguments-in-order-flag nil))
+  ;; use `:init' instead of `:config' is because flycheck needs them
+  ;; eagerly
+  :init
+  (setq checkdoc-force-docstrings-flag nil
+        ;; This is the default since Emacs-26.1
+        checkdoc-arguments-in-order-flag nil
+        sentence-end-double-space nil))
 
 (use-package flycheck
   :ensure t
-  :bind (("C-c t f" . global-flycheck-mode))
+  :bind ("C-c t f" . global-flycheck-mode)
   :config
+  ;; * Emacs Lisp
+  ;; I don't use `package.el' at all
+  (setq-default flycheck-emacs-lisp-initialize-packages nil)
+  ;; XXX Better idea? Such as figure just enough `load-path', such as
+  ;; via `straight.el', `magit-emacs-Q-command'
+  ;; 1) Figure out dependencies (recursively?)
+  ;; 2) Find out load-path
+  (setq-default flycheck-emacs-lisp-load-path 'inherit)
+  
+  (define-advice flycheck-may-enable-mode (:filter-return (enable-p) blacklist)
+    (and enable-p
+         ;; init.el
+         (not (eq (current-buffer) (get-file-buffer user-init-file)))
+         ;; `lisp-interaction-mode'
+         (not (eq major-mode 'lisp-interaction-mode))
+         ;; *scratch*
+         (not (string= (buffer-name) "*scratch*"))
+         ;; Emacs source code
+         (not (and (buffer-file-name)
+                   (string-prefix-p (expand-file-name source-directory)
+                                    (buffer-file-name)))))))
 
-  (setq flycheck-emacs-lisp-load-path 'inherit)
+(use-package flycheck-pos-tip       ; Show Flycheck messages in popups
+  :disabled t
+  :ensure t
+  :after flycheck
+  :config (setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
 
-  (add-hook 'emacs-lisp-mode-hook
-            (defun chunyang-flycheck-disable-checkdoc ()
-              (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))))
+(use-package flycheck-color-mode-line
+  :disabled t
+  :ensure t
+  :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-color-mode-line-mode))
 
-  (defun chunyang-flycheck-toggle-checkdoc ()
-    (interactive)
-    (setq-local flycheck-disabled-checkers
-                (if (memq 'emacs-lisp-checkdoc flycheck-disabled-checkers)
-                    (delq 'emacs-lisp-checkdoc flycheck-disabled-checkers)
-                  (cons 'emacs-lisp-checkdoc flycheck-disabled-checkers)))
-    (when flycheck-mode
-      (flycheck-mode 'toggle)
-      (flycheck-mode 'toggle)))
-
-  (use-package flycheck-pos-tip           ; Show Flycheck messages in popups
-    :disabled t
-    :ensure t
-    :config (setq flycheck-display-errors-function
-                  #'flycheck-pos-tip-error-messages))
-
-  (use-package flycheck-color-mode-line
-    :disabled t
-    :ensure t
-    :config
-    (eval-after-load "flycheck"
-      (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))))
+(use-package flycheck-package           ; Extra Emacs Lisp checker
+  :ensure t
+  :after flycheck
+  :config
+  (flycheck-package-setup)
+  ;; Cause I don't use `package.el' anymore
+  (advice-add 'package-lint--check-packages-installable :around #'ignore))
 
 
 ;;; Markup languages
@@ -3685,8 +3699,8 @@ Adapt from `org-babel-remove-result'."
 
 (use-package flycheck-irony
   :ensure t
-  :defer t
-  :init
+  :after irony
+  :config
   (eval-after-load 'flycheck
     '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
 
