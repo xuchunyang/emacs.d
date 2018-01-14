@@ -1588,6 +1588,10 @@ Intended to be added to `isearch-mode-hook'."
            "~/src/LanguageTool-*/languagetool-commandline.jar")
           #'string>))))
 
+(use-package gammy
+  :load-path "~/src/gammy.el"
+  :defer t)
+
 (use-package checkdoc
   :defer t
   :config
@@ -2413,8 +2417,9 @@ PACKAGE should not be a built-in package."
   (setq magit-save-repository-buffers 'dontask)
   ;; M-x `magit-list-repositories'
   (setq magit-repository-directories
-        '(("~/.emacs.d" . 0)
-          ("~/src"      . 1))))
+        '(("~/.emacs.d"                . 0)
+          ("~/.emacs.d/straight/repos" . 1)
+          ("~/src"                     . 1))))
 
 (use-package magithub
   :ensure t
@@ -3458,6 +3463,8 @@ Adapt from `org-babel-remove-result'."
 
   (setq org-agenda-restore-windows-after-quit t)
 
+  (add-hook 'org-agenda-mode-hook #'hl-line-mode)
+
   ;; Support link to Manpage, EWW and Notmuch
   (require 'org-man)
   (require 'org-eww)
@@ -3674,7 +3681,7 @@ Adapt from `org-babel-remove-result'."
   (use-package irony-eldoc        ; Note: this does not work very well
     :ensure t
     :defer t
-    :init (add-hook 'irony-mode-hook 'irony-eldoc)))
+    :init (add-hook 'irony-mode-hook #'irony-eldoc)))
 
 (use-package flycheck-irony
   :ensure t
