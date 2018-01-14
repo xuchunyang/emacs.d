@@ -2996,25 +2996,8 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package shr
   :defer t
   :config
-  ;; Don't use proportional fonts for text
-  (setq shr-use-fonts nil))
-
-(use-package shr-color
-  :defer t
-  :preface
-  (defun chunyang-theme-dark-p ()
-    "Return t if using Dark theme."
-    ;; FIXME: Use a proper way for this
-    (let ((theme (car custom-enabled-themes)))
-      (and theme
-           (or (string-match-p (rx (or "night" "eighties" "dark" "deep"))
-                               (symbol-name theme))
-               (string= (symbol-name theme) "wombat"))
-           t)))
-  :config
-  (when (chunyang-theme-dark-p)
-    ;; (info "(Mu4e) Displaying rich-text messages")
-    (setq shr-color-visible-luminance-min 75)))
+  (setq shr-use-fonts nil
+        shr-use-colors nil))
 
 (use-package google-this
   :disabled t
