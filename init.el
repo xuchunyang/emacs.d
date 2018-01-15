@@ -2157,6 +2157,18 @@ PACKAGE should not be a built-in package."
   :info (info "(ert) Top")
   :defer t)
 
+(use-package buttercup
+  :about "Behavior-Driven Emacs Lisp Testing, alternative to `ert'"
+  :ensure t
+  :homepage https://github.com/jorgenschaefer/emacs-buttercup/
+  :defer t)
+
+(use-package assess
+  :about "Additional support for testing Emacs Lisp"
+  :ensure t
+  :homepage https://github.com/phillord/assess
+  :defer t)
+
 (use-package testcover                  ; XXX: Try this
   :about Visual code-coverage tool
   :info (info "(elisp) Test Coverage")
