@@ -72,7 +72,8 @@
   :defer t)
 
 (use-package dash
-  :ensure t
+  ;; To install info manual
+  :ensure (dash :type git :host github :repo "magnars/dash.el")
   :defer t
   :config (dash-enable-font-lock))
 
