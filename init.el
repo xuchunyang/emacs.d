@@ -1945,26 +1945,28 @@ See also `describe-function-or-variable'."
            :files ("packages/el-search/*.el"))
   :defer t
   :preface
-  (defun chunyang-el-search-git-repo (pattern)
-    "Search all elisp files in git repo for PATTERN."
+  (defun chunyang-el-search-git-repo (directory pattern)
+    "El-search all elisp files in current Git repository."
     (interactive
-     (list (progn (require 'el-search)
-                  (el-search-read-pattern-for-interactive
-                   "Search git repo for pattern: "))))
-    (require 'magit)
-    (unless (magit-toplevel)
-      (user-error "Not a Git repository"))
-    (let ((topdir (magit-toplevel)))
-      (el-search-setup-search
-       pattern
-       (lambda ()
-         (stream
-          (seq-filter (lambda (s) (string-suffix-p ".el" s))
-                      (let ((default-directory topdir))
-                        (mapcar #'expand-file-name (magit-tracked-files))))))
-       (lambda (search)
-         (setf (alist-get 'description (el-search-object-properties search))
-               (concat "Search the git repo in " (abbreviate-file-name topdir)))))))
+     (progn
+       (require 'el-search)
+       (require 'magit)
+       (let ((root (magit-toplevel)))
+         (if root
+             (list root
+                   (el-search-read-pattern-for-interactive
+                    (format "El-search %s for pattern: " (abbreviate-file-name root))))
+           (error "Not a Git repository")))))
+    (el-search-setup-search
+     pattern
+     (lambda ()
+       (stream
+        (seq-filter (lambda (s) (string-suffix-p ".el" s))
+                    (let ((default-directory directory))
+                      (mapcar #'expand-file-name (magit-tracked-files))))))
+     (lambda (search)
+       (setf (alist-get 'description (el-search-object-properties search))
+             (concat "Search the git repo in " (abbreviate-file-name directory))))))
 
   (defun chunyang-el-search-package (pattern package)
     "Search pattern in directory of PACKAGE (a symbol) recursively.
