@@ -2202,18 +2202,13 @@ PACKAGE should not be a built-in package."
 
 ;;; Help & Info
 
-(defun chunyang-info-elisp-manual ()
-  (interactive)
-  (info "elisp"))
+(use-package find-func
+  :bind ("C-h C-k" . find-function-on-key))
 
-(defun chunyang-info-org-manual ()
-  (interactive)
-  (info "org"))
-
-(bind-key "C-h C-k" #'find-function-on-key)
-;; C-h r `info-emacs-manual'
-(bind-key "C-h E"   #'chunyang-info-elisp-manual)
-(bind-key "C-h O"   #'chunyang-info-org-manual)
+(use-package find-key-binding
+  :ensure (find-key-binding :type git :host github
+                            :repo "xuchunyang/find-key-binding.el")
+  :bind ("C-h C-b" . find-key-binding))
 
 (use-package help-mode
   :preface
