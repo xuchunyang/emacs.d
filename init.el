@@ -1945,18 +1945,35 @@ See also `describe-function-or-variable'."
            :files ("packages/el-search/*.el"))
   :defer t
   :preface
+  (defun chunyang-el-search-symbol-or-sexp-at-point ()
+    ;; Adopted from `el-search-this-sexp'
+    (when (derived-mode-p 'emacs-lisp-mode)
+      (let ((symbol-at-point-text (thing-at-point 'symbol))
+            symbol-at-point)
+        (if (and symbol-at-point-text
+                 ;; That should ideally be always true but isn't
+                 (condition-case nil
+                     (symbolp (setq symbol-at-point (read symbol-at-point-text)))
+                   (invalid-read-syntax nil)))
+            `',symbol-at-point
+          (when (thing-at-point 'sexp)
+            `',(sexp-at-point))))))
   (defun chunyang-el-search-git-repo (directory pattern)
     "El-search all elisp files in current Git repository."
     (interactive
      (progn
        (require 'el-search)
        (require 'magit)
-       (let ((root (magit-toplevel)))
-         (if root
-             (list root
+       (let* ((directory
+               (or (magit-toplevel)
+                   ;; Limited to `magit-repository-directories'
+                   (magit-read-repository)))
+              (pattern
+               (or (when (equal current-prefix-arg '(4))
+                     (chunyang-el-search-symbol-or-sexp-at-point))
                    (el-search-read-pattern-for-interactive
-                    (format "El-search %s for pattern: " (abbreviate-file-name root))))
-           (error "Not a Git repository")))))
+                    (format "El-search %s for pattern: " (abbreviate-file-name directory))))))
+         (list directory pattern))))
     (el-search-setup-search
      pattern
      (lambda ()
