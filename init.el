@@ -1605,7 +1605,8 @@ Intended to be added to `isearch-mode-hook'."
 
 (use-package flycheck
   :ensure t
-  :bind ("C-c t f" . global-flycheck-mode)
+  :bind (("C-c t f" . flycheck-mode)
+         ("C-c t F" . global-flycheck-mode))
   :config
   ;; * Emacs Lisp
   ;; I don't use `package.el' at all
