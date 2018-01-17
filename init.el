@@ -1969,11 +1969,14 @@ See also `describe-function-or-variable'."
                (or (magit-toplevel)
                    ;; Limited to `magit-repository-directories'
                    (magit-read-repository)))
-              (pattern
-               (or (when (equal current-prefix-arg '(4))
-                     (chunyang-el-search-symbol-or-sexp-at-point))
-                   (el-search-read-pattern-for-interactive
-                    (format "El-search %s for pattern: " (abbreviate-file-name directory))))))
+              (default (format "%s" (chunyang-el-search-symbol-or-sexp-at-point)))
+              (input
+               (el-search--read-pattern
+                (format
+                 "El-search %s for pattern: "
+                 (abbreviate-file-name directory))
+                default))
+              (pattern (read input)))
          (list directory pattern))))
     (el-search-setup-search
      pattern
