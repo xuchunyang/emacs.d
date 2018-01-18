@@ -1537,8 +1537,8 @@ Intended to be added to `isearch-mode-hook'."
       '(progn
          (ac-ispell-setup)))
 
-    (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
-    (add-hook 'mail-mode-hook 'ac-ispell-ac-setup)))
+    (add-hook 'git-commit-mode-hook #'ac-ispell-ac-setup)
+    (add-hook 'mail-mode-hook #'ac-ispell-ac-setup)))
 
 (use-package yasnippet
   :disabled t
@@ -1755,7 +1755,7 @@ unlike `markdown-preview'."
 
   :config
   ;; Colorize ansi escape color code
-  (add-hook 'compilation-filter-hook 'chunyang-ansi-color-compilation-buffer)
+  (add-hook 'compilation-filter-hook #'chunyang-ansi-color-compilation-buffer)
 
   ;; FIXME: This is not working on 25.1.1 from macOS
   ;; Only ask for saving files under current project
@@ -1829,8 +1829,8 @@ unlike `markdown-preview'."
   :diminish paredit-mode
   :commands paredit-mode
   :init
-  (add-hook 'lisp-mode-hook 'paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+  (add-hook 'lisp-mode-hook #'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   :config
   (unbind-key "M-r" paredit-mode-map) (bind-key "M-R" #'paredit-raise-sexp  paredit-mode-map)
   (unbind-key "M-s" paredit-mode-map) (bind-key "M-S" #'paredit-splice-sexp paredit-mode-map)
@@ -3643,7 +3643,7 @@ Adapt from `org-babel-remove-result'."
   ;; manual, let me try them for a while. BTW, 'a' and 'h' will be indicated in
   ;; the mode-line, such as C/lah.  BTW, 'l' stands for electric keys, use C-c
   ;; C-l to toggle it.
-  (add-hook 'c-mode-common-hook 'c-toggle-auto-hungry-state)
+  (add-hook 'c-mode-common-hook #'c-toggle-auto-hungry-state)
 
   (defun chunyang-c-mode-setup ()
     (when buffer-file-name
@@ -3655,7 +3655,7 @@ Adapt from `org-babel-remove-result'."
                               (shell-quote-argument fn)
                               (shell-quote-argument (file-name-sans-extension fn)))))))
     (bind-key "C-c C-c" 'recompile c-mode-map))
-  (add-hook 'c-mode-hook 'chunyang-c-mode-setup)
+  (add-hook 'c-mode-hook #'chunyang-c-mode-setup)
 
   (defun chunyang-cpp-lookup ()
     "Lookup C function/macro/etc prototype via Preprocessing."
@@ -3683,7 +3683,7 @@ Adapt from `org-babel-remove-result'."
   :ensure t
   :defer t
   :init
-  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook #'irony-mode)
 
   ;; replace the `completion-at-point' and `complete-symbol' bindings in
   ;; irony-mode's buffers by irony-mode's function
@@ -3696,8 +3696,8 @@ Adapt from `org-babel-remove-result'."
      [remap complete-symbol]
      'irony-completion-at-point-async
      irony-mode-map))
-  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (add-hook 'irony-mode-hook #'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options)
 
   :config
   (use-package company-irony
@@ -3825,7 +3825,7 @@ provides similiar function."
 (use-package ruby-mode
   :defer t
   :init
-  (add-hook 'ruby-mode-hook 'superword-mode))
+  (add-hook 'ruby-mode-hook #'superword-mode))
 
 (use-package inf-ruby
   :ensure t
@@ -3838,13 +3838,13 @@ provides similiar function."
   :ensure t
   :after ruby-mode
   :config
-  (add-hook 'ruby-mode-hook 'robe-mode))
+  (add-hook 'ruby-mode-hook #'robe-mode))
 
 (use-package ruby-tools
   :disabled t
   :ensure t
   :defer t
-  :init (add-hook 'ruby-mode-hook 'ruby-tools-mode))
+  :init (add-hook 'ruby-mode-hook #'ruby-tools-mode))
 
 
 ;;; Standard ML
@@ -3856,7 +3856,7 @@ provides similiar function."
 (use-package sml-eldoc
   :disabled t                           ; Not working
   :commands sml-eldoc-turn-on
-  :init (add-hook 'sml-mode-hook 'sml-eldoc-turn-on))
+  :init (add-hook 'sml-mode-hook #'sml-eldoc-turn-on))
 
 (use-package ob-sml
   :ensure t
@@ -3970,9 +3970,9 @@ provides similiar function."
   :ensure t
   :defer t
   :init
-  (add-hook 'js2-mode-hook 'skewer-mode)
-  (add-hook 'css-mode-hook 'skewer-css-mode)
-  (add-hook 'html-mode-hook 'skewer-html-mode))
+  (add-hook 'js2-mode-hook #'skewer-mode)
+  (add-hook 'css-mode-hook #'skewer-css-mode)
+  (add-hook 'html-mode-hook #'skewer-html-mode))
 
 (use-package css-mode
   :defer t
@@ -4124,7 +4124,7 @@ provides similiar function."
 
 (use-package time-stamp                 ; Built-in
   :defer t
-  :init (add-hook 'before-save-hook 'time-stamp))
+  :init (add-hook 'before-save-hook #'time-stamp))
 
 (use-package autoinsert
   :info (info "(autotype) Autoinserting")
