@@ -1368,8 +1368,8 @@ Intended to be added to `isearch-mode-hook'."
   :config
   :config
   (setq anzu-replace-to-string-separator " => ")
-  (bind-key "M-%" 'anzu-query-replace)
-  (bind-key "C-M-%" 'anzu-query-replace-regexp))
+  (bind-key "M-%" #'anzu-query-replace)
+  (bind-key "C-M-%" #'anzu-query-replace-regexp))
 
 (use-package plur
   :ensure t
@@ -2161,7 +2161,7 @@ PACKAGE should not be a built-in package."
     ("e" debugger-eval-expression "Eval")
     ("v" debugger-toggle-locals "Display local Variable"))
 
-  (bind-key "." 'hydra-debugger-menu/body debugger-mode-map))
+  (bind-key "." #'hydra-debugger-menu/body debugger-mode-map))
 
 ;; TODO Add (info "(elisp) Edebug")
 
@@ -2423,7 +2423,7 @@ PACKAGE should not be a built-in package."
         (kill-new org)
         (message "Copied: %s" org))))
 
-  (bind-key "C" 'chunyang-Info-copy-current-node-html Info-mode-map))
+  (bind-key "C" #'chunyang-Info-copy-current-node-html Info-mode-map))
 
 (use-package cus-edit
   :preface
@@ -3273,7 +3273,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   ;;
   ;; However, It's hard to remember and distinguish them, so just use C-c C-j to
   ;; toggle these two modes.
-  (bind-key "C-c C-j" 'term-char-mode term-mode-map))
+  (bind-key "C-c C-j" #'term-char-mode term-mode-map))
 
 (use-package shell-pop
   :ensure t
@@ -3555,7 +3555,7 @@ Adapt from `org-babel-remove-result'."
       (kill-buffer org-babel-error-buffer-name)))
 
   ;; Or use C-c C-v C-x (`org-babel-do-key-sequence-in-edit-buffer') instead
-  (bind-key "C-h S" 'chunyang-org-info-lookup-symbol org-mode-map)
+  (bind-key "C-h S" #'chunyang-org-info-lookup-symbol org-mode-map)
 
   ;; [[https://emacs-china.org/t/topic/4540][rg搜索文字并跳转后如何自动展开上下文？ - Spacemacs - Emacs China]]
   (add-hook 'next-error-hook
@@ -3654,7 +3654,7 @@ Adapt from `org-babel-remove-result'."
                       (format "cc -std=c99 -Wall -Wpedantic %s -o %s"
                               (shell-quote-argument fn)
                               (shell-quote-argument (file-name-sans-extension fn)))))))
-    (bind-key "C-c C-c" 'recompile c-mode-map))
+    (bind-key "C-c C-c" #'recompile c-mode-map))
   (add-hook 'c-mode-hook #'chunyang-c-mode-setup)
 
   (defun chunyang-cpp-lookup ()
@@ -3690,11 +3690,11 @@ Adapt from `org-babel-remove-result'."
   (defun my-irony-mode-hook ()
     (bind-key
      [remap completion-at-point]
-     'irony-completion-at-point-async
+     #'irony-completion-at-point-async
      irony-mode-map)
     (bind-key
      [remap complete-symbol]
-     'irony-completion-at-point-async
+     #'irony-completion-at-point-async
      irony-mode-map))
   (add-hook 'irony-mode-hook #'my-irony-mode-hook)
   (add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options)
