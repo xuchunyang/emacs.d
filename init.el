@@ -600,7 +600,7 @@
 (use-package helm-buffers
   :defer t
   :config
-  (define-key helm-buffer-map [?\M-o] #'helm-buffer-switch-other-window)
+  (bind-key "M-o" #'helm-buffer-switch-other-window helm-buffer-map)
   ;; It can be very slow by checking remote files (Tramp)
   (setq helm-buffer-skip-remote-checking t))
 
@@ -609,8 +609,8 @@
   :config
   (add-to-list 'helm-boring-file-regexp-list ".DS_Store")
 
-  (define-key helm-find-files-map [?\M-o] #'helm-ff-run-switch-other-window)
-  (define-key helm-generic-files-map [?\M-o] #'helm-ff-run-switch-other-window))
+  (bind-key "M-o" #'helm-ff-run-switch-other-window helm-find-files-map)
+  (bind-key "M-o" #'helm-ff-run-switch-other-window helm-generic-files-map))
 
 (use-package helm-grep
   ;; Must make sure `wgrep-helm' is available first and do NOT load it
@@ -645,7 +645,7 @@
        (isearch-forward nil t)
        (isearch-yank-string initial))
      helm-pattern))
-  (define-key helm-moccur-map "\C-s" #'isearch-from-helm-occur))
+  (bind-key "C-s" #'isearch-from-helm-occur helm-moccur-map))
 
 (use-package helm-ring
   :defer t
@@ -1074,7 +1074,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :config (electric-pair-mode))
 
 ;; I have used 'M-l' to run `helm-mini' for a long time
-(define-key global-map "\M-L" #'downcase-dwim)
+(bind-key "M-L" #'downcase-dwim global-map)
 
 ;; Configure a reasonable fill column, indicate it in the buffer and
 ;; enable automatic filling
@@ -1158,7 +1158,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
          ("M-g l" . avy-goto-line))
   :config
   (with-eval-after-load "isearch"
-    (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)))
+    (bind-key "C-'" #'avy-isearch isearch-mode-map)))
 
 (use-package pin :disabled t)
 
@@ -1374,7 +1374,7 @@ Intended to be added to `isearch-mode-hook'."
 (use-package plur
   :ensure t
   :bind ("C-c M-%" . plur-query-replace)
-  :config (define-key isearch-mode-map "\M-{" #'plur-isearch-query-replace))
+  :config (bind-key "M-{" #'plur-isearch-query-replace isearch-mode-map))
 
 (use-package region-state
   :ensure t
@@ -1502,7 +1502,7 @@ Intended to be added to `isearch-mode-hook'."
   ;; Use Company for completion C-M-i
   (bind-key [remap completion-at-point] #'company-complete company-mode-map)
   ;; M-h/c-h/F1 to display doc in help buffer, C-w to show location
-  (define-key company-active-map "\M-h" #'company-show-doc-buffer)
+  (bind-key "M-h" #'company-show-doc-buffer company-active-map)
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 2
         ;; Easy navigation to candidates with M-<n>
@@ -1572,7 +1572,7 @@ Intended to be added to `isearch-mode-hook'."
   (use-package flyspell-popup
     :ensure t
     :config
-    (define-key flyspell-mode-map [?\C-.] #'flyspell-popup-correct)
+    (bind-key "C-." #'flyspell-popup-correct flyspell-mode-map)
     (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
 
 
@@ -2042,9 +2042,9 @@ PACKAGE should not be a built-in package."
     "Match any string (excluding doc string) that is matched by all REGEXPS"
     `(and (string ,@regexps) (guard (not (el-search--doc-string-p)))))
 
-  (define-key el-search-read-expression-map (kbd "C-S-s") #'exit-minibuffer)
-  (define-key el-search-read-expression-map (kbd "C-S-r") #'exit-minibuffer)
-  (define-key el-search-read-expression-map (kbd "C-S-o") #'el-search-set-occur-flag-exit-minibuffer)
+  (bind-key "C-S-s" #'exit-minibuffer el-search-read-expression-map)
+  (bind-key "C-S-r" #'exit-minibuffer el-search-read-expression-map)
+  (bind-key "C-S-o" #'el-search-set-occur-flag-exit-minibuffer el-search-read-expression-map)
 
   :init
   (defvar emacs-lisp-mode-map)
@@ -2052,32 +2052,30 @@ PACKAGE should not be a built-in package."
   (with-eval-after-load 'elisp-mode
     ;; Because`lisp-interaction-mode-map' doesn't inherit `emacs-lisp-mode-map'
     (dolist (map (list emacs-lisp-mode-map lisp-interaction-mode-map))
-      (define-key map (kbd "C-S-s") #'el-search-pattern)
-      (define-key map (kbd "C-S-r") #'el-search-pattern-backwards)
-      (define-key map (kbd "C-%") #'el-search-query-replace)
-      (define-key map (kbd "C-S-h") #'el-search-this-sexp)))
+      (bind-key "C-S-s" #'el-search-pattern map)
+      (bind-key "C-S-r" #'el-search-pattern-backwards map)
+      (bind-key "C-%" #'el-search-query-replace map)
+      (bind-key "C-S-h" #'el-search-this-sexp map)))
 
-  (define-key global-map (kbd "C-S-j") #'el-search-jump-to-search-head)
-  (define-key global-map (kbd "C-S-a") #'el-search-from-beginning)
-  (define-key global-map (kbd "C-S-d") #'el-search-skip-directory)
-  (define-key global-map (kbd "C-S-n") #'el-search-continue-in-next-buffer)
-  (define-key global-map (kbd "C-S-o") #'el-search-occur)
+  (bind-key "C-S-j" #'el-search-jump-to-search-head global-map)
+  (bind-key "C-S-a" #'el-search-from-beginning global-map)
+  (bind-key "C-S-d" #'el-search-skip-directory global-map)
+  (bind-key "C-S-n" #'el-search-continue-in-next-buffer global-map)
+  (bind-key "C-S-o" #'el-search-occur global-map)
   
-  (define-key isearch-mode-map (kbd "C-S-s") #'el-search-search-from-isearch)
-  (define-key isearch-mode-map (kbd "C-S-r") #'el-search-search-backwards-from-isearch)
-  (define-key isearch-mode-map (kbd "C-%") #'el-search-replace-from-isearch)
-  (define-key isearch-mode-map (kbd "C-S-o") #'el-search-occur-from-isearch)
+  (bind-key "C-S-s" #'el-search-search-from-isearch isearch-mode-map)
+  (bind-key "C-S-r" #'el-search-search-backwards-from-isearch isearch-mode-map)
+  (bind-key "C-%" #'el-search-replace-from-isearch isearch-mode-map)
+  (bind-key "C-S-o" #'el-search-occur-from-isearch isearch-mode-map)
 
-  (define-key global-map (kbd "C-S-e") #'el-search-emacs-elisp-sources)
-  (define-key global-map (kbd "C-S-l") #'el-search-load-path)
-  (define-key global-map (kbd "C-S-b") #'el-search-buffers)
+  (bind-key "C-S-e" #'el-search-emacs-elisp-sources global-map)
+  (bind-key "C-S-l" #'el-search-load-path global-map)
+  (bind-key "C-S-b" #'el-search-buffers global-map)
 
   (defvar dired-mode-map)
 
   (with-eval-after-load 'dired
-    (define-key dired-mode-map
-      (kbd "C-S-s")
-      #'el-search-dired-marked-files)))
+    (bind-key "C-S-s" #'el-search-dired-marked-files dired-mode-map)))
 
 (use-package lispy
   :ensure t
@@ -2163,7 +2161,7 @@ PACKAGE should not be a built-in package."
     ("e" debugger-eval-expression "Eval")
     ("v" debugger-toggle-locals "Display local Variable"))
 
-  (define-key debugger-mode-map "." 'hydra-debugger-menu/body))
+  (bind-key "." 'hydra-debugger-menu/body debugger-mode-map))
 
 ;; TODO Add (info "(elisp) Edebug")
 
@@ -2669,7 +2667,7 @@ PACKAGE should not be a built-in package."
 
   (defun chunyang-server-cleanup ()
     (when (eq (key-binding [?\C-c ?\C-c]) 'server-edit)
-      (define-key (current-local-map) [?\C-c ?\C-c] nil)))
+      (bind-key "C-c C-c" nil (current-local-map))))
 
   (add-hook 'server-switch-hook #'chunyang-server-setup)
   (add-hook 'server-done-hook #'chunyang-server-cleanup)
@@ -3268,14 +3266,14 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   (setq term-buffer-maximum-size 10240)
 
   ;; Respect my own M-x
-  (define-key term-raw-escape-map [?\M-x] (lookup-key global-map [?\M-x]))
+  (bind-key "M-x" (lookup-key global-map [?\M-x]) term-raw-escape-map)
 
   ;; C-c C-j   term-line-mode
   ;; C-c C-k   term-char-mode
   ;;
   ;; However, It's hard to remember and distinguish them, so just use C-c C-j to
   ;; toggle these two modes.
-  (define-key term-mode-map [?\C-c ?\C-j] 'term-char-mode))
+  (bind-key "C-c C-j" 'term-char-mode term-mode-map))
 
 (use-package shell-pop
   :ensure t
@@ -3656,7 +3654,7 @@ Adapt from `org-babel-remove-result'."
                       (format "cc -std=c99 -Wall -Wpedantic %s -o %s"
                               (shell-quote-argument fn)
                               (shell-quote-argument (file-name-sans-extension fn)))))))
-    (define-key c-mode-map "\C-c\C-c" 'recompile))
+    (bind-key "C-c C-c" 'recompile c-mode-map))
   (add-hook 'c-mode-hook 'chunyang-c-mode-setup)
 
   (defun chunyang-cpp-lookup ()
@@ -3690,10 +3688,14 @@ Adapt from `org-babel-remove-result'."
   ;; replace the `completion-at-point' and `complete-symbol' bindings in
   ;; irony-mode's buffers by irony-mode's function
   (defun my-irony-mode-hook ()
-    (define-key irony-mode-map [remap completion-at-point]
-      'irony-completion-at-point-async)
-    (define-key irony-mode-map [remap complete-symbol]
-      'irony-completion-at-point-async))
+    (bind-key
+     [remap completion-at-point]
+     'irony-completion-at-point-async
+     irony-mode-map)
+    (bind-key
+     [remap complete-symbol]
+     'irony-completion-at-point-async
+     irony-mode-map))
   (add-hook 'irony-mode-hook 'my-irony-mode-hook)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
@@ -3808,8 +3810,8 @@ provides similiar function."
             (insert (format " => %s" value)))))))
   :config
   (setq inferior-lisp-program "sbcl")
-  (define-key sly-mode-map "\C-j" #'chunyang-sly-eval-print-last-sexp)
-  (define-key sly-mode-map "\C-j" #'chunyang-sly-eval-print-last-sexp-in-comment))
+  (bind-key "C-j" #'chunyang-sly-eval-print-last-sexp sly-mode-map)
+  (bind-key "C-j" #'chunyang-sly-eval-print-last-sexp-in-comment sly-mode-map))
 
 (use-package sly-mrepl
   :no-require t                      ; Silence byte-compiling warnning
