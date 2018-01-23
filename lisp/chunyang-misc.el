@@ -378,5 +378,22 @@ For testing / debugging Emacs init file."
 (defun chunyang-org-link->markdown-link (org)
   (apply #'chunyang-markdown-link-make (chunyang-org-link-parse org)))
 
+
+(defun chunyang-straight-emacs-Q-command (package)
+  (interactive
+   (list
+    (straight--select-package "Package" nil 'installed)))
+  (let ((cmd (mapconcat
+              #'shell-quote-argument
+              `(,(concat invocation-directory invocation-name)
+                "-Q" "--eval" "(setq debug-on-error t)"
+                "--load" "~/.emacs.d/straight/repos/straight.el/bootstrap.el"
+                "--eval" ,(format "(straight-use-package '%s)" package))
+              " ")))
+    (message
+     "Uncustomized %s command saved to kill-ring, please run it in a terminal"
+     package)
+    (kill-new cmd)))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here

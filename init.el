@@ -789,7 +789,9 @@
              chunyang-qrencode
              ;; 迅雷
              chunyang-decode-thunder-link
-             chunyang-encode-thunder-link))
+             chunyang-encode-thunder-link
+             ;; Emacs -Q with straight.el
+             chunyang-straight-emacs-Q-command))
 
 (use-package chunyang-buffers
   :preface
