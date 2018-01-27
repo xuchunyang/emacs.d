@@ -396,9 +396,8 @@
   (add-to-list 'zoneinfo-style-world-list '("Asia/Shanghai" "Shanghai")))
 
 
-;; Prefer the old fashion (< Emacs 25) `quote' in *Help* & *Messages*
-;; WARNNING: This is not a user option
-;; (setq text-quoting-style 'grave)
+;; Don't translate quote in `message' and `format-message'
+(setq text-quoting-style 'grave)
 
 ;;; Emacs session persistence
 (use-package desktop                    ; frame/window/buffer and global vars
