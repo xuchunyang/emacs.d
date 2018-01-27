@@ -162,7 +162,7 @@ With ARG, put *scratch* buffer right."
   (interactive)
   (switch-to-buffer "*scratch*"))
 
-(defun scratch-clear ()
+(defun chunyang-scratch-clear ()
   "Clear *scratch* buffer."
   (interactive)
   (with-current-buffer "*scratch*"
@@ -171,6 +171,13 @@ With ARG, put *scratch* buffer right."
                (eval (car (get 'initial-scratch-message 'standard-value)))))
           (erase-buffer)
           (insert (substitute-command-keys standard-value))))))
+
+(defun chunyang-clear-messages-buffer ()
+  "Delete the contents of the *Messages* buffer."
+  (interactive)
+  (with-current-buffer "*Messages*"
+    (let ((inhibit-read-only t))
+      (erase-buffer))))
 
 
 (defun chunyang-display-number-as-char (&optional undo)

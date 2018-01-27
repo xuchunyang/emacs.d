@@ -771,7 +771,9 @@
          ("C-x 2" . chunyang-split-window-below)
          ("C-h t" . chunyang-switch-scratch)
          :map lisp-interaction-mode-map
-         ("C-c C-l" . scratch-clear))
+         ("C-c C-l" . chunyang-scratch-clear)
+         :map messages-buffer-mode-map
+         ("C-c C-l" . chunyang-clear-messages-buffer))
   :commands (chunyang-window-click-swap
              chunyang-cycle-filename
              chunyang-display-number-as-char
@@ -2218,12 +2220,6 @@ PACKAGE should not be a built-in package."
     "View the `*Help*' buffer."
     (interactive)
     (pop-to-buffer (help-buffer)))
-  (defun chunyang-clear-messages-buffer ()
-    "Delete the contents of the *Messages* buffer."
-    (interactive)
-    (with-current-buffer "*Messages*"
-      (let ((inhibit-read-only t))
-        (erase-buffer))))
   (defun help-info-lookup-symbol ()
     (interactive)
     (when-let ((symbol (cadr help-xref-stack-item)))
