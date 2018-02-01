@@ -40,3 +40,6 @@ lisp/chunyang-fun.el
 
 # Straight
 /straight/
+
+# el-get
+/el-get/
