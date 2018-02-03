@@ -2134,7 +2134,10 @@ PACKAGE should not be a built-in package."
   :ensure t :defer t)
 
 (use-package debbugs                    ; Interface to GNU Bugs
-  :ensure t
+  :ensure (debbugs
+           :type git
+           :repo "https://git.savannah.gnu.org/git/emacs/elpa.git"
+           :files ("packages/debbugs/*"))
   :defer t
   :preface
   ;; TODO: Fontify #1234 (make it clickable) in certain modes
