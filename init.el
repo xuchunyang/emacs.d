@@ -4362,6 +4362,10 @@ provides similiar function."
   (add-hook 'c++-mode-hook #'lsp-cquery-enable)
   (add-hook 'objc-mode-hook #'lsp-cquery-enable))
 
+(use-package transmission
+  :ensure t
+  :defer t)
+
 
 ;;; Other Emacs Lisp libraries
 
