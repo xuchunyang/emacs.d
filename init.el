@@ -475,8 +475,7 @@
 
 ;;; Minibuffer
 
-(defconst chunyang-completing-read-style
-  (if *is-gnu-linux* 'ivy 'helm))
+(defconst chunyang-completing-read-style 'helm)
 
 ;; Give useful pormpt during M-! (`shell-command') etc
 (use-package prompt-watcher
@@ -1289,8 +1288,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (use-package page-break-lines           ; Turn page breaks into lines
   :ensure t
-  ;; XXX Doesn't look nice on GTK+ Emacs
-  :if (not *is-gnu-linux*)
   :diminish page-break-lines-mode
   :defer t
   :preface
@@ -3280,6 +3277,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :commands shell-pop)
 
 (use-package pcmpl-git
+  :disabled t
   :after pcomplete
   :load-path "~/src/pcmpl-git-el")
 
@@ -4053,6 +4051,7 @@ provides similiar function."
 ;;; Dao http://daoscript.org/
 
 (use-package ob-dao
+  :disabled t
   :after org
   :load-path "~/src/ob-dao")
 
