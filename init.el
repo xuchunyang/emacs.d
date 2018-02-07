@@ -2997,10 +2997,10 @@ your Emacs doesn't have libxml2 support"))
 Note that this will OVERRIDE the existing EWW bookmarks."
     (interactive)
     (let ((bookmark-file
-           (car (cl-delete-if-not
-                 'file-exists-p
-                 `("~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"
-                   "~/.config/chromium/Default/Bookmarks")))))
+           (cl-find-if
+            #'file-exists-p
+            `("~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"
+              "~/.config/chromium/Default/Bookmarks"))))
       (require 'json)
       (chunyang-eww-import-bookmarks-from-chrome-1
        (json-read-file bookmark-file)))
