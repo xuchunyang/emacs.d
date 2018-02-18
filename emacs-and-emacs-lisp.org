@@ -542,3 +542,39 @@ Entered on [2018-01-11 Thu 18:47]
 #+RESULTS:
 | -1 | -2 | -3 |
 |  1 |  2 |  3 |
+
+* ~thread-first~ and ~thread-last~
+Entered on [2018-02-18 Sun 15:44]
+
+
+For example, get parent directory
+
+#+begin_src emacs-lisp
+(file-name-nondirectory
+ (directory-file-name
+  (file-name-directory
+   "~/.emacs.d/init.el")))
+#+end_src
+
+#+RESULTS:
+: .emacs.d
+
+#+begin_src emacs-lisp
+(thread-first "~/.emacs.d/init.el"
+  file-name-directory
+  directory-file-name
+  file-name-nondirectory)
+#+end_src
+
+#+RESULTS:
+: .emacs.d
+
+#+begin_src emacs-lisp
+(thread-last "~/.emacs.d/init.el"
+  file-name-directory
+  directory-file-name
+  file-name-nondirectory)
+#+end_src
+
+#+RESULTS:
+: .emacs.d
