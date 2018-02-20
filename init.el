@@ -774,7 +774,7 @@
          :map messages-buffer-mode-map
          ("C-c C-l" . chunyang-clear-messages-buffer))
   :commands (chunyang-window-click-swap
-             chunyang-cycle-filename
+             chunyang-cycle-filename-format
              chunyang-display-number-as-char
              chunyang-count-top-level-expression))
 

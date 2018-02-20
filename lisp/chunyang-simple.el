@@ -218,7 +218,7 @@ read."
 
 (declare-function helm-ffap-guesser "helm-files" ())
 
-(defun chunyang-cycle-filename ()
+(defun chunyang-cycle-filename-format ()
   "Cycle filename at point between absolute, abbreviated and relative path.
 
 Absolute:     /Users/xcy/.emacs.d/init.el
