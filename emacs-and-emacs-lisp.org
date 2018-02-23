@@ -594,3 +594,19 @@ Entered on [2018-02-21 Wed 02:20]
 
 #+RESULTS:
 : 321
+
+* ~read-answer~ :27.1:
+Entered on [2018-02-23 Fri 18:27]
+
+#+begin_src emacs-lisp
+(read-answer
+ "Are you sure? "
+ '(("yes"  ?y "perform the action")
+   ("no"   ?n "skip to the next")
+   ("all"  ?! "accept all remaining without more questions")
+   ("help" ?h "show help")
+   ("quit" ?q "exit")))
+#+end_src
+
+#+RESULTS:
+: yes
