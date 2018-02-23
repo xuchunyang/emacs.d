@@ -543,7 +543,7 @@ Entered on [2018-01-11 Thu 18:47]
 | -1 | -2 | -3 |
 |  1 |  2 |  3 |
 
-* ~thread-first~ and ~thread-last~
+* ~thread-first~ and ~thread-last~ :25.1:
 Entered on [2018-02-18 Sun 15:44]
 
 
@@ -578,3 +578,19 @@ For example, get parent directory
 
 #+RESULTS:
 : .emacs.d
+
+* ~thunk-let~ and ~thunk-let~ :27.1:
+Entered on [2018-02-21 Wed 02:20]
+
+#+begin_src emacs-lisp :lexical t
+(with-temp-buffer
+  (thunk-let ((a (insert "1"))
+              (b (insert "2")))
+    (insert "3")
+    b
+    a)
+  (buffer-string))
+#+end_src
+
+#+RESULTS:
+: 321
