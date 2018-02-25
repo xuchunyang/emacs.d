@@ -2887,6 +2887,14 @@ This should be add to `find-file-hook'."
 (use-package sx
   :ensure t :defer t)
 
+(use-package twittering-mode
+  :ensure t
+  :defer t
+  :config
+  (setq twittering-proxy-use t
+        twittering-proxy-server "127.0.0.1"
+        twittering-proxy-port 1087))
+
 (use-package eww
   :defer t
   :preface
