@@ -2096,7 +2096,8 @@ PACKAGE should not be a built-in package."
              chunyang-format-help-on-key
              chunyang-eval-print-last-sexp
              chunyang-macroexpand-print-last-sexp
-             chunyang-display-mark-and-pos-mode)
+             chunyang-display-mark-and-pos-mode
+             chunyang-toggle-setq-form)
   :init
   (with-eval-after-load 'elisp-mode
     (bind-keys :map emacs-lisp-mode-map

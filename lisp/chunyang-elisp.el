@@ -292,6 +292,46 @@ KEYWORD-ARGS is same as `make-hash-table'."
          (format "(%s, #o" (chunyang-format-as-binary value))
          rtv))))
 
+
+;;; Group & split setq
+
+(defun chunyang-split-one-setq-form (beg end)
+  (interactive "r")
+  (goto-char beg)
+  (let ((expr
+         (save-excursion
+           (read (current-buffer)))))
+    (delete-region beg end)
+    (insert
+     (mapconcat
+      ;; or try `pp-to-string'
+      #'prin1-to-string
+      (mapcar
+       (lambda (elt)
+         (cons 'setq elt))
+       (seq-partition (cdr expr) 2))
+      "\n"))))
+
+(defun chunyang-group-multi-setq-forms (beg end)
+  (interactive "r")
+  (goto-char beg)
+  (let (exprs)
+    (save-excursion
+      (while (< (point) end)
+        (push (read (current-buffer)) exprs)))
+    (setq exprs (nreverse exprs))
+    (delete-region beg end)
+    (insert (prin1-to-string (cons 'setq (seq-mapcat #'cdr exprs))))))
+
+(defun chunyang-toggle-setq-form (beg end)
+  (interactive "r")
+  (goto-char beg)
+  (let ((expr (save-excursion
+                (read (current-buffer)))))
+    (if (> (length expr) 3)
+        (chunyang-split-one-setq-form beg end)
+      (chunyang-group-multi-setq-forms beg end))))
+
 (provide 'chunyang-elisp)
 
 ;;; chunyang-elisp.el ends here
