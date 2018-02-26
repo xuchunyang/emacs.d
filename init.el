@@ -3990,11 +3990,22 @@ provides similiar function."
 
 ;;; Clojure
 
-(use-package cider
-  :disabled t
+(use-package clojure-mode
   :ensure t
   :defer t
-  :notes "Type 'M-x cider-jack-in' to start")
+  :config (add-hook 'clojure-mode #'paredit-mode))
+
+(use-package cider
+  :homepage
+  https://github.com/clojure-emacs/cider
+  https://cider.readthedocs.io/en/latest
+  :ensure t
+  :defer t
+  :config
+  (setq cider-repl-display-in-current-window t)
+  (setq cider-repl-scroll-on-output nil)
+
+  (add-hook 'cider-repl-mode-hook #'paredit-mode))
 
 
 ;;; Python
