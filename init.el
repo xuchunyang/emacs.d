@@ -1541,10 +1541,16 @@ Intended to be added to `isearch-mode-hook'."
     (add-hook 'mail-mode-hook #'ac-ispell-ac-setup)))
 
 (use-package yasnippet
-  :disabled t
+  :homepage http://joaotavora.github.io/yasnippet/
   :ensure t
   :diminish yas-minor-mode
-  :config (yas-global-mode))
+  :init
+  (setq yas-alias-to-yas/prefix-p nil)
+  (add-hook 'org-mode-hook #'yas-minor-mode))
+
+(use-package yasnippet-snippets
+  :ensure t
+  :defer t)
 
 
 ;;; Spelling and syntax checking
