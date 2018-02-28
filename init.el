@@ -3526,6 +3526,7 @@ Adapt from `org-babel-remove-result'."
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((awk        . t)
+     (clojure    . t)
      (C          . t)
      (ditaa      . t)
      (emacs-lisp . t)
@@ -3993,7 +3994,7 @@ provides similiar function."
 (use-package clojure-mode
   :ensure t
   :defer t
-  :config (add-hook 'clojure-mode #'paredit-mode))
+  :config (add-hook 'clojure-mode-hook #'paredit-mode))
 
 (use-package cider
   :homepage
@@ -4001,11 +4002,21 @@ provides similiar function."
   https://cider.readthedocs.io/en/latest
   :ensure t
   :defer t
+  :init
+  ;; Defaults to `slime' if `cider' is not already in `load-path'
+  (setq org-babel-clojure-backend 'cider)
   :config
+  (add-hook 'cider-repl-mode-hook #'paredit-mode)
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+
+  (bind-key "C-h ." #'cider-doc cider-mode-map)
+  (bind-key "C-h ." #'cider-doc cider-repl-mode-map)
+
+  (setq cider-repl-display-help-banner nil)
   (setq cider-repl-display-in-current-window t)
   (setq cider-repl-scroll-on-output nil)
 
-  (add-hook 'cider-repl-mode-hook #'paredit-mode))
+  (setq cider-prompt-for-symbol nil))
 
 
 ;;; Python
