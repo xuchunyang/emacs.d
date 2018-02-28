@@ -4022,7 +4022,15 @@ provides similiar function."
   (setq cider-repl-display-in-current-window t)
   (setq cider-repl-scroll-on-output nil)
 
-  (setq cider-prompt-for-symbol nil))
+  (setq cider-prompt-for-symbol nil)
+
+  (define-advice cider-eldoc-format-function (:around (old-fun thing pos eldoc-info) docstring)
+    "Show docstring for function as well."
+    (concat
+     (funcall old-fun thing pos eldoc-info)
+     (when-let* ((doc (lax-plist-get eldoc-info "docstring"))
+                 (doc-one-line (substring doc 0 (string-match "\n" doc))))
+       (concat "  |  " (propertize doc-one-line 'face 'italic))))))
 
 
 ;;; Python
