@@ -791,7 +791,8 @@
              chunyang-decode-thunder-link
              chunyang-encode-thunder-link
              ;; Emacs -Q with straight.el
-             chunyang-straight-emacs-Q-command))
+             chunyang-straight-emacs-Q-command
+             chunyang-straight-git-version))
 
 (use-package chunyang-buffers
   :preface

@@ -395,5 +395,20 @@ For testing / debugging Emacs init file."
      package)
     (kill-new cmd)))
 
+;; Inspired by `magit-version'
+(defun chunyang-straight-git-version (package)
+  (interactive
+   (list
+    (straight--select-package "Package" nil 'installed)))
+  (let ((recipe (gethash package straight--recipe-cache))
+        version)
+    (straight--with-plist recipe
+        (local-repo type)
+      (when (and (eq type 'git) local-repo)
+        (let ((default-directory (straight--repos-dir local-repo)))
+          (setq version (magit-git-string "describe" "--tags" "--dirty"))
+          (message "%s" version)
+          version)))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
