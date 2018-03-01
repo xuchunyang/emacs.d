@@ -3549,6 +3549,11 @@ Adapt from `org-babel-remove-result'."
      (scheme     . t)
      (shell      . t)))
 
+  ;; Work-around for
+  ;; http://lists.gnu.org/archive/html/emacs-orgmode/2018-03/msg00013.html
+  (define-advice org-babel-expand-body:clojure (:filter-return (body) do)
+    (format "(do %s)" body))
+  
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
 
