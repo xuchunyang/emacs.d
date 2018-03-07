@@ -1681,10 +1681,7 @@ Intended to be added to `isearch-mode-hook'."
   (setq markdown-fontify-code-blocks-natively t)
   ;; Use M-x `markdown-edit-code-block' to edit code in another buffer
 
-  (setq markdown-command
-        "pandoc -s -f markdown -t html --no-highlight \
-                -A ~/.emacs.d/misc/include-code-prettify.html | \
-         code-prettify")
+  (setq markdown-command "pandoc -s -f markdown -t html")
 
   ;; Live Preview in Chrome
   (defun chunyang-markdown-preview-in-chrome ()
