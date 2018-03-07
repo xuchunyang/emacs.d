@@ -1703,6 +1703,11 @@ unlike `markdown-preview'."
         (add-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :append :local)
       (remove-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :local))))
 
+(use-package edit-indirect
+  :about "Edit Markdown code block like Org"
+  :ensure t
+  :defer t)
+
 (use-package bbcode-mode
   :homepage https://en.wikipedia.org/wiki/BBCode
   :about Lightweight Markup Language used by phpBB forumss
