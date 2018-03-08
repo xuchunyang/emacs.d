@@ -2213,6 +2213,10 @@ PACKAGE should not be a built-in package."
   :ensure t
   :defer t)
 
+(use-package helpful
+  :ensure t
+  :defer t)
+
 
 ;;; Help & Info
 
