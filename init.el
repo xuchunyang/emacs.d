@@ -2476,6 +2476,7 @@ PACKAGE should not be a built-in package."
           ("~/src"                     . 1))))
 
 (use-package magithub
+  :disabled
   :ensure t
   :after magit
   :config (magithub-feature-autoinject t))
