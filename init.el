@@ -2584,6 +2584,14 @@ PACKAGE should not be a built-in package."
 
 ;;; Tools and utilities
 
+(use-package speeddating
+  :about "Increasing and decreasing dates & time"
+  :homepage https://github.com/xuchunyang/emacs-speeddating
+  :ensure (speeddating :type git
+                       :host github
+                       :repo "xuchunyang/emacs-speeddating")
+  :defer t)
+
 (use-package woman
   :defer t
   :config (setq woman-fill-frame t))
