@@ -410,5 +410,23 @@ For testing / debugging Emacs init file."
           (message "%s" version)
           version)))))
 
+
+;; https://github.com/melpa/melpa/pull/5008    melpa/melpa: Pull Request #5008
+;; https://github.com/melpa/melpa/issues/5368  melpa/melpa: Issue #5368
+;;
+;; - Discourse Onebox
+;; - The Open Graph protocol <http://ogp.me/>
+(defun chunyang-url-humanize (url)
+  (let ((user (rx (group (1+ (in alnum)))))
+        (repo (rx (group (1+ (in alnum)))))
+        (id   (rx (group (1+ (in digit))))))
+    (cond
+     ((string-match (format "https://github.com/%s/%s/pull/%s" user repo id) url)
+      (format "%s/%s: Pull Request #%s" (match-string 1 url) (match-string 2 url) (match-string 3 url)))
+     ((string-match (format "https://github.com/%s/%s/issues/%s" user repo id) url)
+      (format "%s/%s: Issue #%s" (match-string 1 url) (match-string 2 url) (match-string 3 url)))
+     ;; TODO: Parse <title> & Open Graph protocol ?
+     (t (user-error "Unsupported URL")))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
