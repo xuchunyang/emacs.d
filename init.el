@@ -1666,6 +1666,18 @@ Intended to be added to `isearch-mode-hook'."
   :ensure t
   :defer t
   :preface
+  (defun chunyang-markdown-link (url)
+    (interactive (list (read-string "URL: " (thing-at-point 'url))))
+    (let (title markdown)
+      (with-current-buffer (url-retrieve-synchronously url)
+        (set-buffer-multibyte t)
+        (let ((dom (libxml-parse-html-region url-http-end-of-headers (point-max))))
+          (require 'dom)
+          (setq title (dom-text (car (dom-by-tag dom 'title))))))
+      (setq markdown (format "[%s](%s)" title url))
+      (kill-new markdown)
+      (message "Copied: %s" markdown)
+      markdown))
   (defun chunyang-markdown-insert-link (title link)
     (interactive
      (let ((title (read-string "Title: "))
