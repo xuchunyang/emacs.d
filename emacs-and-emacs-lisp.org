@@ -610,3 +610,26 @@ Entered on [2018-02-23 Fri 18:27]
 
 #+RESULTS:
 : yes
+
+* ~make-symbol~ vs ~intern~
+Entered on [2018-03-21 Wed 15:41]
+
+#+begin_src elisp
+(assq (make-symbol "one") '((one . 1)))
+     => nil
+
+(assq (intern "one") '((one . 1)))
+     => (one . 1)
+
+(let ((alist (list (cons (make-symbol "one") 1))))
+  (list (assq 'one alist)
+        (assq (make-symbol "one") alist)
+        (assq (intern "one") alist)))
+     => (nil nil nil)
+
+(eq (intern "foo") (intern "foo"))
+     => t
+
+(eq (make-symbol "foo") (make-symbol "foo"))
+     => nil
+#+end_src
