@@ -427,6 +427,21 @@ For testing / debugging Emacs init file."
       (format "%s/%s: Issue #%s" (match-string 1 url) (match-string 2 url) (match-string 3 url)))
      ;; TODO: Parse <title> & Open Graph protocol ?
      (t (user-error "Unsupported URL")))))
+
+;; https://emacs-china.org/t/topic/5334
+(defun chunyang-eval-in-other-emacs (emacs form)
+  (interactive
+   (list (read-shell-command "Emacs: ")
+         (read--expression "Eval: ")))
+  (require 'async)
+  (require 'pp)
+  (let* ((fullpath (executable-find emacs))
+         (invocation-directory (file-name-directory fullpath))
+         (invocation-name (file-name-nondirectory fullpath))
+         (result (async-get (async-start (lambda () (eval form))))))
+    (when (called-interactively-p 'any)
+      (pp-display-expression result "*Pp Eval Output*"))
+    result))
 
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here

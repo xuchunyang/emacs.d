@@ -790,6 +790,8 @@
              ;; 迅雷
              chunyang-decode-thunder-link
              chunyang-encode-thunder-link
+             ;; Eval
+             chunyang-eval-in-other-emacs
              ;; Emacs -Q with straight.el
              chunyang-straight-emacs-Q-command
              chunyang-straight-git-version))
