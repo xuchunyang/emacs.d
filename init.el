@@ -1733,6 +1733,15 @@ unlike `markdown-preview'."
   :ensure t
   :commands mediawiki-mode)
 
+(use-package deft
+  :homepage https://jblevins.org/projects/deft
+  :disabled
+  :about "quickly browse, filter, and edit plain text notes"
+  :ensure t
+  :commands deft
+  :config (setq deft-directory "~/Dropbox/notes"
+                deft-extensions '("md" "org")))
+
 
 ;;; Programming utilities
 
