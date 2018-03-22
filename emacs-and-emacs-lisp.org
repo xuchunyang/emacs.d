@@ -633,3 +633,15 @@ Entered on [2018-03-21 Wed 15:41]
 (eq (make-symbol "foo") (make-symbol "foo"))
      => nil
 #+end_src
+
+* 获得一个 Emacs Package 的主页
+Entered on [2018-03-22 Thu 15:00]
+
+#+begin_src elisp
+(oref (epkg "magit") homepage)
+#+end_src
+
+#+RESULTS:
+: https://github.com/magit/magit
+
+[[info:epkg#Using%20Epkg%20Objects][info:epkg#Using Epkg Objects]]
