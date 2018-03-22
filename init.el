@@ -3533,26 +3533,17 @@ Adapt from `org-babel-remove-result'."
   ;; Fix TAB when point is on src block
   (setq org-src-tab-acts-natively t)
 
-  (setq org-agenda-files '("~/org/todo.org"))
+  (setq org-directory "~/Notes"
+        org-agenda-files '("~/Notes"))
   (setq org-capture-templates
-        '(("t" "Todo [inbox]" entry
-           (file+headline "~/org/todo.org" "Inbox")
-           "* TODO %i%?")
-          ("l" "Link (Google Chrome)" entry
-           (file "~/org/links.org")
-           "* %?%(grab-mac-link 'chrome 'org)\n%U")
+        '(("t" "Todo" entry
+           (file "todo.org")
+           "* TODO %?")
           ("e" "Journal on Emacs and Emacs Lisp" entry
            (file "~/.emacs.d/emacs-and-emacs-lisp.org")
            "* %?\nEntered on %U\n"
            :empty-lines-before 1
            :jump-to-captured t)))
-  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)"
-                                      "|"
-                                      "DONE(d)" "CANCELLED(c)")))
-  (setq org-agenda-custom-commands
-        '(("n" "Agenda and all TODOs" ((agenda "") (alltodo "")))
-          ("i" "Inbox" tags-todo "LEVEL=2+CATEGORY=\"inbox\"")
-          ("p" "Project" tags-todo "LEVEL=2+CATEGORY=\"project\"")))
 
   (setq org-agenda-restore-windows-after-quit t)
 
