@@ -443,5 +443,18 @@ For testing / debugging Emacs init file."
       (pp-display-expression result "*Pp Eval Output*"))
     result))
 
+
+;; https://emacs-china.org/t/topic/4629/8
+(defmacro chunyang-string-interpolation (string)
+  (let (format-string forms)
+    (setq format-string
+          (replace-regexp-in-string
+           "#{\\(.+\\)}"
+           (lambda (substring)
+             (push (read (match-string 1 substring)) forms)
+             "%s")
+           string))
+    `(format ,format-string ,@forms)))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
