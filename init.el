@@ -2297,6 +2297,7 @@ PACKAGE should not be a built-in package."
          ("f" . help-go-forward)
          ("i" . help-info-lookup-symbol))
   :config
+  (temp-buffer-resize-mode)
   (advice-add 'describe-function :after #'describe-function@advice-remove-button)
   ;; The following is not needed since it calls `describe-function' (I guess)
   ;; (advice-add 'describe-symbol   :after #'describe-function@advice-remove-button)
