@@ -2242,7 +2242,7 @@ PACKAGE should not be a built-in package."
                             :repo "xuchunyang/find-key-binding.el")
   :bind ("C-h C-b" . find-key-binding))
 
-(use-package help-mode
+(use-package help
   :preface
   (defun view-help-buffer ()
     "View the `*Help*' buffer."
@@ -2689,7 +2689,7 @@ PACKAGE should not be a built-in package."
 (use-package server
   :defer 3
   :config
-  (unless (server-running-p) (server-start))
+  (unless (server-running-p) (server-mode))
 
   (defun open-emacs-window ()
     (select-frame-set-input-focus (selected-frame)))
