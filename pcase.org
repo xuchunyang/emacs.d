@@ -180,3 +180,31 @@ List, vector, string are all sequences.
 
 #+RESULTS:
 | 1 | 2 | 3 |
+
+** pcase-let
+
+#+begin_src elisp
+  (pcase-let ((`(,_ ,two ,_ ,four) '(1 2 3 4)))
+    (list two four))
+#+end_src
+
+#+RESULTS:
+| 2 | 4 |
+
+#+begin_src elisp
+  (pcase-let ((`(,first . ,rest)
+               (number-sequence 1 100)))
+    (list first (apply #'+ rest)))
+#+end_src
+
+#+RESULTS:
+| 1 | 5049 |
+
+#+begin_src elisp
+(pcase-let ((`(,a (,b (,c)))
+             '(1 (2 (3)))))
+  (list a b c))
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 |
