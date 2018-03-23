@@ -429,19 +429,22 @@ For testing / debugging Emacs init file."
      (t (user-error "Unsupported URL")))))
 
 ;; https://emacs-china.org/t/topic/5334
+(require 'async)
+(require 'pp)
+
 (defun chunyang-eval-in-other-emacs (emacs form)
   (interactive
    (list (read-shell-command "Emacs: ")
          (read--expression "Eval: ")))
-  (require 'async)
-  (require 'pp)
-  (let* ((fullpath (executable-find emacs))
-         (invocation-directory (file-name-directory fullpath))
-         (invocation-name (file-name-nondirectory fullpath))
-         (result (async-get (async-start (lambda () (eval form))))))
-    (when (called-interactively-p 'any)
-      (pp-display-expression result "*Pp Eval Output*"))
-    result))
+  (let ((fullpath (executable-find emacs)))
+    (unless fullpath
+      (user-error "Command not found: %s" emacs))
+    (let* ((invocation-directory (file-name-directory fullpath))
+           (invocation-name (file-name-nondirectory fullpath))
+           (result (async-get (async-start (lambda () (eval form))))))
+      (when (called-interactively-p 'any)
+        (pp-display-expression result "*Pp Eval Output*"))
+      result)))
 
 
 ;; https://emacs-china.org/t/topic/4629/8
