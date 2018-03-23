@@ -645,3 +645,49 @@ Entered on [2018-03-22 Thu 15:00]
 : https://github.com/magit/magit
 
 [[info:epkg#Using%20Epkg%20Objects][info:epkg#Using Epkg Objects]]
+
+* Reuse interactive form
+Entered on [2018-03-23 Fri 13:04]
+
+获得
+
+#+begin_src elisp
+(interactive-form 'find-file)
+#+end_src
+
+#+RESULTS:
+| interactive | (byte-code \300\301\302 "\207 [find-file-read-args Find file:  confirm-nonexistent-file-or-buffer] 3) |
+
+重用
+
+#+begin_src elisp
+(eval (cadr (interactive-form 'find-file)))
+#+end_src
+
+在某些特殊情况下，指的是没经过 byte-compile 和用 list 构造，甚至能选择重用哪一部分
+
+#+begin_src elisp
+(defun foo (string number)
+  (interactive (list (read-string "String: ")
+                     (read-number "Number: "))))
+#+end_src
+
+#+begin_src elisp :results value pp
+(interactive-form 'foo)
+#+end_src
+
+#+RESULTS:
+: (interactive
+:  (list
+:   (read-string "String: ")
+:   (read-number "Number: ")))
+
+#+begin_src elisp :results value pp
+(pcase-let ((`(interactive (list ,string ,number))
+             (interactive-form 'foo)))
+  (list string number))
+#+end_src
+
+#+RESULTS:
+: ((read-string "String: ")
+:  (read-number "Number: "))
