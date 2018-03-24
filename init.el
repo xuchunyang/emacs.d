@@ -821,7 +821,13 @@ Add this to `kill-buffer-query-functions'."
   :bind ("C-x C-b" . ibuffer)           ; was `list-buffers'
   :config
   ;; Since I used to M-o
-  (unbind-key "M-o" ibuffer-mode-map))
+  (unbind-key "M-o" ibuffer-mode-map)
+  ;; Ignore helm buffers
+  (setq ibuffer-never-show-predicates
+        (list
+         (lambda (buf)
+           (with-current-buffer buf
+             (eq 'helm-major-mode major-mode))))))
 
 (use-package ace-window
   :ensure t
