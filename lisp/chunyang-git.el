@@ -27,7 +27,7 @@
 (require 'magit)
 (require 'hierarchy)
 
-v
+
 ;;; Git Tree
 
 ;; [[https://emacs-china.org/t/topic/4627][以树状图展示 Git 项目 - Emacs-general - Emacs China]]
