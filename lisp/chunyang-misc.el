@@ -406,8 +406,9 @@ For testing / debugging Emacs init file."
         (local-repo type)
       (when (and (eq type 'git) local-repo)
         (let ((default-directory (straight--repos-dir local-repo)))
-          (setq version (magit-git-string "describe" "--tags" "--dirty"))
-          (message "%s" version)
+          (setq version (or (magit-git-string "describe" "--tags" "--dirty")
+                            (magit-rev-parse "--short" "HEAD")))
+          (message "%s %s" (upcase-initials package) version)
           version)))))
 
 
