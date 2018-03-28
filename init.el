@@ -3655,12 +3655,8 @@ Adapt from `org-babel-remove-result'."
 (use-package grab-mac-link
   :if *is-mac*
   :ensure t
-  :commands grab-mac-link
-  :init
-  (defun chunyang-grab-mac-link-from-chrome-as-org ()
-    "Insert link & title of the current tab of Chrome as an Org link."
-    (interactive "*")
-    (insert (grab-mac-link 'chrome 'org))))
+  :commands (grab-mac-link grab-mac-link-dwim)
+  :config (setq grab-mac-link-dwim-favourite-app 'chrome))
 
 (use-package htmlize                    ; Enable src block syntax
                                         ; highlightting during
