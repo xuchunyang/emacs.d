@@ -2731,6 +2731,20 @@ PACKAGE should not be a built-in package."
   :ensure t
   :defer t)
 
+(use-package gitignore-templates
+  :ensure (gitignore-templates
+           :type git
+           :host github
+           :repo "xuchunyang/gitignore-templates.el")
+  :defer t)
+
+(use-package github-stars
+  :ensure (github-stars
+           :type git
+           :host github
+           :repo "xuchunyang/github-stars.el")
+  :defer t)
+
 (use-package chunyang-github
   :ensure ghub                          ; Dependency
   :commands (helm-chunyang-github-stars
