@@ -152,7 +152,8 @@
              helm-chunyang-mac-tags
              chunyang-chrome-refresh
              chunyang-chrome-url
-             chunyang-mac-app-running-p))
+             chunyang-mac-app-running-p
+             chunyang-mac-switch-to-app))
 
 
 ;;; GNU/Linux

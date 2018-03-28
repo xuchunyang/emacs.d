@@ -207,6 +207,19 @@ to tell the active tab of its first window to reload"))
                    "end if")
            app)))
 
+;; https://emacs-china.org/t/topic/5393
+(defun chunyang-mac-switch-to-app (app)
+  (interactive
+   (let (apps)
+     (with-temp-buffer
+       (call-process "osascript" nil t nil "-e"
+                     (concat
+                      "tell application \"Finder\"\n"
+                      "  get the name of every process whose visible is true\n"
+                      "end tell"))
+       (setq apps (split-string (buffer-string) "[,\n]" t " ")))
+     (list (completing-read "Switch to Application: " apps))))
+  (do-applescript (format "tell application \"%s\" to activate" app)))
 
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
