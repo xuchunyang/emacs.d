@@ -1693,8 +1693,28 @@ Intended to be added to `isearch-mode-hook'."
            (link  (read-string "Link: ")))
        (list title link)))
     (insert (format "[%s](%s)" title link)))
+
+  ;; Inspired by a reddit post
+  ;; https://www.reddit.com/r/emacs/comments/86c6x3/wrap_a_region_in_if_region_is_active_insert/
+  (defun chunyang-wrap-region (chars)
+    (and (memq last-command-event chars)
+         (use-region-p)
+         (let ((beg (region-beginning))
+               (end (region-end)))
+           (when (cond ((= (point) end) (goto-char beg))
+                       ((= (point) beg) (goto-char end)))
+             (insert last-command-event)
+             (goto-char (1+ end))))))
+
+  (defun chunyang-wrap-region-markdown ()
+    (chunyang-wrap-region '(?` ?_ ?~)))
+
+  (defun chunyang-markdown-mode-setup ()
+    (add-hook 'post-self-insert-hook #'chunyang-wrap-region-markdown 'append 'local))
   ;; :mode ("README\\.md\\'" . gfm-mode)
   :config
+  (add-hook 'markdown-mode-hook #'chunyang-markdown-mode-setup)
+  
   ;; `emacs-lisp', `elisp' and `el' are all Emacs Lisp
   (cl-pushnew '("el" . emacs-lisp-mode) markdown-code-lang-modes)
   (cl-pushnew '("emacs-lisp" . emacs-lisp-mode) markdown-code-lang-modes)
@@ -3538,7 +3558,15 @@ Adapt from `org-babel-remove-result'."
             (pulse-momentary-highlight-region
              (1+ (match-end 0))
              (progn (forward-line 1) (org-babel-result-end))))))))
+
+  (defun chunyang-wrap-region-org ()
+    (chunyang-wrap-region '(?~ ?= ?_ ?*)))
+
+  (defun chunyang-org-mode-setup ()
+    (add-hook 'post-self-insert-hook #'chunyang-wrap-region-org 'append 'local))
   :init
+  (add-hook 'org-mode-hook #'chunyang-org-mode-setup)
+
   ;; Prefer Org mode from git if available
   (add-to-list 'load-path "~/src/org-mode/lisp")
   (add-to-list 'load-path "~/src/org-mode/contrib/lisp")
