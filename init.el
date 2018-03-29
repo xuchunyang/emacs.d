@@ -2247,6 +2247,13 @@ PACKAGE should not be a built-in package."
   :ensure t
   :defer t)
 
+(use-package other-emacs-eval
+  :ensure (other-emacs-eval
+           :type git
+           :host github
+           :repo "xuchunyang/other-emacs-eval")
+  :defer t)
+
 
 ;;; Help & Info
 
