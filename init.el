@@ -2643,6 +2643,13 @@ PACKAGE should not be a built-in package."
 
 ;;; Tools and utilities
 
+(use-package repeater
+  :about "C-n C-n C-n ... End of the buffer"
+  :ensure (repeater :type git
+                    :host github
+                    :repo "xuchunyang/repeater")
+  :config (repeater-mode))
+
 (use-package speeddating
   :about "Increasing and decreasing dates & time"
   :homepage https://github.com/xuchunyang/emacs-speeddating
