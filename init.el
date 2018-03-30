@@ -569,27 +569,11 @@
 (use-package helm-mode                ; Use helm completing everywhere
   :diminish helm-mode
   :after helm
-  :preface
-  (defun helm-completing-read-el-search-history (&rest _)
-    (helm
-     :sources (helm-build-sync-source "Resum El-search"
-                :candidates (let (result)
-                              (dotimes (i (ring-length el-search-history) (nreverse result))
-                                (push
-                                 (cons (el-search--get-search-description-string
-                                        (ring-ref el-search-history i)
-                                        t)
-                                       (prin1-to-string i))
-                                 result)))
-                :multiline t)
-     :buffer "*helm resum El-search*"))
   :config
   (add-to-list 'helm-completing-read-handlers-alist
                '(where-is . helm-completing-read-symbols))
   (add-to-list 'helm-completing-read-handlers-alist
                '(org-insert-link . nil))
-  (add-to-list 'helm-completing-read-handlers-alist
-               '(el-search-jump-to-search-head . helm-completing-read-el-search-history))
   (helm-mode))
 
 (use-package helm-command               ; helm-M-x
