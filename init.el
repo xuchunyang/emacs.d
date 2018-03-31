@@ -3575,7 +3575,7 @@ Adapt from `org-babel-remove-result'."
   ;; Don't indent text under headings
   (setq org-adapt-indentation nil)
   ;; Keep indentation in src block on export
-  (setq org-src-preserve-indentation t)
+  ;; (setq org-src-preserve-indentation t)
   ;; Fix TAB when point is on src block
   (setq org-src-tab-acts-natively t)
 
