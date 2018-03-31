@@ -25,6 +25,11 @@
 ;;; Code:
 
 
+
+(defvar chunyang-eval-print-last-sexp-prefix (car '(";; => "
+                                                    "     => "
+                                                    "     ⇒ ")))
+
 (defun chunyang-eval-print-last-sexp (&optional eval-last-sexp-arg-internal)
   "Adapted from `eval-print-last-sexp'."
   (interactive "P")
@@ -38,8 +43,7 @@
                  (error (setq error-descriptor err))))
            (prompt (if error-descriptor
                        "error-> "       ; error→
-                     "     => "         ; ⇒
-                     )))
+                     chunyang-eval-print-last-sexp-prefix)))
       (if (not error-descriptor)
           (progn (goto-char p0)
                  (princ prompt)
@@ -70,7 +74,7 @@
   (let ((standard-output (current-buffer)))
     (terpri)
     (let ((res (macroexpand (elisp--preceding-sexp))))
-      (princ "     ≡ ")
+      (princ "     ↦ ")
       (princ res)
       (unless (chunyang-current-line-empty-p) (terpri)))))
 
