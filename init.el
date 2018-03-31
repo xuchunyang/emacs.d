@@ -2509,6 +2509,7 @@ PACKAGE should not be a built-in package."
   :bind (("C-x g"   . magit-status)
          ("C-x M-g" . magit-dispatch-popup))
   :config
+  (setq magit-diff-refine-hunk t)
   (setq magit-save-repository-buffers 'dontask)
   ;; M-x `magit-list-repositories'
   (setq magit-repository-directories
