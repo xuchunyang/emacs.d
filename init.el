@@ -1600,8 +1600,7 @@ Intended to be added to `isearch-mode-hook'."
   :init
   (setq checkdoc-force-docstrings-flag nil
         ;; This is the default since Emacs-26.1
-        checkdoc-arguments-in-order-flag nil
-        sentence-end-double-space nil))
+        checkdoc-arguments-in-order-flag nil))
 
 (use-package flycheck
   :ensure t
