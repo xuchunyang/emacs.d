@@ -4117,11 +4117,39 @@ provides similiar function."
 (use-package python
   :defer t
   :preface
-  (defun chunyang-python-mode-setup ())
+  (defun chunyang-python-mode-setup ()
+    (setq indent-tabs-mode nil)
+    (setq fill-column 79))
   :config
-  (add-hook 'python-mode-hook #'chunyang-python-mode-setup)
-  (setq python-shell-interpreter "python3")
-  (setq python-indent-guess-indent-offset-verbose nil))
+  ;; https://docs.python.org/3/tutorial/controlflow.html#intermezzo-coding-style
+  ;; * 缩进
+  (setq python-indent-offset 4
+        python-indent-guess-indent-offset nil))
+
+(use-package elpy
+  :disabled
+  :ensure t
+  :config (elpy-enable))
+
+(use-package pipenv
+  :disabled
+  :ensure t
+  :defer t
+  :hook (python-mode . pipenv-mode))
+
+(use-package anaconda-mode
+  :ensure t
+  :defer t
+  :hook ((python-mode . anaconda-mode)
+         (python-mode . anaconda-eldoc-mode)))
+
+(use-package company-anaconda
+  :ensure t
+  :after company
+  :config
+  (add-to-list 'company-backends 'company-anaconda)
+  ;; (add-to-list 'company-backends '(company-anaconda :with company-capf))
+  )
 
 ;; Related projects:
 ;;   - https://github.com/Wilfred/python-info
