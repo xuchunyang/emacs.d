@@ -299,6 +299,7 @@
   (menu-bar-mode -1))
 
 (when (and *is-mac* (version<= "26" emacs-version))
+  (setq ns-use-proxy-icon nil)  
   (setq initial-frame-alist
         '(
           ;; macOS Dark theme when using an Emacs theme with a dark
