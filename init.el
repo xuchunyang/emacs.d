@@ -62,12 +62,6 @@
 
 ;;; Require helper libraries
 
-(use-package subr-x                     ; 24.4
-  :defer t
-  :config
-  (put 'if-let   'byte-obsolete-info nil)
-  (put 'when-let 'byte-obsolete-info nil))
-
 (use-package seq                        ; 25.1
   :defer t)
 
@@ -3608,6 +3602,10 @@ Adapt from `org-babel-remove-result'."
     ;; Requires SLY or SLIME, and the latter is used by default
     (setq org-babel-lisp-eval-fn 'sly-eval))
 
+  (use-package ob-ipython
+    :ensure t
+    :defer t)
+  
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((awk        . t)
@@ -3622,6 +3620,7 @@ Adapt from `org-babel-remove-result'."
      (org        . t)
      (perl       . t)
      (python     . t)
+     (ipython    . t)
      (R          . t)
      (ruby       . t)
      (scheme     . t)
@@ -3702,6 +3701,7 @@ Adapt from `org-babel-remove-result'."
   (defun chunyang-orglink-turn-on-maybe ()
     (unless (minibufferp)
       (orglink-mode)))
+  :defer t
   :init (add-hook 'prog-mode-hook #'chunyang-orglink-turn-on-maybe)
   :config (setq orglink-mode-lighter nil))
 
@@ -4125,7 +4125,9 @@ provides similiar function."
   ;; https://docs.python.org/3/tutorial/controlflow.html#intermezzo-coding-style
   ;; * 缩进
   (setq python-indent-offset 4
-        python-indent-guess-indent-offset nil))
+        python-indent-guess-indent-offset nil)
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "--simple-prompt -i"))
 
 (use-package elpy
   :disabled
@@ -4139,12 +4141,14 @@ provides similiar function."
   :hook (python-mode . pipenv-mode))
 
 (use-package anaconda-mode
+  :disabled
   :ensure t
   :defer t
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
 
 (use-package company-anaconda
+  :disabled
   :ensure t
   :after company
   :config
