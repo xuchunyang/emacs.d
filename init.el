@@ -742,8 +742,8 @@
   :config (setq uniquify-buffer-name-style 'forward))
 
 (use-package autorevert         ; Auto-revert buffers of changed files
-  :defer t
-  :diminish auto-revert-mode)
+  :diminish auto-revert-mode
+  :config (global-auto-revert-mode))
 
 (use-package chunyang-simple
   :bind (("C-x 3" . chunyang-split-window-right)
