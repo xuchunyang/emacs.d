@@ -4519,6 +4519,12 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package csv-mode
+  :about "Major mode for csv files"
+  :ensure t
+  :defer t
+  :hook (csv-mode . hl-line-mode))
+
 
 ;;; Other Emacs Lisp libraries
 
