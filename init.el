@@ -1202,7 +1202,9 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (use-package undo-tree                  ; Branching undo
   :ensure t
   :diminish undo-tree-mode
-  :config (global-undo-tree-mode))
+  :config
+  (setq undo-tree-visualizer-timestamps t)
+  (global-undo-tree-mode))
 
 (use-package nlinum                   ; Line numbers in display margin
   :ensure t
