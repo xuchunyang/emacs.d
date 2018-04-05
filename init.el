@@ -177,6 +177,8 @@
 
 ;;; Font
 
+(set-face-attribute 'default nil :font "Source Code Pro-13")
+
 
 ;; Theme
 
