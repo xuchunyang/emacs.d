@@ -221,5 +221,24 @@ to tell the active tab of its first window to reload"))
      (list (completing-read "Switch to Application: " apps))))
   (do-applescript (format "tell application \"%s\" to activate" app)))
 
+;; https://emacs.stackexchange.com/questions/40829/cannot-open-new-chrome-tab-by-browse-url-chrome-newtab
+;; chrome://about/
+(defun chunyang-browse-url-mac-chrome (url &optional _new-window)
+  "Browse URL in Chrome.
+
+Chrome protocol URL such as chrome://newtab is supported,
+unlike `browse-url-default-macosx-browser'."
+  (interactive (browse-url-interactive-arg "URL: "))
+  (do-applescript
+   (mapconcat
+    #'identity
+    ;; https://apple.stackexchange.com/a/271709/132365
+    `("set myLink to \"" ,url "\""
+      "tell application \"Google Chrome\""
+      "    activate"
+      "    tell front window to make new tab at after (get active tab) with properties {URL:myLink}"
+      "end tell")
+    "\n")))
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
