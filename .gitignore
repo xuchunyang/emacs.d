@@ -42,3 +42,6 @@ lisp/chunyang-fun.el
 
 # el-get
 /el-get/
+
+# Private
+/xcy.el

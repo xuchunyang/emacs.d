@@ -102,8 +102,8 @@
   ;; This is not a real package so don't load it
   :defer t)
 
-;; Load personal information
-(load "~/.private.el" :no-error)
+;; Load personal secrets
+(load (expand-file-name user-login-name user-emacs-directory) 'no-error)
 
 ;; Make ~/.emacs.d clean
 (use-package no-littering
