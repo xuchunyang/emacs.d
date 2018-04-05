@@ -4565,6 +4565,18 @@ provides similiar function."
   :about "Browse the Emacsmirror package database"
   :info (info "(epkg) Top")
   :notes M-x epkg-describe-package is very impressive
+  :preface
+  (autoload 'epkg-read-package "epkg")
+  (defun chunyang-use-package (package)
+    (interactive
+     (list
+      (epkg-read-package
+       "Insert use-pacakge form for package: ")))
+    (pp
+     `(use-package ,(intern package)
+        :homepage ,(oref (epkg package) homepage)
+        :summary ,(oref (epkg package) summary))
+     (current-buffer)))
   :ensure t
   :defer t)
 
