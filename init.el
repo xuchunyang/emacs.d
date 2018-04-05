@@ -1883,10 +1883,15 @@ unlike `markdown-preview'."
     :ensure t
     :commands menubar-paredit))
 
-(use-package adjust-parens              ; TODO: Try it!!!
+(use-package adjust-parens              ; TODO: Try this?
   :disabled t
   :ensure t
   :config (add-hook 'emacs-lisp-mode-hook #'adjust-parens-mode))
+
+(use-package smartparens                ; TODO: Try this?
+  :homepage https://github.com/Fuco1/smartparens
+  :ensure t
+  :defer t)
 
 
 ;;; Emacs Lisp
