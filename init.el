@@ -167,24 +167,17 @@
 
 (fset 'yes-or-no-p #'y-or-n-p)
 
-;; Mode line
+(setq echo-keystrokes 0.6)              ; 默认 1 秒，更快地显示未完成地按键
 
+;; Mode line
 (column-number-mode)
 (size-indication-mode)
 
-(setq echo-keystrokes 0.6)              ; 默认 1 秒，更快地显示未完成地按键
 
-
-;;; Font
-
+;; Font
 (set-face-attribute 'default nil :font "Source Code Pro-13")
 
-
 ;; Theme
-
-;; I change theme periodically so I don't want hard-code it here,
-;; instead, I use the Custom via 'M-x customize-themes'.
-
 (use-package spacemacs-theme
   :ensure t
   :no-require t                      ; Silence byte-compiling warnings
@@ -202,9 +195,11 @@
   :no-require t
   :defer t)
 
-
 ;; Don't translate quote in `message' and `format-message'
 (setq text-quoting-style 'grave)
+
+
+;;; Histroy
 
 (setq history-length 100)
 (setq history-delete-duplicates t)
@@ -681,10 +676,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   (setq undo-tree-visualizer-timestamps t)
   (global-undo-tree-mode))
 
-(use-package nlinum                   ; Line numbers in display margin
-  :ensure t
-  :bind (("C-c t l" . nlinum-mode)))
-
 
 ;;; Whitespace - Highlight and Manage Whitespaces
 
@@ -983,28 +974,6 @@ Intended to be added to `isearch-mode-hook'."
         (concat " " ann)
       ann)))
 
-(use-package auto-complete
-  :disabled t
-  :ensure t
-  :config
-  (ac-config-default)
-  (setq ac-auto-show-menu 0.3
-        ;; ac-delay 0.1
-        ac-quick-help-delay 0.5)
-  (use-package ac-ispell
-    :ensure t
-    :config
-    ;; Completion words longer than 4 characters
-    (setq ac-ispell-requires 4
-          ac-ispell-fuzzy-limit 2)
-
-    (eval-after-load "auto-complete"
-      '(progn
-         (ac-ispell-setup)))
-
-    (add-hook 'git-commit-mode-hook #'ac-ispell-ac-setup)
-    (add-hook 'mail-mode-hook #'ac-ispell-ac-setup)))
-
 (use-package yasnippet
   :homepage http://joaotavora.github.io/yasnippet/
   :ensure t
@@ -1062,9 +1031,6 @@ Intended to be added to `isearch-mode-hook'."
            "~/src/LanguageTool-*/languagetool-commandline.jar")
           #'string>))))
 
-(use-package gammy
-  :load-path "~/src/gammy.el"
-  :defer t)
 
 (use-package checkdoc
   :defer t
@@ -1289,31 +1255,6 @@ unlike `markdown-preview'."
   ;; TODO: I have some font issue, so disalbe it for now
   ;; :init (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
   ;; :init (global-prettify-symbols-mode)
-  )
-
-(use-package bug-reference              ; buttonize bug references like issue #5
-  :disabled t                           ; XXX Disable to reduce init time
-  ;; Set `bug-reference-url-format' and `bug-reference-bug-regexp' per
-  ;; buffer/file/project.
-  ;;
-  ;; Example setting:
-  ;; bug-reference-url-format: "https://github.com/xuchunyang/emacs.d/issues/%s"
-  ;; bug-reference-bug-regexp: "\\(issue #\\)\\([0-9]+\\)"
-  ;;
-  ;; Notes that that github issue url works for pull request as well,
-  ;; since github redirects /issues/123 to /pull/123 if that is a pull
-  ;; request.
-  ;;
-  ;; To use, run `bug-reference-prog-mode' or `bug-reference-mode' via
-  ;; M-x or Local Variable or Hook like the following:
-  ;;
-  ;; (add-hook 'prog-mode-hook #'bug-reference-prog-mode)
-  ;; (add-hook 'magit-log-mode #'bug-reference-mode)
-  ;;
-  ;; Loading at start-up to make sure Emacs knows
-  ;; `bug-reference-url-format' and `bug-reference-bug-regexp' are
-  ;; *safe* local variable
-  ;; :defer t
   )
 
 (use-package nocomments-mode            ; Hide Comments
@@ -3963,8 +3904,8 @@ provides similiar function."
   :defer t)
 
 (use-package hierarchy
-  :about "Library to create and display hierarchy structures"
   :homepage https://github.com/DamienCassou/hierarchy
+  :about "Library to create and display hierarchy structures"
   :ensure t
   :defer t)
 
@@ -3973,9 +3914,14 @@ provides similiar function."
   :ensure t
   :defer t)
 
-(use-package chart :defer t)
+(use-package chart                      ; Built-in
+  :defer t
+  :defer t)
 
-(use-package bui :disabled t)
+(use-package bui
+  :homepage https://github.com/alezost/bui.el
+  :ensure t
+  :defer t)
 
 
 ;;; Custom
