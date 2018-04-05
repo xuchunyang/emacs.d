@@ -10,15 +10,20 @@
 
 ;;; Startup
 
+;; Debug
+(setq message-log-max 10000)
+
+;; Don't load outdated elc
 (setq load-prefer-newer t)
+
+;; Custom
 (setq custom-file "~/.emacs.d/custom.el")
 
 
 ;;; Package Manager
 
-(setq straight-repository-branch "develop")
-
-(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+(let ((straight-repository-branch "develop")
+      (bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
       (bootstrap-version 3))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -37,6 +42,7 @@
 (use-package use-package
   :config
   (setq use-package-verbose t)
+
   (defalias 'use-package-handler/:ensure #'use-package-handler/:straight)
   (defalias 'use-package-normalize/:ensure #'use-package-normalize/:straight)
   (add-to-list 'use-package-keywords :ensure)
@@ -56,20 +62,20 @@
 (use-package diminish :ensure t)
 
 
-;;; My private packages
+;;; Extra `load-path'
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 
 ;;; Require helper libraries
 
-(use-package seq                        ; 25.1
-  :defer t)
+(require 'subr-x)
+(require 'seq)
+(require 'rx)
 
 (use-package dash
   ;; To install info manual
   :ensure (dash :type git :host github :repo "magnars/dash.el")
-  :defer t
   :config (dash-enable-font-lock))
 
 
@@ -151,215 +157,25 @@
              chunyang-mac-switch-to-app))
 
 
-;;; GNU/Linux
-
-(defconst *is-gnu-linux* (eq system-type 'gnu/linux))
-
-(use-package chunyang-linux
-  :if *is-gnu-linux*
-  :commands chunyang-linux-gnome-terminal-cd
-  :bind (("<S-insert>" . insert-x11-primary-selection)))
-
-(when *is-gnu-linux*
-  (use-package grab-x-link
-    :ensure t
-    :defer t))
-
-;; XXX: Drag & Drop not working
-(use-package exwm
-  :disabled t
-  :homepage https://github.com/ch11ng/exwm/wiki
-  :ensure t
-  :if *is-gnu-linux*
-  :defer t
-  :init (autoload #'exwm-enable "exwm")
-  :config
-  (defun chunyang-exwm-M-x (command)
-    "Launch application via shell COMMAND."
-    ;; XXX: Better Completion?
-    (interactive (list (read-shell-command "EXWM M-x: ")))
-    (start-process-shell-command command nil command))
-
-  (defun xfce4-terminal ()
-    "My termainl emulator."
-    (interactive)
-    (chunyang-exwm-M-x "xfce4-terminal"))
-
-  (defun chromium ()
-    "My web browser."
-    (interactive)
-    (chunyang-exwm-M-x "chromium --proxy-server=localhost:1087"))
-
-  (defun thunar ()
-    "My file manager."
-    (interactive)
-    (chunyang-exwm-M-x "thunar"))
-
-  (defun gnome-screenshot ()
-    (interactive)
-    ;; XXX: support -w/-a/-a/-f etc, see gnome-screenshot --help
-    (chunyang-exwm-M-x "gnome-screenshot"))
-
-  (defun chunyang-exwm-rename-buffer ()
-    "Make class name the buffer name."
-    (exwm-workspace-rename-buffer exwm-class-name))
-
-  (add-hook 'exwm-update-class-hook #'chunyang-exwm-rename-buffer)
-
-  (exwm-input-set-key (kbd "s-r") #'exwm-reset)
-  (exwm-input-set-key (kbd "s-t") #'exwm-input-toggle-keyboard)
-
-  (exwm-input-set-key (kbd "s-x") #'chunyang-exwm-M-x)
-  ;; XXX `ace-window' doesn't show in non-Emacs buffer, try to use Minibuffer instead
-  (exwm-input-set-key (kbd "M-o") #'chunyang-ace-window)
-  ;; XXX This key is strange
-  ;; (exwm-input-set-key (kbd "M-TAB") #'chunyang-ace-window)
-  (exwm-input-set-key (kbd "M-l") #'ivy-switch-buffer)
-  (exwm-input-set-key [C-M-left] #'previous-buffer)
-  (exwm-input-set-key [C-M-right] #'next-buffer)
-
-  ;; Line-editing shortcuts
-  (exwm-input-set-simulation-keys
-   '(([?\C-b] . left)
-     ([?\C-f] . right)
-     ([?\C-p] . up)
-     ([?\C-n] . down)
-     ([?\C-a] . home)
-     ([?\C-e] . end)
-     ([?\M-v] . prior)
-     ([?\C-v] . next)
-     ([?\C-d] . delete)
-     ([?\C-k] . (S-end delete))))
-
-  (defun chunyang-exwm-disable-simulation-keys ()
-    (when (and exwm-class-name
-               (string-prefix-p "Xfce4-terminal" exwm-class-name))
-      (exwm-input-set-local-simulation-keys nil)))
-
-  (add-hook 'exwm-manage-finish-hook #'chunyang-exwm-disable-simulation-keys)
-
-  (defun chunyang-exwm-xfce4-terminal-update-default-directory ()
-    "Update `default-directory' according to the terminal window title."
-    (and exwm-class-name
-         (string-prefix-p "Xfce4-terminal" exwm-class-name)
-         (setq default-directory (expand-file-name (concat exwm-title "/")))))
-
-  (add-hook 'exwm-update-title-hook #'chunyang-exwm-xfce4-terminal-update-default-directory)
-
-  ;; Shrink fringes to 1 pixel
-  ;; (fringe-mode 1)
-
-  ;; Disable dialog boxes since they are unusable in EXWM
-  (setq use-dialog-box nil)
-
-  ;; Disable the clipboard and use the primary selection
-  (setq select-enable-clipboard nil
-        select-enable-primary t)
-
-  ;; Disable pluse on M-. and M-,
-  (with-eval-after-load 'xref
-    (remove-hook 'xref-after-jump-hook   #'xref-pulse-momentarily)
-    (remove-hook 'xref-after-return-hook #'xref-pulse-momentarily))
-
-  (with-eval-after-load 'ace-window
-    (setq aw-scope 'frame))
-
-  ;; Fix pinentry-gtk2, refer
-  ;; https://github.com/ch11ng/exwm/issues/288#issuecomment-322023887
-  (with-eval-after-load 'epa
-    (setq epa-pinentry-mode 'loopback))
-
-  ;; Undo the Fcitx hack
-  (when (string= (getenv "LC_CTYPE") "zh_CN.UTF-8")
-    (setenv "LC_CTYPE")))
-
-
-;;; Windows
-
-(defconst *is-windows* (eq system-type 'windows-nt))
-
-
 ;;; User Interface
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
 
-;; It's possible that Emacs is not built with Tool Bar and Scroll Bar
-;; support, so we need to test first
-(and (bound-and-true-p tool-bar-mode)
-     (tool-bar-mode -1))
-(and (bound-and-true-p scroll-bar-mode)
-     (scroll-bar-mode -1))
-
-;; macOS has a global menu bar, disable `menu-bar-mode' will not save
-;; any space.
-(unless (memq window-system '(ns mac))
-  (menu-bar-mode -1))
-
-(when (and *is-mac* (version<= "26" emacs-version))
-  (setq ns-use-proxy-icon nil)  
-  (setq initial-frame-alist
-        '(
-          ;; macOS Dark theme when using an Emacs theme with a dark
-          ;; background
-          (ns-appearance . dark)
-          ;; Set background of titlebar to match the Emacs background
-          ;; color
-          (ns-transparent-titlebar . t))))
-
-;; (info "(elisp) Font and Color Parameters")
-(defun chunyang-alpha-param-adjust ()
-  "调节当前 Frame 的透明度.
-
-参考 Info node `(elisp) Font and Color Parameters' 中的 \\='alpha 参数."
-  (interactive)
-  (let ((alpha (or (frame-parameter nil 'alpha) 100)))
-    (while (pcase (read-key (format "%d%%, use +,-,0 for further adjustment" alpha))
-             ((or ?+ ?=) (setq alpha (1+ alpha)))
-             (?- (setq alpha (1- alpha)))
-             (?0 (setq alpha 100))
-             (_  nil))
-      (cond ((> alpha 100) (setq alpha 100))
-            ((< alpha 0) (setq alpha 0)))
-      (modify-frame-parameters nil `((alpha . ,alpha))))))
-
-;; Type M-x `about-emacs' to see it
 (setq inhibit-startup-screen t)
 
-;; Don't ring the bell (usually when Quit with C-g and undefined key
-;; binding)
 (setq ring-bell-function #'ignore)
-
-
-;;; Yes Or No (not safe)
 
 (fset 'yes-or-no-p #'y-or-n-p)
 
+;; Mode line
+
+(column-number-mode)
+(size-indication-mode)
+
+(setq echo-keystrokes 0.6)              ; 默认 1 秒，更快地显示未完成地按键
+
 
 ;;; Font
-(ignore-errors
-  (cl-case window-system
-    ;; 'mac -> EmacsMac.app Carbon
-    ;; 'ns  -> Emacs.app Cocoa
-    ((mac ns)
-     ;; 等宽: Source Code Pro 13 + STkaiti 16
-     (setq face-font-rescale-alist `(("STkaiti" . ,(/ 16.0 13))))
-
-     (set-face-attribute 'default nil :font "Source Code Pro-13")
-
-     (set-fontset-font t 'han      (font-spec :family "STkaiti"))
-     (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti"))
-
-     ;; 测试
-     "
-| 软件      |  版本 | 发布日期     |
-|-----------+-------+--------------|
-| GNU Emacs |  25.1 | 2016 年 9 月 |
-| Org       | 9.9.5 | 2017 年 2 月 |
-"
-     ;; 问题：不等高 Height
-     )
-    ('w32
-     (set-face-attribute 'default nil :font "Source Code Pro-10"))
-    ('x
-     (set-face-attribute 'default nil :font "Source Code Pro-10"))))
 
 
 ;; Theme
@@ -379,18 +195,10 @@
   :no-require t
   :defer t)
 
-;; Mode line
-
-(column-number-mode)
-(size-indication-mode)
-
-(setq echo-keystrokes 0.6)              ; 默认 1 秒，更快地显示未完成地按键
-
-(use-package time
-  :defer t
-  :config
-  ;; M-x display-time-world
-  (add-to-list 'zoneinfo-style-world-list '("Asia/Shanghai" "Shanghai")))
+(use-package tangotango-theme
+  :ensure t
+  :no-require t
+  :defer t)
 
 
 ;; Don't translate quote in `message' and `format-message'
@@ -590,39 +398,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
                   (abbreviate-file-name (buffer-file-name))
                 "%b")))
 
-(use-package frame
-  :preface
-  (defun chunyang-toggle-frame-transparency ()
-    (interactive)
-    (if (equal (frame-parameter nil 'alpha) 85)
-        (set-frame-parameter nil 'alpha 100)
-      (set-frame-parameter nil 'alpha 85)))
-  (defun chunyang-frame-left-half ()
-    (interactive)
-    (set-frame-width (selected-frame) (/ 177 2))
-    (set-frame-position (selected-frame) 0 23))
-  (defun chunyang-frame-right-half ()
-    (interactive)
-    (set-frame-width (selected-frame) (/ 177 2))
-    (set-frame-position (selected-frame) 720 23))
-  (defun chunyang-frame-center ()
-    (interactive)
-    (let ((frame (selected-frame)))
-      (set-frame-width frame 93)
-      (set-frame-height frame 36)
-      (set-frame-position frame 337 104)))
-  :bind (("C-c t F" . toggle-frame-fullscreen)
-         ("M-RET"   . toggle-frame-fullscreen)
-         ("C-c t m" . toggle-frame-maximized)
-         ("C-c w f" . toggle-frame-maximized)
-         ("C-c w l" . chunyang-frame-left-half)
-         ("C-c w r" . chunyang-frame-right-half)
-         ("C-c w c" . chunyang-frame-center)
-         ("M-`"     . other-frame))
-  :config
-  ;; (add-to-list 'initial-frame-alist '(maximized . fullscreen))
-  (unbind-key "C-x C-z"))
-
 
 ;;; File handle
 ;; Keep backup and auto save files out of the way
@@ -651,39 +426,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
       (revert-buffer nil :no-confirm)))
   (advice-add 'add-file-local-variable :after #'chunyang-add-file-local-variable-post)
   (advice-add 'add-file-local-variable-prop-line :after #'chunyang-add-file-local-variable-post))
-
-;; TODO Try this first, if useless, remove.
-(defun chunyang-help ()
-  "My *personal* little helper."
-  (interactive)
-  (if (eq major-mode 'dired-mode)
-      (let* ((commands
-              '(dired-hide-details-mode
-                dired-omit-mode
-                wdired-change-to-wdired-mode))
-             (tips
-              (mapconcat
-               (lambda (cmd)
-                 (format "%-30s    %s"
-                         cmd (mapconcat
-                              'key-description
-                              ;; Ignore menu bar
-                              (cl-remove-if
-                               (lambda (key)
-                                 (eq (elt key 0) 'menu-bar))
-                               (where-is-internal cmd))
-                              ", ")))
-               commands "\n")))
-        (message "%s" tips))
-    (user-error "Unsupported context")))
-
-(bind-key "C-h p" #'chunyang-help) ; The default binding of 'C-h p' is `finder-by-keyword'
-
-;; Dired Tips:
-;;
-;; - 'C-u s' to edit ls switch
-;; - 'C-x C-q' (`dired-toggle-read-only') or
-;;   `wdired-change-to-wdired-mode' to edit dired buffer
 
 (use-package dired                      ; Directory Editor
   :defer t
@@ -3962,6 +3704,10 @@ provides similiar function."
   :ensure t
   :commands pydoc)
 
+(use-package helm-pydoc
+  :ensure t
+  :defer t)
+
 (use-package pipenv
   :disabled
   :ensure t
@@ -3982,54 +3728,6 @@ provides similiar function."
   :config
   (add-to-list 'company-backends 'company-anaconda))
 
-(use-package helm-pydoc :ensure t :defer t)
-
-;; Or just type M-! pydoc print
-(use-package pydoc
-  :load-path "~/src/pydoc"
-  :commands pydoc)
-
-
-;;; OCaml
-
-(use-package OCaml
-  :disabled t
-  :ensure tuareg
-  :preface
-  ;; 官方的 Manual （竟然）提供了 Info 格式 <http://caml.inria.fr/pub/docs/manual-ocaml/>
-  (add-to-list 'Info-directory-list "~/Documents/ocaml-4.03-info-manual")
-  :defer t)
-
-
-;;; Shen http://shenlanguage.org/
-
-(use-package shen-mode
-  :disabled t
-  :ensure t
-  :defer t)
-
-(use-package shen-elisp
-  :disabled t
-  :ensure t
-  :defer t)
-
-
-;;; Dao http://daoscript.org/
-
-(use-package ob-dao
-  :disabled t
-  :after org
-  :load-path "~/src/ob-dao")
-
-
-;;; AppleScript
-
-(use-package applescript-mode
-  ;; Needs build with ns (cocoa) support
-  :if (and (eq 'darwin system-type) (eq 'ns window-system))
-  :ensure t
-  :mode ("\\.applescript\\'" "\\.scpt\\'"))
-
 
 ;;; Lua
 
@@ -4046,40 +3744,6 @@ provides similiar function."
 
 ;;; Misc
 
-;; Socks5 proxy setting for `url.el'
-(setq socks-server '("Default server" "127.0.0.1" 1080 5))
-
-;; 白名单
-(setq url-gateway-local-host-regexp
-      (concat "\\`"
-              (regexp-opt '("localhost"
-                            "127.0.0.1"
-                            "elpa.emacs-china.org"))
-              "\\'"))
-
-;; (setq url-gateway-method 'socks)
-
-;; XXX 好像不会及时生效 (?)
-;; (define-minor-mode chunyang-socks-proxy-mode
-;;   "Toggle Socks Proxy mode for the 'url' library."
-;;   :global t
-;;   (setq url-gateway-method
-;;         (if chunyang-socks-proxy-mode
-;;             'socks
-;;           'native)))
-
-(use-package url-cookie
-  :defer t
-  :init
-  ;; Disable saving cookie to disk because periodically message like
-  ;; the following
-  ;;
-  ;; Saving file /Users/xcy/.emacs.d/var/url/configuration/cookies...
-  ;; Wrote /Users/xcy/.emacs.d/var/url/configuration/cookies
-  ;;
-  ;; is very annoying.
-  (setq url-cookie-save-interval nil))
-
 (use-package ascii-art-to-unicode
   :ensure t
   :defer t
@@ -4087,72 +3751,15 @@ provides similiar function."
   ;; `aa2u' is hard to recall
   (defalias 'ascii-art-to-unicode 'aa2u))
 
-(use-package time-stamp                 ; Built-in
-  :defer t
-  :init (add-hook 'before-save-hook #'time-stamp))
-
-(use-package autoinsert
-  :info (info "(autotype) Autoinserting")
-  :notes https://www.emacswiki.org/emacs/AutoInsertMode
-  :defer t
-  :config
-  ;; Note that the following should not be evaled more than once
-  (define-auto-insert
-    '(sh-mode . "Bash Script header")
-    ;; (info "(autotype) Skeleton Language")
-    '("Short description: "
-      "#!/usr/bin/env bash\n"
-      "#\n"
-      "# Copyright (C) " (format-time-string "%Y") " " user-full-name \n
-      "#\n"
-      "# " (file-name-nondirectory (buffer-file-name)) " - " str \n
-      \n \n)))
-
 (use-package restart-emacs :ensure t :defer t)
 
 (use-package package-utils :ensure t :defer t)
-
-(defun chunyang-upgrade-packages-then-restart-emacs ()
-  (interactive)
-  (package-utils-upgrade-all)
-  (restart-emacs))
 
 (use-package e2ansi                     ; Provide Syntax Highlight for shell by
                                         ; Emacs.  This is very cool.
   :ensure t
   :load-path "~/src/e2ansi"
   :defer t)
-
-
-;;; Game
-
-(use-package threes
-  :ensure t
-  :defer t)
-
-(use-package chunyang-fun               ; For fun
-  :init
-  (let ((org (locate-user-emacs-file "lisp/chunyang-fun.org"))
-        (el  (locate-user-emacs-file "lisp/chunyang-fun.el")))
-    (when (file-newer-than-file-p org el)
-      (require 'ob)
-      (org-babel-tangle-file org)
-      (byte-compile-file el)))
-  :commands chunyang-fun-roll-news)
-
-(use-package chunyang-picture
-  :commands chunyang-picture-bing)
-
-(use-package fortune
-  :commands (fortune fortune-message)
-  :config
-  (cond (*is-mac*
-         ;; On macOS, fortune is installed via Homebrew
-         (setq fortune-dir  "/usr/local/share/games/fortunes/"
-               fortune-file "/usr/local/share/games/fortunes/fortunes"))
-        (*is-gnu-linux*
-         (setq fortune-dir  "/usr/share/games/fortunes/"
-               fortune-file "/usr/share/games/fortunes/fortunes"))))
 
 
 ;;; IM
@@ -4207,25 +3814,18 @@ provides similiar function."
   :commands (scws scws-word-at-point))
 
 
-;;; PDF
-
-(use-package pdf-tools
-  :disabled t
-  ;; Disable for Travis-CI, to fix
-  ;; https://travis-ci.org/xuchunyang/emacs.d/jobs/320338600#L6965
-  :if (not noninteractive)
-  :ensure t
-  :homepage https://github.com/politza/pdf-tools
-  :notes
-  - This package is VERY cool
-  - poppler and automake is required when installing
-  - Do not open large file such as larger than 1MB
-  :defer t
-  :mode ("\\.pdf\\'" . pdf-view-mode)
-  :config (pdf-tools-install))
-
-
 ;;; Fun
+
+(use-package fortune
+  :commands (fortune fortune-message)
+  :config
+  (cond (*is-mac*
+         ;; On macOS, fortune is installed via Homebrew
+         (setq fortune-dir  "/usr/local/share/games/fortunes/"
+               fortune-file "/usr/local/share/games/fortunes/fortunes"))
+        (*is-gnu-linux*
+         (setq fortune-dir  "/usr/share/games/fortunes/"
+               fortune-file "/usr/share/games/fortunes/fortunes"))))
 
 (use-package sl
   :ensure t
