@@ -4101,6 +4101,15 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package simple-httpd
+  ;; https://github.com/raxod502/straight.el/issues/265#issuecomment-378986380
+  :ensure (simple-httpd
+           :type git
+           :host github
+           :repo "skeeto/emacs-web-server"
+           :local-repo "simple-httpd")
+  :defer t)
+
 
 ;;; Clojure
 
