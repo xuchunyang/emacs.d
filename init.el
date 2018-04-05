@@ -2872,6 +2872,34 @@ This should be add to `find-file-hook'."
 
 ;;; Web & IRC & Email & RSS
 
+(use-package rcirc
+  :commands rcirc
+  :config
+  (setq rcirc-default-nick "chunyang")
+  (setq rcirc-server-alist
+        '(("irc.freenode.net" :channels ("#emacs"))
+          ("irc.mozilla.org" :channels ("#rust"))))
+  ;; Keep history.
+  (setq rcirc-log-flag t)
+  (setq rcirc-log-directory "~/.emacs.d/var/rcirc-log")
+  ;; Taken from
+  ;; https://github.com/s1n4/dotfiles/blob/master/emacs.d/config/rcirc-config.el
+  (defun wh/log-filename-with-date (process target)
+    (format
+     "%s_%s.log"
+     (if target
+         (rcirc-generate-new-buffer-name process target)
+       (process-name process))
+     (format-time-string "%Y-%m-%d")))
+
+  (setq rcirc-log-filename-function #'wh/log-filename-with-date)
+  ;; Ignore away/join/part messages from lurkers.
+  (setq rcirc-omit-responses '("JOIN" "PART" "QUIT" "NICK" "AWAY"))
+  (add-hook 'rcirc-mode-hook #'rcirc-omit-mode)
+  (use-package rcirc-color
+    :after rcirc
+    :ensure t))
+
 ;; Just by providing the following, Emacs can already send emails
 ;;
 ;; Password is provided in ~/.authinfo file (this file should be encrypted via gpg)
