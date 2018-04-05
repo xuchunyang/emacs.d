@@ -421,16 +421,12 @@
 ;; Maximize Emacs frame on start-up
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+(setq history-length 100)
+(setq history-delete-duplicates t)
+
 (use-package savehist                   ; Minibuffer history
   :config
-  (setq history-length 100              ; The default
-        history-delete-duplicates t
-        savehist-additional-variables
-        '(extended-command-history
-          ;; Record recent directories. To use, type
-          ;; C-u C-x C-f (helm-find-files)
-          helm-ff-history
-          ivy-views))
+  (setq savehist-additional-variables '(extended-command-history))
   (savehist-mode))
 
 (use-package recentf                    ; Recent files
