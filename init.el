@@ -1537,7 +1537,8 @@ Intended to be added to `isearch-mode-hook'."
 
 (use-package yasnippet-snippets
   :ensure t
-  :defer t)
+  :after yasnippet
+  :config (yas-reload-all))
 
 
 ;;; Spelling and syntax checking
