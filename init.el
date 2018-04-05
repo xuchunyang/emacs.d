@@ -4208,16 +4208,24 @@ provides similiar function."
         python-shell-interpreter-args "--simple-prompt -i")
   ;; Python
   (setq python-shell-interpreter "python"
-        python-shell-interpreter-args "-i"))
+        python-shell-interpreter-args "-i")
+
+  ;; Company
+  (add-hook 'inferior-python-mode-hook #'company-mode)
+  ;; Elpy
+  (bind-key "C-h ." #'elpy-doc inferior-python-mode-map))
 
 (use-package elpy
   :ensure t
+  :commands elpy-enable
+  :after python
   :config
   (setq elpy-modules '(elpy-module-sane-defaults
                        elpy-module-company
                        elpy-module-eldoc))
   (elpy-enable)
-  (bind-key "C-h ." #'elpy-doc elpy-mode-map))
+  (bind-key "C-h ." #'elpy-doc elpy-mode-map)
+  (setq elpy-shell-use-project-root nil))
 
 (use-package pydoc
   :ensure t
