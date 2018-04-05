@@ -1534,9 +1534,10 @@ Intended to be added to `isearch-mode-hook'."
   :homepage http://joaotavora.github.io/yasnippet/
   :ensure t
   :diminish yas-minor-mode
-  :init
-  (setq yas-alias-to-yas/prefix-p nil)
-  (add-hook 'org-mode-hook #'yas-minor-mode))
+  :defer t
+  :hook ((org-mode  . yas-minor-mode)
+         (prog-mode . yas-minor-mode))
+  :init (setq yas-alias-to-yas/prefix-p nil))
 
 (use-package yasnippet-snippets
   :ensure t
