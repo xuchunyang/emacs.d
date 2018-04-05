@@ -788,9 +788,7 @@ Add this to `kill-buffer-query-functions'."
        (bury-buffer))
       (_ t)))
   :init
-  (add-hook 'kill-buffer-query-functions #'chunyang-dont-kill-important-buffers)
-  :config
-  (chunyang-last-closed-file-mode))
+  (add-hook 'kill-buffer-query-functions #'chunyang-dont-kill-important-buffers))
 
 (bind-key "O"     #'delete-other-windows special-mode-map)
 (bind-key "Q"     #'kill-this-buffer     special-mode-map)
@@ -2627,7 +2625,7 @@ PACKAGE should not be a built-in package."
   :ensure (repeater :type git
                     :host github
                     :repo "xuchunyang/repeater")
-  :config (repeater-mode))
+  :defer t)
 
 (use-package speeddating
   :about "Increasing and decreasing dates & time"
@@ -3545,6 +3543,30 @@ Adapt from `org-babel-remove-result'."
              (1+ (match-end 0))
              (progn (forward-line 1) (org-babel-result-end))))))))
 
+  (defun chunyang-org-babel-copy-previous-src-block ()
+    ;; TODO 包括内容
+    "复制上一个代码块（不包括内容）."
+    (interactive)
+    (let (result)
+      (save-excursion
+        (org-babel-previous-src-block)
+        (let ((element (org-element-at-point)))
+          (when (eq (car element) 'src-block)
+            (let* ((pl (cadr element))
+                   (lang (plist-get pl :language))
+                   (switches (plist-get pl :switches))
+                   (parms (plist-get pl :parameters)))
+              (setq result
+                    (format
+                     (concat "#+begin_src %s\n"
+                             "\n"
+                             "#+end_src\n")
+                     (mapconcat #'identity
+                                (delq nil (list lang switches parms))
+                                " ")))))))
+      (and result (insert result))
+      (previous-line 2)))
+
   (defun chunyang-wrap-region-org ()
     (chunyang-wrap-region '(?~ ?= ?_ ?*)))
 
@@ -3603,7 +3625,10 @@ Adapt from `org-babel-remove-result'."
     (setq org-babel-lisp-eval-fn 'sly-eval))
 
   (use-package ob-ipython
+    :homepage https://github.com/gregsexton/ob-ipython
     :ensure t
+    ;; :config
+    ;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
     :defer t)
   
   (org-babel-do-load-languages
@@ -4071,6 +4096,7 @@ provides similiar function."
 
 ;; TODO Try this package (examples, documentation)
 (use-package web-server
+  :homepage https://github.com/eschulte/emacs-web-server
   :ensure t
   :defer t)
 
@@ -4126,13 +4152,29 @@ provides similiar function."
   ;; * 缩进
   (setq python-indent-offset 4
         python-indent-guess-indent-offset nil)
+  (setq python-shell-completion-native-enable nil)
+  ;; Jupyter
+  (setq python-shell-interpreter "jupyter"
+        python-shell-interpreter-args "console --simple-prompt")
+  ;; IPython
   (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "--simple-prompt -i"))
+        python-shell-interpreter-args "--simple-prompt -i")
+  ;; Python
+  (setq python-shell-interpreter "python"
+        python-shell-interpreter-args "-i"))
 
 (use-package elpy
-  :disabled
   :ensure t
-  :config (elpy-enable))
+  :config
+  (setq elpy-modules '(elpy-module-sane-defaults
+                       elpy-module-company
+                       elpy-module-eldoc))
+  (elpy-enable)
+  (bind-key "C-h ." #'elpy-doc elpy-mode-map))
+
+(use-package pydoc
+  :ensure t
+  :commands pydoc)
 
 (use-package pipenv
   :disabled
@@ -4541,6 +4583,15 @@ provides similiar function."
   :homepage https://github.com/DamienCassou/hierarchy
   :ensure t
   :defer t)
+
+(use-package ctable
+  :homepage https://github.com/kiwanami/emacs-ctable
+  :ensure t
+  :defer t)
+
+(use-package chart :defer t)
+
+(use-package bui :disabled t)
 
 
 ;;; Custom
