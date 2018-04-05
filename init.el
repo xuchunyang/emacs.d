@@ -3980,23 +3980,7 @@ provides similiar function."
   :ensure t
   :after company
   :config
-  (add-to-list 'company-backends 'company-anaconda)
-  ;; (add-to-list 'company-backends '(company-anaconda :with company-capf))
-  )
-
-;; Related projects:
-;;   - https://github.com/Wilfred/python-info
-;;   - https://bitbucket.org/jonwaltman/pydoc-info
-;;
-;; The Python 3 Documentation in texinfo format was downloaded from
-;; https://github.com/Wilfred/python-info/pull/12
-(use-package info-python
-  :about "Support C-h S in python-mode"
-  :homepage https://github.com/emacs-pe/info-python.el
-  :notes
-  :load-path "~/src/info-python.el"
-  :after python
-  :init (setq info-python-files '("python3")))
+  (add-to-list 'company-backends 'company-anaconda))
 
 (use-package helm-pydoc :ensure t :defer t)
 
