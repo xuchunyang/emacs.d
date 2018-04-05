@@ -396,31 +396,6 @@
 ;; Don't translate quote in `message' and `format-message'
 (setq text-quoting-style 'grave)
 
-;;; Emacs session persistence
-(use-package desktop                    ; frame/window/buffer and global vars
-  :disabled t
-  :if (display-graphic-p)
-  :init
-  (setq desktop-load-locked-desktop nil)
-  (desktop-save-mode)
-  :config
-  (setq desktop-restore-frames nil)
-  ;; Save the content of *scratch* across sessions
-  (add-to-list 'desktop-globals-to-save 'initial-scratch-message)
-  (add-hook 'kill-emacs-hook
-            (lambda ()
-              (when (get-buffer "*scratch*")
-                (with-current-buffer "*scratch*"
-                  (widen)
-                  ;; FIXME: Emacs deals with `initial-scratch-message' with
-                  ;; `substitute-command-keys', which does a lot unwanted
-                  ;; conversions.
-                  (setq initial-scratch-message
-                        (buffer-string)))))))
-
-;; Maximize Emacs frame on start-up
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 (setq history-length 100)
 (setq history-delete-duplicates t)
 
@@ -430,26 +405,9 @@
   (savehist-mode))
 
 (use-package recentf                    ; Recent files
-  :defer t
-  :preface
-  (defun chunyang-recentf-enable ()
-    (recentf-mode)
-    (remove-hook 'find-file-hook #'chunyang-recentf-enable))
-  :init
-  (add-hook 'find-file-hook #'chunyang-recentf-enable)
   :config
-  (setq recentf-max-saved-items 512
-        recentf-exclude (list "/\\.git/.*\\'"      ; Git contents
-                              "/\\.emacs\\.d/elpa" ; ELPA
-                              "/etc/.*\\'"         ; Package configuration
-                              "/var/.*\\'"         ; Package data
-                              ".*\\.gz\\'"
-                              "TAGS"
-                              ".*-autoloads\\.el\\'")))
-
-(use-package recentb
-  :disabled t                    ; Disable for now to reduce init time
-  :config (recentb-mode))
+  (setq recentf-max-saved-items 512)
+  (recentf-mode))
 
 (use-package bookmark
   :defer t
@@ -458,17 +416,10 @@
   (setq bookmark-save-flag 1))
 
 (use-package saveplace                  ; Save point position in files
-  :defer t
-  :init
-  (defun chunyang-save-place-mode-setup ()
-    (save-place-mode)
-    (remove-hook 'find-file-hook #'chunyang-save-place-mode-setup))
-  (add-hook 'find-file-hook #'chunyang-save-place-mode-setup))
+  :config (save-place-mode))
 
 
 ;;; Minibuffer
-
-(defconst chunyang-completing-read-style 'helm)
 
 ;; Give useful pormpt during M-! (`shell-command') etc
 (use-package prompt-watcher
@@ -620,16 +571,17 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   (winner-mode))
 
 (use-package eyebrowse
+  :homepage https://github.com/wasamasa/eyebrowse
   :disabled t
   :ensure t
   :config (eyebrowse-mode))
 
 (use-package shackle
+  :homepage https://github.com/wasamasa/shackle
   :ensure t
   :disabled t
-  :init (shackle-mode)
-  :config
-  (setq shackle-rules '(("\\‘\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.4))))
+  :commands shackle-mode
+  :config (shackle-mode))
 
 ;; Frames
 (setq frame-resize-pixelwise t)         ; Resize by pixels
