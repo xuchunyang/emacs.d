@@ -36,6 +36,7 @@
 
 (use-package use-package
   :config
+  (setq use-package-verbose t)
   (defalias 'use-package-handler/:ensure #'use-package-handler/:straight)
   (defalias 'use-package-normalize/:ensure #'use-package-normalize/:straight)
   (add-to-list 'use-package-keywords :ensure)
