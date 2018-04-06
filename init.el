@@ -990,7 +990,8 @@ Intended to be added to `isearch-mode-hook'."
   :defer t
   :hook ((org-mode  . yas-minor-mode)
          (prog-mode . yas-minor-mode))
-  :init (setq yas-alias-to-yas/prefix-p nil))
+  :init (setq yas-alias-to-yas/prefix-p nil)
+  (add-hook 'minibuffer-setup-hook 'yas-minor-mode))
 
 (use-package yasnippet-snippets
   :ensure t

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: buffer-file-name
+# key: file
+# --
+`(with-current-buffer (window-buffer (minibuffer-selected-window))
+  buffer-file-truename)`

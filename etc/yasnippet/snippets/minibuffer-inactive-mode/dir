@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: default-directory
+# key: dir
+# --
+`(with-current-buffer (window-buffer (minibuffer-selected-window))
+  (abbreviate-file-name default-directory))`
