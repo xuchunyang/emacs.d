@@ -173,6 +173,7 @@
 (size-indication-mode)
 
 (use-package spaceline
+  :disabled
   :ensure t
   :config
   (require 'spaceline-config)
