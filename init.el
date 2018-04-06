@@ -226,6 +226,10 @@
 
 ;;; Minibuffer
 
+(setq enable-recursive-minibuffers t)
+
+(minibuffer-depth-indicate-mode)
+
 ;; Give useful pormpt during M-! (`shell-command') etc
 (use-package prompt-watcher
   :preface
@@ -531,6 +535,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :init (electric-layout-mode))
 
 (use-package elec-pair                  ; Electric pairs
+  :disabled t
   :config (electric-pair-mode))
 
 ;; I have used 'M-l' to run `helm-mini' for a long time
@@ -726,7 +731,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 ;;; Navigation and scrolling
 
-;; (setq scroll-preserve-screen-position 'always)
+(setq scroll-preserve-screen-position 'always)
 
 (setq scroll-error-top-bottom t         ; Move to beg/end of buffer before
                                         ; signalling an error
@@ -834,7 +839,7 @@ Intended to be added to `isearch-mode-hook'."
 
 (use-package region-state
   :ensure t
-  :config (region-state-mode))
+  :commands region-state-mode)
 
 (use-package swap-regions
   :ensure t
@@ -1257,6 +1262,40 @@ unlike `markdown-preview'."
   ;; :init (global-prettify-symbols-mode)
   )
 
+(use-package highlight-symbol
+  :ensure t
+  :init
+  (define-key prog-mode-map (kbd "M-n") #'highlight-symbol-next)
+  (define-key prog-mode-map (kbd "M-p") #'highlight-symbol-prev)
+  ;; http://www.wilfred.me.uk/.emacs.d/init.html#orgcca7dfa
+  (defun highlight-symbol-first ()
+    "Jump to the first location of symbol at point."
+    (interactive)
+    (push-mark)
+    (eval
+     `(progn
+        (goto-char (point-min))
+        (let ((case-fold-search nil))
+          (search-forward-regexp
+           (rx symbol-start ,(thing-at-point 'symbol) symbol-end)
+           nil t))
+        (beginning-of-thing 'symbol))))
+
+  (define-key prog-mode-map (kbd "M-P") #'highlight-symbol-first)
+  (defun highlight-symbol-last ()
+    "Jump to the last location of symbol at point."
+    (interactive)
+    (push-mark)
+    (eval
+     `(progn
+        (goto-char (point-max))
+        (let ((case-fold-search nil))
+          (search-backward-regexp
+           (rx symbol-start ,(thing-at-point 'symbol) symbol-end)
+           nil t)))))
+
+  (global-set-key (kbd "M-N") 'highlight-symbol-last))
+
 (use-package nocomments-mode            ; Hide Comments
   :ensure t
   :defer t)
@@ -1268,6 +1307,15 @@ unlike `markdown-preview'."
 (use-package chunyang-comment
   :commands (chunyang-comment-section
              chunyang-insert-comment-section))
+
+(use-package keyfreq
+  :ensure t
+  :config
+  (keyfreq-mode)
+  (keyfreq-autosave-mode))
+
+
+;; Languages
 
 (use-package json-mode
   :about Prefer json-mode to js-mode
@@ -1281,6 +1329,7 @@ unlike `markdown-preview'."
 ;;; Generic Lisp
 
 (use-package paredit                    ; Balanced sexp editing
+  :disabled
   :ensure t
   :diminish paredit-mode
   :commands paredit-mode
@@ -1299,15 +1348,40 @@ unlike `markdown-preview'."
     :ensure t
     :commands menubar-paredit))
 
-(use-package adjust-parens              ; TODO: Try this?
-  :disabled t
+(use-package smartparens
+  :homepage  https://github.com/Fuco1/smartparens
   :ensure t
-  :config (add-hook 'emacs-lisp-mode-hook #'adjust-parens-mode))
+  :config
+  (sp-with-modes sp-lisp-modes
+    (sp-local-pair "'" nil :actions nil))
 
-(use-package smartparens                ; TODO: Try this?
-  :homepage https://github.com/Fuco1/smartparens
-  :ensure t
-  :defer t)
+  (sp-with-modes sp-lisp-modes
+    (sp-local-pair "(" nil :wrap "M-("))
+
+  (smartparens-global-mode)
+  (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+
+  (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-M-e") 'sp-up-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-t") 'sp-transpose-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+
+  (define-key smartparens-mode-map (kbd "M-S") 'sp-splice-sexp)
+  (define-key smartparens-mode-map (kbd "M-R") 'sp-raise-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
+  (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-]") 'sp-select-next-thing-exchange)
+
+  (define-key smartparens-mode-map (kbd "M-F") 'sp-forward-symbol)
+  (define-key smartparens-mode-map (kbd "M-B") 'sp-backward-symbol))
 
 
 ;;; Emacs Lisp
