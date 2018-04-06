@@ -169,10 +169,14 @@
 
 (setq echo-keystrokes 0.6)              ; 默认 1 秒，更快地显示未完成地按键
 
-;; Mode line
 (column-number-mode)
 (size-indication-mode)
 
+(use-package spaceline
+  :ensure t
+  :config
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme))
 
 ;; Font
 (set-face-attribute 'default nil :font "Source Code Pro-13")
@@ -381,7 +385,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (use-package eyebrowse
   :homepage https://github.com/wasamasa/eyebrowse
-  :disabled t
   :ensure t
   :config (eyebrowse-mode))
 
