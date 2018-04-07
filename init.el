@@ -1066,7 +1066,7 @@ Intended to be added to `isearch-mode-hook'."
   ;; 1) Figure out dependencies (recursively?)
   ;; 2) Find out load-path
   (setq-default flycheck-emacs-lisp-load-path 'inherit)
-  
+
   (define-advice flycheck-may-enable-mode (:filter-return (enable-p) blacklist)
     (and enable-p
          ;; init.el
@@ -1588,7 +1588,7 @@ PACKAGE should not be a built-in package."
   (bind-key "C-S-d" #'el-search-skip-directory global-map)
   (bind-key "C-S-n" #'el-search-continue-in-next-buffer global-map)
   (bind-key "C-S-o" #'el-search-occur global-map)
-  
+
   (bind-key "C-S-s" #'el-search-search-from-isearch isearch-mode-map)
   (bind-key "C-S-r" #'el-search-search-backwards-from-isearch isearch-mode-map)
   (bind-key "C-%" #'el-search-replace-from-isearch isearch-mode-map)
@@ -3156,7 +3156,7 @@ Adapt from `org-babel-remove-result'."
     ;; :config
     ;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
     :defer t)
-  
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((awk        . t)
@@ -3181,7 +3181,7 @@ Adapt from `org-babel-remove-result'."
   ;; http://lists.gnu.org/archive/html/emacs-orgmode/2018-03/msg00013.html
   (define-advice org-babel-expand-body:clojure (:filter-return (body) do)
     (format "(do %s)" body))
-  
+
   ;; This is not safe
   (setq org-confirm-babel-evaluate nil)
 
@@ -3208,14 +3208,19 @@ Adapt from `org-babel-remove-result'."
               (and (derived-mode-p 'org-mode) (org-reveal))))
 
   ;; https://emacs-china.org/t/topic/5494
-  (defun chunyang-org-protocol-capture-bookmark (_)
+  (setq org-protocol-protocol-alist
+        '(("bookmark"
+           :protocol "bookmark"
+           :function chunyang-org-protocol-capture-bookmark)))
+
+  (defun chunyang-org-protocol-capture-bookmark (_info)
     (org-capture nil "b")
     (run-at-time 0 nil #'chunyang-mac-switch-back-to-previous-application)
     nil)
 
   (defun chunyang-mac-switch-back-to-previous-application ()
     (interactive)
-    ;; http://blog.viktorkelemen.com/2011/07/switching-back-to-previous-application.html  
+    ;; http://blog.viktorkelemen.com/2011/07/switching-back-to-previous-application.html
     (do-applescript
      (mapconcat
       #'identity
