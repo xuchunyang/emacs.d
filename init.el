@@ -403,6 +403,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
                   (abbreviate-file-name (buffer-file-name))
                 "%b")))
 
+(bind-key "M-RET" #'toggle-frame-fullscreen)
+
 
 ;;; File handle
 ;; Keep backup and auto save files out of the way
@@ -1340,6 +1342,9 @@ unlike `markdown-preview'."
   :config
   (sp-with-modes sp-lisp-modes
     (sp-local-pair "'" nil :actions nil))
+
+  (sp-with-modes sp-lisp-modes
+    (sp-local-pair "`" nil :actions nil))
 
   (sp-with-modes sp-lisp-modes
     (sp-local-pair "(" nil :wrap "M-("))
@@ -3110,16 +3115,27 @@ Adapt from `org-babel-remove-result'."
   (setq org-directory "~/Notes"
         org-agenda-files '("~/Notes"))
   (setq org-capture-templates
-        '(("t" "Todo" entry
-           (file "todo.org")
-           "* TODO %?")
-          ("e" "Journal on Emacs and Emacs Lisp" entry
-           (file "~/.emacs.d/emacs-and-emacs-lisp.org")
-           "* %?\nEntered on %U\n"
-           :empty-lines-before 1
-           :jump-to-captured t)))
+        '(("t" "Todo" entry (file "todo.org")
+           "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+           :empty-lines 1)
+          ("b" "Bookmark" entry (file "bookmarks.org")
+           "* %?%(grab-mac-link 'chrome 'org)\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+           :empty-lines 1
+           :immediate-finish t)))
 
   (setq org-agenda-restore-windows-after-quit t)
+
+  (defun chunyang-org-capture ()
+    (interactive)
+    (let* ((input
+            (completing-read
+             "org capture template:"
+             (mapcar
+              (lambda (template)
+                (format "%s %s" (car template) (cadr template)))
+              org-capture-templates)))
+           (keys (car (split-string input))))
+      (org-capture nil keys)))
 
   (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 
@@ -3190,6 +3206,26 @@ Adapt from `org-babel-remove-result'."
   (add-hook 'next-error-hook
             (defun chunyang-org-reveal-after-next-error ()
               (and (derived-mode-p 'org-mode) (org-reveal))))
+
+  ;; https://emacs-china.org/t/topic/5494
+  (defun chunyang-org-protocol-capture-bookmark (_)
+    (org-capture nil "b")
+    (run-at-time 0 nil #'chunyang-mac-switch-back-to-previous-application)
+    nil)
+
+  (defun chunyang-mac-switch-back-to-previous-application ()
+    (interactive)
+    ;; http://blog.viktorkelemen.com/2011/07/switching-back-to-previous-application.html  
+    (do-applescript
+     (mapconcat
+      #'identity
+      '("tell application \"System Events\""
+        "  tell process \"Finder\""
+        "    activate"
+        "    keystroke tab using {command down}"
+        "  end tell"
+        "end tell")
+      "\n")))
 
   (require 'org-protocol))
 
