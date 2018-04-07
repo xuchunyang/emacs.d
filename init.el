@@ -536,6 +536,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
       ;; Save the contents of the clipboard to kill ring before killing
       save-interprogram-paste-before-kill t)
 
+(bind-key "M-y" #'helm-show-kill-ring)
+
 (use-package electric                   ; Electric code layout
   :disabled t
   :init (electric-layout-mode))
@@ -543,9 +545,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (use-package elec-pair                  ; Electric pairs
   :disabled t
   :config (electric-pair-mode))
-
-;; I have used 'M-l' to run `helm-mini' for a long time
-(bind-key "M-L" #'downcase-dwim global-map)
 
 ;; Configure a reasonable fill column, indicate it in the buffer and
 ;; enable automatic filling
