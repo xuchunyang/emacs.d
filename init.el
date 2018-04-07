@@ -862,6 +862,10 @@ Intended to be added to `isearch-mode-hook'."
 
 ;;; Highlight
 
+;; Disable annoying mouse highlighting for Org Agenda, also see
+;; https://emacs.stackexchange.com/questions/20651/turn-off-mouse-highlighting-in-org-agenda
+(setq mouse-highlight 1)
+
 (use-package hl-line
   :bind ("C-c t L" . hl-line-mode))
 
