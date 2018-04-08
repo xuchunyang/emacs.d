@@ -301,9 +301,17 @@
   :config (global-auto-revert-mode))
 
 (use-package chunyang-simple
+  :preface
+  ;; 我已经用了用了 M-RET，结果 Org/Eww/Gnus 也用
+  ;; 一个处理按键冲突的简单解决方法
+  (defun chunyang-escape (key)
+    "Execute KEY as it is in `global-map'."
+    (interactive "kExecute Key in global-map: ")
+    (call-interactively (lookup-key (current-global-map) key)))
   :bind (("C-x 3" . chunyang-split-window-right)
          ("C-x 2" . chunyang-split-window-below)
          ("C-h t" . chunyang-switch-scratch)
+         ("C-\\"  . chunyang-escape)
          :map lisp-interaction-mode-map
          ("C-c C-l" . chunyang-scratch-clear)
          :map messages-buffer-mode-map
