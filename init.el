@@ -183,8 +183,13 @@
   (require 'spaceline-config)
   (spaceline-spacemacs-theme))
 
-;; Font
-(set-face-attribute 'default nil :font "Source Code Pro-13")
+;; Fonts
+(when (memq window-system '(mac ns))
+  (set-face-attribute 'default nil :font "Source Code Pro-13")
+
+  (setq face-font-rescale-alist `(("STkaiti" . ,(/ 16.0 13))))
+  (set-fontset-font t 'han      (font-spec :family "STkaiti"))
+  (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti")))
 
 ;; Theme
 (use-package spacemacs-theme
