@@ -2249,6 +2249,18 @@ PACKAGE should not be a built-in package."
   (add-hook 'server-switch-hook #'chunyang-server-setup)
   (add-hook 'server-done-hook #'chunyang-server-cleanup)
 
+  (when *is-mac*
+    ;; Re-focus iTerm
+    (defun chunyang-activate-iterm ()
+      ;; When committing with Magit, `server-done' is also called
+      (unless (bound-and-true-p with-editor-mode)
+        (do-applescript "tell application \"iTerm\" to activate")))
+    (add-hook 'server-done-hook #'chunyang-activate-iterm)
+
+    ;; Save temporary file without query
+    (setq server-temp-file-regexp
+          (rx string-start (eval temporary-file-directory))))
+
   (require 'org-protocol))
 
 (use-package gh-md             :ensure t :defer t)
