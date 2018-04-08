@@ -2514,6 +2514,32 @@ This should be add to `find-file-hook'."
         twittering-proxy-server "127.0.0.1"
         twittering-proxy-port 1087))
 
+(use-package elfeed
+  :ensure t
+  :commands elfeed
+  :config
+  (setq elfeed-feeds
+        '("http://nullprogram.com/feed/"
+          ("http://planet.emacsen.org/atom.xml" emacs)
+          ("https://emacs-china.org/latest.rss" emacs)
+          ("http://emacs.stackexchange.com/feeds" emacs)
+          "http://git-annex.branchable.com/devblog/index.rss")))
+
+(use-package elfeed-org
+  :disabled                             ; TODO 用 Org Mode 保存 Feed
+                                        ; 很好，但我想用一个更轻量级的
+                                        ; 方案，只要设置
+                                        ; `elfeed-feeds' 就可以了
+  :ensure t
+  :config
+  (elfeed-org)
+  (setq rmh-elfeed-org-files (list "/path/to/elfeed.org")))
+
+(use-package elfeed-goodies
+  :disabled
+  :ensure t
+  :config (elfeed-goodies/setup))
+
 (use-package eww
   :defer t
   :preface
