@@ -128,9 +128,17 @@
 
 ;;; Key
 
-(defun chunyang-insert-command-name-by-key ()
-  (interactive)
-  (insert (format "%s" (key-binding (read-key-sequence "Key: ")))))
+(defun chunyang-insert-command (key)
+  "Insert the command name on KEY."
+  (interactive "kInsert command of Key: ")
+  (insert (symbol-name (key-binding key))))
+
+(defun chunyang-insert-key (key)
+  "Insert the kbd representation of KEY."
+  (interactive "kInsert kbd form of key: ")
+  (insert (prin1-to-string `(kbd ,(key-description key)))))
+
+(make-obsolete 'chunyang-insert-key-by-key 'chunyang-insert-key "2018-04-08")
 
 (defun chunyang-insert-key-by-key (&optional ask-for-kind)
   (interactive "P")
