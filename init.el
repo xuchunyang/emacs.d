@@ -3034,6 +3034,11 @@ Because I usualy want to delete the final trailing newline."
                               (point-min) (point-max))))
                    (server-reply-print (server-quote-arg text) proc)))))))))))
 
+(use-package fish-mode
+  :about Major mode for fish shell scripts
+  :ensure t
+  :defer t)
+
 
 ;;; Org mode
 
