@@ -228,6 +228,8 @@
   (setq recentf-max-saved-items 512)
   (recentf-mode))
 
+(bind-key "C-x f" #'helm-recentf)
+
 (use-package bookmark
   :defer t
   :config
