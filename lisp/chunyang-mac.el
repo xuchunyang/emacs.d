@@ -240,5 +240,82 @@ unlike `browse-url-default-macosx-browser'."
       "end tell")
     "\n")))
 
+
+;; https://emacs-china.org/t/topic/5518
+(defun chunyang-chrome-tabs ()
+  "返回 Chrome 标签."
+  (let ((script
+         (mapconcat
+          #'identity
+          '("set titleString to return"
+            ""
+            "tell application \"Google Chrome\""
+            "  set window_list to every window"
+            "  set window_counter to 0"
+            ""
+            "  repeat with the_window in window_list"
+            "    set window_counter to window_counter + 1"
+            "    set tab_list to every tab in the_window"
+            "    set tab_counter to 0"
+            ""
+            "    repeat with the_tab in tab_list"
+            "      set tab_counter to tab_counter + 1"
+            "      set coordinate to window_counter & \" \" & tab_counter"
+            "      set the_title to the title of the_tab"
+            "      set titleString to titleString & coordinate & \" \" & the_title & return"
+            "    end repeat"
+            "  end repeat"
+            "end tell")
+          "\n")))
+    (thread-first script
+      (do-applescript)
+      (string-trim "\"\n" "\n\"")
+      (split-string "\n"))))
+
+;; (chunyang-chrome-tabs)
+;; => ("1 1 Google" "1 2 Home - BBC News")
+;; 1 - 第一个窗口
+;; 1 - 第一个标签
+;; Google - 标题
+
+(defun chunyang-chrome-switch-tab-1 (window-id tab-id)
+  ;; FIXME 不知道如何处理多余一个窗口的情况
+  (do-applescript
+   (concat "tell application \"Google Chrome\"\n"
+           (format "  set active tab index of first window to %s\n" tab-id)
+           "  activate\n"
+           "end tell\n")))
+
+(defun chunyang-chrome-switch-tab (window-id tab-id)
+  (interactive
+   (let* ((tabs (chunyang-chrome-tabs))
+          (input
+           (completing-read
+            "Open Chrome Tab: "
+            (mapcar
+             (lambda (s)
+               (and (string-match
+                     (rx string-start
+                         (1+ num) " " (1+ num) " "
+                         (group (1+ not-newline))
+                         string-end)
+                     s)
+                    (match-string 1 s)))
+             tabs)
+            nil t)))
+     (seq-some (lambda (s)
+                 (and (string-match
+                       (rx-to-string
+                        `(and
+                          string-start
+                          (group (1+ num)) " " (group (1+ num)) " "
+                          ,input
+                          string-end))
+                       s)
+                      (list (match-string 1 s)
+                            (match-string 2 s))))
+               tabs)))
+  (chunyang-chrome-switch-tab-1 window-id tab-id))
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here

@@ -158,7 +158,8 @@
              chunyang-chrome-refresh
              chunyang-chrome-url
              chunyang-mac-app-running-p
-             chunyang-mac-switch-to-app))
+             chunyang-mac-switch-to-app
+             chunyang-chrome-switch-tab))
 
 
 ;;; User Interface
