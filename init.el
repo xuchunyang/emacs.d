@@ -2536,12 +2536,24 @@ This should be add to `find-file-hook'."
   :ensure t
   :commands elfeed
   :config
+  ;; TODO 用 Org Mode 管理 Feeds
+  ;; - Elfeed
+  ;; - OPML
+  ;; - JSON
   (setq elfeed-feeds
         '("http://nullprogram.com/feed/"
-          ("http://planet.emacsen.org/atom.xml" emacs)
-          ("https://emacs-china.org/latest.rss" emacs)
-          ("http://emacs.stackexchange.com/feeds" emacs)
-          "http://git-annex.branchable.com/devblog/index.rss")))
+          "http://planet.emacsen.org/atom.xml"
+          "https://emacs-china.org/latest.rss"
+          "http://emacs.stackexchange.com/feeds"
+          "https://sspai.com/feed"
+          "https://sirsharpest.github.io/rss.xml"
+          "http://feeds2.feedburner.com/stevelosh"
+          "http://feed.williamlong.info/"
+          "http://matt.might.net/articles/feed.rss"
+          "https://olivierpieters.be/feed.xml"
+          "https://two-wrongs.com/feed.xml"
+          "http://alex-charlton.com/rss.xml"
+          "https://jameshfisher.com/feed.xml")))
 
 (use-package elfeed-org
   :disabled                             ; TODO 用 Org Mode 保存 Feed
