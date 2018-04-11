@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: chrome
+# key: chrome
+# --
+`(grab-mac-link
+ 'chrome
+ (cl-case major-mode
+   ((markdown-mode gfm-mode) 'markdown)
+   (org-mode                 'org)
+   (t                        'plain)))`
