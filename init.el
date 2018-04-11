@@ -1322,6 +1322,7 @@ unlike `markdown-preview'."
              chunyang-insert-comment-section))
 
 (use-package keyfreq
+  :disabled
   :ensure t
   :config
   (keyfreq-mode)
