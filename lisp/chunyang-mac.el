@@ -317,5 +317,41 @@ unlike `browse-url-default-macosx-browser'."
                tabs)))
   (chunyang-chrome-switch-tab-1 window-id tab-id))
 
+
+;; https://matthewbilyeu.com/blog/2018-04-09/setting-emacs-theme-based-on-ambient-light
+;; https://emacs-china.org/t/topic/5536
+(defun auto-theme-mode-filter (_proc output)
+  (let ((current-light-sensor-reading (string-to-number output))
+        (current-theme (car custom-enabled-themes))
+        (dark-theme 'sanityinc-tomorrow-eighties)
+        (light-theme 'sanityinc-tomorrow-day))
+    (cond ((/= (length output) 8))      ; printf("%8lld", values[0]);
+          ((and (< current-light-sensor-reading 100000)
+                (not (eq current-theme dark-theme)))
+           (disable-theme current-theme)
+           (enable-theme dark-theme))
+          ((and (>= current-light-sensor-reading 100000)
+                (not (eq current-theme light-theme)))
+           (disable-theme current-theme)
+           (enable-theme light-theme)))))
+
+(define-minor-mode auto-theme-mode
+  "Automatically set Emacs theme based on ambient light."
+  :global t
+  (let* ((buf " *auto-theme-mode*")
+         (proc (get-buffer-process buf)))
+    (if auto-theme-mode
+        (or (and proc (eq 'run (process-status proc)))
+            (let ((process-connection-type nil))
+              (set-process-filter
+               (start-process
+                "lmutracker"
+                buf
+                "/bin/sh"
+                "-c"
+                "while true; do lmutracker && sleep 1; done")
+               #'auto-theme-mode-filter)))
+      (and proc (kill-process proc)))))
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
