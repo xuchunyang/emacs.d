@@ -933,6 +933,8 @@ Intended to be added to `isearch-mode-hook'."
   (setq highlight-symbol-on-navigation-p t))
 
 (use-package rainbow-mode               ; Fontify color values in code
+  ;; https://github.com/emacs-mirror/emacs/blob/e243da257d/etc/NEWS.26#L931
+  :unless (version< "26" emacs-version)
   :ensure t
   :diminish rainbow-mode
   :defer t
