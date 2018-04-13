@@ -315,7 +315,8 @@
   (defun chunyang-escape (key)
     "Execute KEY as it is in `global-map'."
     (interactive "kExecute Key in global-map: ")
-    (call-interactively (lookup-key (current-global-map) key)))
+    (call-interactively (lookup-key (current-global-map) key))
+    (message nil))
   :bind (("C-x 3" . chunyang-split-window-right)
          ("C-x 2" . chunyang-split-window-below)
          ("C-h t" . chunyang-switch-scratch)
