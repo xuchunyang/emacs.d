@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: date
+# key: date
+# --
+`(string-trim (shell-command-to-string "date -I"))`
