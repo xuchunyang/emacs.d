@@ -1036,9 +1036,7 @@ Intended to be added to `isearch-mode-hook'."
   ;; M-h/c-h/F1 to display doc in help buffer, C-w to show location
   (bind-key "M-h" #'company-show-doc-buffer company-active-map)
   (setq company-tooltip-align-annotations t
-        company-minimum-prefix-length 2
-        ;; Easy navigation to candidates with M-<n>
-        company-show-numbers t))
+        company-minimum-prefix-length 2))
 
 (use-package company-clang
   :defer t
