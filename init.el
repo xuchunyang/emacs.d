@@ -230,8 +230,6 @@
   (setq recentf-max-saved-items 512)
   (recentf-mode))
 
-(bind-key "C-x f" #'helm-recentf)
-
 (use-package bookmark
   :defer t
   :config
@@ -297,6 +295,43 @@
 
 (use-package chunyang-edit-minibuffer
   :bind (:map minibuffer-local-map ("C-c '" . chunyang-edit-minibuffer)))
+
+
+;;; Helm
+
+(use-package helm
+  :ensure t
+  :defer t
+  :init
+  (bind-key "C-o" #'helm-imenu)
+  (bind-key "M-i" #'helm-occur)
+  (bind-key "M-I" #'helm-do-grep-ag)
+  (bind-key "M-l" #'helm-mini)
+  (bind-key "M-x" #'helm-M-x)
+  (bind-key "C-x C-f" #'helm-find-files)
+  (bind-key "C-x C-d" #'helm-browse-project)
+
+  (setq helm-display-header-line nil)
+
+  (define-minor-mode chunyang-helm-window-hack-mode
+    "Hack helm window display."
+    :global t
+    (let ((action '("\\`\\*helm"
+                    (display-buffer-in-side-window)
+                    (window-height . 0.4))))
+      (if chunyang-helm-window-hack-mode
+          (progn
+            (add-to-list 'display-buffer-alist action)
+            (setq helm-display-function #'display-buffer))
+        (setq display-buffer-alist
+              (delete action display-buffer-alist))
+        (let ((standard-value (eval (car (get 'helm-display-function 'standard-value)))))
+          (setq helm-display-function standard-value)))))
+
+  (chunyang-helm-window-hack-mode)
+
+  (helm-mode)
+  (diminish 'helm-mode))
 
 
 ;;; Buffers, Windows and Frames
