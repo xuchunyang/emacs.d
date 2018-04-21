@@ -3210,6 +3210,18 @@ Adapt from `org-babel-remove-result'."
       (and result (insert result))
       (previous-line 2)))
 
+  (defun chunyang-org-babel-execute-python-in-iTerm ()
+    (interactive)
+    (seq-let (type plist) (org-element-at-point)
+      (cond ((not (eq 'src-block type))
+             (user-error "Not a src block"))
+            ((not (string= "python" (plist-get plist :language)))
+             (user-error "Not a Python src block"))
+            (t
+             (let ((filename (make-temp-file "" nil ".py")))
+               (org-babel-tangle '(4) filename)
+               (chunyang-mac-iTerm-send-string (concat "python " filename)))))))
+  
   (defun chunyang-org-mode-setup ())
   :init
   (add-hook 'org-mode-hook #'chunyang-org-mode-setup)
