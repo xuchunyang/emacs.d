@@ -315,7 +315,9 @@
   ;; 一个处理按键冲突的简单解决方法
   (defun chunyang-escape (key)
     "Execute KEY as it is in `global-map'."
-    (interactive "kExecute Key in global-map: ")
+    ;; NOTE M-RET not working in `markdown-mode'
+    ;; (interactive "kExecute Key in global-map: ")
+    (interactive (list (vector (read-key "Execute Key in global-map: "))))
     (call-interactively (lookup-key (current-global-map) key))
     (message nil))
   :bind (("C-x 3" . chunyang-split-window-right)
