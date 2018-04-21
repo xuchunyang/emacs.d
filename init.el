@@ -2574,6 +2574,9 @@ This should be add to `find-file-hook'."
   :ensure t
   :commands elfeed
   :config
+  (setq elfeed-curl-extra-arguments '("--proxy" "socks5://127.0.0.1:1080"
+                                      "--retry" "3"))
+  (setq elfeed-curl-timeout 60)
   ;; TODO 用 Org Mode 管理 Feeds
   ;; - Elfeed
   ;; - OPML
