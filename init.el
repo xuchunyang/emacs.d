@@ -131,6 +131,7 @@
         mac-option-modifier 'control))
 
 (use-package mac-win
+  :disabled
   :if *is-mac-port*
   :config (mac-auto-ascii-mode))
 
