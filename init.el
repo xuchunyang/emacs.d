@@ -564,7 +564,9 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
                            "pdf"
                            ;; Image
                            "gif" "png" "jpg" "jpeg")
-                          string-end)) "open")))))
+                          string-end)) "open"))))
+
+  (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python")))
 
 (use-package async
   :ensure t
