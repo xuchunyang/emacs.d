@@ -82,7 +82,8 @@
                  (if current-prefix-arg
                      (read-directory-name "cd to: ")
                    default-directory))))
-  (let ((cmd (format "cd %s" dir)))
+  ;; NOTE `shell-quote-argument' doesn't work with `do-applescript'
+  (let ((cmd (format "cd '%s'" dir)))
     (chunyang-mac-iTerm-send-string cmd)))
 
 
