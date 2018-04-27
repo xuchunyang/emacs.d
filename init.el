@@ -3226,7 +3226,7 @@ Adapt from `org-babel-remove-result'."
              (let ((filename (make-temp-file "" nil ".py")))
                (org-babel-tangle '(4) filename)
                (chunyang-mac-iTerm-send-string (concat "python " filename)))))))
-  
+
   (defun chunyang-org-mode-setup ())
   :init
   (add-hook 'org-mode-hook #'chunyang-org-mode-setup)
