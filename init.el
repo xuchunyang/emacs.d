@@ -600,6 +600,9 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (bind-key "M-y" #'helm-show-kill-ring)
 
+(use-package delsel
+  :config (delete-selection-mode))
+
 (use-package electric                   ; Electric code layout
   :disabled t
   :init (electric-layout-mode))
