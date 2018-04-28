@@ -793,11 +793,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (put 'view-hello-file
      'disabled "I mistype C-h h a lot and it is too slow to block Emacs")
 
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-
-(put 'timer-list 'disabled nil)
-
 
 ;;; Navigation and scrolling
 
