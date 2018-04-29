@@ -4164,6 +4164,15 @@ provides similiar function."
   :defer t)
 
 
+;;; Debugger
+
+(use-package realgud
+  :disabled
+  :homepage https://github.com/realgud/realgud
+  :ensure t
+  :defer t)
+
+
 ;;; Custom
 
 ;; All right, enough is enough, ALL themes are safe to me.
