@@ -817,6 +817,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;; Use `C-M-l' instead of twice `C-l' for a better view
 
 (use-package page-break-lines           ; Turn page breaks into lines
+  :disabled
   :ensure t
   :diminish page-break-lines-mode
   :defer t
