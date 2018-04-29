@@ -334,6 +334,10 @@
   (helm-mode)
   (diminish 'helm-mode))
 
+(use-package helm-ls-git
+  :ensure t
+  :defer t)
+
 
 ;;; Buffers, Windows and Frames
 
