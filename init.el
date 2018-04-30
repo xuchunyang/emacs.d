@@ -2564,6 +2564,9 @@ This should be add to `find-file-hook'."
   ;; course or report a bug
   (setq gnus-use-byte-compile nil))
 
+(use-package chunyang-mail
+  :commands chunyang-browse-gnu-message)
+
 (use-package sx
   :ensure t :defer t)
 
