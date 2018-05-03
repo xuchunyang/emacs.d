@@ -4171,11 +4171,19 @@ provides similiar function."
 
 ;;; Debugger
 
+(use-package gud
+  :info (info "(emacs) Debuggers")
+  :defer
+  :config
+  (setq gud-pdb-command-name "python -m pdb"))
+
 (use-package realgud
-  :disabled
   :homepage https://github.com/realgud/realgud
   :ensure t
-  :defer t)
+  :defer t
+  :config
+  (setq realgud-safe-mode nil)
+  (setq realgud:pdb-command-name "python -m pdb"))
 
 
 ;;; Custom
