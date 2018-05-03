@@ -2535,6 +2535,27 @@ This should be add to `find-file-hook'."
   ;; course or report a bug
   (setq gnus-use-byte-compile nil))
 
+(use-package notmuch
+  :load-path "~/src/notmuch/emacs/"
+  :commands notmuch
+  :preface
+  (defun chunyang-notmuch-update ()
+    (interactive)
+    (shell-command
+     "notmuch tag -unread -inbox -- tag:unread \
+and tag:inbox and from:mail@xuchunyang.me && \
+proxychains4 mbsync --verbose --all && notmuch new&"))
+  :config
+  (setq notmuch-search-oldest-first nil)
+  (setq notmuch-show-logo nil)
+  (setq notmuch-mua-user-agent-function 'notmuch-mua-user-agent-full)
+  (setq notmuch-fcc-dirs "Sent")
+  (bind-key "g" 'notmuch-refresh-this-buffer notmuch-common-keymap))
+
+(use-package ace-link-notmuch
+  :after notmuch
+  :config (ace-link-notmuch-setup))
+
 (use-package chunyang-mail
   :commands chunyang-browse-gnu-message)
 
