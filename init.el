@@ -2594,7 +2594,11 @@ proxychains4 mbsync --verbose --all && notmuch new&"))
           "https://olivierpieters.be/feed.xml"
           "https://two-wrongs.com/feed.xml"
           "http://alex-charlton.com/rss.xml"
-          "https://jameshfisher.com/feed.xml")))
+          "https://jameshfisher.com/feed.xml"
+          "https://open.nytimes.com/feed"
+          "http://bluxte.net/rss.xml"
+          "http://www.pornhub.com/insights/feed/"
+          "https://increment.com/feed.xml")))
 
 (use-package elfeed-org
   :disabled                             ; TODO 用 Org Mode 保存 Feed
