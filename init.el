@@ -2224,6 +2224,8 @@ PACKAGE should not be a built-in package."
   :config
   (setq atomic-chrome-url-major-mode-alist
         '(
+          ;; https://courses.edx.org/courses/course-v1:MITx+6.00.1x+2T2017_2/course/
+          ("6\\.00\\.1" . python-mode)
           ;; [[https://guides.github.com/features/mastering-markdown/][Mastering Markdown · GitHub Guides]]
           ("github\\.com"             . gfm-mode)
           ;; [[https://stackoverflow.com/editing-help][Markdown Editing Help - Stack Overflow]]
