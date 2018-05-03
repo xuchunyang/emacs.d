@@ -3378,11 +3378,7 @@ Adapt from `org-babel-remove-result'."
   (require 'org-protocol))
 
 (use-package ox-html
-  :defer t
-  :config
-  ;; Disable `htmlize.el'
-  ;; TODO How to use other tool to highlight code? pygmentex, highlight.js etc
-  (setq org-html-htmlize-output-type nil))
+  :defer t)
 
 (use-package chunyang-org
   :commands (chunyang-org-agenda-csv
@@ -3406,11 +3402,8 @@ Adapt from `org-babel-remove-result'."
 (use-package htmlize                    ; Enable src block syntax
                                         ; highlightting during
                                         ; exporting from org to html
-  :disabled t
   :ensure t
-  :defer t
-  ;; :init (setq org-html-htmlize-output-type 'css)
-  )
+  :defer t)
 
 (use-package orglink
   :ensure t
