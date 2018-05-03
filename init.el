@@ -3258,6 +3258,9 @@ Adapt from `org-babel-remove-result'."
         '(("t" "Todo" entry (file "todo.org")
            "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
            :empty-lines 1)
+          ("n" "Note" entry (file "notes.org")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+           :empty-lines 1)
           ("b" "Bookmark" entry (file "bookmarks.org")
            "* %?%(grab-mac-link 'chrome 'org)\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
            :empty-lines 1
