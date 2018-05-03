@@ -4170,7 +4170,35 @@ provides similiar function."
   :info (info "(emacs) Debuggers")
   :defer
   :config
-  (setq gud-pdb-command-name "python -m pdb"))
+  (setq gud-pdb-command-name "python -m pdb")
+  ;; `pdb'
+  (define-advice pdb (:after (&rest _) fix-gud-statement)
+    (gud-def gud-statement "!%e"      "\C-e" "Execute Python statement at point."))
+
+  (defhydra hydra-pdb (:hint nil :foreign-keys run)
+    "
+^Running^         ^Breakpoints^   ^Data^          ^Frame
+^^^^^^^^-----------------------------------------------------
+_n_: next         _b_: set        _p_: print exp  _u_: up
+_s_: step         _r_: remove     ^ ^             _d_: down
+_c_: continue
+_r_: return
+"
+    ;; Running
+    ("n" gud-next)
+    ("s" gud-step)
+    ("c" gud-cont)
+    ("r" gud-finish)
+    ;; Breakpoints
+    ("b" gud-break)
+    ("r" gud-remove)
+    ;; Data
+    ("p" gud-print)
+    ;; Frame
+    ("u" gud-up)
+    ("d" gud-down)
+    ;; Quit hydra
+    ("q" nil "quit" :color blue)))
 
 (use-package realgud
   :homepage https://github.com/realgud/realgud
