@@ -606,14 +606,13 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (bind-key "M-y" #'helm-show-kill-ring)
 
 (use-package delsel
+  :disabled
   :config (delete-selection-mode))
 
 (use-package electric                   ; Electric code layout
-  :disabled t
   :init (electric-layout-mode))
 
 (use-package elec-pair                  ; Electric pairs
-  :disabled t
   :config (electric-pair-mode))
 
 ;; Configure a reasonable fill column, indicate it in the buffer and
@@ -1387,7 +1386,6 @@ unlike `markdown-preview'."
 ;;; Generic Lisp
 
 (use-package paredit                    ; Balanced sexp editing
-  :disabled
   :ensure t
   :diminish paredit-mode
   :commands paredit-mode
@@ -1407,42 +1405,12 @@ unlike `markdown-preview'."
     :commands menubar-paredit))
 
 (use-package smartparens
+  :disabled
   :homepage  https://github.com/Fuco1/smartparens
   :ensure t
   :config
-  (sp-with-modes sp-lisp-modes
-    (sp-local-pair "'" nil :actions nil))
-
-  (sp-with-modes sp-lisp-modes
-    (sp-local-pair "`" nil :actions nil))
-
-  (sp-with-modes sp-lisp-modes
-    (sp-local-pair "(" nil :wrap "M-("))
-
-  (smartparens-global-mode)
-  (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
-
-  (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-  (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-M-e") 'sp-up-sexp)
-  (define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
-  (define-key smartparens-mode-map (kbd "C-M-t") 'sp-transpose-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
-
-  (define-key smartparens-mode-map (kbd "M-S") 'sp-splice-sexp)
-  (define-key smartparens-mode-map (kbd "M-R") 'sp-raise-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
-  (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
-
-  (define-key smartparens-mode-map (kbd "C-]") 'sp-select-next-thing-exchange)
-
-  (define-key smartparens-mode-map (kbd "M-F") 'sp-forward-symbol)
-  (define-key smartparens-mode-map (kbd "M-B") 'sp-backward-symbol))
+  (require 'smartparens-config)
+  (smartparens-global-mode))
 
 
 ;;; Emacs Lisp
