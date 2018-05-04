@@ -3866,13 +3866,17 @@ provides similiar function."
 
 (use-package elpy
   :ensure t
-  :commands elpy-enable
-  :after python
+  :defer t
+  :init
+  (defun chunyang-elpy-enable ()
+    (elpy-enable)
+    (elpy-mode)
+    (remove-hook 'python-mode-hook #'chunyang-elpy-enable))
+  (add-hook 'python-mode-hook #'chunyang-elpy-enable)
   :config
   (setq elpy-modules '(elpy-module-sane-defaults
                        elpy-module-company
                        elpy-module-eldoc))
-  (elpy-enable)
   (bind-key "C-h ." #'elpy-doc elpy-mode-map)
   (setq elpy-shell-use-project-root nil))
 
