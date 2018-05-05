@@ -235,8 +235,8 @@
 (use-package bookmark
   :defer t
   :config
-  ;; Save immediately when make or delete a bookmark
-  (setq bookmark-save-flag 1))
+  ;; Save bookmark when Emacs is killed (this is the default)
+  (setq bookmark-save-flag t))
 
 (use-package saveplace                  ; Save point position in files
   :config (save-place-mode))
