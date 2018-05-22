@@ -2556,6 +2556,10 @@ proxychains4 mbsync --verbose --all && notmuch new&"))
   :after notmuch
   :config (ace-link-notmuch-setup))
 
+(use-package helm-notmuch
+  :ensure t
+  :defer t)
+
 (use-package chunyang-mail
   :commands chunyang-browse-gnu-message)
 
