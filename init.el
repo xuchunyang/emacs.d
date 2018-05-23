@@ -3256,6 +3256,8 @@ Adapt from `org-babel-remove-result'."
   ;; Fix TAB when point is on src block
   (setq org-src-tab-acts-natively t)
 
+  (setq org-log-done 'time)
+
   (setq org-directory "~/Notes"
         org-agenda-files '("~/Notes"))
   (setq org-capture-templates
@@ -3264,6 +3266,10 @@ Adapt from `org-babel-remove-result'."
            :empty-lines 1)
           ("n" "Note" entry (file "notes.org")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+           :empty-lines 1)
+          ("j" "Journal" plain (file+datetree "journal.org")
+           "%?"
+           :time-prompt t
            :empty-lines 1)
           ("b" "Bookmark" entry (file "bookmarks.org")
            "* %?%(grab-mac-link 'chrome 'org)\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
@@ -3379,7 +3385,8 @@ Adapt from `org-babel-remove-result'."
         "end tell")
       "\n")))
 
-  (require 'org-protocol))
+  (require 'org-protocol)
+  (require 'org-habit))
 
 (use-package ox-html
   :defer t)
