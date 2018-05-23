@@ -4198,6 +4198,7 @@ _r_: return
     ("r" gud-remove)
     ;; Data
     ("p" gud-print)
+    ("e" gud-statement)
     ;; Frame
     ("u" gud-up)
     ("d" gud-down)
