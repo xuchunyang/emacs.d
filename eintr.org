@@ -1,0 +1,196 @@
+#+TITLE: "An Introduction to Programming in Emacs Lisp" Exercises
+#+AUTHOR: Xu Chunyang
+#+EMAIL: mail@xuchunyang.me
+#+DATE: <2018-05-29 Tue>
+
+#+PROPERTY: header-args:elisp  :results pp
+
+* (info "(eintr) Error Message Exercises")
+
+#+begin_src elisp
+  foo
+#+end_src
+
+#+begin_src elisp
+  (foo)
+#+end_src
+
+#+begin_src elisp
+  (setq counter 0)
+
+  (setq counter (+ counter 2))
+#+end_src
+
+#+RESULTS:
+: 2
+
+#+begin_src elisp
+  (message "Hello %s!" user-full-name)
+#+end_src
+
+#+RESULTS:
+: Hello Xu Chunyang!
+
+* (info "(eintr) Evaluation Exercise")
+
+#+begin_src elisp
+  (goto-char (/ (buffer-size) 2))
+#+end_src
+
+#+begin_src elisp
+  (buffer-name)
+#+end_src
+
+#+RESULTS:
+: eintr.org
+
+#+begin_src elisp
+  (buffer-file-name)
+#+end_src
+
+#+RESULTS:
+: /Users/xcy/.emacs.d/eintr.org
+
+#+begin_src elisp
+  (buffer-size)
+#+end_src
+
+#+RESULTS:
+: 765
+
+#+begin_src elisp
+  (point)
+#+end_src
+
+#+RESULTS:
+: 710
+
+* (info "(eintr) defun Exercises")
+
+#+begin_src elisp
+  (defun double (number)
+    "Double NUMBER."
+    (* number 2))
+#+end_src
+
+#+RESULTS:
+: double
+
+#+begin_src elisp
+  (double 3)
+#+end_src
+
+#+RESULTS:
+: 6
+
+#+begin_src elisp
+  (defun double (number)
+    "Double NUMBER."
+    (interactive "p")
+    (message "The result is %d" (* number 2)))
+#+end_src
+
+#+RESULTS:
+: double
+
+#+begin_src elisp
+  (defun foo (number)
+    (interactive "p")
+    (if (> number fill-column)
+        (message "%d is larger than fill-column" number)))
+#+end_src
+
+#+RESULTS:
+: foo
+
+* (info "(eintr) Buffer Exercises")
+
+#+begin_src elisp
+  (defun simplified-end-of-buffer ()
+    "Move point to the end of the buffer, leave mark at previous position."
+    (interactive)
+    (push-mark)
+    (goto-char (point-max)))
+#+end_src
+
+#+RESULTS:
+: simplified-end-of-buffer
+
+#+begin_src elisp
+  (defun test-if-a-buffer-exists (buffer)
+    (interactive "BBuffer: ")
+    (if (get-buffer buffer)
+        (message "Buffer %s exists" buffer)))
+#+end_src
+
+#+RESULTS:
+: test-if-a-buffer-exists
+
+#+begin_src elisp
+  (test-if-a-buffer-exists "*Help*")
+#+end_src
+
+#+RESULTS:
+: Buffer *Help* exists
+
+#+begin_src elisp
+  (xref-find-definitions "copy-to-buffer")
+#+end_src
+
+* (info "(eintr) optional Exercise")
+
+#+begin_src elisp
+  (defun foo (&optional arg)
+    (interactive "p")
+    (unless arg
+      (setq arg 50))
+    (if (>= arg fill-column)
+        (message "%s is equal or larger than fill-column" arg)
+      (message "%s is smaller than fill-column" arg)))
+#+end_src
+
+* (info "(eintr) narrow Exercise")
+
+#+begin_src elisp
+  (defun narrowing-exercise ()
+    "Display the first 60 characters of the current buffer."
+    (save-restriction
+      (widen)
+      (message "%s" (buffer-substring (point-min) (+ (point-min) 60)))))
+
+  (narrowing-exercise)
+#+end_src
+
+#+RESULTS:
+: #+TITLE: "An Introduction to Programming in Emacs Lisp" Exer
+
+* (info "(eintr) cons Exercise")
+
+#+begin_src elisp
+  (cons 'a '(b c d))
+#+end_src
+
+#+RESULTS:
+: (a b c d)
+
+#+begin_src elisp
+  (setq birds ())
+  (setq birds (cons 'd birds))
+  (setq birds (cons 'c birds))
+  (setq birds (cons 'b birds))
+  (setq birds (cons 'a birds))
+  birds
+#+end_src
+
+#+RESULTS:
+: (a b c d)
+
+#+begin_src elisp
+  (let ((birds '(a b c d)))
+    (setcar birds 'A)
+    (setcdr birds '(B C D))
+    birds)
+#+end_src
+
+#+RESULTS:
+: (A B C D)
