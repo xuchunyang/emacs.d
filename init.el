@@ -22,30 +22,22 @@
 
 ;;; Package Manager
 
-(let ((straight-repository-branch "develop")
-      (bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-      (bootstrap-version 3))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(require 'package)
+(setq package-user-dir (concat "~/.emacs.d/elpa-" emacs-version))
+(setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+                         ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+(package-initialize)
 
 
 ;;; `use-package'
 
-(straight-use-package 'use-package)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
 (use-package use-package
   :config
   (setq use-package-verbose t)
-
-  (defalias 'use-package-handler/:ensure #'use-package-handler/:straight)
-  (defalias 'use-package-normalize/:ensure #'use-package-normalize/:straight)
-  (add-to-list 'use-package-keywords :ensure)
 
   (defmacro chunyang-use-package-keywords-add (keyword)
     "Add new keyword as placeholder."
@@ -74,8 +66,7 @@
 (require 'rx)
 
 (use-package dash
-  ;; To install info manual
-  :ensure (dash :type git :host github :repo "magnars/dash.el")
+  :ensure t
   :config (dash-enable-font-lock))
 
 
@@ -1504,10 +1495,7 @@ See also `describe-function-or-variable'."
         aggressive-indent-protected-commands))
 
 (use-package el-search
-  :ensure (el-search
-           :type git
-           :repo "https://git.savannah.gnu.org/git/emacs/elpa.git"
-           :files ("packages/el-search/*.el"))
+  :ensure t
   :defer t
   :preface
   (defun chunyang-el-search-symbol-or-sexp-at-point ()
@@ -1698,10 +1686,7 @@ PACKAGE should not be a built-in package."
   :ensure t :defer t)
 
 (use-package debbugs                    ; Interface to GNU Bugs
-  :ensure (debbugs
-           :type git
-           :repo "https://git.savannah.gnu.org/git/emacs/elpa.git"
-           :files ("packages/debbugs/*"))
+  :ensure t
   :defer t
   :preface
   ;; TODO: Fontify #1234 (make it clickable) in certain modes
@@ -1775,10 +1760,7 @@ PACKAGE should not be a built-in package."
   :defer t)
 
 (use-package other-emacs-eval
-  :ensure (other-emacs-eval
-           :type git
-           :host github
-           :repo "xuchunyang/other-emacs-eval")
+  :ensure t
   :defer t)
 
 
@@ -1788,8 +1770,7 @@ PACKAGE should not be a built-in package."
   :bind ("C-h C-k" . find-function-on-key))
 
 (use-package find-key-binding
-  :ensure (find-key-binding :type git :host github
-                            :repo "xuchunyang/find-key-binding.el")
+  :load-path "~/src/find-key-binding.el"
   :bind ("C-h C-b" . find-key-binding))
 
 (use-package help
@@ -2153,17 +2134,13 @@ PACKAGE should not be a built-in package."
 
 (use-package repeater
   :about "C-n C-n C-n ... End of the buffer"
-  :ensure (repeater :type git
-                    :host github
-                    :repo "xuchunyang/repeater")
+  :ensure t
   :defer t)
 
 (use-package speeddating
   :about "Increasing and decreasing dates & time"
   :homepage https://github.com/xuchunyang/emacs-speeddating
-  :ensure (speeddating :type git
-                       :host github
-                       :repo "xuchunyang/emacs-speeddating")
+  :ensure t
   :defer t)
 
 (use-package woman
@@ -2289,17 +2266,11 @@ PACKAGE should not be a built-in package."
   :defer t)
 
 (use-package gitignore-templates
-  :ensure (gitignore-templates
-           :type git
-           :host github
-           :repo "xuchunyang/gitignore-templates.el")
+  :ensure t
   :defer t)
 
 (use-package github-stars
-  :ensure (github-stars
-           :type git
-           :host github
-           :repo "xuchunyang/github-stars.el")
+  :ensure t
   :defer t)
 
 (use-package chunyang-github
@@ -2391,7 +2362,7 @@ This should be add to `find-file-hook'."
 (use-package irfc
   :about Read RFC within Emacs
   :notes https://datatracker.ietf.org/
-  :ensure t
+  :disabled t                           ; EmacsWiki
   :defer t
   :mode ("/rfc[0-9]+\\.txt\\'" . irfc-mode)
   :commands irfc-visit)
@@ -3162,7 +3133,6 @@ Because I usualy want to delete the final trailing newline."
   :defer t)
 
 (use-package org
-  :ensure (org :local-repo nil)
   :preface
   (defun chunyang-org-info-lookup-symbol ()
     "Call `info-lookup-symbol' within a source edit buffer if needed."
@@ -3799,15 +3769,6 @@ provides similiar function."
 (use-package web-server
   :homepage https://github.com/eschulte/emacs-web-server
   :ensure t
-  :defer t)
-
-(use-package simple-httpd
-  ;; https://github.com/raxod502/straight.el/issues/265#issuecomment-378986380
-  :ensure (simple-httpd
-           :type git
-           :host github
-           :repo "skeeto/emacs-web-server"
-           :local-repo "simple-httpd")
   :defer t)
 
 
