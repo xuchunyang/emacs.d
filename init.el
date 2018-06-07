@@ -2544,7 +2544,10 @@ This should be add to `find-file-hook'."
     (shell-command
      "notmuch tag -unread -inbox -- tag:unread \
 and tag:inbox and from:mail@xuchunyang.me && \
-proxychains4 mbsync --verbose --all && notmuch new&"))
+proxychains4 mbsync --verbose --all && notmuch new&")
+    (when-let ((buffer (get-buffer "*notmuch-hello*")))
+      (with-current-buffer buffer
+        (notmuch-refresh-this-buffer))))
   :config
   (setq notmuch-search-oldest-first nil)
   (setq notmuch-show-logo nil)
