@@ -194,3 +194,136 @@
 
 #+RESULTS:
 : (A B C D)
+
+* (info "(eintr) search Exercises")
+
+#+begin_src emacs-lisp
+  (defun test-search (pattern)
+    (interactive "sSearch for: ")
+    (search-forward pattern)
+    (message "Found!"))
+#+end_src
+
+#+RESULTS:
+: test-search
+
+#+begin_src emacs-lisp
+  (defun print-third-kill-ring ()
+    (interactive)
+    (if (> (length kill-ring) 2)
+        (message "%s" (nth 2 kill-ring))
+      (message "kill-ring doesn't have at least three elements")))
+#+end_src
+
+#+RESULTS:
+: print-third-kill-ring
+
+* (info "(eintr) List Exercise")
+
+#+begin_src emacs-lisp
+  (setq flowers '(violet buttercup))
+  (setq more-flowers (cons 'bar (cons 'foo flowers)))
+  (setcar flowers 'fish)
+  more-flowers
+#+end_src
+
+#+RESULTS:
+| bar | foo | fish | buttercup |
+
+* (info "(eintr) yank nthcdr Exercises")
+
+#+begin_src emacs-lisp
+  (let ((numbers '(1 2 3 4)))
+    (list (car numbers)
+          (car (nthcdr 1 numbers))
+          (car (nthcdr 2 numbers))
+          (car (nthcdr 3 numbers))))
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 | 4 |
+
+* (info "(eintr) Looping exercise")
+
+#+begin_src emacs-lisp
+  (defun triangle-square (number-of-rows)
+    (let ((total 0)
+          (row-number 1))
+      (while (<= row-number number-of-rows)
+        (setq total (+ total (* row-number row-number)))
+        (setq row-number (1+ row-number)))
+      total))
+
+  (triangle-square 4)
+#+end_src
+
+#+RESULTS:
+: 30
+
+#+begin_src emacs-lisp
+  (defun triangle-multiple (number-of-rows)
+    (let ((total 1)
+          (row-number 1))
+      (while (<= row-number number-of-rows)
+        (setq total (* total row-number))
+        (cl-incf row-number))
+      total))
+
+  (= (triangle-multiple 4)
+     (* 1 2 3 4))
+#+end_src
+
+#+RESULTS:
+: t
+
+#+begin_src emacs-lisp
+  (defun triangle-square (number-of-rows)
+    (if (= number-of-rows 0)
+        0
+      (+ (* number-of-rows number-of-rows)
+         (triangle-square (1- number-of-rows)))))
+
+  (triangle-square 4)
+#+end_src
+
+#+RESULTS:
+: 30
+
+#+begin_src emacs-lisp
+  (defun triangle-multiple (n)
+    (if (= n 0) 1
+      (* n (triangle-multiple (1- n)))))
+
+  (triangle-multiple 4)
+#+end_src
+
+#+RESULTS:
+: 24
+
+* (info "(eintr) re-search Exercises")
+
+#+begin_src emacs-lisp
+  (defun blank-lines ()
+    (interactive)
+    (re-search-forward "^\\(?:[ \t]*\n\\)\\{2,\\}"))
+#+end_src
+
+#+RESULTS:
+: blank-lines
+
+#+begin_src emacs-lisp
+  (defun the-the ()
+    (interactive)
+    (if (re-search-forward
+         "\\b\\([^@ \n\t]+\\)[ \n\t]+\\1\\b" nil 'move)
+        (message "Found duplicated word.")
+      (message "End of buffer")))
+#+end_src
+
+#+RESULTS:
+: the-the
+
+#+begin_example
+one two two three four five
+five six seven
+#+end_example
