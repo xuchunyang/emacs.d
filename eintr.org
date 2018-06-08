@@ -327,3 +327,57 @@
 one two two three four five
 five six seven
 #+end_example
+
+* (info "(eintr) Counting Exercise")
+
+#+begin_src emacs-lisp
+  (defun count-puncuation (beg end)
+    "Print number of punctuation marks in the region."
+    (interactive "r")
+    (message "Counting punctuation marks in the region...")
+    (save-excursion
+      (goto-char beg)
+      (let ((count 0))
+        (while (and (< (point) end)
+                    (re-search-forward "[.,;:!?]" end t))
+          (setq count (1+ count)))
+        (cond ((zerop count)
+               (message
+                "The region does NOT have any punctuation marks."))
+              ((= 1 count)
+               (message
+                "The region has 1 punctuation mark."))
+              (t
+               (message
+                "The region has %d punctuation marks." count))))))
+#+end_src
+
+#+RESULTS:
+: count-puncuation
+
+#+begin_src emacs-lisp
+  (defun recursive-count-punctuation (region-end)
+    "Number of punctuation marks between point and REGION-END."
+    (if (and (< (point) region-end)
+             (re-search-forward "[.,;:!?]" region-end t))
+        (1+ (recursive-count-punctuation region-end))
+      0))
+
+  (defun count-puncuation (beg end)
+    (interactive "r")
+    (save-excursion
+      (goto-char beg)
+      (let ((count (recursive-count-punctuation end)))
+        (cond ((zerop count)
+               (message
+                "The region does NOT have any punctuation marks."))
+              ((= 1 count)
+               (message
+                "The region has 1 punctuation mark."))
+              (t
+               (message
+                "The region has %d punctuation marks." count))))))
+#+end_src
+
+#+RESULTS:
+: count-puncuation
