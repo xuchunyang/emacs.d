@@ -2261,7 +2261,6 @@ PACKAGE should not be a built-in package."
 (use-package gh-md             :ensure t :defer t)
 
 (use-package github-notifier
-  :disabled t
   :ensure t
   :defer t)
 
