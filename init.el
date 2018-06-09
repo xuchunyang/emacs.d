@@ -2533,6 +2533,18 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :ensure t
   :defer t)
 
+(use-package mu4e
+  :commands mu4e
+  :defer t
+  :config
+  (setq mu4e-maildir       "~/Maildir"
+        mu4e-sent-folder   "/Sent"
+        mu4e-drafts-folder "/Drafts"
+        mu4e-trash-folder  "/Trash"
+        mu4e-refile-folder "/Archive")
+
+  (setq mu4e-get-mail-command "proxychains4 mbsync --verbose --all"))
+
 (use-package chunyang-mail
   :commands chunyang-browse-gnu-message)
 
@@ -4134,6 +4146,16 @@ provides similiar function."
 
 (use-package bui
   :homepage https://github.com/alezost/bui.el
+  :ensure t
+  :defer t)
+
+(use-package trie
+  :info https://en.wikipedia.org/wiki/Trie
+  :ensure t
+  :defer t)
+
+(use-package strie
+  :homepage https://github.com/jcatw/strie.el
   :ensure t
   :defer t)
 
