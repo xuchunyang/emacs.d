@@ -4024,6 +4024,10 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package xkcd
+  :ensure t
+  :defer t)
+
 
 ;;; Utilities
 
