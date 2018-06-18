@@ -4122,6 +4122,11 @@ provides similiar function."
   :defer t
   :hook (csv-mode . hl-line-mode))
 
+(use-package po-mode
+  :about "Major mode for PO files"
+  :ensure t
+  :defer t)
+
 
 ;;; Other Emacs Lisp libraries
 
