@@ -3983,7 +3983,7 @@ provides similiar function."
   :commands (scws scws-word-at-point))
 
 (use-package pinyin
-  :hompage https://github.com/xuchunyang/pinyin.el
+  :homepage https://github.com/xuchunyang/pinyin.el
   :load-path "~/src/pinyin.el"
   :commands pinyin)
 
