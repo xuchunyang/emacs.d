@@ -3982,6 +3982,11 @@ provides similiar function."
   :load-path "~/src/emacs-scws"
   :commands (scws scws-word-at-point))
 
+(use-package pinyin
+  :hompage https://github.com/xuchunyang/pinyin.el
+  :load-path "~/src/pinyin.el"
+  :commands pinyin)
+
 
 ;;; Fun
 
