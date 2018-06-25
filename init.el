@@ -2613,22 +2613,21 @@ proxychains4 mbsync --verbose --all && notmuch new&")
     (eww-reload)
     (message "Image is now %s"
              (if shr-inhibit-images "off" "on")))
-  (defun chunyang-eww-visit-chrome-tab ()
-    "EWW URL of the current Chrome Tab."
-    (interactive)
-    (unless *is-mac*
-      (user-error
-       "`chunyang-eww-visit-chrome-tab' supports macOS only"))
 
-    (if (require 'grab-mac-link nil t)
-        (progn
-          (require 'dash)
-          (-let (((url . _title) (grab-mac-link-chrome-1)))
-            (eww url)))
-      (eww
-       (do-applescript
-        "tell application \"Google Chrome\" \
-to return URL of active tab of first window"))))
+  (defun chunyang-eww-visit-chrome-tab ()
+    "Visit URL of current Chrome Tab with EWW."
+    (interactive)
+    (unless  (eq system-type 'darwin)
+      (user-error "Not supported system, only works on macOS"))
+    (let* ((url (do-applescript
+                 (concat "tell application \"Google Chrome\" to "
+                         "return URL of active tab of first window")))
+           (url (substring url 1 -1)))
+      (when (string-prefix-p "file://" url)
+        (setq url (url-unhex-string url)
+              url (replace-regexp-in-string "\\?.*$" "" url)))
+      (eww url)))
+  
   (defun helm-eww-bookmarks ()
     "My EWW bookmarks manager using helm."
     (interactive)
