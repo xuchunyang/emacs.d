@@ -3752,6 +3752,21 @@ provides similiar function."
   ;; racket-mode
   (push '("\\.rkt[dl]?\\'" . racket-mode) auto-mode-alist))
 
+(use-package scribble-mode
+  :about https://docs.racket-lang.org/scribble/index.html
+  :homepage https://github.com/emacs-pe/scribble-mode
+  :ensure t
+  :defer t)
+
+;; NOTE: scribble.el and scribble-mode.el are two different package,
+;; though they are supposed to provide the same function, they can't
+;; be used at the same emacs session
+(use-package scribble
+  :disabled
+  :homepage http://www.neilvandyke.org/scribble-emacs/
+  :load-path "~/src/emacs-scribble"
+  :mode ("\\.scrbl\\'" . scribble-mode))
+
 
 ;;; Web
 
