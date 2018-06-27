@@ -3679,8 +3679,25 @@ provides similiar function."
   :preface
   (defun chunyang-geiser-eval-print-last-sexp ()
     (interactive)
-    (let ((res (geiser-eval-last-sexp nil)))
-      (insert "\n" "     " res "\n")))
+    (let ((message-log-max nil))
+      ;; FIXME: Handle error correctly like C-u M-x `geiser-eval-last-sexp'
+      (let ((res (geiser-eval-last-sexp nil)))
+        (unless (string= "=> " res)
+          (unless (bolp) (insert "\n"))
+          (insert
+           ";; "
+           ;; Handle Multiple Values
+           (replace-regexp-in-string "\n=>" "\n;; =>" res)
+           "\n")
+          (message nil)))))
+
+  (defun chunyang-geiser-expand-sexp-at-point (&optional all)
+    (interactive "P")
+    (geiser-expand-region (point)
+                          (save-excursion (forward-sexp) (point))
+                          all
+                          t))
+
   ;; Important keys:
   ;; C-c C-z - Switch between source and REPL
   ;; C-z C-a - Switch to REPL with current module
@@ -3688,11 +3705,12 @@ provides similiar function."
     (bind-keys :map geiser-mode-map
                ("C-h ."   . geiser-doc-symbol-at-point)
                ("C-h C-." . geiser-doc-look-up-manual)
-               ("C-j"     . chunyang-geiser-eval-print-last-sexp)))
+               ("C-j"     . chunyang-geiser-eval-print-last-sexp)
+               ("C-c e"   . chunyang-geiser-expand-sexp-at-point)))
   :config
   ;; To learn how Geiser chooses Scheme implementation,
   ;; see (info "(geiser) The source and the REPL")
-  (setq geiser-active-implementations '(racket chicken))
+  ;; (setq geiser-active-implementations '(racket chicken))
 
   ;; XXX With scheme src block in Org, `scheme-mode' is called from time to
   ;; time, then `geiser-mode' is called, but it can't figure out the scheme
@@ -3703,12 +3721,15 @@ provides similiar function."
   ;;    scheme implementation.
   ;;
   ;; Ok, for now, just use the fallback.
-  (setq geiser-default-implementation 'chicken)
+  (setq geiser-default-implementation 'racket)
 
   (add-hook 'geiser-mode-hook #'chunyang-geiser-setup)
 
   ;; Yes, use ParEdit in the REPL too
-  (add-hook 'geiser-repl-mode-hook #'paredit-mode))
+  (add-hook 'geiser-repl-mode-hook #'paredit-mode)
+
+  ;; (info "(geiser) Seeing is believing")
+  (and *is-mac* (setq geiser-image-viewer "open")))
 
 (use-package ob-scheme
   :defer t
