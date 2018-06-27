@@ -1300,7 +1300,9 @@ unlike `markdown-preview'."
         compilation-scroll-output 'first-error))
 
 (use-package quickrun
-  :ensure t :defer t)
+  :homepage https://github.com/syohex/emacs-quickrun
+  :ensure t
+  :defer t)
 
 (use-package prog-mode
   :bind ("C-c t p" . prettify-symbols-mode)
