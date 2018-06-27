@@ -3057,6 +3057,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
     )
 
   (use-package eshell-prompt-extras
+    :disabled t
     :ensure t
     :config
     (setq eshell-highlight-prompt nil
