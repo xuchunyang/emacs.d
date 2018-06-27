@@ -3296,6 +3296,12 @@ Adapt from `org-babel-remove-result'."
     ;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
     :defer t)
 
+  (use-package ob-racket
+    :homepage https://github.com/DEADB17/ob-racket
+    :load-path "~/src/ob-racket"
+    :config
+    (add-to-list 'org-src-lang-modes (cons "racket" 'scheme)))
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((awk        . t)
@@ -3312,6 +3318,7 @@ Adapt from `org-babel-remove-result'."
      (python     . t)
      (ipython    . t)
      (R          . t)
+     (racket     . t)
      (ruby       . t)
      (scheme     . t)
      (shell      . t)))
