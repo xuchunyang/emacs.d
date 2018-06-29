@@ -3744,13 +3744,21 @@ provides similiar function."
   :config (add-hook 'scheme-mode-hook #'paredit-mode))
 
 (use-package racket-mode
-  :disabled t                           ; Use geiser
+  :homepage https://github.com/greghendershott/racket-mode
   :ensure t
   :defer t
   :init
-  ;; Doing this is because geiser sets *.rkt as scheme mode and overrides
-  ;; racket-mode
-  (push '("\\.rkt[dl]?\\'" . racket-mode) auto-mode-alist))
+  ;; Because Geiser registers *.rkt to use `scheme-mode'
+  (add-to-list 'auto-mode-alist '("\\.rkt\\'" . racket-mode))
+  ;; Might not be a very good idea, because '#lang basic' etc
+  (add-hook 'racket-mode-hook #'paredit-mode)
+  (defun chunyang-racket-mode-setup ()
+    ;; `racket-mode' enable this mode, not sure why
+    (and (bound-and-true-p hs-minor-mode)
+         (hs-minor-mode -1)))
+  (add-hook 'racket-mode-hook #'chunyang-racket-mode-setup)
+  :config
+  (bind-key "C-h ." #'racket-describe racket-mode-map))
 
 (use-package scribble-mode
   :about https://docs.racket-lang.org/scribble/index.html
