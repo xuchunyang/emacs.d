@@ -4190,6 +4190,10 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package basic-mode
+  :ensure t
+  :defer t)
+
 
 ;;; Other Emacs Lisp libraries
 
