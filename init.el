@@ -3743,13 +3743,18 @@ provides similiar function."
   :defer t
   :config (add-hook 'scheme-mode-hook #'paredit-mode))
 
+;; Dependency of `racket-mode'
+(use-package faceup
+  :ensure t
+  :defer t)
+
 (use-package racket-mode
   :homepage https://github.com/greghendershott/racket-mode
-  :ensure t
+  ;; :ensure t
+  :load-path "~/src/racket-mode"
   :defer t
+  :mode "\\.rkt\\'"
   :init
-  ;; Because Geiser registers *.rkt to use `scheme-mode'
-  (add-to-list 'auto-mode-alist '("\\.rkt\\'" . racket-mode))
   ;; Might not be a very good idea, because '#lang basic' etc
   (add-hook 'racket-mode-hook #'paredit-mode)
   (defun chunyang-racket-mode-setup ()
