@@ -207,6 +207,19 @@
 ;; Don't translate quote in `message' and `format-message'
 (setq text-quoting-style 'grave)
 
+(use-package frame-tabs
+  :about Show buffer tabs in side window
+  :ensure t
+  :defer t
+  :preface
+  (defun chunyang-frame-tabs-filter (buffer _frame)
+    (let ((name (buffer-name buffer)))
+      (unless (or (eq (aref name 0) ?\s)
+                  (string-match-p "\\`\\*helm" name))
+        name)))
+  :config
+  (setq frame-tabs-filter-function #'chunyang-frame-tabs-filter))
+
 
 ;;; Histroy
 
