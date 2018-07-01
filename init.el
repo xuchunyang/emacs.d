@@ -4221,6 +4221,17 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package gist
+  :disabled t                        ; 依赖 gh.el 的 autoload 加载太慢
+  :ensure t
+  :homepage https://github.com/defunkt/gist.el
+  :defer t)
+
+(use-package yagist
+  :ensure t
+  :homepage https://github.com/mhayashi1120/yagist.el
+  :defer t)
+
 
 ;;; Other Emacs Lisp libraries
 
