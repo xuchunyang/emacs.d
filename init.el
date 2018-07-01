@@ -3763,7 +3763,34 @@ provides similiar function."
          (hs-minor-mode -1)))
   (add-hook 'racket-mode-hook #'chunyang-racket-mode-setup)
   :config
-  (bind-key "C-h ." #'racket-describe racket-mode-map))
+  ;; For `racket-shell-send-string-no-output'
+  (require 'racket-ext)
+  (defun chunyang-racket-eval-print-last-sexp ()
+    (interactive)
+    (let* ((end (point))
+           (beg (save-excursion
+                  (backward-sexp)
+                  (if (save-match-data (looking-at "#;"))
+                      (+ (point) 2)
+                    (point))))
+           (sexp (buffer-substring-no-properties beg end))
+           (str (replace-regexp-in-string (rx (* "\n") eos) "\n" sexp))
+           ;; XXX error?
+           (res (racket-shell-send-string-no-output str)))
+      (unless (bolp) (insert ?\n))
+      (cond ((string= res "")
+             ;; (message "No return value for this sexp")
+             )
+            ((string-match ".\n+." res) ; Multiline
+             (insert res))
+            (t
+             (insert ";; => " res "\n")))))
+
+  (bind-key "C-j" #'chunyang-racket-eval-print-last-sexp racket-mode-map)
+
+  (bind-key "C-h ." #'racket-describe racket-mode-map)
+  ;; This is annoying!
+  (advice-add 'racket--repl-show-and-move-to-end :override #'ignore))
 
 (use-package scribble-mode
   :about https://docs.racket-lang.org/scribble/index.html
