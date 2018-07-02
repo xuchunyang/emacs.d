@@ -577,6 +577,12 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
   (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python")))
 
+(use-package dired-du
+  :notes du can be slow
+  :ensure t
+  :commands dired-du-mode
+  :config (setq dired-du-size-format t))
+
 (use-package async
   :ensure t
   :defer t
