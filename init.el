@@ -4211,6 +4211,11 @@ provides similiar function."
   ;; XXX The face `lsp-face-highlight-textual' (background yellow) is ugly
   (setq lsp-highlight-symbol-at-point nil))
 
+(use-package eglot
+  :about "Client for Language Server Protocol (LSP) servers"
+  :ensure t
+  :defer t)
+
 (use-package cquery
   :disabled "Just give it a try"
   :homepage https://github.com/jacobdufault/cquery
