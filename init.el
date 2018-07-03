@@ -2561,6 +2561,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :defer t)
 
 (use-package mu4e
+  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
   :commands mu4e
   :defer t
   :config
@@ -2570,6 +2571,14 @@ proxychains4 mbsync --verbose --all && notmuch new&")
         mu4e-trash-folder  "/Trash"
         mu4e-refile-folder "/Archive")
 
+  (add-to-list 'mu4e-view-actions
+               '("open in web browser" .
+                 chunyang-mu4e-action-open-html-in-browser))
+  (defun chunyang-mu4e-action-open-html-in-browser (msg)
+    (when-let* ((html (mu4e-message-field msg :body-html))
+                (tmpfile (make-temp-file "mure-" nil ".html" html)))
+      (call-process "open" nil nil nil tmpfile)))
+  
   (setq mu4e-get-mail-command "proxychains4 mbsync --verbose --all"))
 
 (use-package chunyang-mail
