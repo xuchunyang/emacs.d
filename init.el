@@ -2298,6 +2298,12 @@ PACKAGE should not be a built-in package."
   :commands (helm-chunyang-github-stars
              helm-chunyang-github-repos))
 
+(use-package git-link
+  :homepage https://github.com/sshaw/git-link
+  :ensure t
+  :defer t
+  :config (setq git-link-open-in-browser t))
+
 (use-package tramp                      ; Work with remote files
   ;; The entry point is find-file. Examples
   ;;
