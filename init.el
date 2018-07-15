@@ -4109,6 +4109,15 @@ provides similiar function."
 
 ;;; Fun
 
+;; My profile: https://codestats.net/users/xuchunyang
+(use-package code-stats
+  :homepage https://codestats.net/
+  :load-path "~/src/code-stats-emacs"
+  :config
+  (add-hook 'prog-mode-hook #'code-stats-mode)
+  (run-with-idle-timer 30 t #'code-stats-sync)
+  (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait))))
+
 (use-package fortune
   :commands (fortune fortune-message)
   :config
