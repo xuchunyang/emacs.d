@@ -491,6 +491,16 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;; Exit Emacs without confirm kill processes (Emacs-26.1)
 (setq confirm-kill-processes nil)
 
+;; .#foo.txt
+;; 不同进程修改同一个文件
+(setq create-lockfiles nil)
+;; foo.txt~
+;; 备份最近一个版本
+(setq make-backup-files nil)
+;; #foo.txt#
+;; 定期预存，否则停电、系统崩溃等会损失没保存数据
+(setq auto-save-default nil)
+
 (use-package files
   :bind (("C-c f u" . revert-buffer)
          ("C-c f n" . normal-mode))
