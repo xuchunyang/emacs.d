@@ -1667,6 +1667,7 @@ PACKAGE should not be a built-in package."
     (bind-key "C-S-s" #'el-search-dired-marked-files dired-mode-map)))
 
 (use-package lispy
+  :disabled
   :ensure t
   :homepage https://github.com/abo-abo/lispy
   :commands (lispy-alt-multiline        ; Format lisp code
