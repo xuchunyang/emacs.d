@@ -2588,6 +2588,10 @@ proxychains4 mbsync --verbose --all && notmuch new&")
         mu4e-trash-folder  "/Trash"
         mu4e-refile-folder "/Archive")
 
+  (setq mu4e-user-mailing-lists
+        '(("racket-users.googlegroups.com" . "Racket")
+          ("chicken-users.nongnu.org"      . "Chicken")))
+  
   (add-to-list 'mu4e-view-actions
                '("open in web browser" .
                  chunyang-mu4e-action-open-html-in-browser))
