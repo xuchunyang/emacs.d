@@ -339,6 +339,10 @@
   (helm-mode)
   (diminish 'helm-mode))
 
+(use-package wgrep-helm
+  :ensure t
+  :defer t)
+
 (use-package helm-ls-git
   :ensure t
   :defer t)
