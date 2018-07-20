@@ -3375,7 +3375,6 @@ Adapt from `org-babel-remove-result'."
      (org        . t)
      (perl       . t)
      (python     . t)
-     (ipython    . t)
      (R          . t)
      (racket     . t)
      (ruby       . t)
