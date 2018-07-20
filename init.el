@@ -309,8 +309,10 @@
   :ensure t
   :defer t
   :init
+  (setq helm-advice-push-mark nil)
   (bind-key "C-o" #'helm-imenu)
   (bind-key "M-i" #'helm-occur)
+  (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
   (bind-key "M-I" #'helm-do-grep-ag)
   (bind-key "M-l" #'helm-mini)
   (bind-key "M-x" #'helm-M-x)
