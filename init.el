@@ -3346,6 +3346,9 @@ Adapt from `org-babel-remove-result'."
     (setq org-babel-lisp-eval-fn 'sly-eval))
 
   (use-package ob-ipython
+    ;; XXX org-capture: Capture abort: (json-readtable-error 47)
+    ;; 作者假设 jupyter 正常运行，不好
+    :disabled
     :homepage https://github.com/gregsexton/ob-ipython
     :ensure t
     ;; :config
