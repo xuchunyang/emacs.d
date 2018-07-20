@@ -4292,6 +4292,10 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package cmake-mode
+  :ensure t
+  :defer t)
+
 (use-package gist
   :disabled t                        ; 依赖 gh.el 的 autoload 加载太慢
   :ensure t
