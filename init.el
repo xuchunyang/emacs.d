@@ -4182,6 +4182,11 @@ provides similiar function."
 
 ;;; Utilities
 
+(use-package helm-unicode
+  :about 标点符号等输入
+  :ensure t
+  :defer t)
+
 (use-package restclient
   :about "Test HTTP API"
   :ensure t
