@@ -4303,8 +4303,12 @@ provides similiar function."
   :homepage https://github.com/defunkt/gist.el
   :defer t)
 
+;; XXX Not working for multiple bytes ?
+;; [[https://github.com/magit/ghub/issues/12][Error: Multibyte text in HTTP request · Issue #12 · magit/ghub]]
 (use-package yagist
   :ensure t
+  :load-path "~/src/yagist.el"
+  :commands (yagist-buffer yagist-buffer-private)
   :homepage https://github.com/mhayashi1120/yagist.el
   :defer t)
 
