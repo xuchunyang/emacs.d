@@ -2925,6 +2925,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 ;;; Dictionary
 
 (use-package youdao-dictionary
+  :load-path "~/src/youdao-dictionary.el"
   :ensure t
   :bind (("C-c y" . youdao-dictionary-search)
          ("C-c Y" . youdao-dictionary-search-at-point+)))
