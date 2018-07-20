@@ -3724,6 +3724,7 @@ provides similiar function."
 ;;; Scheme
 
 (use-package geiser                     ; For Scheme
+  :disabled
   :ensure t
   :defer t
   :defines geiser-mode-map
