@@ -3072,6 +3072,10 @@ Note that this will OVERRIDE the existing EWW bookmarks."
                     (substring-no-properties (eshell-get-history 0)))))))
         (and last-arg (insert last-arg)))))
   :bind ("C-x m" . eshell)              ; 'C-x m' runs `compose-mail' by default
+  :init
+  (setq eshell-banner-message
+        '(concat (mapconcat #'identity (mingju) " -- ")
+                 "\n\n"))
   :config
   (setq eshell-history-size 5000)       ; Same as $HISTSIZE
   (setq eshell-hist-ignoredups t)       ; make the input history more bash-like
@@ -4103,6 +4107,15 @@ provides similiar function."
 
 
 ;;; Chinese | 中文
+
+(use-package mingju
+  :load-path "~/src/mingju"
+  :commands mingju)
+
+(use-package @300
+  :load-path "~/src/300"
+  :commands (@300 @300-random))
+
 (use-package chunyang-chinese
   :commands (chunyang-chinese-insert-mark
              chinese-punctuation-mode
