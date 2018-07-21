@@ -45,3 +45,6 @@ lisp/chunyang-fun.el
 
 # Private
 /xcy.el
+
+# Emacs 27 packages autoloads
+/package-quickstart.el

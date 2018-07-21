@@ -22,16 +22,17 @@
 
 ;;; Package Manager
 
-(require 'package)
-(setq package-user-dir (concat "~/.emacs.d/elpa-" emacs-version))
-(setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-                         ("melpa" . "http://elpa.emacs-china.org/melpa/")))
-(package-initialize)
+(unless (version< "27" emacs-version)
+  (require 'package)
+  (setq package-user-dir (concat "~/.emacs.d/elpa-" emacs-version))
+  (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+                           ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+  (package-initialize))
 
 
 ;;; `use-package'
 
-(unless (package-installed-p 'use-package)
+(unless (fboundp 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
