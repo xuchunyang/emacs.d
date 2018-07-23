@@ -319,6 +319,8 @@
   (bind-key "M-x" #'helm-M-x)
   (bind-key "C-x C-f" #'helm-find-files)
   (bind-key "C-x C-d" #'helm-browse-project)
+  (bind-key "C-z" #'helm-resume)
+  (bind-key "C-h a" #'helm-apropos)
 
   (setq helm-display-header-line nil)
 
@@ -479,7 +481,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
                   (abbreviate-file-name (buffer-file-name))
                 "%b")))
 
-(bind-key "M-RET" #'toggle-frame-fullscreen)
+(bind-key "M-RET" #'toggle-frame-maximized)
 
 
 ;;; File handle
