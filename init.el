@@ -1138,6 +1138,9 @@ Intended to be added to `isearch-mode-hook'."
            "~/src/LanguageTool-*/languagetool-commandline.jar")
           #'string>))))
 
+(use-package flycheck-languagetool
+  :after flycheck
+  :config (flycheck-languagetool-setup))
 
 (use-package checkdoc
   :defer t
@@ -2401,7 +2404,8 @@ This should be add to `find-file-hook'."
 
 (use-package helm-lastpass
   :ensure t
-  :defer t)
+  :load-path "~/src/helm-lastpass"
+  :commands helm-lastpass)
 
 (use-package irfc
   :about Read RFC within Emacs
