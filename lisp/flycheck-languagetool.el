@@ -45,7 +45,7 @@
    (alist-get 'matches (car (flycheck-parse-json output)))))
 
 (flycheck-def-option-var flycheck-languagetool-commandline-jar
-    "~/src/LanguageTool-4.2/languagetool-commandline.jar"
+    (expand-file-name "~/src/LanguageTool-4.2/languagetool-commandline.jar")
     languagetool
   "The path of languagetool-commandline.jar."
   :type '(file :must-match t))
@@ -59,7 +59,7 @@
 (flycheck-define-checker languagetool
   "Style and grammar checker using LanguageTool."
   :command ("java"
-            (option "-jar" (expand-file-name flycheck-languagetool-commandline-jar))
+            (option "-jar" flycheck-languagetool-commandline-jar)
             (option "-l" flycheck-languagetool-language)
             "-l" "en-US"
             "--json"
