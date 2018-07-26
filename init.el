@@ -3832,7 +3832,28 @@ provides similiar function."
     (and (bound-and-true-p hs-minor-mode)
          (hs-minor-mode -1)))
   (add-hook 'racket-mode-hook #'chunyang-racket-mode-setup)
+  (defun chunyang-racket-describe-mode-setup ()
+    (run-at-time
+     0
+     nil
+     (lambda ()
+       "Remove the last line."
+       (when-let ((buffer (get-buffer "*Racket Describe*")))
+	 (with-current-buffer buffer
+	   (save-excursion
+	     (goto-char (point-max))
+	     (goto-char (line-beginning-position))
+	     (when (looking-at-p "^Definition")
+	       (let ((inhibit-read-only t))
+		 (delete-region (line-beginning-position)
+				(line-end-position))))))))))
+  (add-hook 'racket-describe-mode-hook #'chunyang-racket-describe-mode-setup)
   :config
+  (define-advice racket-describe (:around (old-fun &rest args) silence)
+    "Silence `message', which is annoying."
+    (let ((message-log-max nil))
+      (apply old-fun args)
+      (message nil)))
   ;; For `racket-shell-send-string-no-output'
   (require 'racket-ext)
   (defun chunyang-racket-eval-print-last-sexp ()
@@ -4156,9 +4177,11 @@ provides similiar function."
 
 ;; My profile: https://codestats.net/users/xuchunyang
 (use-package code-stats
+  :disabled
   :homepage https://codestats.net/
   :load-path "~/src/code-stats-emacs"
   :config
+  (setq code-stats-url "https://beta.codestats.net")
   (add-hook 'prog-mode-hook #'code-stats-mode)
   (run-with-idle-timer 30 t #'code-stats-sync)
   (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait))))
