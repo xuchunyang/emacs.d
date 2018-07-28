@@ -321,6 +321,7 @@
   (bind-key "C-x C-d" #'helm-browse-project)
   (bind-key "C-z" #'helm-resume)
   (bind-key "C-h a" #'helm-apropos)
+  (bind-key "C-c f l" #'helm-locate-library)
 
   (setq helm-display-header-line nil)
 
