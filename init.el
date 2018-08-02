@@ -4177,6 +4177,13 @@ provides similiar function."
   :load-path "~/src/pinyin.el"
   :commands pinyin)
 
+(use-package moedict
+  ;; Package-Requires: ((emacs "24.3") (helm "1.9.1") (esqlite "0.3.1"))
+  :ensure esqlite
+  :homepage https://github.com/kuanyui/moedict.el
+  :load-path "~/src/moedict.el"
+  :commands moedict)
+
 
 ;;; Fun
 
