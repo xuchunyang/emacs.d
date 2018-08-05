@@ -3435,7 +3435,9 @@ Adapt from `org-babel-remove-result'."
 
   (defun chunyang-org-protocol-capture-bookmark (_info)
     (org-capture nil "b")
-    (run-at-time 0 nil #'chunyang-mac-switch-back-to-previous-application)
+    ;; Only needed for Mac Port's builtin protocol support
+    (when *is-mac-port*
+      (run-at-time 0 nil #'chunyang-mac-switch-back-to-previous-application))
     nil)
 
   (defun chunyang-mac-switch-back-to-previous-application ()
@@ -3452,6 +3454,7 @@ Adapt from `org-babel-remove-result'."
         "end tell")
       "\n")))
 
+  ;; $ emacsclient 'org-protocol://bookmark?'
   (require 'org-protocol)
   (require 'org-habit))
 
