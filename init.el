@@ -4192,11 +4192,11 @@ provides similiar function."
 
 ;; My profile: https://codestats.net/users/xuchunyang
 (use-package code-stats
-  :disabled
   :homepage https://codestats.net/
   :load-path "~/src/code-stats-emacs"
+  :diminish code-stats-mode
   :config
-  (setq code-stats-url "https://beta.codestats.net")
+  ;; (setq code-stats-url "https://beta.codestats.net")
   (add-hook 'prog-mode-hook #'code-stats-mode)
   (run-with-idle-timer 30 t #'code-stats-sync)
   (add-hook 'kill-emacs-hook (lambda () (code-stats-sync :wait))))
