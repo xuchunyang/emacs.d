@@ -2586,7 +2586,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :defer t)
 
 (use-package mu4e
-  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
+  :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e/"
   :commands mu4e
   :defer t
   :config
