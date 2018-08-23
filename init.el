@@ -827,6 +827,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (put 'view-hello-file
      'disabled "I mistype C-h h a lot and it is too slow to block Emacs")
 
+(put 'list-timers 'disabled nil)
+
 
 ;;; Navigation and scrolling
 
