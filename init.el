@@ -3912,6 +3912,7 @@ provides similiar function."
 ;;; Web
 
 (use-package web-mode
+  :disabled t
   :homepage http://web-mode.org
   :ensure t
   :defer t
@@ -3921,6 +3922,7 @@ provides similiar function."
         web-mode-code-indent-offset   2))
 
 (use-package emmet-mode
+  :disabled t
   :homepage https://github.com/smihica/emmet-mode
   :about Unfold CSS-selector-like expressions to markup
   :ensure t
@@ -3933,19 +3935,31 @@ provides similiar function."
 (use-package js2-mode
   :homepage https://github.com/mooz/js2-mode/
   :ensure t
-  :mode "\\.js\\'")
+  :hook (js2-mode . js2-imenu-extras-mode)
+  :init
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+  :config (setq js2-skip-preprocessor-directives t))
 
 (use-package tern
   :homepage http://ternjs.net/
   :ensure t
   :defer t)
 
-(use-package indium
-  :homepage https://github.com/NicolasPetton/indium
-  :about A JavaScript development environment for Emacs
-  :info (info "(Indium) Top")
+(use-package js2-refactor
   :ensure t
-  :commands indium-run-node)
+  :defer t)
+
+(use-package indium
+  :ensure t
+  :homepage https://github.com/NicolasPetton/indium
+  :about JavaScript Awesome Development Environment
+  :info (info "(Indium) Top")
+  :init (add-hook 'js-mode-hook #'indium-interaction-mode))
+
+(use-package tide
+  :homepage https://github.com/ananthakumaran/tide
+  :hook (js-mode . tide-setup))
 
 (use-package skewer-mode
   :about live browser JavaScript, CSS, and HTML interaction
