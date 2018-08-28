@@ -3705,6 +3705,15 @@ provides similiar function."
   :config
   ;; Enable Paredit in REPL too
   (add-hook 'sly-mrepl-mode-hook #'paredit-mode))
+
+
+;;; newLISP <http://www.newlisp.org/>
+
+(use-package newlisp-mode
+  :ensure t
+  :homepage https://github.com/kosh04/newlisp-mode
+  :defer t)
+
 
 ;;; Ruby
 
