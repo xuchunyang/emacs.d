@@ -3097,6 +3097,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   ;;       '(concat (shell-command-to-string "fortune") "\n"))
 
   ;; Visual commands like top(1) and vi(1)
+  (add-to-list 'eshell-visual-commands "watch")
   (setq eshell-visual-subcommands '(("git" "log" "diff" "show")))
   (setq eshell-destroy-buffer-when-process-dies t)
 
