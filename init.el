@@ -3946,7 +3946,8 @@ provides similiar function."
 (use-package js2-mode
   :homepage https://github.com/mooz/js2-mode/
   :ensure t
-  :hook (js2-mode . js2-imenu-extras-mode)
+  :hook ((js2-mode . js2-imenu-extras-mode)
+         (js2-mode . js2-mode-hide-warnings-and-errors))
   :init
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
@@ -3966,11 +3967,11 @@ provides similiar function."
   :homepage https://github.com/NicolasPetton/indium
   :about JavaScript Awesome Development Environment
   :info (info "(Indium) Top")
-  :init (add-hook 'js-mode-hook #'indium-interaction-mode))
+  :hook (js2-mode . indium-interaction-mode))
 
 (use-package tide
   :homepage https://github.com/ananthakumaran/tide
-  :hook (js-mode . tide-setup))
+  :hook (js2-mode . tide-setup))
 
 (use-package skewer-mode
   :about live browser JavaScript, CSS, and HTML interaction
