@@ -1280,12 +1280,11 @@ unlike `markdown-preview'."
 
 (use-package deft
   :homepage https://jblevins.org/projects/deft
-  :disabled
   :about "quickly browse, filter, and edit plain text notes"
   :ensure t
   :commands deft
-  :config (setq deft-directory "~/Dropbox/notes"
-                deft-extensions '("md" "org")))
+  :init (setq deft-extensions '("md"))
+  :config (setq deft-markdown-mode-title-level 1))
 
 
 ;;; Programming utilities
