@@ -3969,6 +3969,7 @@ provides similiar function."
   :hook (js2-mode . indium-interaction-mode))
 
 (use-package tide
+  :disabled t
   :homepage https://github.com/ananthakumaran/tide
   :hook (js2-mode . tide-setup))
 
