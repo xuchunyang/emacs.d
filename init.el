@@ -4351,8 +4351,10 @@ provides similiar function."
   (setq lsp-highlight-symbol-at-point nil))
 
 (use-package eglot
-  :about "Client for Language Server Protocol (LSP) servers"
+  :about A client for Language Server Protocol servers
+  :homepage https://github.com/joaotavora/eglot
   :ensure t
+  :commands eglot
   :defer t)
 
 (use-package cquery
