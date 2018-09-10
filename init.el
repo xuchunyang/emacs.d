@@ -3955,6 +3955,34 @@ provides similiar function."
 (use-package tern
   :homepage http://ternjs.net/
   :ensure t
+  :defer t
+  :config
+  ;; https://discuss.ternjs.net/t/emacs-get-the-full-function-docs-comments-with-c-c-c-d/50/3
+  (defun tern-describe ()
+    (interactive)
+    (tern-run-query
+     (lambda (data)
+       ;; url, doc, type, origin
+       (let-alist data
+         (with-current-buffer (get-buffer-create "*Tern Describe*")
+           (let ((inhibit-read-only t))
+             (erase-buffer)
+             (when .doc
+               (insert .doc)
+               (fill-region (point-min) (point-max)))
+             (when .url
+               (and .doc (insert "\n\n"))
+               (insert .url))
+             (goto-char (point-min))
+             (display-buffer (current-buffer))))))
+     '((type . "documentation") (docFormat . "full"))
+     (point))))
+
+(use-package company-tern
+  :ensure t
+  :after (company tern)
+  :homepage https://github.com/proofit404/company-tern
+  :init (add-to-list 'company-backends 'company-tern)
   :defer t)
 
 (use-package js2-refactor
