@@ -3980,7 +3980,8 @@ provides similiar function."
              (goto-char (point-min))
              (display-buffer (current-buffer))))))
      '((type . "documentation") (docFormat . "full"))
-     (point))))
+     (point)))
+  :hook (js2-mode . tern-mode))
 
 (use-package company-tern
   :ensure t
