@@ -1088,13 +1088,15 @@ Intended to be added to `isearch-mode-hook'."
       ann)))
 
 (use-package yasnippet
+  :disabled t
   :homepage http://joaotavora.github.io/yasnippet/
   :ensure t
   :diminish yas-minor-mode
   :defer t
   :hook ((org-mode  . yas-minor-mode)
          (prog-mode . yas-minor-mode))
-  :init (setq yas-alias-to-yas/prefix-p nil)
+  :init
+  (setq yas-alias-to-yas/prefix-p nil)
   (add-hook 'minibuffer-setup-hook 'yas-minor-mode))
 
 (use-package yasnippet-snippets
