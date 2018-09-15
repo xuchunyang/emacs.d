@@ -3944,7 +3944,13 @@ provides similiar function."
 
 (use-package js
   :defer t
-  :config (setq js-indent-level 2))
+  :config
+  (setq js-indent-level 2)
+  (defun chunyang-js-mode-setup ()
+    (setq electric-layout-rules
+          (seq-remove (lambda (elt) (= (car elt) ?\;))
+                      electric-layout-rules)))
+  (add-hook 'js-mode-hook #'chunyang-js-mode-setup))
 
 (use-package js2-mode
   :homepage https://github.com/mooz/js2-mode/
