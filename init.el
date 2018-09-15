@@ -944,6 +944,8 @@ Intended to be added to `isearch-mode-hook'."
   :commands region-state-mode)
 
 (use-package swap-regions
+  :about "利用 Recursive Edit 交换两个 Region"
+  :load-path "~/src/swap-regions.el"
   :ensure t
   :bind ("C-c C-t" . swap-regions))
 
