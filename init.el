@@ -3946,6 +3946,7 @@ provides similiar function."
   :defer t
   :config
   (setq js-indent-level 2)
+  (setq js-switch-indent-offset 2)
   (defun chunyang-js-mode-setup ()
     (setq electric-layout-rules
           (seq-remove (lambda (elt) (= (car elt) ?\;))
