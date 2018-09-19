@@ -537,6 +537,9 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   ;; --dired, thus Dired doesn't have to search filename. See
   ;; `insert-directory-program'.
 
+  (and *is-mac*
+       (executable-find "gls")
+       (setq insert-directory-program "gls"))
   (setq dired-listing-switches "-Alh")
 
   ;; `dired-listing-switches' can't contain whitespace before
@@ -893,7 +896,13 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;;
 ;; See also (info "(emacs) Grep Searching")
 
-(use-package grep :defer t)
+(use-package grep
+  :defer t
+  :config
+  (and *is-mac*
+       (executable-find "gfind")
+       (setq find-program "gfind")))
+
 (use-package wgrep :ensure t :defer t)
 
 ;; Notes that isearch is not a package and it is loaded from the very
