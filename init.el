@@ -594,6 +594,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
                            "torrent"
                            ;; PDF
                            "pdf"
+                           ;; HTML
+                           "html"
                            ;; Image
                            "gif" "png" "jpg" "jpeg")
                           string-end)) "open"))))
