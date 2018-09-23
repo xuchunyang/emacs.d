@@ -323,12 +323,12 @@ For testing / debugging Emacs init file."
     (unless (and (string-prefix-p "AA" s)
                  (string-suffix-p "ZZ" s))
       (error "%s is not started with 'AA' or ended with 'ZZ'" link))
-    (substring s 2 -2)))
+    (message "%s" (substring s 2 -2))))
 
 (defun chunyang-encode-thunder-link (link)
   "Encode LINK into thunder:// link."
   (interactive "s链接: ")
-  (concat "thunder://" (base64-encode-string (concat "AA" link "ZZ"))))
+  (message "%s" (concat "thunder://" (base64-encode-string (concat "AA" link "ZZ")))))
 
 ;; (chunyang-encode-thunder-link "http://example.com/index.html")
 ;;      => "thunder://QUFodHRwOi8vZXhhbXBsZS5jb20vaW5kZXguaHRtbFpa"
