@@ -45,7 +45,8 @@
                         :command (list
                                   "node"
                                   (expand-file-name "index.js" expand-emmet--dir))
-                        :connection-type 'pipe)))  )
+                        :connection-type 'pipe))
+    (sit-for 1)))
 
 (defun expand-emmet--expand (abbrev)
   (expand-emmet--ensure-server-process)
