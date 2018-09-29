@@ -3959,6 +3959,10 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package expand-emmet
+  :load-path "~/.emacs.d/lisp/expand-emmet"
+  :commands expand-emmet-line)
+
 (use-package js
   :defer t
   :config
