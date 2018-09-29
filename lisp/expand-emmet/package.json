@@ -1,0 +1,15 @@
+{
+  "name": "expand-emmet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@emmetio/expand-abbreviation": "^0.7.1",
+    "@emmetio/snippets": "^0.2.10"
+  }
+}
