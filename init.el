@@ -1555,6 +1555,7 @@ See also `describe-function-or-variable'."
         aggressive-indent-protected-commands))
 
 (use-package el-search
+  :disabled t
   :ensure t
   :defer t
   :preface
