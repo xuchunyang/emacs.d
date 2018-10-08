@@ -3940,6 +3940,7 @@ provides similiar function."
 (use-package sgml-mode
   :preface
   (defun chunyang-html-mode-setup ()
+    ;; Add HTML Empty Elements.  XHTML requires /> but HTML doesn't
     (add-to-list 'sgml-empty-tags "source"))
   :hook (html-mode . chunyang-html-mode-setup))
 
