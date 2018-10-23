@@ -4126,6 +4126,8 @@ provides similiar function."
   (bind-key "C-h ." #'elpy-doc inferior-python-mode-map))
 
 (use-package elpy
+  :disabled       ; too many dependencies (find-file-in-project ->
+                  ; ivy), and I don't write python for now.
   :ensure t
   :defer t
   :init
