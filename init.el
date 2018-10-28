@@ -2861,6 +2861,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 (use-package web-search
   :ensure t
+  :load-path "~/src/web-search.el"
   :bind ("M-s M-s" . web-search))
 
 
