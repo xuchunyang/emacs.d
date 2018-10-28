@@ -4217,6 +4217,12 @@ provides similiar function."
   (setq gitter--debug t))
 
 
+;;; News
+
+(use-package hn
+  :commands list-hacker-news)
+
+
 ;;; Programming Language
 
 (use-package language-detection
