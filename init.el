@@ -3025,6 +3025,10 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package echo
   :commands echo-mode)
 
+(use-package xinhua
+  :about 《新华字典》
+  :commands xinhua)
+
 ;; [[https://www.moedict.tw/about.html][萌典]] - 繁体 - 台湾
 ;; See also [[https://github.com/kuanyui/moedict.el][kuanyui/moedict.el: Moe Dictionary client for Emacs. 萌典 Emacs 版客戶端]]
 (defun chunyang-moedict (query)
