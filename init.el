@@ -307,6 +307,7 @@
 ;;; Helm
 
 (use-package helm
+  :disabled
   :ensure t
   :defer t
   :init
@@ -322,6 +323,7 @@
   (bind-key "C-z" #'helm-resume)
   (bind-key "C-h a" #'helm-apropos)
   (bind-key "C-c f l" #'helm-locate-library)
+  (bind-key "M-y" #'helm-show-kill-ring)
 
   (setq helm-display-header-line nil)
 
@@ -637,8 +639,6 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (setq kill-ring-max 200                 ; More killed items
       ;; Save the contents of the clipboard to kill ring before killing
       save-interprogram-paste-before-kill t)
-
-(bind-key "M-y" #'helm-show-kill-ring)
 
 (use-package delsel
   :disabled
