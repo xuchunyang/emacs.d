@@ -652,7 +652,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 ;; Configure a reasonable fill column, indicate it in the buffer and
 ;; enable automatic filling
-;; (setq-default fill-column 80)
+(setq-default fill-column 80)
 ;; or change it interactively via C-x f (`set-fill-column')
 
 ;; I prefer indent long-line code myself
