@@ -2702,10 +2702,11 @@ proxychains4 mbsync --verbose --all && notmuch new&")
     (interactive)
     (unless  (eq system-type 'darwin)
       (user-error "Not supported system, only works on macOS"))
-    (let* ((url (do-applescript
-                 (concat "tell application \"Google Chrome\" to "
-                         "return URL of active tab of first window")))
-           (url (substring url 1 -1)))
+    (let ((url (do-applescript
+                (concat "tell application \"Google Chrome\" to "
+                        "return URL of active tab of first window"))))
+      ;; Remove double quotes if exists
+      (setq url (string-trim url "\"" "\""))
       (when (string-prefix-p "file://" url)
         (setq url (url-unhex-string url)
               url (replace-regexp-in-string "\\?.*$" "" url)))
