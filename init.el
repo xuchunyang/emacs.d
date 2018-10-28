@@ -3237,6 +3237,7 @@ Because I usualy want to delete the final trailing newline."
   :defer t)
 
 (use-package org
+  :disabled
   :preface
   (defun chunyang-org-info-lookup-symbol ()
     "Call `info-lookup-symbol' within a source edit buffer if needed."
