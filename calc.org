@@ -1,0 +1,71 @@
+* ex1
+
+Q: What will the keystrokes ‘1 <RET> 2 <RET> 3 <RET> 4 + * -’ compute?
+
+A: 1 - (2 * (3 + 4)) = -13
+
+* ex2
+
+Q: Compute ‘2*4 + 7*9.5 + 5/4’ using the stack.
+
+A: 75.75
+
+* ex3
+
+Q: Suppose the numbers 10, 20, and 30 are on the
+stack.  Figure out how to add one to the number in level 2 without
+affecting the rest of the stack.  Also figure out how to add one to the
+number in level 3
+
+A: TAB ('calc-roll-down') and M-TAB ('calc-roll-up')
+
+* ex4
+
+Q: To enter the complex number ‘(2, 3)’, your friend
+Joe typed ‘( 2 , <SPC> 3 )’.  What happened?  (Joe thought of a clever
+way to correct his mistake in only two keystrokes, but it didn’t quite
+work.  Try it to find out why.)
+
+A: TAB DEL or simply M-DEL ('calc-pop-above')
+
+* ex5
+
+Q: How could you get the same effect as pressing ‘Q’
+but using an algebraic entry instead?  How about if the ‘Q’ key on your
+keyboard were broken?
+
+A: ' sqrt($) RET
+
+* ex6
+
+Q: Joe entered the formula ‘2 x y’, stored 5 in ‘x’,
+pressed ‘=’, and got the expected result, ‘10 y’.  He then tried the
+same for the formula ‘2 x (1+y)’, expecting ‘10 (1+y)’, but it didn’t
+work.  Why not?
+
+A: x is interpreted as a function name, use 2 x*(1+y).
+
+* ex7
+
+Q: What result would you expect ‘1 <RET> 0 /’ to
+give?  What if you then type ‘0 *’?
+
+A: div 0 error
+
+* ex8
+
+Q: Your friend Joe tried to enter one-third as
+‘3#0.1’ in ‘d r 3’ mode with a precision of 12.  He got ‘3#0.0222222...’
+(with 25 2’s) in the display.  When he multiplied that by three, he got
+‘3#0.222222...’ instead of the expected ‘3#1’.  Next, Joe entered
+‘3#0.2’ and, to his great relief, saw ‘3#0.2’ on the screen.  But when
+he typed ‘2 /’, he got ‘3#0.10000001’ (some zeros omitted).  What’s
+going on here?
+
+A: 
+
+* ex9
+
+* ex10
+
+* ex11
