@@ -4351,6 +4351,28 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(defun chunyang-birthday-p ()
+  "Return t if today is my birthday, i.e., 农历九月廿三."
+  ;; Adapted from `calendar-chinese-date-string'
+  (require 'cal-china)
+  (pcase-let ((`(_ _ ,m ,d) (calendar-chinese-from-absolute
+                             (calendar-absolute-from-gregorian
+                              (calendar-current-date)))))
+    ;; Note: For leap months M is a float.
+    (equal (list (floor m) d) '(9 23))))
+
+(defun chunyang-happy-birthday ()
+  ;; Avoid slowing down Emacs startup
+  (run-with-idle-timer
+   1
+   nil
+   (lambda ()
+     (when (chunyang-birthday-p)
+       (let ((cursor-type nil))
+         (animate-birthday-present user-full-name))))))
+
+(add-hook 'emacs-startup-hook #'chunyang-happy-birthday)
+
 
 ;;; Utilities
 
