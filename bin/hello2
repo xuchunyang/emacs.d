@@ -1,0 +1,28 @@
+#!/usr/local/bin/emacs --script
+;; -*- lexical-binding: t; -*-
+
+;;; * Lexical Binding
+
+(message "lexical-binding: t")
+
+;;; * Output
+
+(message "Hello World (stderr, trailing newline)")
+
+(prin1 "prin1 (quoted)\n")
+
+(terpri)
+
+(mapc #'write-char "using write-char\n")
+
+(princ "hello world\n")
+
+;;; * Argument
+
+(message "Arguments: %S" argv)
+
+;;; * Exit
+
+(kill-emacs 42)
+
+(princ "this will not run")
