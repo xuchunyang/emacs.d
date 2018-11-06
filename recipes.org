@@ -1,0 +1,111 @@
+* stream-of-directory-files
+
+stream.el
+
+#+BEGIN_SRC elisp
+;; 模仿 ls -R
+(defun foo ()
+  (interactive)
+  (with-current-buffer (get-buffer-create "*LS*")
+    (setq buffer-undo-list t)
+    (erase-buffer)
+    (switch-to-buffer (current-buffer))
+    (seq-do
+     (lambda (f)
+       (insert f ?\n)
+       (goto-char (point-max))
+       (set-window-point (selected-window) (point-max))
+       (redisplay))
+     (stream-of-directory-files "~/.emacs.d/" nil 'nosort 'recurse))))
+#+END_SRC
+
+* stream-from-iterator
+
+iter-defun is defined in generator.el
+
+#+BEGIN_SRC elisp :lexical t
+(iter-defun fibonacci ()
+  (let ((a 0)
+        (b 1))
+    (while t
+      (iter-yield a)
+      (cl-psetq a b
+                b (+ a b)))))
+
+;; 前 10 个斐波那契数
+(cl-loop repeat 10
+         for n iter-by (fibonacci)
+         collect n)
+
+(-> (fibonacci)
+    (stream-from-iterator)
+    (seq-take 10)
+    (seq-into 'list))
+#+END_SRC
+
+#+RESULTS:
+| 0 | 1 | 1 | 2 | 3 | 5 | 8 | 13 | 21 | 34 |
+
+* stream-cons
+
+#+BEGIN_SRC elisp :lexical t
+(defun fib (a b)
+  (stream-cons a (fib b (+ a b))))
+
+(seq-into (seq-take (fib 0 1) 10) 'list)
+#+END_SRC
+
+#+RESULTS:
+| 0 | 1 | 1 | 2 | 3 | 5 | 8 | 13 | 21 | 34 |
+
+* stream-range
+
+#+BEGIN_SRC elisp :lexical t
+(seq-into (stream-range 0 5) 'list)
+#+END_SRC
+
+#+RESULTS:
+| 0 | 1 | 2 | 3 | 4 |
+
+#+BEGIN_SRC elisp :lexical t
+(seq-into (seq-take (stream-range 0) 5) 'list)
+#+END_SRC
+
+#+RESULTS:
+| 0 | 1 | 2 | 3 | 4 |
+
+* stream-scan
+
+#+BEGIN_SRC elisp :lexical t
+(seq-into
+ (seq-take (stream-scan #'* 1 (stream-range 1)) 5)
+ 'list)
+#+END_SRC
+
+#+RESULTS:
+| 1 | 1 | 2 | 6 | 24 |
+
+* map-let
+
+#+BEGIN_SRC elisp :lexical t
+(map-let (x y) '((x . 1) (y . 2))
+  (list :x x
+        :y y))
+#+END_SRC
+
+#+RESULTS:
+| :x | 1 | :y | 2 |
+
+#+BEGIN_SRC elisp :lexical t
+(map-let (x y) '((x . 1) (y . 2))
+  (list :x x
+        :y y))
+#+END_SRC
+
+#+BEGIN_SRC elisp :lexical t
+(map-let (('x a) ('y b)) '((x . 1) (y . 2))
+  (list a b))
+#+END_SRC
+
+#+RESULTS:
+| 1 | 2 |
