@@ -158,8 +158,10 @@
 
 
 ;;; User Interface
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
+(when (bound-and-true-p tool-bar-mode)
+  (tool-bar-mode -1))
+(when (bound-and-true-p scroll-bar-mode)
+  (scroll-bar-mode -1))
 
 (setq inhibit-startup-screen t)
 
