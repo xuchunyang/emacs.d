@@ -4378,6 +4378,10 @@ provides similiar function."
 
 ;;; Utilities
 
+(use-package cycle-quotes
+  :ensure t
+  :defer t)
+
 (use-package helm-unicode
   :about 标点符号等输入
   :ensure t
