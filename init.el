@@ -3348,6 +3348,18 @@ Adapt from `org-babel-remove-result'."
                (org-babel-tangle '(4) filename)
                (chunyang-mac-iTerm-send-string (concat "python " filename)))))))
 
+  (defun chunyang-org-babel-execute-js-in-iTerm ()
+    (interactive)
+    (seq-let (type plist) (org-element-at-point)
+      (cond ((not (eq 'src-block type))
+             (user-error "Not a src block"))
+            ((not (string= "js" (plist-get plist :language)))
+             (user-error "Not a JS src block"))
+            (t
+             (let ((filename (make-temp-file "" nil ".js")))
+               (org-babel-tangle '(4) filename)
+               (chunyang-mac-iTerm-send-string (concat "node " filename)))))))
+
   (defun chunyang-org-mode-setup ())
   :init
   (add-hook 'org-mode-hook #'chunyang-org-mode-setup)
@@ -3517,6 +3529,17 @@ Adapt from `org-babel-remove-result'."
   ;; $ emacsclient 'org-protocol://bookmark?'
   (require 'org-protocol)
   (require 'org-habit))
+
+(use-package org
+  :defer t
+  :init
+  (setq org-babel-load-languages '((emacs-lisp . t)
+                                   (js . t)
+                                   (shell . t)))
+  :config
+  (add-to-list 'org-src-lang-modes '("js" . js2))
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-src-preserve-indentation t))
 
 (use-package ox-html
   :defer t)
