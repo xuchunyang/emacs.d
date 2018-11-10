@@ -199,8 +199,8 @@
 
 (use-package tomorrow-theme
   :ensure color-theme-sanityinc-tomorrow
-  :no-require t
-  :defer t)
+  :defer t
+  :init (load-theme 'sanityinc-tomorrow-eighties 'no-comfirm))
 
 (use-package tangotango-theme
   :ensure t
@@ -4601,6 +4601,6 @@ _r_: return
 
 ;; All right, enough is enough, ALL themes are safe to me.
 (setq custom-safe-themes t)
-(load custom-file :no-error :no-message)
+;; (load custom-file :no-error :no-message)
 
 ;;; init.el ends here
