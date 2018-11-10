@@ -4028,6 +4028,10 @@ provides similiar function."
   (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
   :config (setq js2-skip-preprocessor-directives t))
 
+(use-package nodejs-repl
+  :ensure t
+  :commands nodejs-repl-switch-to-repl)
+
 (use-package tern
   :homepage http://ternjs.net/
   :ensure t
