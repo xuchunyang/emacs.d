@@ -1397,8 +1397,7 @@ unlike `markdown-preview'."
   :bind ("C-c t p" . prettify-symbols-mode)
   ;; TODO: I have some font issue, so disalbe it for now
   ;; :init (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
-  ;; :init (global-prettify-symbols-mode)
-  )
+  :init (global-prettify-symbols-mode))
 
 (use-package highlight-symbol
   :ensure t
