@@ -306,6 +306,33 @@
   :bind (:map minibuffer-local-map ("C-c '" . chunyang-edit-minibuffer)))
 
 
+;;; Ivy
+
+;; counsel -> swiper -> ivy
+(use-package counsel
+  :ensure t
+  :diminish ivy-mode
+  :config
+  (ivy-mode)
+  (setq ivy-use-virtual-buffers t) ; recentf in `ivy-switch-buffer'
+  (setq counsel-find-file-at-point t)
+  ;; TODO: Replace global-set-key with bind-key
+  (global-set-key (kbd "M-i") 'swiper)
+  (global-set-key (kbd "C-o") 'counsel-imenu)
+  (global-set-key (kbd "M-I") 'counsel-ag)
+  (global-set-key (kbd "C-z") 'ivy-resume)
+  (global-set-key (kbd "M-l") 'ivy-switch-buffer)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "M-y") 'counsel-yank-pop)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "C-h f") 'counsel-describe-function)
+  (global-set-key (kbd "C-h v") 'counsel-describe-variable)
+  (global-set-key (kbd "C-c f l") 'counsel-find-library)
+  (global-set-key (kbd "C-h S") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "C-c g") 'counsel-git)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+
+
 ;;; Helm
 
 (use-package helm
