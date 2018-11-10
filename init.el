@@ -4248,7 +4248,9 @@ provides similiar function."
 
 ;;; Emacs
 
-(unless source-directory
+;; FIXME brew install emacs-mac
+(unless (and source-directory
+             (file-exists-p source-directory))
   (setq source-directory "~/src/emacs"))
 
 
