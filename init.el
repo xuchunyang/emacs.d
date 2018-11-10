@@ -4253,6 +4253,11 @@ provides similiar function."
              (file-exists-p source-directory))
   (setq source-directory "~/src/emacs"))
 
+(use-package elisp-bytecode
+  :homepage "https://github.com/rocky/elisp-bytecode"
+  :init (add-to-list 'Info-directory-list "~/src/elisp-bytecode")
+  :defer t)
+
 
 ;;; Chinese | 中文
 
