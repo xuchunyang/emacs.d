@@ -3516,6 +3516,7 @@ Adapt from `org-babel-remove-result'."
   :defer t)
 
 (use-package orglink
+  :disabled t
   :ensure t
   :preface
   ;; XXX To fix "funcall-interactively: Text is read-only" error, when
@@ -4301,6 +4302,7 @@ provides similiar function."
 
 ;; My profile: https://codestats.net/users/xuchunyang
 (use-package code-stats
+  :disabled t
   :homepage https://codestats.net/
   :load-path "~/src/code-stats-emacs"
   :diminish code-stats-mode
