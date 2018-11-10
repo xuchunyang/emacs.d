@@ -673,8 +673,9 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :disabled
   :config (delete-selection-mode))
 
-(use-package electric                   ; Electric code layout
-  :init (electric-layout-mode))
+(use-package electric              ; Electric code layout
+  :disabled t                      ; `electric-layout-mode' can be very annoying
+  :config (electric-layout-mode))
 
 (use-package elec-pair                  ; Electric pairs
   :config (electric-pair-mode))
