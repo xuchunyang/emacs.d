@@ -1851,6 +1851,10 @@ PACKAGE should not be a built-in package."
   :ensure t
   :defer t)
 
+(use-package elisp-demos
+  :load-path "~/src/elisp-demos"
+  :config (elisp-demos-help-mode))
+
 (use-package other-emacs-eval
   :ensure t
   :defer t)
