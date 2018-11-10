@@ -4443,6 +4443,7 @@ provides similiar function."
   :defer t)
 
 (use-package lsp-mode
+  :disabled t
   :ensure t
   :about "Minor mode for Language Server Protocol"
   :homepage https://github.com/emacs-lsp/lsp-mode
