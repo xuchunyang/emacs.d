@@ -439,17 +439,18 @@
 
 (use-package chunyang-buffers
   :preface
-  (defun chunyang-dont-kill-important-buffers ()
-    "Inhibit killing of important buffers.
-
-Add this to `kill-buffer-query-functions'."
-    (pcase (buffer-name)
-      ((and bufname (or "*scratch*" "*Messages*"))
-       (message "Not allowed to kill %s, burying instead" bufname)
-       (bury-buffer))
-      (_ t)))
-  :init
-  (add-hook 'kill-buffer-query-functions #'chunyang-dont-kill-important-buffers))
+  (defun chunyang-kill-all-buffers ()
+    (interactive)
+    (let ((buffers-to-kill
+           (seq-filter
+            (lambda (buffer)
+              (let ((name (buffer-name buffer)))
+                ;; Ignore uninteresting buffers
+                (and (not (string-prefix-p " " name))
+                     (not (member name '("*scratch*" "*Messages*"))))))
+            (buffer-list))))
+      (mapc #'kill-buffer buffers-to-kill)))
+  :defer t)
 
 (bind-key "O"     #'delete-other-windows special-mode-map)
 (bind-key "Q"     #'kill-this-buffer     special-mode-map)
