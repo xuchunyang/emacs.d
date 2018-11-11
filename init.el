@@ -4032,6 +4032,23 @@ provides similiar function."
 
 (use-package js
   :defer t
+  :preface
+  (defun chunyang-nodejs-find-module (module)
+    (interactive
+     (list (read-string "Module: "
+                        ;; Use `syntax-ppss' or text props?
+                        (thing-at-point 'symbol))))
+    (let (filename)
+      (with-temp-buffer
+        (let ((exit (call-process "node" nil t nil "-pe" (format "require.resolve('%s')" module))))
+          (when (eq (char-before) ?\n)
+            (delete-char -1))
+          (if (zerop exit)
+              (setq filename (buffer-string))
+            (user-error "Can't find location of %s" module))))
+      (if (file-exists-p filename)
+          (find-file filename)
+        (user-error "Don't know how to open %s" filename))))
   :config
   (setq js-indent-level 2)
   (setq js-switch-indent-offset 2)
