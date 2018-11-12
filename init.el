@@ -1898,26 +1898,28 @@ PACKAGE should not be a built-in package."
                  is-symbol-p
                  t))))
       (describe-symbol sym)))
-  (defun describe-function@advice-remove-button (&rest _r)
+
+  (defun chunyang-advice-remove-button (function)
     "Add a button to remove advice."
-    (require 'subr-x)
-    (when-let ((buf (get-buffer "*Help*")))
-      (with-current-buffer buf
+    (when (get-buffer "*Help*")
+      (with-current-buffer "*Help*"
         (save-excursion
           (goto-char (point-min))
-          (while (re-search-forward "^:[-a-z]* advice: .\\(.*\\).$" nil t)
-            (let* ((fun (nth 1 help-xref-stack-item))
-                   (advice (intern (match-string 1)))
-                   (button-fun (lambda (_)
-                                 (message "Removing %s from %s" advice fun)
-                                 ;; FIXME Not working for lambda, maybe
-                                 ;; https://emacs.stackexchange.com/questions/33020/how-can-i-remove-an-unnamed-advice
-                                 ;; can help
-                                 (advice-remove fun advice)
-                                 (save-excursion (revert-buffer nil t))))
-                   (inhibit-read-only t))
-              (insert " » ")
-              (insert-text-button "Remove" 'action button-fun 'follow-link t)))))))
+          ;; :around advice: ‘shell-command--shell-command-with-editor-mode’
+          (while (re-search-forward "^:[-a-z]+ advice: [‘'`]\\(.+\\)[’'']$" nil t)
+            (let ((advice (intern-soft (match-string 1))))
+              (when (and advice (fboundp advice))
+                (let ((inhibit-read-only t))
+                  (insert " » ")
+                  (insert-text-button
+                   "Remove"
+                   'action
+                   ;; In case lexical-binding is off
+                   `(lambda (_)
+                      (message "Removing %s of advice from %s" ',function ',advice)
+                      (advice-remove ',function #',advice)
+                      (save-excursion (revert-buffer nil t)))
+                   'follow-link t)))))))))
   :bind (("C-h ." . chunyang-describe-symbol-at-point)
          ("C-h h" . view-help-buffer)
          :map help-mode-map
@@ -1926,10 +1928,7 @@ PACKAGE should not be a built-in package."
          ("i" . help-info-lookup-symbol))
   :config
   (temp-buffer-resize-mode)
-  (advice-add 'describe-function :after #'describe-function@advice-remove-button)
-  ;; The following is not needed since it calls `describe-function' (I guess)
-  ;; (advice-add 'describe-symbol   :after #'describe-function@advice-remove-button)
-  (advice-add 'describe-key      :after #'describe-function@advice-remove-button))
+  (advice-add 'describe-function-1 :after #'chunyang-advice-remove-button))
 
 (use-package info-look
   :defer t
