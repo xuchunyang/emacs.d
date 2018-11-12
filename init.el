@@ -1854,7 +1854,9 @@ PACKAGE should not be a built-in package."
 
 (use-package elisp-demos
   :load-path "~/src/elisp-demos"
-  :config (elisp-demos-help-mode))
+  :config
+  (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
 
 (use-package other-emacs-eval
   :ensure t
