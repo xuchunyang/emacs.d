@@ -1920,7 +1920,7 @@ PACKAGE should not be a built-in package."
                    `(lambda (_)
                       (message "Removing %s of advice from %s" ',function ',advice)
                       (advice-remove ',function #',advice)
-                      (save-excursion (revert-buffer nil t)))
+                      (revert-buffer nil t))
                    'follow-link t)))))))))
   :bind (("C-h ." . chunyang-describe-symbol-at-point)
          ("C-h h" . view-help-buffer)
