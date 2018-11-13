@@ -450,6 +450,18 @@
                      (not (member name '("*scratch*" "*Messages*"))))))
             (buffer-list))))
       (mapc #'kill-buffer buffers-to-kill)))
+
+  (defun chunyang-kill-invisible-buffers ()
+    "Kill all invisible buffers."
+    (interactive)
+    (seq-do
+     #'kill-buffer
+     (seq-difference
+      (seq-filter
+       (lambda (buffer)
+         (not (string-prefix-p " " (buffer-name buffer))))
+       (buffer-list))
+      (seq-map #'window-buffer (window-list)))))
   :defer t)
 
 (bind-key "O"     #'delete-other-windows special-mode-map)
