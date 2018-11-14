@@ -24,6 +24,15 @@
 
 ;;; Code:
 
+(defun chunyang-eval-last-sexp-in-next-window ()
+  (interactive)
+  (pcase (window-list)
+    (`(,_ ,next-window)
+     (let ((sexp (sexp-at-point)))
+       (with-current-buffer (window-buffer next-window)
+         (eval-expression sexp))))
+    (t (user-error "Should be only two window"))))
+
 
 
 (defvar chunyang-eval-print-last-sexp-prefix (car '(";; => "

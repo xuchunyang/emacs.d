@@ -1745,6 +1745,7 @@ PACKAGE should not be a built-in package."
 (use-package chunyang-elisp
   :commands (chunyang-format-command-on-key
              chunyang-format-help-on-key
+             chunyang-eval-last-sexp-in-next-window
              chunyang-eval-print-last-sexp
              chunyang-macroexpand-print-last-sexp
              chunyang-display-mark-and-pos-mode
@@ -1773,6 +1774,7 @@ PACKAGE should not be a built-in package."
 
 (use-package macrostep
   :ensure t
+  ;; should only for elisp
   :bind ("C-c e" . macrostep-expand))
 
 (use-package pcache              :ensure t :defer t)
