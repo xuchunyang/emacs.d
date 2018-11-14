@@ -1569,21 +1569,14 @@ See also `describe-function-or-variable'."
                    "\\s-+\\(" sym-regexp "\\)")
            2)))
 
-  ;; Display function's short docstring along side with args in eldoc
-  (define-advice elisp-get-fnsym-args-string
-      (:around (orig-fun &rest r) append-func-doc)
+  (define-advice elisp-get-fnsym-args-string (:around (orig-fun sym &rest r) docstring)
+    "If SYM is a function, append its docstring."
     (concat
-     (apply orig-fun r)
-     (let* ((f (car r))
-            (fdoc
-             (and (fboundp f)
-                  (documentation f 'raw)))
-            (fdoc-one-line
-             (and fdoc
-                  (substring fdoc 0 (string-match "\n" fdoc)))))
-       (when (and fdoc-one-line
-                  (not (string= "" fdoc-one-line)))
-         (concat "  |  " (propertize fdoc-one-line 'face 'italic)))))))
+     (apply orig-fun sym r)
+     (let* ((doc (and (fboundp sym) (documentation sym 'raw)))
+            (oneline (and doc (substring doc 0 (string-match "\n" doc)))))
+       (and oneline
+            (concat "  |  " (propertize oneline 'face 'italic)))))))
 
 (use-package aggressive-indent
   :disabled t
