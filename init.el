@@ -4403,6 +4403,10 @@ provides similiar function."
 
 ;;; Fun
 
+(use-package svg-clock
+  :ensure t
+  :commands svg-clock)
+
 ;; My profile: https://codestats.net/users/xuchunyang
 (use-package code-stats
   :disabled t
