@@ -407,10 +407,21 @@
     (interactive (list (vector (read-key "Execute Key in global-map: "))))
     (call-interactively (lookup-key (current-global-map) key))
     (message nil))
+  (defun chunyang-dispatch-key (key)
+    (interactive "kDispatch Key: ")
+    (require 'seq)
+    (let* ((commands (seq-filter #'commandp
+                                 (mapcar (lambda (map) (lookup-key map key))
+                                         (current-active-maps))))
+           (collection (mapcar #'symbol-name commands))
+           (command (intern (completing-read
+                             (concat (key-description key) " ")
+                             collection nil t nil nil (cadr collection)))))
+      (command-execute command)))
   :bind (("C-x 3" . chunyang-split-window-right)
          ("C-x 2" . chunyang-split-window-below)
          ("C-h t" . chunyang-switch-scratch)
-         ("C-\\"  . chunyang-escape)
+         ("C-\\"  . chunyang-dispatch-key)
          :map lisp-interaction-mode-map
          ("C-c C-l" . chunyang-scratch-clear)
          :map messages-buffer-mode-map
