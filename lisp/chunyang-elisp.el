@@ -31,7 +31,7 @@
      (let ((sexp (sexp-at-point)))
        (with-current-buffer (window-buffer next-window)
          (eval-expression sexp))))
-    (t (user-error "Should be only two window"))))
+    (_ (user-error "Should be only two window"))))
 
 
 
