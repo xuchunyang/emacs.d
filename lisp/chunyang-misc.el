@@ -9,6 +9,28 @@
 (require 'cl-lib)
 
 
+;; 恢复最近的选中区域
+
+(defvar-local chunyang-last-region nil
+  "List of mark and point.")
+
+(defun chunyang-last-region-save ()
+  (when (/= (mark) (point))
+    (setq chunyang-last-region (list (mark) (point)))))
+
+(defun chunyang-last-region-restore ()
+  "Restore the last region."
+  (interactive)
+  (when chunyang-last-region
+    (pcase-let ((`(,mark ,point) chunyang-last-region))
+      (setf (mark) mark
+            (point) point))))
+
+;; (add-hook 'deactivate-mark-hook #'chunyang-last-region-save)
+;; (remove-hook 'deactivate-mark-hook #'chunyang-last-region-save)
+
+
+
 ;;; Format Emacs Lisp
 
 (defun chunyang-one-space (beg end &optional query-p)
