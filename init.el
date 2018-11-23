@@ -533,10 +533,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 ;; Frames
 (setq frame-resize-pixelwise t)         ; Resize by pixels
-(setq frame-title-format
-      '(:eval (if (buffer-file-name)
-                  (abbreviate-file-name (buffer-file-name))
-                "%b")))
+(setq frame-title-format '(buffer-file-name "%f" "%b"))
 
 (bind-key "M-RET" #'toggle-frame-maximized)
 
