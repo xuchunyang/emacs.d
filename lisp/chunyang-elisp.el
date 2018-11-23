@@ -94,6 +94,16 @@
   :global t
   :lighter (:eval (format " [%s, %d]" (mark) (point))))
 
+(define-minor-mode chunyang-display-window-mode
+  "Display window in the mode line."
+  :global t
+  :lighter (:eval
+            ;; #<window 229 on *scratch*>
+            ;; #<window 229>
+            (let ((str (prin1-to-string (selected-window))))
+              (and (string-match "[0-9]+" str)
+                   (format " #<window %s>" (match-string 0 str))))))
+
 
 ;; Byte-code, disassemble
 
