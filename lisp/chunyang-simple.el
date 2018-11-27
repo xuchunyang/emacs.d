@@ -4,6 +4,19 @@
 
 (require 'subr-x)
 
+;; TODO Try different automatic layout
+(defun chunyang-display-all-buffers ()
+  (interactive)
+  (delete-other-windows)
+  (let ((split-fn 'split-window-right))
+    (dolist (buffer (delq (current-buffer) (buffer-list)))
+      (unless (string-prefix-p " " (buffer-name buffer))
+        (select-window (funcall split-fn))
+        (setq split-fn (pcase-exhaustive split-fn
+                         ('split-window-right 'split-window-below)
+                         ('split-window-below 'split-window-right)))
+        (switch-to-buffer buffer)))))
+
 
 (defun chunyang-split-window-right ()
   "Split window with another buffer."
