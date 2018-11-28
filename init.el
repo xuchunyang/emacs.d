@@ -3296,7 +3296,6 @@ Because I usualy want to delete the final trailing newline."
   :defer t)
 
 (use-package org
-  :disabled
   :preface
   (defun chunyang-org-info-lookup-symbol ()
     "Call `info-lookup-symbol' within a source edit buffer if needed."
@@ -3378,17 +3377,6 @@ Adapt from `org-babel-remove-result'."
              (let ((filename (make-temp-file "" nil ".js")))
                (org-babel-tangle '(4) filename)
                (chunyang-mac-iTerm-send-string (concat "node " filename)))))))
-
-  (defun chunyang-org-mode-setup ())
-  :init
-  (add-hook 'org-mode-hook #'chunyang-org-mode-setup)
-
-  ;; Prefer Org mode from git if available
-  (add-to-list 'load-path "~/src/org-mode/lisp")
-  (add-to-list 'load-path "~/src/org-mode/contrib/lisp")
-
-  (add-to-list 'Info-directory-list "~/src/org-mode/doc")
-  (when *is-mac* (autoload 'org-mac-grab-link "org-mac-link"))
   :defer t
   :bind (("C-c c"      . org-capture)
          ("C-c a"      . org-agenda)
@@ -3396,12 +3384,11 @@ Adapt from `org-babel-remove-result'."
          ;; Don't forget to use `transpose-lines' and `transpose-sexps'
          ("<M-S-down>" . org-drag-line-forward)
          ("<M-S-up>"   . org-drag-line-backward))
-  :bind (:map org-mode-map ("C-h S" . chunyang-org-info-lookup-symbol))
   :config
   ;; Don't indent text under headings
   (setq org-adapt-indentation nil)
   ;; Keep indentation in src block on export
-  ;; (setq org-src-preserve-indentation t)
+  (setq org-src-preserve-indentation t)
   ;; Fix TAB when point is on src block
   (setq org-src-tab-acts-natively t)
 
@@ -3413,17 +3400,18 @@ Adapt from `org-babel-remove-result'."
         '(("t" "Todo" entry (file "todo.org")
            "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
            :empty-lines 1)
-          ("n" "Note" entry (file "notes.org")
-           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
-           :empty-lines 1)
-          ("j" "Journal" plain (file+datetree "journal.org")
-           "%?"
-           :time-prompt t
-           :empty-lines 1)
-          ("b" "Bookmark" entry (file "bookmarks.org")
-           "* %?%(grab-mac-link 'chrome 'org)\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
-           :empty-lines 1
-           :immediate-finish t)))
+          ;; ("n" "Note" entry (file "notes.org")
+          ;;  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+          ;;  :empty-lines 1)
+          ;; ("j" "Journal" plain (file+datetree "journal.org")
+          ;;  "%?"
+          ;;  :time-prompt t
+          ;;  :empty-lines 1)
+          ;; ("b" "Bookmark" entry (file "bookmarks.org")
+          ;;  "* %?%(grab-mac-link 'chrome 'org)\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+          ;;  :empty-lines 1
+          ;;  :immediate-finish t)
+          ))
 
   (setq org-agenda-restore-windows-after-quit t)
 
@@ -3442,9 +3430,9 @@ Adapt from `org-babel-remove-result'."
   (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 
   ;; Support link to Manpage, EWW and Notmuch
-  (require 'org-man)
+  (require 'org-man nil 'noerror)
   (require 'org-eww)
-  (require 'org-notmuch)
+  (require 'org-notmuch nil 'noerror)
 
   (use-package ob-lisp                  ; Common Lisp
     :defer t
@@ -3467,6 +3455,8 @@ Adapt from `org-babel-remove-result'."
     :load-path "~/src/ob-racket"
     :config
     (add-to-list 'org-src-lang-modes (cons "racket" 'scheme)))
+
+  (add-to-list 'org-src-lang-modes '("js" . js2))
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -3548,17 +3538,6 @@ Adapt from `org-babel-remove-result'."
   ;; $ emacsclient 'org-protocol://bookmark?'
   (require 'org-protocol)
   (require 'org-habit))
-
-(use-package org
-  :defer t
-  :init
-  (setq org-babel-load-languages '((emacs-lisp . t)
-                                   (js . t)
-                                   (shell . t)))
-  :config
-  (add-to-list 'org-src-lang-modes '("js" . js2))
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-src-preserve-indentation t))
 
 (use-package ox-html
   :defer t)
