@@ -639,19 +639,20 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   (when *is-mac*
     (setq dired-guess-shell-alist-user
           (list
-           (list (rx (and "."
-                          (or
-                           ;; Videos
-                           "mp4" "avi" "mkv" "rmvb"
-                           ;; Torrent
-                           "torrent"
-                           ;; PDF
-                           "pdf"
-                           ;; HTML
-                           "html"
-                           ;; Image
-                           "gif" "png" "jpg" "jpeg")
-                          string-end)) "open"))))
+           (list (rx "."
+                     (or
+                      ;; Videos
+                      "mp4" "avi" "mkv" "rmvb"
+                      ;; Torrent
+                      "torrent"
+                      ;; PDF
+                      "pdf"
+                      ;; HTML
+                      "html"
+                      ;; Image
+                      "gif" "png" "jpg" "jpeg")
+                     string-end)
+                 "open"))))
 
   (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python")))
 
