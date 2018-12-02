@@ -1587,7 +1587,33 @@ See also `describe-function-or-variable'."
        (and oneline
             (stringp oneline)
             (not (string= "" oneline))
-            (concat "  |  " (propertize oneline 'face 'italic)))))))
+            (concat "  |  " (propertize oneline 'face 'italic))))))
+
+  (define-advice elisp--preceding-sexp (:around (old-fun) multiline-comment)
+    "Support sexp in multiline comment."
+    (if (nth 4 (syntax-ppss))
+        (let ((work-buffer (current-buffer))
+              (temp-buffer (generate-new-buffer " *temp*"))
+              (sexp nil))
+          (with-current-buffer temp-buffer
+            (delay-mode-hooks (emacs-lisp-mode)))
+          (save-excursion
+            (comment-normalize-vars)
+            (while (and (comment-beginning)
+                        (not sexp))
+              (let ((code (buffer-substring-no-properties
+                           (point) (line-end-position))))
+                (with-current-buffer temp-buffer
+                  (goto-char (point-min))
+                  (insert code ?\n)
+                  (goto-char (point-max))
+                  (condition-case err
+                      (setq sexp (elisp--preceding-sexp))
+                    (scan-error nil))))
+              (forward-line -1)
+              (goto-char (line-end-position))))
+          sexp)
+      (funcall old-fun))))
 
 (use-package aggressive-indent
   :disabled t
