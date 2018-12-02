@@ -4467,6 +4467,31 @@ provides similiar function."
 
 ;;; Utilities
 
+(use-package popup
+  :about "Visual Popup Interface Library (using overlay)"
+  :homepage https://github.com/auto-complete/popup-el
+  :ensure t
+  :defer t)
+
+(use-package quick-peek
+  :about "Inline pop-up library (using overlay)"
+  :homepage https://github.com/cpitclaudel/quick-peek
+  :ensure t
+  :commands (quick-peek-show quick-peek-hide))
+
+(use-package pos-tip
+  :about "Like tooltip-show but can show at arbitrary position"
+  :homepage https://github.com/pitkali/pos-tip
+  :ensure t
+  :commands pos-tip-show)
+
+(use-package posframe
+  :if (version<= "26.1" emacs-version)
+  :about "Show a child frame at point"
+  :homepage https://github.com/tumashu/posframe
+  :ensure t
+  :defer t)
+
 (use-package cycle-quotes
   :ensure t
   :defer t)
@@ -4642,6 +4667,11 @@ provides similiar function."
 (use-package strie
   :homepage https://github.com/jcatw/strie.el
   :ensure t
+  :defer t)
+
+(use-package request
+  :ensure t
+  :homepage https://github.com/tkf/emacs-request
   :defer t)
 
 
