@@ -1591,29 +1591,36 @@ See also `describe-function-or-variable'."
 
   (define-advice elisp--preceding-sexp (:around (old-fun) multiline-comment)
     "Support sexp in multiline comment."
-    (if (nth 4 (syntax-ppss))
-        (let ((work-buffer (current-buffer))
-              (temp-buffer (generate-new-buffer " *temp*"))
-              (sexp nil))
-          (with-current-buffer temp-buffer
-            (delay-mode-hooks (emacs-lisp-mode)))
-          (save-excursion
-            (comment-normalize-vars)
-            (while (and (comment-beginning)
-                        (not sexp))
-              (let ((code (buffer-substring-no-properties
-                           (point) (line-end-position))))
-                (with-current-buffer temp-buffer
-                  (goto-char (point-min))
-                  (insert code ?\n)
-                  (goto-char (point-max))
-                  (condition-case err
-                      (setq sexp (elisp--preceding-sexp))
-                    (scan-error nil))))
-              (forward-line -1)
-              (goto-char (line-end-position))))
-          sexp)
-      (funcall old-fun))))
+    (condition-case err
+        (funcall old-fun)
+      (scan-error
+       (if (nth 4 (syntax-ppss))
+           (let ((work-buffer (current-buffer))
+                 (temp-buffer (generate-new-buffer " *temp*"))
+                 found sexp error)
+             (with-current-buffer temp-buffer
+               (delay-mode-hooks (emacs-lisp-mode)))
+             (save-excursion
+               (comment-normalize-vars)
+               (while (and (comment-beginning)
+                           (not found))
+                 (let ((code (buffer-substring-no-properties
+                              (point) (line-end-position))))
+                   (with-current-buffer temp-buffer
+                     (goto-char (point-min))
+                     (insert code ?\n)
+                     (goto-char (point-max))
+                     (condition-case err
+                         (setq sexp (funcall old-fun)
+                               found t)
+                       (scan-error (setq error err)))))
+                 (when (= -1 (forward-line -1))
+                   (error "elisp--preceding-sexp@multiline-comment error"))
+                 (goto-char (line-end-position))))
+             (cond (found sexp)
+                   (error (signal (car error) (cdr error)))
+                   (t (error "elisp--preceding-sexp@multiline-comment error"))))
+         (signal (car err) (cdr err)))))))
 
 (use-package aggressive-indent
   :disabled t
