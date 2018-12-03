@@ -4413,6 +4413,11 @@ provides similiar function."
   :load-path "~/src/moedict.el"
   :commands moedict)
 
+;; https://cc-cedict.org/editor/editor.php?handler=QueryDictionary
+(use-package cc-cedict
+  :load-path "~/src/cc-cedict.el"
+  :commands cc-cedict)
+
 
 ;;; Fun
 
