@@ -521,6 +521,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   (winner-mode))
 
 (use-package eyebrowse
+  :disabled t
   :homepage https://github.com/wasamasa/eyebrowse
   :ensure t
   :config (eyebrowse-mode))
