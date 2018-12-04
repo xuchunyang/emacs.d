@@ -3353,6 +3353,13 @@ Because I usualy want to delete the final trailing newline."
 
 (use-package org
   :preface
+  (defun chunyang-org-eval-defun ()
+    "`eval-defun' wrapper for org-mode."
+    (interactive)
+    (let ((beginning-of-defun-function nil)
+          (end-of-defun-function (lambda () (forward-sexp 1))))
+      (call-interactively #'eval-defun)))
+
   (defun chunyang-org-info-lookup-symbol ()
     "Call `info-lookup-symbol' within a source edit buffer if needed."
     (interactive)
@@ -3441,6 +3448,7 @@ Adapt from `org-babel-remove-result'."
          ("<M-S-down>" . org-drag-line-forward)
          ("<M-S-up>"   . org-drag-line-backward))
   :config
+  (bind-key "C-M-x" #'chunyang-org-eval-defun org-mode-map)
   ;; Don't indent text under headings
   (setq org-adapt-indentation nil)
   ;; Keep indentation in src block on export
