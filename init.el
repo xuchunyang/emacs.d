@@ -1007,6 +1007,7 @@ Intended to be added to `isearch-mode-hook'."
 
 (use-package region-state
   :ensure t
+  :load-path "~/src/region-state.el"
   :commands region-state-mode
   :init (region-state-mode))
 
