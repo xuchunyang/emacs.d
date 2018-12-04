@@ -1140,9 +1140,9 @@ Intended to be added to `isearch-mode-hook'."
   (add-hook 'prog-mode-hook #'company-mode)
   :config
   ;; Use Company for completion C-M-i
-  (bind-key [remap completion-at-point] #'company-complete company-mode-map)
+  ;; (bind-key [remap completion-at-point] #'company-complete company-mode-map)
   ;; M-h/c-h/F1 to display doc in help buffer, C-w to show location
-  (bind-key "M-h" #'company-show-doc-buffer company-active-map)
+  ;; (bind-key "M-h" #'company-show-doc-buffer company-active-map)
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 2))
 
