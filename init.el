@@ -1105,6 +1105,7 @@ Intended to be added to `isearch-mode-hook'."
   :diminish abbrev-mode)
 
 (use-package hippie-exp                 ; Powerful expansion and completion
+  :disabled t
   :bind ([remap dabbrev-expand]  . hippie-expand)
   :config
   (setq hippie-expand-try-functions-list
