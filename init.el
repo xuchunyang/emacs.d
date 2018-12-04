@@ -1799,15 +1799,7 @@ PACKAGE should not be a built-in package."
              chunyang-display-window-mode
              chunyang-toggle-setq-form
              chunyang-insert-command
-             chunyang-insert-key)
-  :init
-  (with-eval-after-load 'elisp-mode
-    (bind-keys :map emacs-lisp-mode-map
-               ("C-j" . chunyang-eval-print-last-sexp)
-               ("C-," . chunyang-macroexpand-print-last-sexp)
-               :map lisp-interaction-mode-map
-               ("C-j" . chunyang-eval-print-last-sexp)
-               ("C-," . chunyang-macroexpand-print-last-sexp))))
+             chunyang-insert-key))
 
 (use-package chunyang-package
   :commands describe-package--add-melpa-link
