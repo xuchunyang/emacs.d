@@ -3318,13 +3318,27 @@ Because I usualy want to delete the final trailing newline."
   :defer t)
 
 
-;;; Org mode
+;;; Calendar
 
 (use-package calendar
   :init
   ;; 每周从周一开始（需要 load 之前设置）
   (setq calendar-week-start-day 1)
   :defer t)
+
+(use-package calfw
+  :about "Alternative Calendar Interface"
+  :homepage https://github.com/kiwanami/emacs-calfw
+  :ensure t
+  :commands cfw:open-calendar-buffer)
+
+(use-package calfw-org
+  :about "calfw interface for org agenda"
+  :ensure t
+  :commands cfw:open-org-calendar)
+
+
+;;; Org mode
 
 (use-package org
   :preface
