@@ -1275,6 +1275,16 @@ Intended to be added to `isearch-mode-hook'."
   ;; Cause I don't use `package.el' anymore
   (advice-add 'package-lint--check-packages-installable :around #'ignore))
 
+(use-package elsa
+  :homepage https://github.com/emacs-elsa/Elsa
+  :about Emacs Lisp Static Analyzer
+  :ensure t
+  :defer t)
+
+(use-package flycheck-elsa
+  :ensure t
+  :defer t)
+
 
 ;;; Markup languages
 
