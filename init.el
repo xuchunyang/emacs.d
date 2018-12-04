@@ -4417,6 +4417,10 @@ provides similiar function."
 ;;; Fun
 
 (use-package svg-clock
+  :disabled t                           ; Disabled because it will install the
+                                        ; outdated svg-1.0.el from gnu elpa,
+                                        ; rather then use the newer (not
+                                        ; version) builtin one
   :ensure t
   :commands svg-clock)
 
