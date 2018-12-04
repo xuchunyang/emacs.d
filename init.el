@@ -3642,6 +3642,11 @@ Adapt from `org-babel-remove-result'."
   ;; C-l to toggle it.
   (add-hook 'c-mode-common-hook #'c-toggle-auto-hungry-state)
 
+  (defun chunyang-c-mode-common-setup ()
+    (abbrev-mode -1))
+
+  (add-hook 'c-mode-common-hook #'chunyang-c-mode-common-setup)
+
   (defun chunyang-c-mode-setup ()
     (when buffer-file-name
       (unless (file-exists-p "Makefile")
