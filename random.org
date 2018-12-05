@@ -1,0 +1,26 @@
+* Table of Contents                                               :TOC:QUOTE:
+#+BEGIN_QUOTE
+- [[#defsubst][=defsubst=]]
+#+END_QUOTE
+
+* =defsubst=
+
+使用 =defsubst= 定义 Inline Function —— 像 Macro 的 Function。
+
+#+BEGIN_SRC elisp
+(defsubst foo () (message "Foo is an inline funciton"))
+#+END_SRC
+
+#+RESULTS:
+: foo
+
+经过 Byte-compile，调用 Inline Function 的地方会像 Macro 那样直接插入 Function Body，从而避免函数调用的负担。
+
+#+BEGIN_SRC elisp
+(defun bar () (foo))
+(byte-compile 'bar)
+(symbol-function 'bar)
+#+END_SRC
+
+#+RESULTS:
+: #[nil "\300\301!\207" [message "Foo is an inline funciton"] 2]
