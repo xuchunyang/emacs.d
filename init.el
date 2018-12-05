@@ -4721,7 +4721,14 @@ provides similiar function."
   :defer t)
 
 (use-package ctable
+  :about "Library for creating tables"
   :homepage https://github.com/kiwanami/emacs-ctable
+  :ensure t
+  :defer t)
+
+(use-package etable
+  :about "Library for creating tables."
+  :homepage https://github.com/Fuco1/ETable
   :ensure t
   :defer t)
 
