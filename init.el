@@ -1870,7 +1870,16 @@ PACKAGE should not be a built-in package."
 
   (bind-key "." #'hydra-debugger-menu/body debugger-mode-map))
 
-;; TODO Add (info "(elisp) Edebug")
+(use-package edebug
+  :info (info "(elisp) Edebug")
+  :defer t
+  :config
+  ;; Don't pause after every break (Added in Emacs 26.1)
+  (setq edebug-sit-on-break nil)
+  ;; Don't restore window configuration
+  ;; - For safety, it should be t, but it usually is pointless & slow & annoying
+  ;; - Use W to toggle this option
+  (setq edebug-save-windows nil))
 
 (use-package nameless
   :ensure t
