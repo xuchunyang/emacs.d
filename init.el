@@ -4725,6 +4725,18 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package esxml
+  :homepage https://github.com/tali713/esxml
+  :about "XML writing and Document.querySelector()"
+  :ensure t
+  :defer t)
+
+(use-package xmlgen
+  :about "XML writing"
+  :notes "Unlike esxml, xmlgen uses its own sexp syntax and don't with work libxml-parse-html-region"
+  :ensure t
+  :defer t)
+
 (use-package chart                      ; Built-in
   :defer t
   :defer t)
