@@ -3462,7 +3462,7 @@ Adapt from `org-babel-remove-result'."
         org-agenda-files '("~/Notes"))
   (setq org-capture-templates
         '(("t" "Todo" entry (file "todo.org")
-           "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+           "* TODO %i%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
            :empty-lines 1)
           ;; ("n" "Note" entry (file "notes.org")
           ;;  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
