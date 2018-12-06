@@ -4511,6 +4511,11 @@ provides similiar function."
   :ensure t
   :disabled t)
 
+(use-package pacmacs
+  :about "Pac-Man Game"
+  :homepage https://github.com/codingteam/pacmacs.el
+  :ensure t)
+
 (use-package spinner
   :about "Add spinners and progress-bars to the mode-line for ongoing operations"
   :ensure t
