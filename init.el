@@ -2720,7 +2720,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   (setq mu4e-user-mailing-lists
         '(("racket-users.googlegroups.com" . "Racket")
           ("chicken-users.nongnu.org"      . "Chicken")))
-  
+
   (add-to-list 'mu4e-view-actions
                '("open in web browser" .
                  chunyang-mu4e-action-open-html-in-browser))
@@ -2728,7 +2728,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
     (when-let* ((html (mu4e-message-field msg :body-html))
                 (tmpfile (make-temp-file "mure-" nil ".html" html)))
       (call-process "open" nil nil nil tmpfile)))
-  
+
   (setq mu4e-get-mail-command "proxychains4 mbsync --verbose --all"))
 
 (use-package chunyang-mail
@@ -2814,7 +2814,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
         (setq url (url-unhex-string url)
               url (replace-regexp-in-string "\\?.*$" "" url)))
       (eww url)))
-  
+
   (defun helm-eww-bookmarks ()
     "My EWW bookmarks manager using helm."
     (interactive)
@@ -4016,14 +4016,14 @@ provides similiar function."
      (lambda ()
        "Remove the last line."
        (when-let ((buffer (get-buffer "*Racket Describe*")))
-	 (with-current-buffer buffer
-	   (save-excursion
-	     (goto-char (point-max))
-	     (goto-char (line-beginning-position))
-	     (when (looking-at-p "^Definition")
-	       (let ((inhibit-read-only t))
-		 (delete-region (line-beginning-position)
-				(line-end-position))))))))))
+         (with-current-buffer buffer
+           (save-excursion
+             (goto-char (point-max))
+             (goto-char (line-beginning-position))
+             (when (looking-at-p "^Definition")
+               (let ((inhibit-read-only t))
+                 (delete-region (line-beginning-position)
+                                (line-end-position))))))))))
   (add-hook 'racket-describe-mode-hook #'chunyang-racket-describe-mode-setup)
   :config
   (define-advice racket-describe (:around (old-fun &rest args) silence)
