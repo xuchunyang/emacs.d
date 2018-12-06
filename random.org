@@ -2,6 +2,7 @@
 #+BEGIN_QUOTE
 - [[#defsubst][=defsubst=]]
 - [[#1--2--3----100][1 + 2 + 3 + ... + 100]]
+- [[#1-2-3--list-1-2-3][='(1 2 3)= ≠ =(list 1 2 3)=]]
 #+END_QUOTE
 
 * =defsubst=
@@ -79,6 +80,34 @@ Good
 
 #+RESULTS:
 : 5050
+
+* ='(1 2 3)= ≠ =(list 1 2 3)=
+
+这两种写法有本质不同，有时能交换使用，有时又不能。选中那种写法首先考虑对不对，然后在考虑风格。
+
+- =`(,1 2 3)= ≠ =(list 1 2 3)=
+- =`(,1 ,2 3)= ≠ =(list 1 2 3)=
+- =`(,1 ,2 ,3)= = =(list 1 2 3)=
+
+=bar= 一般属于错误：
+
+#+BEGIN_SRC elisp
+(defun foo () (list 1 2 3))
+(defun bar () '(1 2 3))
+#+END_SRC
+
+#+RESULTS:
+: bar
+
+#+BEGIN_SRC elisp :results pp
+(cl-incf (car (bar)) 100)
+(cl-incf (car (bar)) 100)
+(symbol-function 'bar)
+#+END_SRC
+
+#+RESULTS:
+: (lambda nil
+:   '(201 2 3))
 
 # Local Variables:
 # eval: (toc-org-mode)
