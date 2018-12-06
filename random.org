@@ -1,8 +1,19 @@
+# -*- eval: (toc-org-mode); -*-
+
+#+PROPERTY: header-args:elisp :results pp
+
 * Table of Contents                                               :TOC:QUOTE:
 #+BEGIN_QUOTE
 - [[#defsubst][=defsubst=]]
 - [[#1--2--3----100][1 + 2 + 3 + ... + 100]]
 - [[#1-2-3--list-1-2-3][='(1 2 3)= ≠ =(list 1 2 3)=]]
+- [[#cl-loop][=cl-loop=]]
+  - [[#append-vs-collect][=append= vs =collect=]]
+  - [[#in-ref-vs-in][=in-ref= vs =in=]]
+  - [[#into][=into=]]
+  - [[#nconc-vs-append][=nconc= vs =append=]]
+  - [[#return][=return=]]
+  - [[#if][=if=]]
 #+END_QUOTE
 
 * =defsubst=
@@ -109,6 +120,111 @@ Good
 : (lambda nil
 :   '(201 2 3))
 
-# Local Variables:
-# eval: (toc-org-mode)
-# End:
+* =cl-loop=
+
+** =append= vs =collect=
+
+#+BEGIN_SRC elisp
+(cl-loop for k in '(1 2 3)
+         for v in '(a b c)
+         collect (list k v))
+#+END_SRC
+
+#+RESULTS:
+: ((1 a)
+:  (2 b)
+:  (3 c))
+
+#+BEGIN_SRC elisp
+(cl-loop for k in '(1 2 3)
+         for v in '(a b c)
+         append (list k v))
+#+END_SRC
+
+#+RESULTS:
+: (1 a 2 b 3 c)
+
+** =in-ref= vs =in=
+
+#+BEGIN_SRC elisp
+(let ((nums (list 1 2 3)))
+  (cl-loop for i in nums
+           do (cl-incf i))
+  nums)
+#+END_SRC
+
+#+RESULTS:
+: (1 2 3)
+
+#+BEGIN_SRC elisp
+(let ((nums (list 1 2 3)))
+  (cl-loop for i in-ref nums
+           do (cl-incf i))
+  nums)
+#+END_SRC
+
+#+RESULTS:
+: (2 3 4)
+
+** =into=
+
+#+BEGIN_SRC elisp
+(cl-loop for i from 1 to 100
+         sum i into result
+         finally return (format "1 + 2 + 3 ... + 100 = %s" result))
+#+END_SRC
+
+#+RESULTS:
+: "1 + 2 + 3 ... + 100 = 5050"
+
+** =nconc= vs =append=
+
+#+BEGIN_SRC elisp
+(let ((l (list (list 1) (list 2) (list 3))))
+  (cl-loop for i in l
+           append i)
+  l)
+#+END_SRC
+
+#+RESULTS:
+: ((1)
+:  (2)
+:  (3))
+
+#+BEGIN_SRC elisp
+(let ((l (list (list 1) (list 2) (list 3))))
+  (cl-loop for i in l
+           nconc i)
+  l)
+#+END_SRC
+
+#+RESULTS:
+: ((1 2 3)
+:  (2 3)
+:  (3))
+
+** =return=
+
+#+BEGIN_SRC elisp
+(cl-loop for i from 1
+         when (> i 100)
+         return "look ma, not catch/throw")
+#+END_SRC
+
+#+RESULTS:
+: "look ma, not catch/throw"
+
+** =if=
+
+#+BEGIN_SRC elisp
+(cl-loop for i from 1 to 10
+         if (cl-evenp i)
+         collect i into evens
+         else
+         collect i into odds
+         finally return (list odds evens))
+#+END_SRC
+
+#+RESULTS:
+: ((1 3 5 7 9)
+:  (2 4 6 8 10))
