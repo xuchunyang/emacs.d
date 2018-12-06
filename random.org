@@ -18,6 +18,7 @@
   - [[#across-ref][=across-ref=]]
   - [[#vconcat][=vconcat=]]
   - [[#nest-cl-loop][nest cl-loop]]
+  - [[#byte-compiling-cl-loop-is-important][Byte-compiling cl-loop is important]]
 #+END_QUOTE
 
 * =defsubst=
@@ -308,3 +309,28 @@ Good
 
 #+RESULTS:
 : (1 2 3 4 5 6 7 8 9)
+
+** Byte-compiling cl-loop is important
+
+#+BEGIN_SRC elisp
+(defun foo ()
+  (cl-loop for i below 10000
+           do (cl-loop for j below 10000)))
+
+(benchmark-run 1 (foo))
+#+END_SRC
+
+#+RESULTS:
+: (18.556844 1 0.09451100000001134)
+
+#+BEGIN_SRC elisp
+(defun bar ()
+  (cl-loop for i below 10000
+           do (cl-loop for j below 10000)))
+
+(byte-compile 'bar)
+(benchmark-run 1 (bar))
+#+END_SRC
+
+#+RESULTS:
+: (2.316306 0 0.0)
