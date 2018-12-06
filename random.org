@@ -1,6 +1,7 @@
 * Table of Contents                                               :TOC:QUOTE:
 #+BEGIN_QUOTE
 - [[#defsubst][=defsubst=]]
+- [[#1--2--3----100][1 + 2 + 3 + ... + 100]]
 #+END_QUOTE
 
 * =defsubst=
@@ -24,3 +25,61 @@
 
 #+RESULTS:
 : #[nil "\300\301!\207" [message "Foo is an inline funciton"] 2]
+
+* 1 + 2 + 3 + ... + 100
+
+Bad (waste space)
+
+#+BEGIN_SRC elisp
+(apply #'+ (number-sequence 1 100))
+#+END_SRC
+
+#+RESULTS:
+: 5050
+
+Bad
+
+#+BEGIN_SRC elisp
+(cl-reduce #'+ (number-sequence 1 100))
+#+END_SRC
+
+#+RESULTS:
+: 5050
+
+Best
+
+#+BEGIN_SRC elisp
+(cl-loop for i from 1 to 100
+         sum i)
+#+END_SRC
+
+#+RESULTS:
+: 5050
+
+Good
+
+#+BEGIN_SRC elisp
+(let ((i 1)
+      (sum 0))
+  (while (<= i 100)
+    (setq sum (+ sum i))
+    (setq i (1+ i)))
+  sum)
+#+END_SRC
+
+#+RESULTS:
+: 5050
+
+Good
+
+#+BEGIN_SRC elisp
+(require 'stream)
+(seq-reduce #'+ (stream-range 1 101) 0)
+#+END_SRC
+
+#+RESULTS:
+: 5050
+
+# Local Variables:
+# eval: (toc-org-mode)
+# End:
