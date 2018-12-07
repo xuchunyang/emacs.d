@@ -3660,7 +3660,7 @@ Adapt from `org-babel-remove-result'."
   ;; manual, let me try them for a while. BTW, 'a' and 'h' will be indicated in
   ;; the mode-line, such as C/lah.  BTW, 'l' stands for electric keys, use C-c
   ;; C-l to toggle it.
-  (add-hook 'c-mode-common-hook #'c-toggle-auto-hungry-state)
+  ;; (add-hook 'c-mode-common-hook #'c-toggle-auto-hungry-state)
 
   (defun chunyang-c-mode-common-setup ()
     (abbrev-mode -1))
@@ -3692,6 +3692,11 @@ Adapt from `org-babel-remove-result'."
         (re-search-forward symbol nil t)
         (display-buffer (current-buffer)))))
   :config
+  ;; Really need a key binding for reporting bug? M-x `c-submit-bug-report'
+  (unbind-key "C-c C-b" c-mode-map)
+  ;; C/*lah => C
+  (advice-add 'c-update-modeline :around #'ignore)
+
   ;; Add imenu support for section comment like this
   ;; /*** includes ***/
   (add-to-list
