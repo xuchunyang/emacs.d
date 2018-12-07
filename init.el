@@ -1650,7 +1650,6 @@ See also `describe-function-or-variable'."
         aggressive-indent-protected-commands))
 
 (use-package el-search
-  :disabled t
   :ensure t
   :defer t
   :preface
@@ -1712,6 +1711,10 @@ PACKAGE should not be a built-in package."
             (cadr (assq package package-alist)))))
       (el-search-directory pattern pkgdir t)))
 
+  :init
+  ;; XXX To reduce startup time, use `emacs-lisp-mode-hook' and bind some key to
+  ;; `global-map'.
+  (el-search-install-shift-bindings)
   :config
   (require 'el-search-x)
 
@@ -1748,42 +1751,7 @@ PACKAGE should not be a built-in package."
 
   (el-search-defpattern s (&rest regexps)
     "Match any string (excluding doc string) that is matched by all REGEXPS"
-    `(and (string ,@regexps) (guard (not (el-search--doc-string-p)))))
-
-  (bind-key "C-S-s" #'exit-minibuffer el-search-read-expression-map)
-  (bind-key "C-S-r" #'exit-minibuffer el-search-read-expression-map)
-  (bind-key "C-S-o" #'el-search-set-occur-flag-exit-minibuffer el-search-read-expression-map)
-
-  :init
-  (defvar emacs-lisp-mode-map)
-  (defvar lisp-interaction-mode-map)
-  (with-eval-after-load 'elisp-mode
-    ;; Because`lisp-interaction-mode-map' doesn't inherit `emacs-lisp-mode-map'
-    (dolist (map (list emacs-lisp-mode-map lisp-interaction-mode-map))
-      (bind-key "C-S-s" #'el-search-pattern map)
-      (bind-key "C-S-r" #'el-search-pattern-backwards map)
-      (bind-key "C-%" #'el-search-query-replace map)
-      (bind-key "C-S-h" #'el-search-this-sexp map)))
-
-  (bind-key "C-S-j" #'el-search-jump-to-search-head global-map)
-  (bind-key "C-S-a" #'el-search-from-beginning global-map)
-  (bind-key "C-S-d" #'el-search-skip-directory global-map)
-  (bind-key "C-S-n" #'el-search-continue-in-next-buffer global-map)
-  (bind-key "C-S-o" #'el-search-occur global-map)
-
-  (bind-key "C-S-s" #'el-search-search-from-isearch isearch-mode-map)
-  (bind-key "C-S-r" #'el-search-search-backwards-from-isearch isearch-mode-map)
-  (bind-key "C-%" #'el-search-replace-from-isearch isearch-mode-map)
-  (bind-key "C-S-o" #'el-search-occur-from-isearch isearch-mode-map)
-
-  (bind-key "C-S-e" #'el-search-emacs-elisp-sources global-map)
-  (bind-key "C-S-l" #'el-search-load-path global-map)
-  (bind-key "C-S-b" #'el-search-buffers global-map)
-
-  (defvar dired-mode-map)
-
-  (with-eval-after-load 'dired
-    (bind-key "C-S-s" #'el-search-dired-marked-files dired-mode-map)))
+    `(and (string ,@regexps) (guard (not (el-search--doc-string-p))))))
 
 (use-package lispy
   :disabled
