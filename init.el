@@ -1716,6 +1716,16 @@ PACKAGE should not be a built-in package."
   (with-eval-after-load 'elisp-mode
     (el-search-install-shift-bindings))
   :config
+  (defun chunyang-el-search-change-occur-buffer-name ()
+    (when el-search--current-search
+      (setf (buffer-name)
+            (format "*El Occur: %s*"
+                    (cl-substitute
+                     ?\s ?\n
+                     (el-search--pp-to-string (el-search-object-pattern
+                                               el-search--current-search))
+                     :test #'=)))))
+  (add-hook 'el-search-occur-mode-hook #'chunyang-el-search-change-occur-buffer-name)
   (require 'el-search-x)
 
   ;; FIXME: Update this list every time el-search starts. How?
