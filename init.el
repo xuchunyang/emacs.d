@@ -1712,9 +1712,9 @@ PACKAGE should not be a built-in package."
       (el-search-directory pattern pkgdir t)))
 
   :init
-  ;; XXX To reduce startup time, use `emacs-lisp-mode-hook' and bind some key to
-  ;; `global-map'.
-  (el-search-install-shift-bindings)
+  ;; Reduce startup time. keys won't work untill an elisp file is opened.
+  (with-eval-after-load 'elisp-mode
+    (el-search-install-shift-bindings))
   :config
   (require 'el-search-x)
 
