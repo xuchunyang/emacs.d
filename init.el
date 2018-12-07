@@ -175,6 +175,23 @@
 (column-number-mode)
 (size-indication-mode)
 
+(defconst chunyang-mode-line-format
+  '(" %+  "
+    mode-line-buffer-identification
+    "   "
+    mode-line-position
+    "   "
+    mode-line-modes
+    mode-line-misc-info)
+  "A simple and clean mode-line.")
+;; (substring-no-properties (format-mode-line chunyang-mode-line-format))
+;; ;; =>
+;; " *  init.el         3% of 153k (189,0)     (Emacs-Lisp) "
+
+(setq-default mode-line-format chunyang-mode-line-format)
+;; To restore
+;; (setq-default mode-line-format (eval (car (get 'mode-line-format 'standard-value))))
+
 (use-package spaceline
   :disabled
   :ensure t
