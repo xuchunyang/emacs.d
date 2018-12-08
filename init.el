@@ -4471,6 +4471,12 @@ provides similiar function."
   :ensure t
   :commands svg-clock)
 
+(use-package zone-nyan
+  :ensure t
+  :about "Walk a cat (using svg)"
+  :homepage https://github.com/wasamasa/zone-nyan
+  :commands zone-mode)
+
 ;; My profile: https://codestats.net/users/xuchunyang
 (use-package code-stats
   :disabled t
