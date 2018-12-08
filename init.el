@@ -94,8 +94,8 @@
     (let ((f "~/.emacs.d/var/scratch"))
       (when (file-exists-p f)
         (with-current-buffer "*scratch*"
-          (erase-buffer)
-          (insert-file-contents f)))))
+          (insert-file-contents f)
+          (set-buffer-modified-p nil)))))
   :init
   (add-hook 'kill-emacs-hook #'chunyang-scratch-save)
   (add-hook 'after-init-hook #'chunyang-scratch-restore)
