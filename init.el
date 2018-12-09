@@ -2192,6 +2192,8 @@ PACKAGE should not be a built-in package."
 (use-package vc
   :defer t
   :init
+  ;; Disable VC entirely
+  (setq vc-handled-backends ())
   ;; Don't ask me again
   (setq vc-follow-symlinks t))
 
