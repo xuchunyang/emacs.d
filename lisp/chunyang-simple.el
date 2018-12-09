@@ -183,7 +183,8 @@ With ARG, put *scratch* buffer right."
         (let ((standard-value
                (eval (car (get 'initial-scratch-message 'standard-value)))))
           (erase-buffer)
-          (insert (substitute-command-keys standard-value))))))
+          (insert (substitute-command-keys standard-value))
+          (set-buffer-modified-p nil)))))
 
 (defun chunyang-clear-messages-buffer ()
   "Delete the contents of the *Messages* buffer."
