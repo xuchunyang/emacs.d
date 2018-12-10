@@ -1847,11 +1847,13 @@ PACKAGE should not be a built-in package."
   ;; TODO: Fontify #1234 (make it clickable) in certain modes
   (defun chunyang-open-emacs-bug (id)
     "Open emacs bug report in browser, the bug id looks like Bug#25942."
-    (interactive (list
-                  (or (number-at-point)
-                      (and (looking-at "#\\([0-9]*\\)")
-                           (string-to-number (match-string 1)))
-                      (read-number "Bug Id: "))))
+    (interactive
+     (list
+      (or
+       (let ((case-fold-search t))
+         (when (thing-at-point-looking-at (rx (opt "Bug#") (group (1+ num))) 10)
+           (string-to-number (match-string 1))))
+       (read-number "Bug Id: "))))
     (let ((url
            (format "https://debbugs.gnu.org/cgi/bugreport.cgi?bug=%s"
                    id)))
