@@ -1836,6 +1836,13 @@ PACKAGE should not be a built-in package."
   :ensure t
   :defer t
   :preface
+  ;; https://debbugs.gnu.org/cgi/pkgreport.cgi?which=submitter&data=mail%40xuchunyang.me
+  (defun chunyang-list-emacs-bugs ()
+    "List emacs bugs submitted by me."
+    (interactive)
+    (let ((debbugs-gnu-current-query `((submitter . ,user-mail-address))))
+      (debbugs-gnu nil)))
+
   ;; TODO: Fontify #1234 (make it clickable) in certain modes
   (defun chunyang-open-emacs-bug (id)
     "Open emacs bug report in browser, the bug id looks like Bug#25942."
