@@ -19,6 +19,10 @@
 ;; Custom
 (setq custom-file "~/.emacs.d/custom.el")
 
+;; Emacs should have them, see Bug#33576
+(defun version> (v1 v2) (version< v2 v1))
+(defun version>= (v1 v2) (version<= v2 v1))
+
 
 ;;; Package Manager
 
