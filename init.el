@@ -10,12 +10,6 @@
 
 ;;; Startup
 
-;; Debug
-(setq message-log-max 10000)
-
-;; Don't load outdated elc
-(setq load-prefer-newer t)
-
 ;; Custom
 (setq custom-file "~/.emacs.d/custom.el")
 
