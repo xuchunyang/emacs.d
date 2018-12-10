@@ -326,12 +326,14 @@
 
 ;; counsel -> swiper -> ivy
 (use-package counsel
+  ;; TODO Toggle between normal Emacs completing-read & Ivy
+  ;; :disabled
   :ensure t
   :diminish ivy-mode
   :config
   (setq ivy-do-completion-in-region nil)
   (ivy-mode)
-  (setq ivy-use-virtual-buffers t) ; recentf in `ivy-switch-buffer'
+  (setq ivy-use-virtual-buffers t)      ; recentf in `ivy-switch-buffer'
   (setq counsel-find-file-at-point t)
   ;; TODO: Replace global-set-key with bind-key
   (global-set-key (kbd "M-i") 'swiper)
@@ -1859,6 +1861,7 @@ PACKAGE should not be a built-in package."
       (browse-url url))))
 
 (use-package hydra
+  :homepage https://github.com/abo-abo/hydra
   :ensure t
   :defer t)
 
@@ -2622,7 +2625,7 @@ This should be add to `find-file-hook'."
             (t nil))))
   :config
   ;; don't keep message buffers around
-  (setq message-kill-buffer-on-exit t)
+  ;; (setq message-kill-buffer-on-exit t)
   (setq message-directory (locate-user-emacs-file "var/Mail"))
   (setq message-signature 'chunyang-message-signature))
 
@@ -2763,9 +2766,11 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   ;; - JSON
   (setq elfeed-feeds
         '("http://nullprogram.com/feed/"
-          "http://planet.emacsen.org/atom.xml"
-          "https://emacs-china.org/latest.rss"
-          "http://emacs.stackexchange.com/feeds"
+          ("http://emacsninja.com/emacs.atom" emacs)
+          ("http://emacshorrors.com/feed.atom" emacs)
+          ("http://planet.emacsen.org/atom.xml" emacs)
+          ("https://emacs-china.org/latest.rss" emacs)
+          ("http://ubuntupodcast.org/feed/" ubuntu)
           "https://sspai.com/feed"
           "https://sirsharpest.github.io/rss.xml"
           "http://feeds2.feedburner.com/stevelosh"
@@ -2777,7 +2782,6 @@ proxychains4 mbsync --verbose --all && notmuch new&")
           "https://jameshfisher.com/feed.xml"
           "https://open.nytimes.com/feed"
           "http://bluxte.net/rss.xml"
-          "http://www.pornhub.com/insights/feed/"
           "https://increment.com/feed.xml")))
 
 (use-package elfeed-org
