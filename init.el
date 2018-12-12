@@ -4534,6 +4534,7 @@ provides similiar function."
   :disabled t)
 
 (use-package pacmacs
+  :disabled                      ; It defines `plist-map' without package prefix
   :about "Pac-Man Game"
   :homepage https://github.com/codingteam/pacmacs.el
   :ensure t)
