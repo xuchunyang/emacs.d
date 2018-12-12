@@ -1746,14 +1746,14 @@ PACKAGE should not be a built-in package."
   ;; XXX: Better idea for the buffer name, see C-j C-S-j
   ;; `el-search-jump-to-search-head'
   (defun chunyang-el-search-change-occur-buffer-name ()
-    (when el-search--current-search
+    (when el-search-occur-search-object
       (setf (buffer-name)
             (generate-new-buffer-name
              (format "*El Occur: %s*"
                      (cl-substitute
                       ?\s ?\n
-                      (el-search--pp-to-string (el-search-object-pattern
-                                                el-search--current-search))
+                      (prin1-to-string (el-search-object-pattern
+                                        el-search-occur-search-object))
                       :test #'=))))))
   (add-hook 'el-search-occur-mode-hook #'chunyang-el-search-change-occur-buffer-name)
   (require 'el-search-x)
