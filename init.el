@@ -253,7 +253,9 @@
 (use-package recentf                    ; Recent files
   :config
   (setq recentf-max-saved-items 512
-        recentf-exclude '("-autoloads\\.el\\'"
+        recentf-exclude '("/\\.git/.*\\'"
+                          "/\\.emacs\\.d/elpa"
+                          "-autoloads\\.el\\'"
                           "/TAGS\\'"))
   (recentf-mode))
 
