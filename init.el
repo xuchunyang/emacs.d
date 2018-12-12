@@ -570,7 +570,10 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;; this feature in such case.
 (unless (and *is-mac* (not *is-mac-port*))
   ;; Delete files to trash
-  (setq delete-by-moving-to-trash t))
+  ;; (setq delete-by-moving-to-trash t)
+  ;; To support 'Put back' (but this is slow)
+  ;; (setq mac-system-move-file-to-trash-use-finder t)
+  )
 
 ;; Exit Emacs without confirm kill processes (Emacs-26.1)
 (setq confirm-kill-processes nil)
