@@ -252,7 +252,9 @@
 
 (use-package recentf                    ; Recent files
   :config
-  (setq recentf-max-saved-items 512)
+  (setq recentf-max-saved-items 512
+        recentf-exclude '("-autoloads\\.el\\'"
+                          "/TAGS\\'"))
   (recentf-mode))
 
 (use-package bookmark
