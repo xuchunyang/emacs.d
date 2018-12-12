@@ -1735,6 +1735,8 @@ PACKAGE should not be a built-in package."
   (with-eval-after-load 'elisp-mode
     (el-search-install-shift-bindings))
   :config
+  ;; XXX: Better idea for the buffer name, see C-j C-S-j
+  ;; `el-search-jump-to-search-head'
   (defun chunyang-el-search-change-occur-buffer-name ()
     (when el-search--current-search
       (setf (buffer-name)
