@@ -19,6 +19,7 @@
   - [[#vconcat][=vconcat=]]
   - [[#nest-cl-loop][nest cl-loop]]
   - [[#byte-compiling-cl-loop-is-important][Byte-compiling cl-loop is important]]
+- [[#parsec][parsec]]
 #+END_QUOTE
 
 * =defsubst=
@@ -334,3 +335,16 @@ Good
 
 #+RESULTS:
 : (2.316306 0 0.0)
+
+* parsec
+
+#+BEGIN_SRC elisp
+(parsec-with-input "/* hello */"
+  (parsec-string "/*")
+  (parsec-many-till-as-string (parsec-any-ch)
+                              (parsec-try
+                               (parsec-string "*/"))))
+#+END_SRC
+
+#+RESULTS:
+: " hello "
