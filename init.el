@@ -2043,6 +2043,14 @@ PACKAGE should not be a built-in package."
 (use-package info
   :defer t
   :config
+  ;; Install libc info manual on macOS
+  ;;
+  ;; $ cd ~/.emacs.d/var/info/
+  ;; $ curl --proxy socks5://127.0.0.1:1080 -O https://www.gnu.org/software/libc/manual/info/libc-info.tar.gz
+  ;; $ tar xvf libc-info.tar.gz
+  ;; $ install-info libc.info dir
+  (add-to-list 'Info-directory-list "~/.emacs.d/var/info")
+
   ;; Get HTML link
   ;; (emacs) Echo Area
   ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Echo-Area.html
@@ -2817,7 +2825,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   ;; XXX Don't ever save cookie to disk, since I don't know what's purpose of
   ;; cookie, and more importantly, keep loogging the following per hour is
   ;; annoying
-  ;; 
+  ;;
   ;; Saving file /Users/xcy/.emacs.d/var/url/configuration/cookies...
   (advice-add 'url-cookie-setup-save-timer :override #'ignore))
 
