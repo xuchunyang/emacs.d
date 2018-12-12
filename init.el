@@ -253,9 +253,12 @@
 (use-package recentf                    ; Recent files
   :config
   (setq recentf-max-saved-items 512
-        recentf-exclude '("/\\.git/.*\\'"
-                          "/\\.emacs\\.d/elpa"
+        recentf-exclude '("/\\.git/.*\\'"      ; Git contents
+                          "/\\.emacs\\.d/elpa" ; ELPA
+                          "/\\.emacs\\.d/etc/"
+                          "/\\.emacs\\.d/var/"
                           "-autoloads\\.el\\'"
+                          "\\.elc\\'"
                           "/TAGS\\'"))
   (recentf-mode))
 
