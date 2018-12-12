@@ -2808,6 +2808,16 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :ensure t
   :config (elfeed-goodies/setup))
 
+(use-package url-cookie
+  :defer t
+  :config
+  ;; XXX Don't ever save cookie to disk, since I don't know what's purpose of
+  ;; cookie, and more importantly, keep loogging the following per hour is
+  ;; annoying
+  ;; 
+  ;; Saving file /Users/xcy/.emacs.d/var/url/configuration/cookies...
+  (advice-add 'url-cookie-setup-save-timer :override #'ignore))
+
 (use-package eww
   :defer t
   :preface
