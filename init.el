@@ -2577,6 +2577,17 @@ This should be add to `find-file-hook'."
   :ensure t
   :defer t)
 
+(use-package gif-screencast
+  :about One-frame-per-action GIF recording for optimal quality/size ratio
+  :homepage https://gitlab.com/ambrevar/emacs-gif-screencast
+  :ensure t
+  :config
+  (when *is-mac*
+    (setq gif-screencast-args '("-x"))
+    (setq gif-screencast-capture-format "ppm"))
+
+  (bind-key "C-c C-c" #'gif-screencast-stop gif-screencast-mode-map))
+
 
 ;;; Project
 
