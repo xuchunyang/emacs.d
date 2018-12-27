@@ -1972,20 +1972,25 @@ PACKAGE should not be a built-in package."
     "Like `describe-symbol' but doesn't query always."
     (interactive)
     (require 'help-mode)
-    (let* ((is-symbol-p
-            (lambda (vv)
-              (cl-some (lambda (x) (funcall (nth 1 x) vv))
-                       describe-symbol-backends)))
-           (sym
-            (or (let ((it (intern (current-word))))
-                  (when (funcall is-symbol-p it)
-                    it))
-                (completing-read
-                 "Describe symbol: "
-                 obarray
-                 is-symbol-p
-                 t))))
-      (describe-symbol sym)))
+    (describe-symbol
+     (or (pcase (variable-at-point)
+           (0 nil)
+           (v v))
+         (function-called-at-point)
+         (let* ((is-symbol-p
+                 (lambda (vv)
+                   (cl-some (lambda (x) (funcall (nth 1 x) vv))
+                            describe-symbol-backends)))
+                (sym
+                 (or (let ((it (intern (current-word))))
+                       (when (funcall is-symbol-p it)
+                         it))
+                     (completing-read
+                      "Describe symbol: "
+                      obarray
+                      is-symbol-p
+                      t))))
+           sym))))
 
   (defun chunyang-advice-remove-button (function)
     "Add a button to remove advice."
