@@ -1429,10 +1429,6 @@ unlike `markdown-preview'."
   :bind (("C-x c" . compile))
   :preface
 
-  (defun chunyang-ansi-color-compilation-buffer ()
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region compilation-filter-start (point))))
-
   ;; (defvar chunyang-compilation-root nil)
   ;; (defun chunyang-compilation-setup ()
   ;;   (setq chunyang-compilation-root (chunyang-project-root)))
@@ -1440,8 +1436,6 @@ unlike `markdown-preview'."
   ;;   (file-in-directory-p (buffer-file-name) chunyang-compilation-root))
 
   :config
-  ;; Colorize ansi escape color code
-  (add-hook 'compilation-filter-hook #'chunyang-ansi-color-compilation-buffer)
 
   ;; FIXME: This is not working on 25.1.1 from macOS
   ;; Only ask for saving files under current project
