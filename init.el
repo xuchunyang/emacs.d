@@ -170,6 +170,22 @@
 
 (setq echo-keystrokes 0.6)              ; 默认 1 秒，更快地显示未完成地按键
 
+(defun chunyang-frame-transparency-adjust ()
+  "Adjust current frame's transparency using <up> and <down>."
+  (declare (interactive-only "Use `set-frame-parameter' instead."))
+  (interactive)
+  ;; If `alpha' is not a number in [0, 100], reset to 100
+  (pcase (frame-parameter nil 'alpha)
+    ((and (pred numberp) n (guard (<= 0 n 100))))
+    (_ (setf (frame-parameter nil 'alpha) 100)))
+  (while (pcase (read-key (format "%2d%%  Press <up> and <down> to adjust"
+                                  (frame-parameter nil 'alpha)))
+           ((or (and 'up   (let new-alpha (1+ (frame-parameter nil 'alpha))))
+                (and 'down (let new-alpha (1- (frame-parameter nil 'alpha)))))
+            (when (<= 0 new-alpha 100)
+              (setf (frame-parameter nil 'alpha) new-alpha))
+            t))))
+
 (column-number-mode)
 (size-indication-mode)
 
