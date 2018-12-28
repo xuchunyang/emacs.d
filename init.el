@@ -247,7 +247,7 @@
 
 (use-package savehist                   ; Minibuffer history
   :config
-  (setq savehist-additional-variables '(extended-command-history))
+  (setq savehist-additional-variables '(extended-command-history Info-history-list))
   (savehist-mode))
 
 (use-package recentf                    ; Recent files
