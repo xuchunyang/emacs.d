@@ -363,6 +363,59 @@ KEYWORD-ARGS is same as `make-hash-table'."
         (chunyang-split-one-setq-form beg end)
       (chunyang-group-multi-setq-forms beg end))))
 
+
+;; (info "(elisp) Box Diagrams")
+
+;; (insert (chunyang-box-diagram '(rose violet buttercup)))
+;;  --- ---      --- ---       --- ---         
+;; |   |   |--> |   |   |-->  |   |   |--> nil 
+;;  --- ---      --- ---       --- ---         
+;;   |            |             |              
+;;   |            |             |              
+;;    --> rose     --> violet    --> buttercup nil
+
+;; (with-current-buffer (get-buffer-create "*test*")
+;;   (erase-buffer)
+;;   (insert (chunyang-box-diagram (number-sequence 1 10)))
+;;   (goto-char (point-min))
+;;   (display-buffer (current-buffer)))
+
+;; TODO: Try the second manner
+;; TODO: How to draw ((pine needles) oak maple)?
+
+;;;###autoload
+(defun chunyang-box-diagram (list)
+  "Draw LIST as box diagrams, see Info node `(elisp) Box Diagrams'."
+  (let (boxes)
+    ;; one element one box
+    (while list
+      (push (format "\
+ --- ---
+|   |   |--> %s
+ --- ---
+  |
+  |
+   --> %s " (if (cdr list) "" "nil") (car list)) boxes)
+      (setq list (cdr list)))
+    (setq boxes (nreverse boxes))
+    ;; make box rectangle
+    (setq boxes
+          (mapcar
+           (lambda (box)
+             (let* ((lines (split-string box "\n"))
+                    (maxlen (apply #'max (mapcar #'length lines))))
+               (mapconcat
+                (lambda (line)
+                  (format (format "%%-%ds" maxlen) line))
+                lines "\n")))
+           boxes))
+    ;; concat the boxes
+    (setq boxes (mapcar (lambda (box) (split-string box "\n")) boxes))
+    (cl-loop repeat (length (car boxes))
+             for i from 0
+             collect (apply #'concat (mapcar (lambda (box) (nth i box)) boxes)) into lines
+             finally return (mapconcat #'identity lines "\n"))))
+
 (provide 'chunyang-elisp)
 
 ;;; chunyang-elisp.el ends here
