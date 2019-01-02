@@ -2610,6 +2610,45 @@ This should be add to `find-file-hook'."
   (bind-key "C-c C-c" #'gif-screencast-stop gif-screencast-mode-map))
 
 
+;;; Documentation
+
+(use-package dash-at-point
+  :ensure t
+  :defer t
+  :preface
+  (defun chunyang-dash ()
+    (interactive)
+    (ivy-read
+     "Search Dash: "
+     (lambda (str)
+       (or
+        (ivy-more-chars)
+        (with-temp-buffer
+          (if (zerop (call-process "dashAlfredWorkflow" nil t nil str))
+              (let* ((dom (libxml-parse-xml-region (point-min) (point-max)))
+                     (items (dom-by-tag dom 'item)))
+                (cl-loop for item in items
+                         for uid = (dom-attr item 'uid)
+                         for quicklookurl = (dom-child-by-tag item 'quicklookurl)
+                         for title = (dom-text (dom-child-by-tag item 'title))
+                         for subtitle = (dom-text (car (last (dom-by-tag item 'subtitle))))
+                         for subtitle+face = (propertize subtitle 'face 'font-lock-comment-face)
+                         collect (propertize (concat title " " subtitle+face)
+                                             'uid uid
+                                             'quicklookurl 'quicklookurl)))
+            (list
+             "Error: dashAlfredWorkflow fails"
+             ""
+             (split-string (buffer-string) "\n"))))))
+     :dynamic-collection t
+     :action (lambda (x)
+               (call-process "open" nil nil nil (get-text-property 0 'uid x))))))
+
+(use-package zeal-at-point
+  :ensure t
+  :defer t)
+
+
 ;;; Project
 
 (use-package projectile
