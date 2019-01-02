@@ -263,7 +263,9 @@
 
 (use-package savehist                   ; Minibuffer history
   :config
-  (setq savehist-additional-variables '(extended-command-history Info-history-list))
+  (setq savehist-additional-variables '(extended-command-history
+                                        Info-history-list
+                                        ivy-views))
   (savehist-mode))
 
 (use-package recentf                    ; Recent files
