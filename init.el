@@ -2631,20 +2631,26 @@ This should be add to `find-file-hook'."
                      (items (dom-by-tag dom 'item)))
                 (cl-loop for item in items
                          for uid = (dom-attr item 'uid)
-                         for quicklookurl = (dom-child-by-tag item 'quicklookurl)
+                         for quicklookurl = (dom-text (dom-child-by-tag item 'quicklookurl))
                          for title = (dom-text (dom-child-by-tag item 'title))
                          for subtitle = (dom-text (car (last (dom-by-tag item 'subtitle))))
                          for subtitle+face = (propertize subtitle 'face 'font-lock-comment-face)
                          collect (propertize (concat title " " subtitle+face)
                                              'uid uid
-                                             'quicklookurl 'quicklookurl)))
+                                             'quicklookurl quicklookurl)))
             (list
              "Error: dashAlfredWorkflow fails"
              ""
              (split-string (buffer-string) "\n"))))))
      :dynamic-collection t
      :action (lambda (x)
-               (call-process "open" nil nil nil (get-text-property 0 'uid x))))))
+               (call-process "open" nil nil nil (get-text-property 0 'uid x)))))
+  (ivy-set-actions
+   'chunyang-dash
+   '(("b"
+      (lambda (x)
+        (browse-url (get-text-property 0 'quicklookurl x)))
+      "browse url"))))
 
 (use-package zeal-at-point
   :ensure t
