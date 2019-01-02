@@ -2619,6 +2619,7 @@ This should be add to `find-file-hook'."
   :preface
   (defun chunyang-dash ()
     (interactive)
+    (require 'dom)
     (ivy-read
      "Search Dash: "
      (lambda (str)
