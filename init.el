@@ -355,6 +355,7 @@
   :diminish ivy-mode
   :config
   (setq ivy-do-completion-in-region nil)
+  (setq ivy-count-format "")
   (ivy-mode)
   (setq ivy-use-virtual-buffers t)      ; recentf in `ivy-switch-buffer'
   (setq counsel-find-file-at-point t)
