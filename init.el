@@ -2625,6 +2625,7 @@ This should be add to `find-file-hook'."
        (or
         (ivy-more-chars)
         (with-temp-buffer
+          ;; dashAlfredWorkflow 'c:puts' | xmllint --format -
           (if (zerop (call-process "dashAlfredWorkflow" nil t nil str))
               (let* ((dom (libxml-parse-xml-region (point-min) (point-max)))
                      (items (dom-by-tag dom 'item)))
