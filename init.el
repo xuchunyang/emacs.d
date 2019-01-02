@@ -709,8 +709,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (use-package async
   :ensure t
-  :defer t
-  :init (eval-after-load 'dired '(dired-async-mode)))
+  :commands dired-async-mode)
 
 (use-package direx                      ; Alternative to Dired
   :ensure t
