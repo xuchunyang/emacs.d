@@ -1804,6 +1804,7 @@ PACKAGE should not be a built-in package."
              (backward-sexp)
              (= op (point))))))))
 
+  ;; Type C-h f `el-search-defined-patterns' to learn defined patterns
   (el-search-defpattern doc-string (&rest regexps)
     "Match any documentation string that is matched by all REGEXPS."
     `(and (string ,@regexps) (guard (el-search--doc-string-p))))
