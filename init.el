@@ -269,6 +269,29 @@
   (savehist-mode))
 
 (use-package recentf                    ; Recent files
+  :preface
+  (defun chunyang-recentf-save-list-for-alfred ()
+    "Save the recent list as JSON file for Alfred Script Filter.
+See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
+    (require 'json)
+    (when (and recentf-mode recentf-list)
+      (write-region
+       (json-encode-list
+        `((items
+           ,@(mapcar
+              (lambda (f)
+                (let ((abbrev (abbreviate-file-name f))
+                      (onlyname (file-name-nondirectory f)))
+                  `((uid . ,abbrev)
+                    (type . "file")
+                    (title . ,onlyname)
+                    (subtitle . ,abbrev)
+                    (arg . ,abbrev)
+                    (autocomplete . ,onlyname)
+                    (icon . ((type . "fileicon")
+                             (path . ,abbrev))))))
+              recentf-list))))
+       nil "~/.recentf-alfred.json" nil 'silent)))
   :config
   (setq recentf-max-saved-items 512
         recentf-exclude '("/\\.git/.*\\'"      ; Git contents
@@ -278,7 +301,8 @@
                           "-autoloads\\.el\\'"
                           "\\.elc\\'"
                           "/TAGS\\'"))
-  (recentf-mode))
+  (recentf-mode)
+  (add-hook 'kill-emacs-hook #'chunyang-recentf-save-list-for-alfred 'append))
 
 (use-package bookmark
   :defer t
