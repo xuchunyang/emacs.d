@@ -2640,45 +2640,20 @@ This should be add to `find-file-hook'."
 
 ;;; Documentation
 
-(use-package dash-at-point
-  :ensure t
-  :defer t
-  :preface
-  (defun chunyang-dash ()
-    (interactive)
-    (require 'dom)
-    (ivy-read
-     "Search Dash: "
-     (lambda (str)
-       (or
-        (ivy-more-chars)
-        (with-temp-buffer
-          ;; dashAlfredWorkflow 'c:puts' | xmllint --format -
-          (if (zerop (call-process "dashAlfredWorkflow" nil t nil str))
-              (let* ((dom (libxml-parse-xml-region (point-min) (point-max)))
-                     (items (dom-by-tag dom 'item)))
-                (cl-loop for item in items
-                         for uid = (dom-attr item 'uid)
-                         for quicklookurl = (dom-text (dom-child-by-tag item 'quicklookurl))
-                         for title = (dom-text (dom-child-by-tag item 'title))
-                         for subtitle = (dom-text (car (last (dom-by-tag item 'subtitle))))
-                         for subtitle+face = (propertize subtitle 'face 'font-lock-comment-face)
-                         collect (propertize (concat title " " subtitle+face)
-                                             'uid uid
-                                             'quicklookurl quicklookurl)))
-            (list
-             "Error: dashAlfredWorkflow fails"
-             ""
-             (split-string (buffer-string) "\n"))))))
-     :dynamic-collection t
-     :action (lambda (x)
-               (call-process "open" nil nil nil (get-text-property 0 'uid x)))))
+(use-package dashdoc
+  :load-path "~/src/DashDoc"
+  :commands dashdoc
+  :config
   (ivy-set-actions
-   'chunyang-dash
+   'dashdoc-ivy
    '(("b"
       (lambda (x)
         (browse-url (get-text-property 0 'quicklookurl x)))
       "browse url"))))
+
+(use-package dash-at-point
+  :ensure t
+  :defer t)
 
 (use-package zeal-at-point
   :ensure t
