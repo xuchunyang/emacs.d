@@ -529,7 +529,8 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
                 (and (not (string-prefix-p " " name))
                      (not (member name '("*scratch*" "*Messages*"))))))
             (buffer-list))))
-      (mapc #'kill-buffer buffers-to-kill)))
+      (mapc #'kill-buffer buffers-to-kill)
+      (delete-other-windows)))
 
   (defun chunyang-kill-invisible-buffers ()
     "Kill all invisible buffers."
