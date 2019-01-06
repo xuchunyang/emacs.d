@@ -1782,11 +1782,52 @@ PACKAGE should not be a built-in package."
             (cadr (assq package package-alist)))))
       (el-search-directory pattern pkgdir t)))
 
+  (defun chunyang-el-search-elpa (pattern)
+    (interactive
+     (let* ((default (format "%s" (chunyang-el-search-symbol-or-sexp-at-point)))
+            (input
+             (el-search--read-pattern
+              (format
+               "El-search %s for pattern: "
+               (abbreviate-file-name package-user-dir))
+              default))
+            (pattern (read input)))
+       (list pattern)))
+    (el-search-directory pattern package-user-dir t))
+
   :init
   ;; Reduce startup time. keys won't work untill an elisp file is opened.
+  ;;
+  ;; UPDATE: Well, it dosen't really matter, since `elisp-mode' is always loaded
+  ;; even in Emacs -Q.
   (with-eval-after-load 'elisp-mode
     (el-search-install-shift-bindings))
   :config
+  (defun el-search-helm ()
+    (interactive)
+    (el-search--message-no-log "Preparing helm...")
+    (unless el-search--current-search
+      (user-error "No active search"))
+    (let* ((search el-search--current-search)
+           (stream-of-matches (funcall (el-search-object-get-matches search)))
+           (candidates (mapcar
+                        (pcase-lambda ((and match `(,buffer ,match-beg ,file)))
+                          (with-current-buffer buffer
+                            (cons (buffer-substring match-beg (el-search--end-of-sexp match-beg))
+                                  match)))
+                        (seq-into stream-of-matches 'list))))
+      (require 'helm)
+      (helm :sources
+            (helm-build-sync-source "El-search"
+              :candidates candidates
+              :multiline t
+              :action (pcase-lambda (`(,buffer ,match-beg ,file))
+                        (if file
+                            (find-file file)
+                          (switch-to-buffer buffer))
+                        (goto-char match-beg)))
+            :buffer "*helm el-search*")))
+
   ;; XXX: Better idea for the buffer name, see C-j C-S-j
   ;; `el-search-jump-to-search-head'
   (defun chunyang-el-search-change-occur-buffer-name ()
