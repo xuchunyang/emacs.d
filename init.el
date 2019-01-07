@@ -1819,7 +1819,8 @@ PACKAGE should not be a built-in package."
                         (seq-into stream-of-matches 'list))))
       (require 'helm)
       (helm :sources
-            (helm-build-sync-source "El-search"
+            (helm-build-sync-source
+                (el-search--get-search-description-string el-search--current-search)
               :candidates candidates
               :multiline t
               :action (pcase-lambda (`(,buffer ,match-beg ,file))
