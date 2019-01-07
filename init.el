@@ -1813,7 +1813,8 @@ PACKAGE should not be a built-in package."
            (candidates (mapcar
                         (pcase-lambda ((and match `(,buffer ,match-beg ,file)))
                           (with-current-buffer buffer
-                            (cons (buffer-substring match-beg (el-search--end-of-sexp match-beg))
+                            (cons (buffer-substring-no-properties
+                                   match-beg (el-search--end-of-sexp match-beg))
                                   match)))
                         (seq-into stream-of-matches 'list))))
       (require 'helm)
