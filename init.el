@@ -2519,18 +2519,6 @@ PACKAGE should not be a built-in package."
   (defun open-emacs-window ()
     (select-frame-set-input-focus (selected-frame)))
 
-  ;; Hmm, 'C-c C-c' is easier than 'C-x #' to type
-  (defun chunyang-server-setup ()
-    (unless (key-binding [?\C-c ?\C-c])
-      (local-set-key [?\C-c ?\C-c] #'server-edit)))
-
-  (defun chunyang-server-cleanup ()
-    (when (eq (key-binding [?\C-c ?\C-c]) 'server-edit)
-      (bind-key "C-c C-c" nil (current-local-map))))
-
-  (add-hook 'server-switch-hook #'chunyang-server-setup)
-  (add-hook 'server-done-hook #'chunyang-server-cleanup)
-
   (when *is-mac*
     ;; Re-focus iTerm
     (defun chunyang-activate-iterm ()
