@@ -1906,7 +1906,26 @@ PACKAGE should not be a built-in package."
              chunyang-display-window-mode
              chunyang-toggle-setq-form
              chunyang-insert-command
-             chunyang-insert-key))
+             chunyang-insert-key)
+  :preface
+  (defun threadify (exp)
+    (cl-labels ((aux (exp acc)
+                     (pcase exp
+                       (`(,func ,arg1)
+                        (aux arg1 (cons func acc)))
+                       (`(,func ,arg1 . ,args)
+                        (aux arg1 (cons (cons func args) acc)))
+                       (X `(-> ,X ,@acc)))))
+      (aux exp ())))
+
+  (defun threadify-sexp-at-point ()
+    (interactive)
+    (unless (sexp-at-point)
+      (user-error "No sexp at point"))
+    (pcase-let ((`(,beg . ,end) (bounds-of-thing-at-point 'sexp)))
+      (let ((new (pp-to-string (threadify (sexp-at-point)))))
+        (delete-region beg end)
+        (insert new)))))
 
 (use-package chunyang-package
   :commands describe-package--add-melpa-link
