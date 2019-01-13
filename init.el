@@ -2569,7 +2569,19 @@ PACKAGE should not be a built-in package."
 (use-package chunyang-github
   :ensure ghub                          ; Dependency
   :commands (helm-chunyang-github-stars
-             helm-chunyang-github-repos))
+             helm-chunyang-github-repos)
+  :preface
+  (defun chunyang-github-create (&optional private)
+    "Create a new repository on GitHub and add a git remote for it."
+    (interactive "P")
+    (let* ((git-root (or (locate-dominating-file default-directory ".git")
+                         (user-error "Not a git repository")))
+           (basename (file-name-nondirectory (directory-file-name git-root)))
+           (response (ghub-post "/user/repos" `((name . ,basename)
+                                                (private . ,private)))))
+      (call-process-shell-command
+       (concat "git remote add origin " (alist-get 'clone_url response)))
+      (message "%s" (alist-get 'html_url response)))))
 
 (use-package git-link
   :homepage https://github.com/sshaw/git-link
