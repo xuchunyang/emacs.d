@@ -4410,6 +4410,30 @@ provides similiar function."
   :defer t)
 
 
+;;; Elixir
+
+(use-package elixir-mode
+  :ensure t
+  :homepage https://github.com/elixir-lang/emacs-elixir
+  :defer t
+  :config
+  (require 'comint)
+  (define-derived-mode inferior-elixir-mode comint-mode "Inferior Elixir"
+    "Major mode for Elixir inferior process."
+    (setq comint-prompt-regexp (rx bol (or "iex" "...") "(" (1+ num) ") ")))
+
+  (defun run-elixir ()
+    (interactive)
+    (with-current-buffer (make-comint-in-buffer "Elixir" "*Elixir*" "iex" nil)
+      (inferior-elixir-mode)
+      (display-buffer (current-buffer)))))
+
+(use-package alchemist
+  :homepage https://github.com/tonini/alchemist.el
+  :ensure t
+  :defer t)
+
+
 ;;; Clojure
 
 (use-package clojure-mode
@@ -4864,7 +4888,25 @@ provides similiar function."
   :homepage https://github.com/joaotavora/eglot
   :ensure t
   :commands eglot
-  :defer t)
+  :defer t
+  :config
+  ;; * Elixir
+  ;; https://elixirforum.com/t/emacs-elixir-setup-configuration-wiki/19196
+  (add-to-list
+   'eglot-server-programs
+   '(elixir-mode "~/src/elixir-ls/release/language_server.sh"))
+
+  (defun chunyang-elixir-current-project (dir)
+    "Return the current project as a cons cell usable by project.el."
+    (let ((project-dir (locate-dominating-file dir "mix.exs")))
+      (if project-dir
+          (cons 'elixir project-dir)
+        nil)))
+
+  (add-hook 'project-find-functions #'chunyang-elixir-current-project)
+
+  (cl-defmethod project-roots ((project (head elixir)))
+    (list (cdr project))))
 
 (use-package cquery
   :disabled "Just give it a try"
