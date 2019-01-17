@@ -519,15 +519,16 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 
 (use-package chunyang-buffers
   :preface
-  (defun chunyang-kill-all-buffers ()
-    (interactive)
+  (defun chunyang-kill-all-buffers (&optional except-current-buffer)
+    (interactive "P")
     (let ((buffers-to-kill
            (seq-filter
             (lambda (buffer)
               (let ((name (buffer-name buffer)))
                 ;; Ignore uninteresting buffers
                 (and (not (string-prefix-p " " name))
-                     (not (member name '("*scratch*" "*Messages*"))))))
+                     (not (member name '("*scratch*" "*Messages*")))
+                     (not (and except-current-buffer (eq buffer (current-buffer)))))))
             (buffer-list))))
       (mapc #'kill-buffer buffers-to-kill)
       (delete-other-windows)))
