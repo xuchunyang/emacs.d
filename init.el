@@ -186,7 +186,7 @@
               (setf (frame-parameter nil 'alpha) new-alpha))
             t))))
 
-(column-number-mode)
+;; (column-number-mode)
 (size-indication-mode)
 
 (defconst chunyang-mode-line-format
