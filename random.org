@@ -20,6 +20,10 @@
   - [[#nest-cl-loop][nest cl-loop]]
   - [[#byte-compiling-cl-loop-is-important][Byte-compiling cl-loop is important]]
 - [[#parsec][parsec]]
+- [[#how-does-emacs-lisp-completion-work][How does Emacs Lisp Completion work?]]
+  - [[#how-does-emacs-do-completion][How does Emacs do completion?]]
+  - [[#global-functions--variables][Global Functions & Variables]]
+  - [[#local-variables][Local variables]]
 #+END_QUOTE
 
 * =defsubst=
@@ -348,3 +352,65 @@ Good
 
 #+RESULTS:
 : " hello "
+
+* How does Emacs Lisp Completion work?
+
+** How does Emacs do completion?
+
+#+BEGIN_SRC elisp
+(with-temp-buffer
+  (emacs-lisp-mode)
+  completion-at-point-functions)
+#+END_SRC
+
+#+RESULTS:
+: (elisp-completion-at-point t)
+
+** Global Functions & Variables
+
+#+BEGIN_SRC elisp
+(all-completions "emacs-lisp" obarray #'functionp)
+#+END_SRC
+
+#+RESULTS:
+: ("emacs-lisp-byte-compile-and-load" "emacs-lisp-mode" "emacs-lisp-macroexpand" "emacs-lisp-byte-compile")
+
+** Local variables
+
+#+BEGIN_SRC elisp
+(with-temp-buffer
+  (emacs-lisp-mode)
+  (insert "(let ((foo 1) (bar 2)) (+ foo ))")
+  (backward-char 2)
+  (elisp--local-variables))
+#+END_SRC
+
+#+RESULTS:
+: (bar foo)
+
+#+BEGIN_SRC elisp
+(elisp--local-variables-1 nil '(let ((foo 1) (bar 2)) (+ foo elisp--witness--lisp)))
+#+END_SRC
+
+#+RESULTS:
+: (bar foo)
+
+#+BEGIN_SRC elisp
+(elisp--local-variables-1
+ nil
+ '(let ((foo 1))
+    (let ((bar 2))
+      (let ((baz 3))
+        (+ foo elisp--witness--lisp)))))
+#+END_SRC
+
+#+RESULTS:
+: (baz bar foo)
+
+#+BEGIN_SRC elisp
+(pcase '(let ((foo 1) (bar 2)) (+ foo elisp--witness--lisp))
+  (`(let ,bindings . ,body) (mapcar #'car bindings)))
+#+END_SRC
+
+#+RESULTS:
+: (foo bar)
