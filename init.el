@@ -554,6 +554,26 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)           ; was `list-buffers'
   :config
+  (define-ibuffer-column human-readable-size
+    (
+     :name "Size"
+     :inline t
+     :header-mouse-map ibuffer-size-header-map
+     :summarizer
+     (lambda (column-strings)
+       (cl-loop for s in column-strings
+                sum (get-text-property (1- (length s)) 'size s) into total
+                finally return (file-size-human-readable total))))
+    (let ((size (buffer-size)))
+      (propertize (file-size-human-readable size)
+                  'size size)))
+
+  (setq ibuffer-formats
+        '((mark " " (name 18 18 :left :elide)
+                " " (human-readable-size 6 -1 :right)
+                " " (mode 16 16 :left :elide) " " filename-and-process)
+          (mark " " (name 16 -1) " " filename)))
+
   ;; Since I used to M-o
   (unbind-key "M-o" ibuffer-mode-map))
 
