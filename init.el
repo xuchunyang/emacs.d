@@ -2776,6 +2776,11 @@ This should be add to `find-file-hook'."
     :after rcirc
     :ensure t))
 
+(use-package erc
+  :defer t
+  :config
+  (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT")))
+
 ;; Just by providing the following, Emacs can already send emails
 ;;
 ;; Password is provided in ~/.authinfo file (this file should be encrypted via gpg)
