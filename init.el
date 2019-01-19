@@ -331,22 +331,17 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
                (erase-buffer)
                (insert prompt)
                (set-text-properties (point-min) (point-max) props)))))
-      (cond ((eq this-command 'shell-command-on-region)
-             (and (equal (minibuffer-prompt) "Shell command on region: ")
-                  current-prefix-arg
-                  (funcall prompt-fn "Shell command on region and replace: ")))
-            ((eq this-command 'shell-command)
-             (and (equal (minibuffer-prompt) "Shell command: ")
-                  current-prefix-arg
-                  (funcall prompt-fn "Shell command and insert output: ")))
-            ((eq this-command 'eshell-command)
-             (and (equal (minibuffer-prompt) "Emacs shell command: ")
-                  current-prefix-arg
-                  (funcall prompt-fn "Emacs shell command and insert output: ")))
-            ((eq this-command 'async-shell-command)
-             (and (equal (minibuffer-prompt) "Async shell command: ")
-                  current-prefix-arg
-                  (funcall prompt-fn "Async shell command and insert output: "))))))
+      (pcase (list this-command (minibuffer-prompt) (and current-prefix-arg t))
+        ('(shell-command-on-region "Shell command on region: " t)
+         (funcall prompt-fn "Shell command on region and replace: "))
+        ('(shell-command "Shell command: " t)
+         (funcall prompt-fn "Shell command and insert output: "))
+        ('(eshell-command "Emacs shell command: " t)
+         (funcall prompt-fn "Emacs shell command and insert output: "))
+        ('(async-shell-command "Async shell command: " t)
+         (funcall prompt-fn "Async shell command and insert output: "))
+        (`(pp-eval-expression "Eval: " ,_)
+         (funcall prompt-fn "Pp Eval: ")))))
 
   (define-minor-mode prompt-watcher-mode
     "Watch the minibuffer prompt and customize if asking."
