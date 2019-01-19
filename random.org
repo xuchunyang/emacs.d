@@ -24,6 +24,7 @@
   - [[#how-does-emacs-do-completion][How does Emacs do completion?]]
   - [[#global-functions--variables][Global Functions & Variables]]
   - [[#local-variables][Local variables]]
+- [[#20--21--22----2n--2n1---1][2^0 + 2^1 + 2^2 + ... + 2^n = 2^(n+1) - 1]]
 #+END_QUOTE
 
 * =defsubst=
@@ -414,3 +415,38 @@ Good
 
 #+RESULTS:
 : (foo bar)
+
+* 2^0 + 2^1 + 2^2 + ... + 2^n = 2^(n+1) - 1
+
+等比数列求和
+
+#+BEGIN_SRC elisp
+(cl-loop for i from 0 to 10
+         sum (expt 2 i))
+#+END_SRC
+
+#+RESULTS:
+: 2047
+
+#+BEGIN_SRC elisp
+(1- (expt 2 11))
+#+END_SRC
+
+#+RESULTS:
+: 2047
+
+\begin{equation}
+S_n = \frac{a(q^n - 1)}{q - 1}
+\end{equation}
+
+#+BEGIN_SRC elisp
+(defun geometric-series-sum (a q n)
+  "Return a*q^0 + a*q^1 + a*q^2 + ... + a*q^1."
+  (/ (* a (- (expt q n) 1))
+     (- q 1)))
+
+(geometric-series-sum 1 2 11)
+#+END_SRC
+
+#+RESULTS:
+: 2047
