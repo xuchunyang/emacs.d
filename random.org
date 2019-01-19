@@ -25,6 +25,8 @@
   - [[#global-functions--variables][Global Functions & Variables]]
   - [[#local-variables][Local variables]]
 - [[#20--21--22----2n--2n1---1][2^0 + 2^1 + 2^2 + ... + 2^n = 2^(n+1) - 1]]
+- [[#10n--7][10^n % 7]]
+- [[#7n-的个位数][7^n 的个位数]]
 #+END_QUOTE
 
 * =defsubst=
@@ -450,3 +452,46 @@ S_n = \frac{a(q^n - 1)}{q - 1}
 
 #+RESULTS:
 : 2047
+
+* 10^n % 7
+
+#+BEGIN_SRC elisp :results table drawer
+(cl-loop for n from 0 to 17
+         collect (% (expt 10 n) 7))
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+| 1 | 3 | 2 | 6 | 4 | 5 | 1 | 3 | 2 | 6 | 4 | 5 | 1 | 3 | 2 | 6 | 4 | 5 |
+:END:
+
+#+BEGIN_SRC elisp
+(defun 10^n%7 (n)
+  "Return 10^n % 7."
+  (nth (% n 6) '(1 3 2 6 4 5)))
+
+(10^n%7 100)
+#+END_SRC
+
+#+RESULTS:
+: 4
+
+* 7^n 的个位数
+
+#+BEGIN_SRC elisp
+(cl-loop for n from 0 to 20
+         collect (% (expt 7 n) 10))
+#+END_SRC
+
+#+RESULTS:
+: (1 7 9 3 1 7 9 3 1 7 9 3 1 7 9 3 1 7 9 3 1)
+
+#+BEGIN_SRC elisp
+(defun 7^n-digit (n)
+  (nth (% n 4) '(1 7 9 3)))
+
+(7^n-digit 987654321)
+#+END_SRC
+
+#+RESULTS:
+: 7
