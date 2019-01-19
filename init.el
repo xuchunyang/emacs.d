@@ -2587,14 +2587,16 @@ PACKAGE should not be a built-in package."
   :commands (helm-chunyang-github-stars
              helm-chunyang-github-repos)
   :preface
-  (defun chunyang-github-create (&optional private)
+  (defun chunyang-github-create ()
     "Create a new repository on GitHub and add a git remote for it."
-    (interactive "P")
+    (interactive)
+    (require 'ghub)
     (let* ((git-root (or (locate-dominating-file default-directory ".git")
                          (user-error "Not a git repository")))
            (basename (file-name-nondirectory (directory-file-name git-root)))
-           (response (ghub-post "/user/repos" `((name . ,basename)
-                                                (private . ,private)))))
+           (params `((name . ,basename)
+                     (private . ,(y-or-n-p "Private GitHub Repository?"))))
+           (response (ghub-post "/user/repos" params)))
       (call-process-shell-command
        (concat "git remote add origin " (alist-get 'clone_url response)))
       (message "%s" (alist-get 'html_url response)))))
