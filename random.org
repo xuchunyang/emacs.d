@@ -27,6 +27,7 @@
 - [[#20--21--22----2n--2n1---1][2^0 + 2^1 + 2^2 + ... + 2^n = 2^(n+1) - 1]]
 - [[#10n--7][10^n % 7]]
 - [[#7n-的个位数][7^n 的个位数]]
+- [[#how-to-extend-pcase][How to extend pcase?]]
 #+END_QUOTE
 
 * =defsubst=
@@ -495,3 +496,17 @@ S_n = \frac{a(q^n - 1)}{q - 1}
 
 #+RESULTS:
 : 7
+
+* How to extend pcase?
+
+use pcase-defmacro
+
+#+BEGIN_SRC elisp
+(pcase-defmacro my-alist (&rest patterns)
+  (cl-loop for pat in patterns
+           collect `(app (alist-get ',pat) ,pat) into aux
+           finally return `(and ,@aux)))
+
+(pcase '((a . 1) (b . 2) (c . 3) (d . 4))
+  ((my-alist a b c d) (list a b c d)))
+#+END_SRC
