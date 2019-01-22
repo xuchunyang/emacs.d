@@ -1523,40 +1523,6 @@ unlike `markdown-preview'."
   ;; :init (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
   :init (global-prettify-symbols-mode))
 
-(use-package highlight-symbol
-  :ensure t
-  :init
-  (define-key prog-mode-map (kbd "M-n") #'highlight-symbol-next)
-  (define-key prog-mode-map (kbd "M-p") #'highlight-symbol-prev)
-  ;; http://www.wilfred.me.uk/.emacs.d/init.html#orgcca7dfa
-  (defun highlight-symbol-first ()
-    "Jump to the first location of symbol at point."
-    (interactive)
-    (push-mark)
-    (eval
-     `(progn
-        (goto-char (point-min))
-        (let ((case-fold-search nil))
-          (search-forward-regexp
-           (rx symbol-start ,(thing-at-point 'symbol) symbol-end)
-           nil t))
-        (beginning-of-thing 'symbol))))
-
-  (define-key prog-mode-map (kbd "M-P") #'highlight-symbol-first)
-  (defun highlight-symbol-last ()
-    "Jump to the last location of symbol at point."
-    (interactive)
-    (push-mark)
-    (eval
-     `(progn
-        (goto-char (point-max))
-        (let ((case-fold-search nil))
-          (search-backward-regexp
-           (rx symbol-start ,(thing-at-point 'symbol) symbol-end)
-           nil t)))))
-
-  (global-set-key (kbd "M-N") 'highlight-symbol-last))
-
 (use-package nocomments-mode            ; Hide Comments
   :ensure t
   :defer t)
