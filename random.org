@@ -28,6 +28,7 @@
 - [[#10n--7][10^n % 7]]
 - [[#7n-的个位数][7^n 的个位数]]
 - [[#how-to-extend-pcase][How to extend pcase?]]
+- [[#sn--a_1--a_2----a_n][S(n) = a_1 + a_2 + ... + a_n]]
 #+END_QUOTE
 
 * =defsubst=
@@ -510,3 +511,25 @@ use pcase-defmacro
 (pcase '((a . 1) (b . 2) (c . 3) (d . 4))
   ((my-alist a b c d) (list a b c d)))
 #+END_SRC
+
+* S(n) = a_1 + a_2 + ... + a_n
+
+#+BEGIN_SRC elisp
+(defun my-sum (a k n)
+  "S(n) = a_1 + a_2 + ... + a_n.
+a_i+1 - a_i = k."
+  (cl-loop for i from a by k
+           repeat n
+           sum i))
+
+(defun my-better-sum (a k n)
+  (/ (* (+ a (+ a (* (- n 1) k))) n) 2))
+
+(list (my-sum 1 1 100)
+      (my-sum 1 2 50)
+      (my-better-sum 1 1 100)
+      (my-better-sum 1 2 50))
+#+END_SRC
+
+#+RESULTS:
+: (5050 2500 5050 2500)
