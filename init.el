@@ -1072,8 +1072,8 @@ Intended to be added to `isearch-mode-hook'."
   :config
   (when (version>= emacs-version "27")
     (setq isearch-lazy-count t)
-    (setq lazy-highlight-buffer t
-          lazy-highlight-cleanup nil)
+    ;; (setq lazy-highlight-buffer t
+    ;;       lazy-highlight-cleanup nil)
     (setq isearch-allow-scroll 'unlimited)))
 
 (use-package re-builder
