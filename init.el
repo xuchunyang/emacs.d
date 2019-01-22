@@ -4543,10 +4543,7 @@ provides similiar function."
 
 (use-package pydoc
   :ensure t
-  :commands pydoc
-  :init
-  ;; FIXME Because fish isn't compatible with posix shell
-  (setq shell-file-name "/bin/sh"))
+  :commands pydoc)
 
 (use-package helm-pydoc
   :ensure t
