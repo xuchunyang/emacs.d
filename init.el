@@ -1495,6 +1495,23 @@ unlike `markdown-preview'."
   :bind (("C-x c" . compile))
   :preface
 
+  (defun chunyang-compile-command ()
+    "Guess a `compile-command' for the current buffer."
+    (when-let ((file (and buffer-file-name (file-name-nondirectory buffer-file-name)))
+               (command (pcase major-mode
+                          ('c-mode "cc")
+                          ('elixir-mode "elixir")
+                          ((guard (derived-mode-p 'emacs-lisp-mode))
+                           "emacs -Q --batch -f batch-byte-compile"))))
+      (format "%s %s" command (shell-quote-argument file))))
+
+  (defun chunyang-compile-command-set ()
+    (pcase (chunyang-compile-command)
+      ((and command (guard command))
+       (setq-local compile-command command))))
+
+  (add-hook 'prog-mode-hook #'chunyang-compile-command-set)
+
   ;; (defvar chunyang-compilation-root nil)
   ;; (defun chunyang-compilation-setup ()
   ;;   (setq chunyang-compilation-root (chunyang-project-root)))
@@ -3861,18 +3878,6 @@ Adapt from `org-babel-remove-result'."
     (abbrev-mode -1))
 
   (add-hook 'c-mode-common-hook #'chunyang-c-mode-common-setup)
-
-  (defun chunyang-c-mode-setup ()
-    (when buffer-file-name
-      (unless (file-exists-p "Makefile")
-        (setq-local compile-command
-                    (let ((fn (file-name-nondirectory buffer-file-name)))
-                      ;; https://gcc.gnu.org/onlinedocs/gcc-4.8.4/gcc/Warning-Options.html
-                      (format "cc -std=c99 -Wall -Wpedantic %s -o %s"
-                              (shell-quote-argument fn)
-                              (shell-quote-argument (file-name-sans-extension fn)))))))
-    (bind-key "C-c C-c" #'recompile c-mode-map))
-  (add-hook 'c-mode-hook #'chunyang-c-mode-setup)
 
   (defun chunyang-cpp-lookup ()
     "Lookup C function/macro/etc prototype via Preprocessing."
