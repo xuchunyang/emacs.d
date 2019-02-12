@@ -29,6 +29,8 @@
 - [[#7n-的个位数][7^n 的个位数]]
 - [[#how-to-extend-pcase][How to extend pcase?]]
 - [[#sn--a_1--a_2----a_n][S(n) = a_1 + a_2 + ... + a_n]]
+- [[#variable-vs-function---symbol][variable vs function  | Symbol]]
+- [[#delete-first-element-of-list][Delete first element of list]]
 #+END_QUOTE
 
 * =defsubst=
@@ -533,3 +535,42 @@ a_i+1 - a_i = k."
 
 #+RESULTS:
 : (5050 2500 5050 2500)
+
+* variable vs function  | Symbol
+
+#+BEGIN_SRC elisp
+(defun my-eval (expr)
+  (pcase expr
+    (`((lambda . ,_) . ,_) (apply (car expr) (cdr expr)))
+    (`(,(and (pred symbolp)
+             (pred symbol-function)
+             (app symbol-function function))
+       . ,args)
+     (my-eval (cons function args)))))
+#+END_SRC
+
+* Delete first element of list
+
+#+BEGIN_SRC elisp
+(let ((l (list 1 2 3 4 5)))
+  (setcar l (cadr l))
+  (setcdr l (cddr l))
+  l)
+#+END_SRC
+
+#+RESULTS:
+: (2 3 4 5)
+
+#+BEGIN_SRC elisp
+(defun delete-first (l)
+  (cl-assert (> (length l) 1))
+  (setcar l (cadr l))
+  (setcdr l (cddr l)))
+
+(let ((l (list 1 2 3 4 5)))
+  (delete-first l)
+  l)
+#+END_SRC
+
+#+RESULTS:
+: (2 3 4 5)
