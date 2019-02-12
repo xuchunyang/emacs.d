@@ -1082,6 +1082,11 @@ Intended to be added to `isearch-mode-hook'."
   ;; Escape 的工作就交给 Emacs 了
   (setq reb-re-syntax 'string))
 
+(use-package xr
+  :about Convert string regexp to rx notation
+  :ensure t
+  :defer t)
+
 (use-package anzu                       ; Position/matches count for isearch
   :disabled t
   :ensure t
