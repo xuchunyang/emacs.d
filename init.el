@@ -1372,17 +1372,41 @@ Intended to be added to `isearch-mode-hook'."
   :config
   (flycheck-package-setup)
   ;; Cause I don't use `package.el' anymore
-  (advice-add 'package-lint--check-packages-installable :around #'ignore))
+  ;; (advice-add 'package-lint--check-packages-installable :around #'ignore)
+  )
 
 (use-package elsa
-  :homepage https://github.com/emacs-elsa/Elsa
   :about Emacs Lisp Static Analyzer
+  :homepage https://github.com/emacs-elsa/Elsa
+  :load-path "~/src/Elsa"
   :ensure t
   :defer t)
+
+(use-package flycheck-elsa-without-cask
+  :after flycheck
+  :no-require t
+  :config
+  (flycheck-define-checker emacs-lisp-elsa-without-cask
+    "Run Elsa without Cask."
+    :command ("elsa"
+              (eval (flycheck-prepend-with-option "-L" load-path))
+              source)
+    :error-filter flycheck-increment-error-columns
+    :error-patterns
+    ((error line-start (file-name) ":"  line ":" column ":error:" (message))
+     (warning line-start (file-name) ":" line ":" column ":warning:" (message))
+     (info line-start (file-name) ":" line ":" column ":notice:" (message)))
+    :modes (emacs-lisp-mode))
+
+  (setf (car (flycheck-checker-get 'emacs-lisp-elsa-without-cask 'command))
+        (expand-file-name "bin/elsa" (file-name-directory (locate-library "elsa"))))
+
+  (add-to-list 'flycheck-checkers 'emacs-lisp-elsa-without-cask))
 
 (use-package flycheck-elsa
   :ensure t
-  :defer t)
+  :after flycheck
+  :config (flycheck-elsa-setup))
 
 
 ;;; Markup languages
@@ -2058,6 +2082,21 @@ PACKAGE should not be a built-in package."
 (use-package other-emacs-eval
   :ensure t
   :defer t)
+
+(use-package cask
+  :about Project management for Emacs package development
+  :homepage http://github.com/cask/cask
+  :disabled t)
+
+(use-package cask-mode
+  :about Major mode for editing Cask files
+  :ensure t
+  :defer t)
+
+(use-package emake
+  :about Test Elisp without the hoops
+  :homepage https://github.com/vermiculus/emake.el
+  :disabled t)
 
 
 ;;; Help & Info
