@@ -5055,6 +5055,7 @@ _r_: return
     ("q" nil "quit" :color blue)))
 
 (use-package realgud
+  :disabled t                           ; Lots of byte compiling warnings
   :homepage https://github.com/realgud/realgud
   :ensure t
   :defer t
