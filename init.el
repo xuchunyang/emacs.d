@@ -4924,6 +4924,7 @@ provides similiar function."
   :hook (csv-mode . hl-line-mode))
 
 (use-package po-mode
+  :disabled t                           ; Melpa stopped ship it
   :about "Major mode for PO files"
   :ensure t
   :defer t)
