@@ -32,6 +32,7 @@
 - [[#variable-vs-function---symbol][variable vs function  | Symbol]]
 - [[#delete-first-element-of-list][Delete first element of list]]
 - [[#transient][Transient]]
+- [[#deal-with-interactive-from-in-advice][Deal with Interactive from in Advice]]
 #+END_QUOTE
 
 * =defsubst=
@@ -600,3 +601,47 @@ a_i+1 - a_i = k."
 
 #+RESULTS:
 : foo-grep
+
+* Deal with Interactive from in Advice
+
+#+BEGIN_SRC elisp
+(defun greeting (name age)
+  (interactive "sName: \nnAge: ")
+  (message "Hi, I'm %s, %d years old!" name age))
+#+END_SRC
+
+如果 FUNCTION 没有 Interactive Form，那么会继承旧的 Interactive Form：
+
+#+BEGIN_SRC elisp
+(define-advice greeting (:around (old-fun name age) foo)
+  (message "Hello, my name is %s" name))
+#+END_SRC
+
+#+RESULTS:
+: greeting@foo
+
+如果 FUNCTION 有 Interactive Form，那么会覆盖旧的 Interactive Form:
+
+#+BEGIN_SRC elisp
+(define-advice greeting (:around (old-fun &rest args) foo)
+  (interactive "sWhat's your name? \nnHow old are you? ")
+  (apply old-fun args))
+#+END_SRC
+
+#+RESULTS:
+: greeting@foo
+
+如果 Function 的 Interactive Form 是个函数，则传进旧的 Interactive Spec：
+
+#+BEGIN_SRC elisp
+(define-advice greeting (:around (old-fun &rest args) foo)
+  (interactive (lambda (spec)
+                 (message "[DEBUG] %s" spec)
+                 (message nil)
+                 (setq spec (replace-regexp-in-string "Name:" "What's your name?" spec t t))
+                 (advice-eval-interactive-spec spec)))
+  (apply old-fun args))
+#+END_SRC
+
+#+RESULTS:
+: greeting@foo
