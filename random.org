@@ -31,6 +31,7 @@
 - [[#sn--a_1--a_2----a_n][S(n) = a_1 + a_2 + ... + a_n]]
 - [[#variable-vs-function---symbol][variable vs function  | Symbol]]
 - [[#delete-first-element-of-list][Delete first element of list]]
+- [[#transient][Transient]]
 #+END_QUOTE
 
 * =defsubst=
@@ -574,3 +575,28 @@ a_i+1 - a_i = k."
 
 #+RESULTS:
 : (2 3 4 5)
+
+* Transient
+
+#+BEGIN_SRC elisp
+(define-infix-argument my-grep:--regexp ()
+  :description "PATTERN"
+  :class 'transient-option
+  :key "-e"
+  :argument "--regexp=")
+
+(define-transient-command foo ()
+  "Foo."
+  ["Arguments"
+   (my-grep:--regexp)
+   ("-i" "Ignore Case" "--ignore-case")]
+  ["Do"
+   ("g" "grep" foo-grep)])
+
+(defun foo-grep ()
+  (interactive)
+  (message "[DEBUG] %S" (transient-args 'foo)))
+#+END_SRC
+
+#+RESULTS:
+: foo-grep
