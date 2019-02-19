@@ -2358,8 +2358,7 @@ PACKAGE should not be a built-in package."
   :ensure t
   :homepage https://github.com/magit/magit
   :info (info "(magit) Top")
-  :bind (("C-x g"   . magit-status)
-         ("C-x M-g" . magit-dispatch-popup))
+  :bind (("C-x g"   . magit-status))
   :config
   (setq-default magit-diff-refine-hunk t)
   (setq magit-save-repository-buffers 'dontask)
