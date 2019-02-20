@@ -459,6 +459,22 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   :diminish auto-revert-mode
   :config (global-auto-revert-mode))
 
+(use-package simple
+  :no-require t
+  :config
+  (define-advice goto-line (:before (&rest _) preview-line-number)
+    "Preview line number when prompting for line number.
+Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricketc_thread/egu2sve'."
+    (interactive
+     (lambda (spec)
+       (if (and (boundp 'display-line-numbers) ; `display-line-numbers' was added in Emacs 26.1
+                (not display-line-numbers))
+           (unwind-protect
+               (progn (display-line-numbers-mode)
+                      (advice-eval-interactive-spec spec))
+             (display-line-numbers-mode -1))
+         (advice-eval-interactive-spec spec))))))
+
 (use-package chunyang-simple
   :preface
   ;; 我已经用了用了 M-RET，结果 Org/Eww/Gnus 也用
