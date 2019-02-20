@@ -2497,6 +2497,10 @@ PACKAGE should not be a built-in package."
 
 (use-package comint
   :defer t
+  :init
+  (define-advice comint-run (:before (_program) fix-interactive-form)
+    "Fix the original interactive form."
+    (interactive (list (read-shell-command "Run program: "))))
   :config
   ;; Disable auto scroll on RET (like Eshell)
   (setq comint-scroll-show-maximum-output nil))
