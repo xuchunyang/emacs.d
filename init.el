@@ -4601,6 +4601,12 @@ provides similiar function."
   (add-to-list 'company-backends 'company-lua))
 
 
+;;; Janet <https://janet-lang.org/>
+
+(use-package janet
+  :commands run-janet)
+
+
 ;;; Misc
 
 (use-package ascii-art-to-unicode
