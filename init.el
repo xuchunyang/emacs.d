@@ -2043,6 +2043,11 @@ PACKAGE should not be a built-in package."
   :info (info "(elisp) Edebug")
   :defer t
   :config
+
+  (define-advice edebug-eval-expression (:before (_expr) better-interactive-form)
+    "Fix the original interactive form."
+    (interactive (list (read--expression "Edebug Eval: "))))  
+  
   ;; Don't pause after every break (Added in Emacs 26.1)
   (setq edebug-sit-on-break nil)
   ;; Don't restore window configuration
