@@ -2854,7 +2854,7 @@ This should be add to `find-file-hook'."
       user-mail-address    "mail@xuchunyang.me"
       ;; This is required for ~/.authinfo.gpg but not ~/.authinfo
       smtpmail-smtp-user   user-mail-address
-      smtpmail-smtp-server "smtp.yandex.com"
+      smtpmail-smtp-server "smtp.fastmail.com"
       smtpmail-smtp-service 465
       smtpmail-stream-type 'ssl
       send-mail-function   'smtpmail-send-it)
@@ -2883,60 +2883,7 @@ This should be add to `find-file-hook'."
 
 (use-package gnus
   :defer t
-  :config
-  (setq gnus-select-method
-        '(nnimap "mail"
-                 (nnimap-address "imap.yandex.com")
-                 (nnimap-server-port 993)
-                 (nnimap-stream ssl)))
-
-  (setq gnus-message-archive-group "nnimap:Sent"
-        gnus-gcc-mark-as-read t)
-
-  (setq gnus-use-cache t)
-  (setq gnus-cache-enter-articles '(ticked dormant))
-  (setq gnus-cache-remove-articles nil)
-  (setq gnus-keep-backlog nil)
-
-  (with-eval-after-load 'gnus-agent
-    (defun chunyang-gnus-article-old-p ()
-      "Return t if an article is old."
-      (< (time-to-days (date-to-time (mail-header-date gnus-headers)))
-         (- (time-to-days nil) 2)))
-
-    (setq gnus-category-predicate-alist
-          (append gnus-category-predicate-alist
-                  '((old . chunyang-gnus-article-old-p)))))
-
-  (setq gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B %s%)\n"
-        gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
-        gnus-group-line-format "%M%S%p%P%5y:%B %G\n")
-
-  (setq gnus-sum-thread-tree-false-root ""
-        gnus-sum-thread-tree-indent " "
-        gnus-sum-thread-tree-leaf-with-other "├► "
-        gnus-sum-thread-tree-root ""
-        gnus-sum-thread-tree-single-leaf "╰► "
-        gnus-sum-thread-tree-vertical "│")
-
-  (setq gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date))
-  (setq gnus-thread-hide-subtree t)
-  (setq gnus-summary-display-arrow nil)
-  (setq gnus-auto-select-first nil)
-
-  (with-eval-after-load 'gnus-art
-    (setq gnus-visible-headers
-          (cons "^User-Agent:"
-                (split-string (car (get 'gnus-visible-headers 'standard-value))
-                              (regexp-quote "\\|")))))
-  (setq gnus-treat-display-smileys nil)
-
-  ;; XXX I don't understand what "Scoring" means in Gnus
-  (setq gnus-use-scoring nil)
-
-  ;; XXX To avoid a byte-compile warnning, should figure out the
-  ;; course or report a bug
-  (setq gnus-use-byte-compile nil))
+  :config (setq gnus-select-method '(nnimap "imap.fastmail.com")))
 
 (use-package notmuch
   :load-path "~/src/notmuch/emacs/"
