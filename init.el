@@ -2030,6 +2030,19 @@ PACKAGE should not be a built-in package."
 
 (use-package debug
   :defer t
+  :preface
+  ;; (DEBUG emacs-version (+ 1 2 3))
+  (defmacro DEBUG (&rest exprs)
+    `(message
+      ,(concat "[DEBUG] "
+               (mapconcat
+                (lambda (e)
+                  (concat
+                   (replace-regexp-in-string
+                    "%" "%%" (prin1-to-string e))
+                   " = %S"))
+                exprs ", "))
+      ,@exprs))  
   :config
   (defhydra hydra-debugger-menu ()
     "Debug"
