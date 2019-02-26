@@ -155,6 +155,15 @@
              chunyang-mac-switch-to-app
              chunyang-chrome-switch-tab))
 
+(use-package finda
+  :if *is-mac*
+  :homepage https://keminglabs.com/finda/
+  :about Open apps, files, Emacs buffers, Chrome tabs/history etc
+  :defer 2
+  :config
+  (require 'server)
+  (or (server-running-p) (server-mode)))
+
 
 ;;; User Interface
 (when (bound-and-true-p tool-bar-mode)
