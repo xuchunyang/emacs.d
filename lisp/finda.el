@@ -40,7 +40,8 @@
     (json-encode-list l)))
 
 (defun finda-switch-to-buffer (buffer-name)
-  (switch-to-buffer buffer-name))
+  (select-window
+   (display-buffer buffer-name 'display-buffer-reuse-window)))
 
 (provide 'finda)
 ;;; finda.el ends here
