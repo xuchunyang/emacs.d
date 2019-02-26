@@ -2923,20 +2923,8 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :defer t)
 
 (use-package mu4e
-  :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e/"
   :commands mu4e
-  :defer t
   :config
-  (setq mu4e-maildir       "~/Maildir"
-        mu4e-sent-folder   "/Sent"
-        mu4e-drafts-folder "/Drafts"
-        mu4e-trash-folder  "/Trash"
-        mu4e-refile-folder "/Archive")
-
-  (setq mu4e-user-mailing-lists
-        '(("racket-users.googlegroups.com" . "Racket")
-          ("chicken-users.nongnu.org"      . "Chicken")))
-
   (add-to-list 'mu4e-view-actions
                '("open in web browser" .
                  chunyang-mu4e-action-open-html-in-browser))
@@ -2945,7 +2933,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
                 (tmpfile (make-temp-file "mure-" nil ".html" html)))
       (call-process "open" nil nil nil tmpfile)))
 
-  (setq mu4e-get-mail-command "proxychains4 mbsync --verbose --all"))
+  (setq mu4e-get-mail-command "offlineimap"))
 
 (use-package chunyang-mail
   :commands chunyang-browse-gnu-message)
