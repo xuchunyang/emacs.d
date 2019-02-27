@@ -3017,6 +3017,12 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :ensure t
   :config (elfeed-goodies/setup))
 
+(use-package pocket-reader
+  :homepage https://github.com/alphapapa/pocket-reader.el
+  :about Client for https://getpocket.com
+  :ensure t
+  :defer t)
+
 (use-package url-cookie
   :defer t
   :config
