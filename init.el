@@ -405,6 +405,23 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   (global-set-key (kbd "C-c g") 'counsel-git)
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
 
+(use-package prescient
+  :ensure t
+  :homepage https://github.com/raxod502/prescient.el
+  :about Simple but effective sorting and filtering
+  :config (prescient-persist-mode))
+
+(use-package ivy-prescient
+  :ensure t
+  :after ivy
+  :config (ivy-prescient-mode))
+
+(use-package company-prescient
+  :disabled
+  :ensure t
+  :after company
+  :config (company-prescient-mode))
+
 
 ;;; Helm
 
