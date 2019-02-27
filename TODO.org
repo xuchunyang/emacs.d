@@ -1,0 +1,19 @@
+#+TODO: TODO | INPROGRESS | DONE INVALID
+#+STARTUP: nologdone
+
+* TODO 学习别人的 Emacs 配置
+
+- https://github.com/wasamasa/dotemacs
+
+* TODO 写一个 =use-package= 替代品
+
+我看不懂 =use-package= 的实现，所以打算写个简单的替代品。
+
+* TODO 写一个 Emacs Lisp 包管理器
+
+- 用来支持开发 Emacs Lisp 项目
+- 像 =package.el= 一样支持 ELPA
+
+* TODO 写一个 Emacs Lisp 代码格式化工具
+
+* TODO 写一个 [[https://msgpack.org/][MessagePack]] 的 Emacs Lisp 实现
