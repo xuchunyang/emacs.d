@@ -374,6 +374,11 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 (use-package chunyang-edit-minibuffer
   :bind (:map minibuffer-local-map ("C-c '" . chunyang-edit-minibuffer)))
 
+(use-package which-key
+  :ensure t
+  :diminish which-key-mode
+  :config (which-key-mode))
+
 
 ;;; Ivy
 
