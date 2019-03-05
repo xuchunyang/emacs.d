@@ -3873,6 +3873,7 @@ Adapt from `org-babel-remove-result'."
 
 (use-package grab-mac-link
   :if *is-mac*
+  :load-path "~/src/grab-mac-link"
   :ensure t
   :commands (grab-mac-link grab-mac-link-dwim)
   :config (setq grab-mac-link-dwim-favourite-app 'chrome))
