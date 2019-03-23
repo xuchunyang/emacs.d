@@ -4824,6 +4824,13 @@ provides similiar function."
 
 (add-hook 'emacs-startup-hook #'chunyang-happy-birthday)
 
+(when (string= "03-23" (format-time-string "%m-%d"))
+  (run-with-idle-timer
+   1 nil
+   (lambda ()
+     (let (cursor-type)
+       (animate-birthday-present user-full-name)))))
+
 
 ;;; Utilities
 
