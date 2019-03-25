@@ -1335,7 +1335,15 @@ Intended to be added to `isearch-mode-hook'."
     :defer t
     :init
     (setq ispell-program-name "aspell"
-          ispell-extra-args '("--sug-mode=ultra")))
+          ispell-extra-args
+          '("--sug-mode=fast"
+            ;; NOTE 我把 macOS 改成了中文语言，然后 Emacs:
+            ;;
+            ;; (getenv "LANG")
+            ;; ;; => "zh-Hans_US.UTF-8"
+            ;;
+            ;; 导致 Aspell 试图找 zh 语言的字典，遂失败
+            "--lang=en_US")))
   :bind ("C-c t s" . flyspell-mode)
   :config
   (unbind-key "C-."   flyspell-mode-map)
