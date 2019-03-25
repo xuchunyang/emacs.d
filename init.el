@@ -79,7 +79,8 @@
 ;; C-a." after startup
 (setq inhibit-startup-echo-area-message "xcy")
 
-(setq initial-major-mode 'fundamental-mode)
+;; Use `fundamental-mode' to reduce startup time
+(setq initial-major-mode 'lisp-interaction-mode)
 
 (use-package chunyang-scratch
   :preface
