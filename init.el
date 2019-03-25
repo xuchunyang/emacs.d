@@ -1547,6 +1547,15 @@ unlike `markdown-preview'."
   :config (setq deft-markdown-mode-title-level 1))
 
 
+;;; PDF
+
+(use-package pdf-tools
+  :homepage https://github.com/politza/pdf-tools
+  :ensure t
+  ;; FIXME I do not know how to setup pdf-tools
+  :init (pdf-loader-install))
+
+
 ;;; Programming utilities
 
 ;; `glasses-mode' -- 把 areYouReady 显示成 are_You_Ready
