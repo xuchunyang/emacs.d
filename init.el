@@ -4561,6 +4561,9 @@ provides similiar function."
   (setq python-shell-interpreter "python"
         python-shell-interpreter-args "-i")
 
+  ;; Disable syntax highlightting in the Python Shell
+  (setq python-shell-font-lock-enable nil)
+
   ;; Company
   (add-hook 'inferior-python-mode-hook #'company-mode)
   ;; Elpy
