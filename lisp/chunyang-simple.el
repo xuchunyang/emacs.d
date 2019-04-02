@@ -309,5 +309,11 @@ Relative:     ../init.el
       (message "Buffer has %s expressions" count)
       count)))
 
+
+(defun chunyang-delete-region (b e)
+  (interactive "r")
+  (let ((inhibit-read-only t))
+    (delete-region b e)))
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here

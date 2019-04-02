@@ -540,6 +540,7 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
   :commands (chunyang-window-click-swap
              chunyang-cycle-filename-format
              chunyang-display-number-as-char
+             chunyang-delete-region
              chunyang-count-top-level-expression))
 
 (use-package chunyang-misc
