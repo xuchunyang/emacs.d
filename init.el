@@ -4473,6 +4473,34 @@ provides similiar function."
 (use-package web-server
   :homepage https://github.com/eschulte/emacs-web-server
   :ensure t
+  :preface
+  (defun simple-http-server (root-dir)
+    "简单的文件 HTTP 服务器，效果类似于 python -m http.server 8888."
+    (interactive (list (expand-file-name default-directory)))
+    (ws-start
+     `(lambda (request)
+        (with-slots ((proc process) headers) request
+          (let* ((path (alist-get :GET headers))
+                 (path (concat ,root-dir path)))
+            (cond ((file-directory-p path)
+                   (ws-response-header proc 200 (cons "Content-type" "text/html"))
+                   (process-send-string
+                    proc
+                    (mapconcat
+                     (lambda (f)
+                       (when (file-directory-p f)
+                         (setq f (concat f "/")))
+                       (format "<li><a href=%s>%s</li>"
+                               (url-encode-url f) (url-encode-url f)))
+                     (directory-files path)
+                     "\n")))
+                  ((file-regular-p path)
+                   (ws-send-file proc path))
+                  (t
+                   (ws-send-404 proc)))
+            )))
+     8888)
+    (browse-url "http://localhost:8888/"))
   :defer t)
 
 
