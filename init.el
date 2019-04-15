@@ -2693,6 +2693,7 @@ PACKAGE should not be a built-in package."
   :defer t)
 
 (use-package github-stars
+  :load-path "~/src/github-stars.el"
   :ensure t
   :defer t)
 
