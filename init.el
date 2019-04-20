@@ -2452,6 +2452,25 @@ PACKAGE should not be a built-in package."
           ("~/.emacs.d/straight/repos" . 1)
           ("~/src"                     . 1))))
 
+
+(use-package ghub
+  :ensure t
+  :defer t
+  :config
+  ;; FIXME https://github.com/magit/ghub/issues/81
+  (setq ghub-use-workaround-for-emacs-bug nil)
+  :notes
+  ;; Examples
+  (ghub-get "/")
+  (ghub-get "/user")
+  (ghub-get "/user/starred"))
+
+(use-package forge
+  :homepage https://github.com/magit/forge
+  :about Work with Git forges from the comfort of Magit
+  :ensure t
+  :defer t)
+
 (use-package magithub
   :disabled
   :ensure t
