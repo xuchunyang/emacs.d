@@ -4618,6 +4618,9 @@ provides similiar function."
   ;; Elpy
   (bind-key "C-h ." #'elpy-doc inferior-python-mode-map))
 
+(use-package chunyang-python
+  :commands chunyang-jedi)
+
 (use-package elpy
   :disabled       ; too many dependencies (find-file-in-project ->
                   ; ivy), and I don't write python for now.
