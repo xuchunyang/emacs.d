@@ -4619,7 +4619,8 @@ provides similiar function."
   (bind-key "C-h ." #'elpy-doc inferior-python-mode-map))
 
 (use-package chunyang-python
-  :commands chunyang-jedi)
+  :commands (chunyang-jedi
+             chunyang-python-comment-box))
 
 (use-package elpy
   :disabled       ; too many dependencies (find-file-in-project ->

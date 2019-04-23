@@ -45,6 +45,17 @@
         (message "Error:\n%s" (buffer-string))))
     (delete-file tmpfile)))
 
+;;;###autoload
+(defun chunyang-python-comment-box (b e)
+  (interactive "*r")
+  (let ((s (string-trim (buffer-substring b e))))
+    (delete-region b e)
+    ;; NOTE PEP8 要求 # 后得有一个空格，但我不想要一个坏的盒子
+    (insert
+     "#*----------------------------------------------------------------------------#\n"
+     "#*    " s (make-string (- 79 6 (length s) 1) ?\s)                            "#\n"           
+     "#*----------------------------------------------------------------------------#\n")))
+
 (provide 'chunyang-python)
 ;;; chunyang-python.el ends here
 
