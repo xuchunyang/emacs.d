@@ -1555,7 +1555,35 @@ unlike `markdown-preview'."
   :homepage https://github.com/politza/pdf-tools
   :ensure t
   ;; FIXME I do not know how to setup pdf-tools
-  :init (pdf-loader-install))
+  :init
+  (pdf-loader-install)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;    恢复页面                                           ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  
+  ;; 持久化？
+  (defvar chunyang-pdf-alist nil
+    "List of (FILENAME . PAGE).")
+
+  (defun chunyang-pdf-view-mode-save-page ()
+    (when (and (eq major-mode 'pdf-view-mode)
+               buffer-file-name)
+      (setq chunyang-pdf-alist
+            (delq (assoc buffer-file-name chunyang-pdf-alist)
+                  chunyang-pdf-alist))
+      (push (cons buffer-file-name (pdf-view-current-page))
+            chunyang-pdf-alist)))
+
+  (add-hook 'kill-buffer-hook #'chunyang-pdf-view-mode-save-page 'append)
+
+  (defun chunyang-pdf-view-mode-open-page ()
+    (when-let ((page (assoc-default buffer-file-name chunyang-pdf-alist)))
+      (pdf-view-goto-page page)))
+
+  (add-hook 'pdf-view-mode-hook #'chunyang-pdf-view-mode-open-page 'append)
+
+  "the ugly placement (for better line-base diff)")
 
 
 ;;; Programming utilities
