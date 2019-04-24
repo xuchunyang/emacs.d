@@ -64,7 +64,7 @@
              (string-trim
               (buffer-substring-no-properties
                (line-beginning-position) (line-end-position))))
-            (insert (format "%s-%s" (capitalize adjective) (capitalize noun)))
+            (insert (format "%s%s" (capitalize adjective) (capitalize noun)))
           (insert "%s_%s_%s"
                   (capitalize adjective)
                   (capitalize noun)
