@@ -46,14 +46,18 @@
 
 ;;;###autoload
 (defun chunyang-python-comment-box (b e)
-  (interactive "*r")
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-end-position))))
   (let ((s (string-trim (buffer-substring b e))))
     (delete-region b e)
     ;; NOTE PEP8 要求 # 后得有一个空格，但我不想要一个坏的盒子
     (insert
-     "#*----------------------------------------------------------------------------#\n"
-     "#*    " s (make-string (- 79 6 (string-width s) 1) ?\s)                      "#\n"           
-     "#*----------------------------------------------------------------------------#\n")))
+     "#*------------------------------------------------------------------#\n"
+     "#*    " s (make-string (- 69 6 (string-width s) 1) ?\s)            "#\n"           
+     "#*------------------------------------------------------------------#\n")))
 
 (provide 'chunyang-python)
 ;;; chunyang-python.el ends here
