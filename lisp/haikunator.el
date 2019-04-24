@@ -65,10 +65,10 @@
               (buffer-substring-no-properties
                (line-beginning-position) (line-end-position))))
             (insert (format "%s%s" (capitalize adjective) (capitalize noun)))
-          (insert "%s_%s_%s"
-                  (capitalize adjective)
-                  (capitalize noun)
-                  token))
+          (insert (format "%s_%s_%s"
+                          (capitalize adjective)
+                          (capitalize noun)
+                          token)))
       (insert (format "%s-%s-%s" adjective noun token)))))
 
 (provide 'haikunator)
