@@ -66,8 +66,8 @@
                (line-beginning-position) (line-end-position))))
             (insert (format "%s%s" (capitalize adjective) (capitalize noun)))
           (insert (format "%s_%s_%s"
-                          (capitalize adjective)
-                          (capitalize noun)
+                          adjective
+                          noun
                           token)))
       (insert (format "%s-%s-%s" adjective noun token)))))
 
