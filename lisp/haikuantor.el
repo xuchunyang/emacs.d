@@ -19,7 +19,8 @@
 
 ;;; Commentary:
 
-;;
+;; Other idea
+;; https://github.com/aceakash/project-name-generator#readme
 
 ;;; Code:
 
