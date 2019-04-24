@@ -29,7 +29,6 @@
   (let ((line (line-number-at-pos))
         (column (current-column))
         (file buffer-file-name)
-        (source (buffer-string))
         (tmpfile (make-temp-file "chunyang-jedi-"))
         (prompt (buffer-substring (line-beginning-position) (point))))
     (write-region nil nil tmpfile)
