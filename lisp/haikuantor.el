@@ -53,8 +53,13 @@
                         (seq-random-elt adjectives)
                         (seq-random-elt nouns)
                         (random 10000))))
-      (kill-new name)
-      (message "Copied: %s" name))))
+      (condition-case nil
+          (insert name)
+        ;; eval: Buffer is read-only: #<buffer *Messages*>
+        ;; eval: Text is read-only
+        (error
+         (kill-new name)
+         (message "Copied: %s" name))))))
 
 (provide 'haikuantor)
 ;;; haikuantor.el ends here
