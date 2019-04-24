@@ -2880,8 +2880,8 @@ This should be add to `find-file-hook'."
 
   (bind-key "C-c C-c" #'gif-screencast-stop gif-screencast-mode-map))
 
-(use-package haikuantor
-  :commands haikunator)
+(use-package haikunator
+  :commands haikuantor-insert)
 
 
 ;;; Documentation
