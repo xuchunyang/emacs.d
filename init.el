@@ -4640,6 +4640,9 @@ provides similiar function."
   ;; Python
   (setq python-shell-interpreter "python"
         python-shell-interpreter-args "-i")
+  ;; Python 3
+  (setq python-shell-interpreter "python3"
+        python-shell-interpreter-args "-i")
 
   ;; Disable syntax highlightting in the Python Shell
   (setq python-shell-font-lock-enable nil)
