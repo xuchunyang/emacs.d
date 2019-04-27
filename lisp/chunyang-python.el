@@ -30,7 +30,8 @@
         (column (current-column))
         (file buffer-file-name)
         (tmpfile (make-temp-file "chunyang-jedi-"))
-        (prompt (buffer-substring (line-beginning-position) (point))))
+        (prompt (buffer-substring (line-beginning-position) (point)))
+        (orig-buffer (current-buffer)))
     (write-region nil nil tmpfile)
     (with-temp-buffer
       (if (zerop (call-process "jedi-completions.py" tmpfile t nil
@@ -40,7 +41,8 @@
           (let ((completions (split-string (buffer-string) "\n" t)))
             ;; TODO try in-buffer completions instead.
             ;; See (info "(elisp) Completion in Buffers")
-            (insert (completing-read prompt completions nil t)))
+            (with-current-buffer orig-buffer
+              (insert (completing-read prompt completions nil t))))
         (message "Error:\n%s" (buffer-string))))
     (delete-file tmpfile)))
 
