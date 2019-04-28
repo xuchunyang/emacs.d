@@ -4675,7 +4675,8 @@ provides similiar function."
 
 (use-package pydoc
   :ensure t
-  :commands pydoc)
+  :commands pydoc
+  :config (setq pydoc-command "python3 -m pydoc"))
 
 (use-package helm-pydoc
   :ensure t
