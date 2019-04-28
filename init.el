@@ -4632,6 +4632,8 @@ provides similiar function."
   (add-hook 'python-mode-hook #'chunyang-python-mode-setup)
   (add-hook 'inferior-python-mode-hook #'chunyang-inferior-python-mode-setup)
 
+  (setq python-indent-guess-indent-offset nil)
+
   (setq python-shell-interpreter "python3"
         python-shell-completion-native-enable nil
         python-shell-font-lock-enable nil))
