@@ -5242,3 +5242,9 @@ _r_: return
 ;; (load custom-file :no-error :no-message)
 
 ;;; init.el ends here
+
+;; Local Variables:
+;; bug-reference-url-format: "https://debbugs.gnu.org/cgi/bugreport.cgi?bug=%s"
+;; bug-reference-bug-regexp: "bug#\\(?2:[0-9]+\\)"
+;; eval: (bug-reference-prog-mode)
+;; End:
