@@ -3258,8 +3258,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package shr
   :defer t
   :config
-  (setq shr-use-fonts nil
-        shr-use-colors nil)
+  (setq shr-use-fonts nil)
   (define-advice shr-tag-blockquote (:around (old-fun &rest args) bug-32277)
     "Work-around for bug#32277."
     (cl-letf (((symbol-function 'shr-mark-fill) #'ignore))
