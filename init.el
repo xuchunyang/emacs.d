@@ -4622,34 +4622,19 @@ provides similiar function."
   :defer t
   :preface
   (defun chunyang-python-mode-setup ()
-    (setq indent-tabs-mode nil)
-    (setq fill-column 79))
+    (eldoc-mode -1)
+    (kill-local-variable 'completion-at-point-functions))
+
+  (defun chunyang-inferior-python-mode-setup ()
+    (setq-local comint-process-echoes t)
+    (kill-local-variable' completion-at-point-functions))
   :config
-  ;; https://docs.python.org/3/tutorial/controlflow.html#intermezzo-coding-style
-  ;; * 缩进
-  (setq python-indent-offset 4
-        python-indent-guess-indent-offset nil)
-  (setq python-shell-completion-native-enable nil)
-  ;; Jupyter
-  (setq python-shell-interpreter "jupyter"
-        python-shell-interpreter-args "console --simple-prompt")
-  ;; IPython
-  (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "--simple-prompt -i")
-  ;; Python
-  (setq python-shell-interpreter "python"
-        python-shell-interpreter-args "-i")
-  ;; Python 3
+  (add-hook 'python-mode-hook #'chunyang-python-mode-setup)
+  (add-hook 'inferior-python-mode-hook #'chunyang-inferior-python-mode-setup)
+
   (setq python-shell-interpreter "python3"
-        python-shell-interpreter-args "-i")
-
-  ;; Disable syntax highlightting in the Python Shell
-  (setq python-shell-font-lock-enable nil)
-
-  ;; Company
-  (add-hook 'inferior-python-mode-hook #'company-mode)
-  ;; Elpy
-  (bind-key "C-h ." #'elpy-doc inferior-python-mode-map))
+        python-shell-completion-native-enable nil
+        python-shell-font-lock-enable nil))
 
 (use-package chunyang-python
   :commands (chunyang-jedi
