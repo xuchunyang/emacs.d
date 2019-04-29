@@ -2957,8 +2957,12 @@ This should be add to `find-file-hook'."
       smtpmail-smtp-user   user-mail-address
       smtpmail-smtp-server "smtp.fastmail.com"
       smtpmail-smtp-service 465
-      smtpmail-stream-type 'ssl
-      send-mail-function   'smtpmail-send-it)
+      smtpmail-stream-type 'ssl)
+
+;; Which MUA (Mail User Agent) or Email client to use in C-x m?
+(setq mail-user-agent 'message-user-agent)
+;; "--text follows this line--" is verbose
+(setq mail-header-separator "")
 
 (use-package message
   :defer t
@@ -2977,6 +2981,10 @@ This should be add to `find-file-hook'."
              nil)
             (t nil))))
   :config
+  (setq message-send-mail-function 'message-smtpmail-send-it)
+  (setq message-default-headers
+        (format "User-Agent: Emacs/%s using message.el and smtpmail.el\n"
+                emacs-version))  
   ;; don't keep message buffers around
   ;; (setq message-kill-buffer-on-exit t)
   (setq message-directory (locate-user-emacs-file "var/Mail"))
@@ -3522,7 +3530,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
                    (split-string
                     (substring-no-properties (eshell-get-history 0)))))))
         (and last-arg (insert last-arg)))))
-  :bind ("C-x m" . eshell)              ; 'C-x m' runs `compose-mail' by default
+  :bind ("C-x M" . eshell)              ; 'C-x m' runs `compose-mail' by default
   :init
   (setq eshell-banner-message
         '(concat (mapconcat #'identity (mingju) " -- ")
