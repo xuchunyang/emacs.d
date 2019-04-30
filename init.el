@@ -3038,6 +3038,13 @@ proxychains4 mbsync --verbose --all && notmuch new&")
 (use-package chunyang-mail
   :commands chunyang-browse-gnu-message)
 
+(use-package vdirel
+  :about Access Contacts using vdirsyncer via the CardDAV protocol 
+  :homepage https://github.com/DamienCassou/vdirel
+  :ensure t
+  :config
+  (setq vdirel-repository "~/.contacts/Default"))
+
 (use-package sx
   :ensure t :defer t)
 
