@@ -3042,8 +3042,8 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :about Access Contacts using vdirsyncer via the CardDAV protocol 
   :homepage https://github.com/DamienCassou/vdirel
   :ensure t
-  :config
-  (setq vdirel-repository "~/.contacts/Default"))
+  :config (setq vdirel-repository "~/.contacts/Default")
+  :commands vdirel-helm-select-email)
 
 (use-package sx
   :ensure t :defer t)
