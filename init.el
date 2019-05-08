@@ -982,7 +982,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 (use-package canonicalize
   :about "Change github into GitHub"
-  :commands canonicalize-dwim)
+  :bind ("M-c" . canonicalize-dwim))
 
 
 ;;; Whitespace - Highlight and Manage Whitespaces
