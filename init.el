@@ -156,6 +156,11 @@
              chunyang-mac-switch-to-app
              chunyang-chrome-switch-tab))
 
+(use-package iterm2
+  :if *is-mac*
+  :commands (iterm2-send-region
+             iterm2-cd))
+
 (use-package finda
   :if *is-mac*
   :homepage https://keminglabs.com/finda/
