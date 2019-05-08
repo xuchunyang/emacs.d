@@ -71,7 +71,8 @@
     (cond ((equal word repl))
           (repl (delete-region beg end)
                 (insert repl))
-          (t (capitalize-region beg end)))))
+          (t (capitalize-region beg end)))
+    (goto-char end)))
 
 (provide 'canonicalize)
 ;;; canonicalize.el ends here
