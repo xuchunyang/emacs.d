@@ -34,9 +34,16 @@
   "A list of (\"github\" . \"GitHub\").")
 
 (defun canonicalize-alist ()
-  (or canonicalize-alist
+  (let ((cache '(nil)))
+    (when (or (eq (car cache) nil)
+              (time-less-p (car cache)
+                           (file-attribute-modification-time
+                            (file-attributes canonicalize-file))))
+      (setcar cache (file-attribute-modification-time
+                     (file-attributes canonicalize-file)))
       (setq canonicalize-alist
-            (mapcar (lambda (w) (cons (downcase w) w)) (canonicalize-file-read)))))
+            (mapcar (lambda (w) (cons (downcase w) w)) (canonicalize-file-read))))
+    canonicalize-alist))
 
 (defun canonicalize-file-read ()
   (with-temp-buffer
