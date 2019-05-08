@@ -4536,7 +4536,9 @@ provides similiar function."
 
 (use-package css-mode
   :defer t
-  :config (setq css-indent-offset 2))
+  :config
+  ;; 4 is already the default
+  (setq css-indent-offset 4))
 
 ;; TODO Try this package (examples, documentation)
 (use-package web-server
