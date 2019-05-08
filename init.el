@@ -980,6 +980,10 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   (setq undo-tree-visualizer-timestamps t)
   (global-undo-tree-mode))
 
+(use-package canonicalize
+  :about "Change github into GitHub"
+  :commands canonicalize-dwim)
+
 
 ;;; Whitespace - Highlight and Manage Whitespaces
 

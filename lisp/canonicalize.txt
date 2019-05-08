@@ -1,0 +1,18 @@
+;;; -*- sort-fold-case: t; -*-
+AppleScript
+CSS
+DuckDuckGo
+GCC
+GDB
+GitHub
+GNU
+HTML
+iTerm2
+JavaScript
+MySQL
+PHP
+PostgreSQL
+Ruby on Rails
+SQL
+SQLite
+YouTube
