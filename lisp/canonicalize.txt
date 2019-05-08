@@ -1,18 +1,16 @@
 ;;; -*- sort-fold-case: t; -*-
 AppleScript
-CSS
 DuckDuckGo
-GCC
-GDB
 GitHub
-GNU
-HTML
+iMac
+iOS
+iPhone
 iTerm2
+iTunes
 JavaScript
+macOS
 MySQL
-PHP
 PostgreSQL
 Ruby on Rails
-SQL
 SQLite
 YouTube
