@@ -33,17 +33,17 @@
 (defvar canonicalize-alist nil
   "A list of (\"github\" . \"GitHub\").")
 
+(defvar canonicalize-alist-cache-time nil)
+
 (defun canonicalize-alist ()
-  (let ((cache '(nil)))
-    (when (or (eq (car cache) nil)
-              (time-less-p (car cache)
-                           (file-attribute-modification-time
-                            (file-attributes canonicalize-file))))
-      (setcar cache (file-attribute-modification-time
-                     (file-attributes canonicalize-file)))
+  (let ((mt (file-attribute-modification-time
+             (file-attributes canonicalize-file))))
+    (when (or (not canonicalize-alist-cache-time)
+              (time-less-p canonicalize-alist-cache-time mt))
+      (setq canonicalize-alist-cache-time mt)
       (setq canonicalize-alist
-            (mapcar (lambda (w) (cons (downcase w) w)) (canonicalize-file-read))))
-    canonicalize-alist))
+            (mapcar (lambda (w) (cons (downcase w) w)) (canonicalize-file-read)))))
+  canonicalize-alist)
 
 (defun canonicalize-file-read ()
   (with-temp-buffer
