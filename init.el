@@ -5140,6 +5140,10 @@ provides similiar function."
 (use-package fix-anything
   :commands fix-anything)
 
+(use-package countdown
+  :load-path "~/src/countdown.el"
+  :commands countdown)
+
 
 ;;; Other Emacs Lisp libraries
 
