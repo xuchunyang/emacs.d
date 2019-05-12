@@ -381,6 +381,7 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   :bind (:map minibuffer-local-map ("C-c '" . chunyang-edit-minibuffer)))
 
 (use-package which-key
+  :disabled
   :ensure t
   :diminish which-key-mode
   :config (which-key-mode))
@@ -390,6 +391,7 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 
 ;; counsel -> swiper -> ivy
 (use-package counsel
+  :disabled
   ;; TODO Toggle between normal Emacs completing-read & Ivy
   ;; :disabled
   :ensure t
