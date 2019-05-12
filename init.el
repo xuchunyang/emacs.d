@@ -5137,6 +5137,9 @@ provides similiar function."
   :homepage https://github.com/mhayashi1120/yagist.el
   :defer t)
 
+(use-package fix-anything
+  :commands fix-anything)
+
 
 ;;; Other Emacs Lisp libraries
 
