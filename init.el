@@ -258,6 +258,10 @@
 ;; Don't translate quote in `message' and `format-message'
 (setq text-quoting-style 'grave)
 
+;; Remove the default italics for C-x 8 RET, see the comment of
+;; `mule--ucs-names-annotation'.
+(custom-set-faces '(completions-annotations ((t))))
+
 (use-package frame-tabs
   :about Show buffer tabs in side window
   :ensure t
