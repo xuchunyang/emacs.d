@@ -154,6 +154,7 @@
              chunyang-chrome-url
              chunyang-mac-app-running-p
              chunyang-mac-switch-to-app
+             chunyang-mac-switch-input-source
              chunyang-chrome-switch-tab))
 
 (use-package iterm2

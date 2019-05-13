@@ -23,6 +23,17 @@
 
 ;;; Code:
 
+;;; Input Method
+
+(defun chunyang-mac-switch-input-source ()
+  "在「简体拼音」和「美国」之间切换."
+  (interactive)
+  (let ((US "com.apple.keylayout.US")
+        (CN "com.apple.inputmethod.SCIM.ITABC"))
+    (pcase (mac-input-source)
+      ((pred (string= US)) (mac-select-input-source CN))
+      ((pred (string= CN)) (mac-select-input-source US)))))
+
 
 ;;; Terminal.app
 
