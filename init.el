@@ -5145,6 +5145,10 @@ provides similiar function."
   :load-path "~/src/countdown.el"
   :commands countdown)
 
+(use-package unifont
+  :load-path "~/src/unifont.el"
+  :commands unifont-test)
+
 
 ;;; Other Emacs Lisp libraries
 
