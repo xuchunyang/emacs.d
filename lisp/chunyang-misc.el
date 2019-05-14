@@ -9,6 +9,32 @@
 (require 'cl-lib)
 
 
+;; 读取剪切板中的图片
+
+;; https://emacs-china.org/t/markdown/9296
+;; NOTE 仅在 Emacs Mac Port 下测试过，其它 Emacs 应该不行
+(defun chunyang-insert-image-from-clipboard ()
+  "保存剪切板图片为 clipboard.png，插入 Markdown 图片链接."
+  (interactive)
+  (if-let* ((s
+             ;; `gui-selection-value' is not reliable
+             (gui--selection-value-internal 'CLIPBOARD))
+            (prop (get-text-property 0 'display s))
+            (data (pcase prop (`(image . ,plist) (plist-get plist :data))))
+            (file "clipboard.png"))
+      (progn
+        (let ((coding-system-for-write 'binary))
+          (write-region data nil file))
+        ;; Convert TIFF into PNG
+        (shell-command (format "convert %s %s" file file))
+        (cond ((derived-mode-p 'markdown-mode)
+               (insert (format "![](%s)" file)))
+              ((derived-mode-p 'org-mode)
+               (insert (format "file:%s" file)))
+              (t (insert file))))
+    (user-error "No image in clipboard")))
+
+
 ;; 恢复最近的选中区域
 
 (defvar-local chunyang-last-region nil

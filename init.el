@@ -560,6 +560,8 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              chunyang-timer
              chunyang-random-word
              chunyang-format-as-binary
+             ;; Clipboard
+             chunyang-insert-image-from-clipboard
              ;; QR Code
              chunyang-scan-qr-code-from-screen
              chunyang-qrdecode
