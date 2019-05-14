@@ -9,6 +9,25 @@
 (require 'cl-lib)
 
 
+;; Detect file type
+
+;; http://www.sparkhound.com/blog/detect-image-file-types-through-byte-arrays
+(defun chunyang-detect-file-type (data)
+  ;; FIXME we need to ensure data is binary (not encoded utf-8 string)
+  (pcase (string-to-list (substring data 0 4))
+    ('(?M ?M 0 42) 'TIFF)
+    ('(?I ?I 0 42) 'TIFF)
+    ('(#x89 ?P ?N ?G) 'PNG)
+    ('(#xff #xd8 #xff #xe0) 'JPEG)
+    ('(#xff #xd8 #xff #xe1) 'JPEG)))
+
+;; (with-temp-buffer
+;;   (set-buffer-multibyte nil)
+;;   (insert-file-contents-literally "~/play.png")
+;;   (chunyang-detect-file-type (buffer-string)))
+;; => PNG
+
+
 ;; 读取剪切板中的图片
 
 ;; https://emacs-china.org/t/markdown/9296
