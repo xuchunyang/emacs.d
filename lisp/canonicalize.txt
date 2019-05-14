@@ -3,6 +3,7 @@ AppleScript
 DuckDuckGo
 GitHub
 iMac
+ImageMagick
 iOS
 iPhone
 iTerm2
