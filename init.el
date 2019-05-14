@@ -3530,6 +3530,18 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   ;; toggle these two modes.
   (bind-key "C-c C-j" #'term-char-mode term-mode-map))
 
+(use-package vterm
+  :if module-file-suffix
+  :homepage https://github.com/akermu/emacs-libvterm
+  :ensure t
+  :defer t
+  :notes
+  To build vterm-module.so
+  - mkdir -p build
+  - cd build
+  - cmake ..
+  - make)
+
 (use-package shell-pop
   :ensure t
   :commands shell-pop)
