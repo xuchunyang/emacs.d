@@ -5171,7 +5171,7 @@ provides similiar function."
 
 (use-package unifont
   :load-path "~/src/unifont.el"
-  :commands unifont-test)
+  :commands (unifont-test unifont-insert))
 
 
 ;;; Other Emacs Lisp libraries
