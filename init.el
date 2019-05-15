@@ -2880,6 +2880,10 @@ This should be add to `find-file-hook'."
   :load-path "~/src/helm-lastpass"
   :commands helm-lastpass)
 
+(use-package 1password
+  :load-path "~/src/1password.el"
+  :commands (1password-login 1password-get-password))
+
 (use-package irfc
   :about Read RFC within Emacs
   :notes https://datatracker.ietf.org/
