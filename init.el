@@ -4871,6 +4871,10 @@ provides similiar function."
 
 ;;; Fun
 
+(use-package lolcat
+  :load-path "~/src/lolcat"
+  :commands (lolcat eshell/lolcat lolcat-message lolcat-view-file))
+
 (use-package svg-clock
   :disabled t                           ; Disabled because it will install the
                                         ; outdated svg-1.0.el from gnu elpa,
