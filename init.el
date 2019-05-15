@@ -593,6 +593,15 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
       (mapc #'kill-buffer buffers-to-kill)
       (delete-other-windows)))
 
+  (defun chunyang-kill-dir-buffers (dir)
+    "Kill all buffers whose `default-directory' is under DIR."
+    (interactive (list default-directory))
+    (setq dir (expand-file-name dir))
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when (string-prefix-p dir (expand-file-name default-directory))
+          (kill-buffer buffer)))))
+
   (defun chunyang-kill-invisible-buffers ()
     "Kill all invisible buffers."
     (interactive)
@@ -604,12 +613,12 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
          (not (string-prefix-p " " (buffer-name buffer))))
        (buffer-list))
       (seq-map #'window-buffer (window-list)))))
-  :defer t)
+  :defer t
+  :bind ("C-x K" . chunyang-kill-dir-buffers))
 
 (bind-key "O"     #'delete-other-windows special-mode-map)
 (bind-key "Q"     #'kill-this-buffer     special-mode-map)
 (bind-key "C-x k" #'kill-this-buffer)
-(bind-key "C-x K" #'kill-buffer)
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)           ; was `list-buffers'
