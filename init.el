@@ -817,6 +817,8 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
                      string-end)
                  "open"))))
 
+  (add-to-list 'dired-guess-shell-alist-user
+               '("\\.el\\'" "emacs -Q --batch -f batch-byte-compile"))
   (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python")))
 
 (use-package dired-du
