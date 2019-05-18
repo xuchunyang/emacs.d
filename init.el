@@ -3031,6 +3031,7 @@ This should be add to `find-file-hook'."
   :config (setq gnus-select-method '(nnimap "imap.fastmail.com")))
 
 (use-package notmuch
+  :disabled
   :load-path "~/src/notmuch/emacs/"
   :commands notmuch
   :preface
