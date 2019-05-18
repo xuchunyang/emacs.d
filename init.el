@@ -2202,13 +2202,14 @@ PACKAGE should not be a built-in package."
   :homepage https://github.com/phillord/assess
   :defer t)
 
-(use-package testcover                  ; XXX: Try this
-  :about Visual code-coverage tool
+(use-package testcover
+  :about Visual code-coverage tool (based on Edebug)
   :info (info "(elisp) Test Coverage")
   :defer t)
 
-(use-package undercover                 ; XXX: Try this
-  :about Test coverage library for Emacs Lisp
+(use-package undercover
+  :about base on Edebug and generate output for Coveralls
+  :homepage https://github.com/sviridov/undercover.el
   :ensure t
   :defer t)
 
