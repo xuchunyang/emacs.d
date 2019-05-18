@@ -1,4 +1,5 @@
 ;;; -*- sort-fold-case: t; -*-
+1Password
 AppleScript
 DuckDuckGo
 GitHub
