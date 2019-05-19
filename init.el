@@ -559,6 +559,7 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
 
 (use-package chunyang-misc
   :commands (chunyang-open-another-emacs
+             chunyang-starify-region
              chunyang-timer
              chunyang-random-word
              chunyang-format-as-binary

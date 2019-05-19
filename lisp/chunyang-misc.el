@@ -9,6 +9,14 @@
 (require 'cl-lib)
 
 
+;;;###autoload
+(defun chunyang-starify-region (b e)
+  "Hide the text in the region."
+  (interactive "*r")
+  ;; • looks nice
+  (insert (make-string (length (delete-and-extract-region b e)) ?*)))
+
+
 ;; Detect file type
 
 ;; http://www.sparkhound.com/blog/detect-image-file-types-through-byte-arrays
