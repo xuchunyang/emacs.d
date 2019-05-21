@@ -107,7 +107,9 @@
 ;; Inspired by https://with-emacs.com/images/show_paren.gif
 (define-minor-mode display-command-mode
   "Display last command and key on the mode line."
-  :lighter (:eval (display-command-mode--string)))
+  :lighter (:eval (display-command-mode--string))
+  ;; FIXME Define `global-display-command-mode' instead  
+  :global t)
 
 (defun display-command-mode--string ()
   (let* ((keys (recent-keys 'include-cmds))
