@@ -104,6 +104,34 @@
               (and (string-match "[0-9]+" str)
                    (format " #<window %s>" (match-string 0 str))))))
 
+;; Inspired by https://with-emacs.com/images/show_paren.gif
+(define-minor-mode display-command-mode
+  "Display last command and key on the mode line."
+  :lighter (:eval (display-command-mode--string)))
+
+(defun display-command-mode--string ()
+  (let* ((keys (recent-keys 'include-cmds))
+         (i (1- (length keys)))
+         (read (lambda ()
+                 (let ((cmd (cdr (aref keys i)))
+                       key)
+                   (setq i (1- i))
+                   (while (and (>= i 0) (pcase (aref keys i)
+                                          (`(nil . ,_) nil)
+                                          (_ t)))
+                     (push (aref keys i) key)
+                     (setq i (1- i)))
+                   (list :cmd cmd :key (key-description (vconcat key)))))))
+    (let ((last-key (funcall read))
+          (times 1))
+      (while (equal last-key (funcall read))
+        (cl-incf times))
+      (format " %s %s%s"
+              (plist-get last-key :key)
+              (plist-get last-key :cmd)
+              (if (> times 1)
+                  (format " x%d" times)
+                "")))))
 
 ;; Byte-code, disassemble
 

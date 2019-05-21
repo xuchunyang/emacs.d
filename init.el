@@ -2058,6 +2058,7 @@ PACKAGE should not be a built-in package."
              chunyang-macroexpand-print-last-sexp
              chunyang-display-mark-and-pos-mode
              chunyang-display-window-mode
+             display-command-mode
              chunyang-toggle-setq-form
              chunyang-insert-command
              chunyang-insert-key)
