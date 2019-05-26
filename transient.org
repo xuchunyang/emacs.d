@@ -1,0 +1,61 @@
+* Use Transient to implement simple "command dispatchers"
+
+#+BEGIN_SRC elisp
+(define-transient-command pip-dispatch ()
+  "Invoke a pip command from a list of available commands."
+  [("i" "install"    pip-todo)
+   ("d" "download"   pip-todo)
+   ("u" "uninstall"  pip-todo)]
+  [("l" "list"       pip-todo)
+   ("s" "show"       pip-todo)
+   ("s" "search"     pip-todo)]
+  [("f" "freeze"     pip-todo)
+   ("C" "config"     pip-todo)
+   ("c" "check"      pip-todo)
+   ("w" "wheel"      pip-todo)
+   ("h" "hash"       pip-todo)])
+
+(defun pip-todo ()
+  (interactive)
+  (message "TODO %s" "do something"))
+#+END_SRC
+
+#+RESULTS:
+: pip-todo
+
+* Define transient command
+
+#+BEGIN_SRC elisp
+(define-transient-command my-grep ()
+  ["Matcher Selection"
+   ("-E" "Extended RegExp" "--extended-regexp")
+   ("-G" "Basic RegExp" "--basic-regexp")
+   ("-P" "Perl RegExp" "--perl-regexp")
+   ("-F" "Fixed Strings" "--fixed-strings")]
+  ["Matching Control"
+   ("-e" "Pattern" "--regexp=")
+   ("-f" "Pattern from file" "--file=" my-grep:-f)
+   ("-i" "Ignore case" "--ignore-case")
+   ("-v" "Invert match" "--invert-match")
+   ("-w" "Word regexp" "--word-regexp")
+   ("-x" "Line regexp" "--line-regexp")]
+  ["General Output Control"
+   ("-c" "Display a count of matching lines" "--count")
+   ("-o" "Display only match part" "--only-matching")]
+  ["Output Line Prefix Control"
+   ("-n" "Line number" "--line-number")]
+  [("g" "grep" my-grep-do)])
+
+(define-infix-argument my-grep:-f ()
+  :description "File"
+  :class 'transient-files
+  :argument "-f"
+  :reader 'my-grep-read-file)
+
+(defun my-grep-read-file (&rest _)
+  (expand-file-name (read-file-name "File: ")))
+
+(define-suffix-command my-grep-do (file &rest args)
+  (interactive (cons (read-file-name "File: ") (transient-args)))
+  (grep (mapconcat #'identity (cons "grep" (cons file args)) " ")))
+#+END_SRC
