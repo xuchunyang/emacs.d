@@ -69,7 +69,9 @@
 
 (use-package dash
   :ensure t
-  :config (dash-enable-font-lock))
+  :config
+  ;; Will also make `it', `acc' into variable face everywhere
+  (dash-enable-font-lock))
 
 
 ;;; Initialization
