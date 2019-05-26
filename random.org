@@ -33,6 +33,7 @@
 - [[#delete-first-element-of-list][Delete first element of list]]
 - [[#transient][Transient]]
 - [[#deal-with-interactive-from-in-advice][Deal with Interactive from in Advice]]
+- [[#info-elisp-programmed-completion][(info "(elisp) Programmed Completion")]]
 #+END_QUOTE
 
 * =defsubst=
@@ -645,3 +646,16 @@ a_i+1 - a_i = k."
 
 #+RESULTS:
 : greeting@foo
+
+* (info "(elisp) Programmed Completion")
+
+Hit ? =minibuffer-completion-help= to list all possible completions
+
+#+BEGIN_SRC elisp
+(completing-read
+ "Grep init.el: "
+ (lambda (string pred action)
+   (pcase action
+     ('t (process-lines grep-program "-F" string user-init-file))
+     ('nil (car (process-lines grep-program "-F" string user-init-file))))))
+#+END_SRC
