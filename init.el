@@ -2253,6 +2253,12 @@ PACKAGE should not be a built-in package."
   :homepage https://github.com/vermiculus/emake.el
   :disabled t)
 
+(use-package font-lock-studio
+  :about Debugger for Font Lock keywords
+  :homepage https://github.com/Lindydancer/font-lock-studio
+  :ensure t
+  :commands font-lock-studio)
+
 
 ;;; Help & Info
 
