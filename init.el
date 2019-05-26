@@ -4896,7 +4896,7 @@ provides similiar function."
 ;;; Fun
 
 (use-package lolcat
-  :load-path "~/src/lolcat"
+  :load-path "~/src/lolcat.el"
   :commands (lolcat eshell/lolcat lolcat-message lolcat-view-file))
 
 (use-package svg-clock
