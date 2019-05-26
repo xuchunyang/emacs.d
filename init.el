@@ -3157,7 +3157,11 @@ proxychains4 mbsync --verbose --all && notmuch new&")
 (use-package larder
   :load-path "~/src/larder.el"
   :homepage https://github.com/xuchunyang/larder.el
-  :commands (larder-org larder-list-bookmarks larder-helm))
+  :commands (larder-org
+             larder-list-bookmarks
+             larder-helm
+             larder-add-bookmark
+             larder-add-bookmark-widget))
 
 (use-package url-cookie
   :defer t
