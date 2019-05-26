@@ -13,6 +13,7 @@ JavaScript
 macOS
 MySQL
 PostgreSQL
+RegExp
 Ruby on Rails
 SQLite
 YouTube
