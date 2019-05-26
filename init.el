@@ -3028,7 +3028,7 @@ This should be add to `find-file-hook'."
   :config
   (setq message-send-mail-function 'message-smtpmail-send-it)
   (setq message-default-headers
-        (format "User-Agent: Emacs/%s using message.el and smtpmail.el\n"
+        (format "User-Agent: Emacs/%s"
                 emacs-version))  
   ;; don't keep message buffers around
   ;; (setq message-kill-buffer-on-exit t)
