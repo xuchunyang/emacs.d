@@ -3073,6 +3073,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :config (ace-link-notmuch-setup))
 
 (use-package helm-notmuch
+  :disabled
   :ensure t
   :defer t)
 
