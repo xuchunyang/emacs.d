@@ -4404,8 +4404,8 @@ provides similiar function."
 
 (use-package racket-mode
   :homepage https://github.com/greghendershott/racket-mode
-  ;; :ensure t
-  :load-path "~/src/racket-mode"
+  :ensure t
+  ;; :load-path "~/src/racket-mode"
   :defer t
   :mode "\\.rkt\\'"
   :init
