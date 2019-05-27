@@ -3538,6 +3538,13 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   ;; TODO: Render the reuslt
   (shell-command (format "curl 'https://www.moedict.tw/uni/%s'" query)))
 
+(use-package foldoc
+  :about Emacs client for http://foldoc.org/
+  :homepage https://github.com/xuchunyang/foldoc.el
+  :load-path "~/src/foldoc.el"
+  :config (setq foldoc-file (locate-user-emacs-file "var/folddoc/Dictionary"))
+  :commands foldoc)
+
 
 ;;; Shell (including shell-command, shell, term and Eshell)
 
