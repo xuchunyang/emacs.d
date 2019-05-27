@@ -4927,7 +4927,11 @@ provides similiar function."
 
 (use-package lolcat
   :load-path "~/src/lolcat.el"
-  :commands (lolcat eshell/lolcat lolcat-message lolcat-view-file))
+  :commands (eshell/lolcat
+             lolcat-message
+             lolcat-this-buffer
+             lolcat-view-buffer
+             lolcat-view-file))
 
 (use-package svg-clock
   :disabled t                           ; Disabled because it will install the
