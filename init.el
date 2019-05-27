@@ -1476,32 +1476,29 @@ Intended to be added to `isearch-mode-hook'."
 (use-package elsa
   :about Emacs Lisp Static Analyzer
   :homepage https://github.com/emacs-elsa/Elsa
-  :load-path "~/src/Elsa"
+  ;; :load-path "~/src/Elsa"
   :ensure t
-  :defer t)
+  :defer t
+  :preface
+  (defun chunyang-elsa-batch-command ()
+    (interactive)
+    ;; To check FILENAME, use '$ elsa FILENAME', and elsa needs Elsafile.el to
+    ;; work
+    (let ((cmd (mapconcat
+                #'shell-quote-argument
+                `(,(expand-file-name "bin/elsa" (file-name-directory (locate-library "elsa")))
+                  ,@(mapcan (lambda (lib)
+                              (list "-L" (file-name-directory (locate-library lib))))
+                            '("elsa" "dash" "f" "s" "trinary")))
+                " ")))
+      (message "Elsa batch command saved to kill-ring")
+      (kill-new cmd))))
 
 (use-package flycheck-elsa-without-cask
-  :after flycheck
-  :no-require t
-  :config
-  (flycheck-define-checker emacs-lisp-elsa-without-cask
-    "Run Elsa without Cask."
-    :command ("elsa"
-              (eval (flycheck-prepend-with-option "-L" load-path))
-              source)
-    :error-filter flycheck-increment-error-columns
-    :error-patterns
-    ((error line-start (file-name) ":"  line ":" column ":error:" (message))
-     (warning line-start (file-name) ":" line ":" column ":warning:" (message))
-     (info line-start (file-name) ":" line ":" column ":notice:" (message)))
-    :modes (emacs-lisp-mode))
-
-  (setf (car (flycheck-checker-get 'emacs-lisp-elsa-without-cask 'command))
-        (expand-file-name "bin/elsa" (file-name-directory (locate-library "elsa"))))
-
-  (add-to-list 'flycheck-checkers 'emacs-lisp-elsa-without-cask))
+  :after flycheck)
 
 (use-package flycheck-elsa
+  :disabled
   :ensure t
   :after flycheck
   :config (flycheck-elsa-setup))
