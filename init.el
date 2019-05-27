@@ -3179,7 +3179,11 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   ;; annoying
   ;;
   ;; Saving file /Users/xcy/.emacs.d/var/url/configuration/cookies...
-  (advice-add 'url-cookie-setup-save-timer :override #'ignore))
+  ;; (advice-add 'url-cookie-setup-save-timer :override #'ignore)
+
+  ;; Turn on cache, see https://emacs-china.org/t/url-el-cache/9411
+  (setq url-automatic-caching t
+        url-cache-expire-time (* 6 3600)))
 
 (use-package eww
   :defer t
