@@ -3171,7 +3171,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
              larder-add-bookmark
              larder-add-bookmark-widget))
 
-(use-package url-cookie
+(use-package url
   :defer t
   :config
   ;; XXX Don't ever save cookie to disk, since I don't know what's purpose of
