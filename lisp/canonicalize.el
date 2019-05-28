@@ -59,12 +59,14 @@
 ;;;###autoload
 (defun canonicalize-dwim (beg end)
   (declare (interactive-only t))
-  (interactive (if (use-region-p)
-                   (list (region-beginning) (region-end))
-                 (let ((bounds (bounds-of-thing-at-point 'word)))
-                   (if bounds
-                       (list (car bounds) (cdr bounds))
-                     (user-error "No region or word found")))))
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))                   
+     (let ((bounds (bounds-of-thing-at-point 'word)))
+       (if bounds
+           (list (car bounds) (cdr bounds))
+         (save-excursion
+           (list (point) (progn (forward-word) (point))))))))
   (let* ((word (buffer-substring beg end))
          (alist (canonicalize-alist))
          (repl (cdr (assoc (downcase word) alist #'string=))))
@@ -72,7 +74,7 @@
           (repl (delete-region beg end)
                 (insert repl))
           (t (capitalize-region beg end)))
-    (goto-char end)))
+    (goto-char (1+ end))))
 
 (provide 'canonicalize)
 ;;; canonicalize.el ends here
