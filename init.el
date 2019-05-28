@@ -4946,6 +4946,9 @@ provides similiar function."
   :about <hr> for Emacs
   :commands hr-insert)
 
+(use-package github-emojis
+  :commands github-emoji)
+
 (use-package lolcat
   :load-path "~/src/lolcat.el"
   :commands (eshell/lolcat
