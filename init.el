@@ -4929,6 +4929,12 @@ provides similiar function."
   :homepage https://github.com/woudshoo/sparkline
   :defer t)
 
+(use-package spark
+  :ensure t
+  :about ▁▂▃▅▂█
+  :homepage https://github.com/alvinfrancis/spark
+  :defer t)
+
 (use-package lolcat
   :load-path "~/src/lolcat.el"
   :commands (eshell/lolcat
