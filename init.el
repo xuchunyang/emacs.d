@@ -4942,6 +4942,10 @@ provides similiar function."
   :homepage https://github.com/alvinfrancis/spark
   :defer t)
 
+(use-package hr
+  :about <hr> for Emacs
+  :commands hr-insert)
+
 (use-package lolcat
   :load-path "~/src/lolcat.el"
   :commands (eshell/lolcat
