@@ -4923,6 +4923,12 @@ provides similiar function."
 
 ;;; Fun
 
+(use-package sparkline
+  :ensure t
+  :about 生成走势图 | https://en.wikipedia.org/wiki/Sparkline
+  :homepage https://github.com/woudshoo/sparkline
+  :defer t)
+
 (use-package lolcat
   :load-path "~/src/lolcat.el"
   :commands (eshell/lolcat
