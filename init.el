@@ -2909,6 +2909,13 @@ This should be add to `find-file-hook'."
   :mode ("/rfc[0-9]+\\.txt\\'" . irfc-mode)
   :commands irfc-visit)
 
+(use-package rfc-mode
+  :ensure t
+  :about Read and browse RFC documents
+  :homepage https://github.com/galdor/rfc-mode
+  :init (setq rfc-mode-directory (locate-user-emacs-file "var/rfc-mode/"))
+  :commands (rfc-mode-browse rfc-mode-read))
+
 (use-package symbolic-link-on-save
   :about Create Symbolic Link on save
   :commands symbolic-link-on-save-mode)
