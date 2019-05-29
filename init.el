@@ -3709,6 +3709,11 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 ;;; Emacs + Shell
 
+(use-package $
+  :about https://emacs-china.org/t/xiki-shell/9448
+  :commands $
+  :bind ("M-RET" . $))
+
 (define-advice shell-command (:after (&rest _) exchange-point-and-mark)
   "Move point to the end of the inserted output.
 Because I usualy want to delete the final trailing newline."
