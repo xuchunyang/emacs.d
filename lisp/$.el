@@ -48,11 +48,13 @@
                      (progn (while (get-text-property (point) '$)
                               (forward-line))
                             (point)))
+      (unless (bolp) (insert "\n"))
       (insert
        (with-temp-buffer
          (let ((default-directory directory))
            (shell-command command t)
-           (propertize (buffer-string) '$ t)))))))
+
+           (propertize (buffer-string) '$ t 'rear-nonsticky t)))))))
 
 (provide '$)
 ;;; $.el ends here
