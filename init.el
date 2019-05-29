@@ -2657,6 +2657,19 @@ PACKAGE should not be a built-in package."
 
 ;;; Tools and utilities
 
+(use-package hyperbole
+  :ensure t
+  :homepage https://www.gnu.org/software/hyperbole/
+  :notes
+  - {M-x apropos RET hyperbole RET}
+  - ~/.emacs.d/
+  - https://example.com
+  ;; - github#/rswgnu/hyperbole
+  :init (setq hkey-init nil)
+  :commands
+  ;; M-RET, C-h A, C-h h
+  (hkey-either hkey-help hyperbole))
+
 (use-package repeater
   :about "C-n C-n C-n ... End of the buffer"
   :ensure t
