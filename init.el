@@ -4298,6 +4298,7 @@ provides similiar function."
 ;;; newLISP <http://www.newlisp.org/>
 
 (use-package newlisp-mode
+  :disabled Breaks indentation, see https://emacs-china.org/t/emacs-lisp-if/9394
   :ensure t
   :homepage https://github.com/kosh04/newlisp-mode
   :defer t)
