@@ -705,6 +705,12 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :commands shackle-mode
   :config (shackle-mode))
 
+(use-package buffer-expose
+  :ensure t
+  :about Visual buffer switching using a window grid
+  :homepage https://github.com/clemera/buffer-expose
+  :defer t)
+
 ;; Frames
 (setq frame-resize-pixelwise t)         ; Resize by pixels
 (setq frame-title-format '(buffer-file-name "%f" "%b"))
