@@ -503,6 +503,10 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   :ensure t
   :defer t)
 
+(use-package helm-fd
+  :about find files using fd <https://github.com/sharkdp/fd> with helm
+  :commands helm-fd)
+
 
 ;;; Buffers, Windows and Frames
 
