@@ -233,6 +233,16 @@
 ;; To restore
 ;; (setq-default mode-line-format (eval (car (get 'mode-line-format 'standard-value))))
 
+(setq-default header-line-format chunyang-mode-line-format
+              mode-line-format nil)
+
+(defun chunyang-toggle-header-line ()
+  "Toggle header line."
+  (interactive)
+  (if header-line-format
+      (setq header-line-format nil)
+    (setq header-line-format chunyang-mode-line-format)))
+
 (use-package spaceline
   :disabled
   :ensure t
