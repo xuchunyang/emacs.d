@@ -1834,6 +1834,15 @@ See also `describe-function-or-variable'."
             (not (string= "" oneline))
             (concat "  |  " (propertize oneline 'face 'italic))))))
 
+  (define-advice eval-print-last-sexp (:around (old-fun &rest args) add-prefix)
+    "Prepend ;; =>."
+    (let ((op (point)))
+      (apply old-fun args)
+      (save-excursion
+        (goto-char op)
+        (forward-line 1)
+        (insert ";; => "))))
+
   (define-advice elisp--preceding-sexp (:around (old-fun) multiline-comment)
     "Support sexp in multiline comment."
     (condition-case err
