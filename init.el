@@ -5311,6 +5311,11 @@ provides similiar function."
   :about 命令行工具文档 (中文)
   :commands cli-docs)
 
+(use-package tldr
+  :homepage https://github.com/kuanyui/tldr.el
+  :ensure t
+  :defer t)
+
 
 ;;; Other Emacs Lisp libraries
 
