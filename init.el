@@ -168,6 +168,10 @@
              chunyang-mac-switch-input-source
              chunyang-chrome-switch-tab))
 
+(use-package chrome-cli
+  :if *is-mac*
+  :commands chrome-cli-switch-to-tab)
+
 (use-package iterm2
   :if *is-mac*
   :commands (iterm2-send-region
