@@ -582,6 +582,7 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              chunyang-cycle-filename-format
              chunyang-display-number-as-char
              chunyang-delete-region
+             chunyang-center-current-line
              chunyang-count-top-level-expression))
 
 (use-package chunyang-misc

@@ -315,5 +315,18 @@ Relative:     ../init.el
   (let ((inhibit-read-only t))
     (delete-region b e)))
 
+
+(defun chunyang-center-current-line ()
+  "Center the content of current line."
+  (interactive)
+  (let ((n (/ (- (window-width)
+                 (string-width (buffer-substring
+                                (line-beginning-position)
+                                (line-end-position))))
+              2)))
+    (when (> n 0)
+      (goto-char (line-beginning-position))
+      (insert (make-string n ?\s)))))
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
