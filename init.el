@@ -5307,6 +5307,10 @@ provides similiar function."
   :load-path "~/src/unifont.el"
   :commands (unifont-test unifont-insert))
 
+(use-package cli-docs
+  :about 命令行工具文档 (中文)
+  :commands cli-docs)
+
 
 ;;; Other Emacs Lisp libraries
 
