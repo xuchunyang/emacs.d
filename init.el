@@ -600,6 +600,8 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              ;; 迅雷
              chunyang-decode-thunder-link
              chunyang-encode-thunder-link
+             ;; HTML -> Markdown
+             chunyang-yank-html
              ;; Eval
              chunyang-eval-in-other-emacs
              ;; Emacs -Q with straight.el

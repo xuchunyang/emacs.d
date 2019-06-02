@@ -328,5 +328,41 @@ Relative:     ../init.el
       (goto-char (line-beginning-position))
       (insert (make-string n ?\s)))))
 
+
+
+;; https://emacs-china.org/t/org/9479
+(defun chunyang-yank-html ()
+  "Yank HTML from clipboard as Org or Markdown code."
+  (interactive)
+  (let* ((result
+          (condition-case err
+              ;; hex-encoded string:
+              ;;           < m e t a ......>
+              ;; «data HTML3C6D657461......3E»
+              (do-applescript "the clipboard as «class HTML»")
+            (error
+             ;; assume it's user's fault
+             (user-error "Can't get HTML data from the clipboard: %s"
+                         (error-message-string err)))))
+         (data (substring result 10 -1))
+         (html (with-temp-buffer
+                 (set-buffer-multibyte nil)
+                 (let* ((i 0))
+                   (while (> (length data) (+ 2 i))
+                     (insert (string-to-number (substring data i (+ 2 i)) 16))
+                     (cl-incf i 2)))
+                 (decode-coding-region (point-min) (point-max) 'utf-8 t)))
+         (target (cond ((derived-mode-p 'org-mode) "org")
+                       ;; the official Markdown doesn't support table?
+                       (t "gfm"))))
+    (insert
+     (with-temp-buffer
+       (if (zerop (call-process-region html nil "pandoc" nil t nil
+                                       ;; https://stackoverflow.com/a/35812743/2999892
+                                       "-f" "html-native_divs-native_spans"
+                                       "-t" target))
+           (buffer-string)
+         (error "pandoc failed: %s" (buffer-string)))))))
+
 (provide 'chunyang-simple)
 ;;; chunyang-simple.el ends here
