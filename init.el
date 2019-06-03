@@ -5091,11 +5091,12 @@ provides similiar function."
   "Return t if today is my birthday, i.e., 农历九月廿三."
   ;; Adapted from `calendar-chinese-date-string'
   (require 'cal-china)
-  (pcase-let ((`(_ _ ,m ,d) (calendar-chinese-from-absolute
-                             (calendar-absolute-from-gregorian
-                              (calendar-current-date)))))
-    ;; Note: For leap months M is a float.
-    (equal (list (floor m) d) '(9 23))))
+  (pcase-exhaustive (calendar-chinese-from-absolute
+                     (calendar-absolute-from-gregorian
+                      (calendar-current-date)))
+    (`(,_ ,_ ,m ,d)
+     ;; Note: For leap months M is a float
+     (equal (list (floor m) d) '(9 23)))))
 
 (defun chunyang-happy-birthday ()
   ;; Avoid slowing down Emacs startup
