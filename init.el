@@ -237,15 +237,14 @@
 ;; To restore
 ;; (setq-default mode-line-format (eval (car (get 'mode-line-format 'standard-value))))
 
-(setq-default header-line-format chunyang-mode-line-format
-              mode-line-format nil)
-
-(defun chunyang-toggle-header-line ()
-  "Toggle header line."
+(defun chunyang-toggle-mode-or-header-line ()
+  "Toggle between mode and header line for displaying the status line."
   (interactive)
-  (if header-line-format
-      (setq header-line-format nil)
-    (setq header-line-format chunyang-mode-line-format)))
+  (if (default-value 'header-line-format)
+      (setq-default header-line-format nil
+                    mode-line-format chunyang-mode-line-format)
+    (setq-default mode-line-format nil
+                  header-line-format chunyang-mode-line-format)))
 
 (use-package spaceline
   :disabled
