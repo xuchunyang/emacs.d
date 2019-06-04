@@ -28,7 +28,7 @@
   (require 'rx)
 
   (declare-function helm "helm" (&rest plist))
-  (declare-function helm-build-sync-source "helm-source" (name &rest args)))
+  (declare-function helm-make-source "helm-source" (name class &rest args)))
 
 (defvar chrome-cli-program "chrome-cli"
   "The chrome-cli program.")
@@ -39,7 +39,7 @@
   (require 'helm)
   (helm
    :sources
-   (helm-build-sync-source "Chrome Tabs"
+   (helm-make-source "Chrome Tabs" 'helm-source-sync
      :candidates
      (mapcar
       (lambda (x)
