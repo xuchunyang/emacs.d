@@ -27,6 +27,7 @@
 ;;; Code:
 
 (require 'helm)
+(require 'helm-find)
 
 ;;;###autoload
 (defun helm-fd ()
