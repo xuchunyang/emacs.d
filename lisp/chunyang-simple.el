@@ -316,6 +316,7 @@ Relative:     ../init.el
     (delete-region b e)))
 
 
+;; NOTE I didn't realize there is a `center-line' 
 (defun chunyang-center-current-line ()
   "Center the content of current line."
   (interactive)
