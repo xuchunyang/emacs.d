@@ -5385,6 +5385,12 @@ provides similiar function."
   :homepage https://github.com/tkf/emacs-request
   :defer t)
 
+(use-package aio
+  :ensure t
+  :about skeeto/emacs-aio: async/await for Emacs Lisp
+  :homepage https://github.com/skeeto/emacs-aio
+  :defer t)
+
 
 ;;; Debugger
 
