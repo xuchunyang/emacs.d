@@ -2139,6 +2139,12 @@ PACKAGE should not be a built-in package."
   ;; should only for elisp
   :bind ("C-c e" . macrostep-expand))
 
+(use-package litable
+  :homepage https://github.com/Fuco1/litable
+  :about On-the-fly evaluation/substitution of emacs lisp code
+  :ensure t
+  :defer t)
+
 (use-package pcache              :ensure t :defer t)
 (use-package persistent-soft     :ensure t :defer t)
 (use-package log4e               :ensure t :defer t)
