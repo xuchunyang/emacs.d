@@ -2991,6 +2991,12 @@ This should be add to `find-file-hook'."
 
   (bind-key "C-c C-c" #'gif-screencast-stop gif-screencast-mode-map))
 
+(use-package keycast
+  :about Show current command and its key in the mode line
+  :ensure t
+  :homepage https://github.com/tarsius/keycast
+  :defer t)
+
 (use-package haikunator
   :commands haikunator-insert)
 
