@@ -30,27 +30,29 @@
 (require 'helm-find)
 
 ;;;###autoload
-(defun helm-fd ()
-  (interactive)
-  (helm
-   :sources
-   (helm-build-async-source "fd"
-     :header-name (lambda (name)
-                    (format "%s in [%s]" name (helm-default-directory)))
-     :candidates-process
-     (lambda ()
-       (let ((process-connection-type nil))
-         (let ((proc (apply #'start-process
-                            "helm-fd" helm-buffer
-                            "fd" (split-string helm-pattern))))
-           (set-process-sentinel proc #'ignore)
-           proc)))
-     :persistent-action 'helm-ff-kill-or-find-buffer-fname    
-     :action 'helm-type-file-actions
-     :help-message 'helm-generic-file-help-message
-     :keymap helm-find-map
-     :candidate-number-limit 9999)
-   :buffer "*helm fd*"))
+(defun helm-fd (dir)
+  (interactive (list (or (locate-dominating-file "." ".git")
+                         default-directory)))
+  (let ((default-directory dir))
+    (helm
+     :sources
+     (helm-build-async-source "fd"
+       :header-name (lambda (name)
+                      (format "%s in [%s]" name (helm-default-directory)))
+       :candidates-process
+       (lambda ()
+         (let ((process-connection-type nil))
+           (let ((proc (apply #'start-process
+                              "helm-fd" helm-buffer
+                              "fd" (split-string helm-pattern))))
+             (set-process-sentinel proc #'ignore)
+             proc)))
+       :persistent-action 'helm-ff-kill-or-find-buffer-fname    
+       :action 'helm-type-file-actions
+       :help-message 'helm-generic-file-help-message
+       :keymap helm-find-map
+       :candidate-number-limit 9999)
+     :buffer "*helm fd*")))
 
 (provide 'helm-fd)
 ;;; helm-fd.el ends here
