@@ -5311,8 +5311,9 @@ provides similiar function."
   :commands (unifont-test unifont-insert))
 
 (use-package cli-docs
+  :load-path "~/src/cli-docs.el"
   :about 命令行工具文档 (中文)
-  :commands cli-docs)
+  :commands (cli-docs cli-docs-helm))
 
 (use-package tldr
   :homepage https://github.com/kuanyui/tldr.el
