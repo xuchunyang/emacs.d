@@ -468,7 +468,7 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 ;;; Helm
 
 (use-package helm
-  :disabled
+  :disabled                             ; old, see next use-package block
   :ensure t
   :defer t
   :init
@@ -507,6 +507,18 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 
   (helm-mode)
   (diminish 'helm-mode))
+
+(use-package helm
+  :ensure t
+  :defer t
+  :config
+  (with-eval-after-load 'helm-unicode
+    (define-advice helm-unicode-insert-char (:override (_candidate) candidates)
+      (insert
+       (mapconcat
+        (lambda (x) (substring x -1))
+        (helm-marked-candidates)
+        " ")))))
 
 (use-package wgrep-helm
   :ensure t
