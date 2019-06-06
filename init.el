@@ -3611,6 +3611,23 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :commands foldoc)
 
 
+;;; English
+
+;; https://github.com/manateelazycat/company-english-helper
+;; company-ispell.el
+
+(use-package longman
+  :commands longman-3000-insert)
+
+(use-package helm-english-helper
+  :commands helm-english-helper)
+
+(use-package wordnut
+  :about Interface to WordNet https://wordnet.princeton.edu/
+  :notes brew install wordnet
+  :commands wordnut-search)
+
+
 ;;; Shell (including shell-command, shell, term and Eshell)
 
 (use-package flycheck-checkbashisms    ; Don't use Bash-only features in /bin/sh
