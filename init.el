@@ -3634,6 +3634,16 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package helm-english-helper
   :commands helm-english-helper)
 
+(use-package helm-baidu-dict
+  :homepage https://dict.baidu.com
+  :about 百度汉语 - 查询成语和诗词
+  :commands helm-baidu-dict-suggest)
+
+(use-package helm-baidu-fanyi
+  :homepage https://fanyi.baidu.com
+  :about 百度翻译
+  :commands helm-baidu-fanyi-suggest)
+
 (use-package wordnut
   :about Interface to WordNet https://wordnet.princeton.edu/
   :notes brew install wordnet
