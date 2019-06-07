@@ -42,7 +42,7 @@
 ;; (github-emojis--url-as-filename
 ;;  "https://github.githubassets.com/images/icons/emoji/unicode/1f631.png?v8")
 ;; => "1f631.png"
-(defun github-emojis--url-to-filename (url)
+(defun github-emojis--url-as-filename (url)
   (pcase-exhaustive (url-path-and-query (url-generic-parse-url url))
     (`(,path . ,_) (file-name-nondirectory path))))
 
@@ -69,10 +69,6 @@
               (github-emojis)
               (number-sequence 0 (1- (length (github-emojis)))))
     (progress-reporter-done progress-reporter)))
-
-(with-temp-buffer
-  (insert-image (github-emojis-download "octocat"))
-  (buffer-string))
 
 (defun github-emoji (emoji)
   "View GitHub EMOJI."
