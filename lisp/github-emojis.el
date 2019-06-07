@@ -24,6 +24,10 @@
 
 ;;; Code:
 
+(require 'json)
+(require 'seq)
+(require 'url)
+
 (defvar github-emojis-directory (locate-user-emacs-file "var/github-emojis/")
   "Where to keep Emojis pictures?")
 
