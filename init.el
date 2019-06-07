@@ -5042,7 +5042,7 @@ provides similiar function."
   :commands hr-insert)
 
 (use-package github-emojis
-  :commands github-emoji)
+  :commands (github-emojis-find-file github-emojis-helm))
 
 (use-package lolcat
   :load-path "~/src/lolcat.el"
