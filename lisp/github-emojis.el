@@ -74,6 +74,7 @@
               (number-sequence 0 (1- (length (github-emojis)))))
     (progress-reporter-done progress-reporter)))
 
+;;;###autoload
 (defun github-emoji (emoji)
   "View GitHub EMOJI."
   (interactive
@@ -83,6 +84,28 @@
           (prompt (format "%s GitHub Emoji: " octocat)))
      (list (completing-read prompt (github-emojis) nil t))))
   (find-file (github-emojis-download emoji)))
+
+(declare-function helm "helm")
+(declare-function helm-make-source "helm-source")
+
+;;;###autoload
+(defun github-emojis-helm ()
+  (interactive)
+  (github-emojis-download-all)
+  (require 'helm)
+  (helm
+   :sources
+   (helm-make-source "Image" 'helm-source-sync
+     :candidates
+     (mapcar
+      (pcase-lambda (`(,name . ,_url))
+        (let ((filename (github-emojis-download name)))
+          (format "%-15s %s"
+                  name
+                  (propertize " " 'display (create-image filename)))))
+      (github-emojis)))
+   :buffer "*helm GitHub Emojis*"
+   :full-frame t))
 
 (provide 'github-emojis)
 ;;; github-emojis.el ends here
