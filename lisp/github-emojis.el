@@ -75,8 +75,8 @@
     (progress-reporter-done progress-reporter)))
 
 ;;;###autoload
-(defun github-emoji (emoji)
-  "View GitHub EMOJI."
+(defun github-emojis-find-file (emoji)
+  "Open local file of GitHub EMOJI."
   (interactive
    (let* ((octocat (with-temp-buffer
                      (insert-image-file (github-emojis-download "octocat"))
@@ -90,6 +90,7 @@
 
 ;;;###autoload
 (defun github-emojis-helm ()
+  "Like `github-emojis-find-file' but with helm interface."
   (interactive)
   (github-emojis-download-all)
   (require 'helm)
@@ -103,7 +104,10 @@
           (format "%-15s %s"
                   name
                   (propertize " " 'display (create-image filename)))))
-      (github-emojis)))
+      (github-emojis))
+     :action
+     (lambda (x)
+       (find-file (github-emojis-download (car (split-string x " "))))))
    :buffer "*helm GitHub Emojis*"
    :full-frame t))
 
