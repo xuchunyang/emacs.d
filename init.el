@@ -3439,6 +3439,10 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :load-path "~/src/web-search.el"
   :bind ("M-s M-s" . web-search))
 
+(use-package helm-chrome-history
+  :about Search Chrome history with helm
+  :commands helm-chrome-history)
+
 
 ;;; Music
 
