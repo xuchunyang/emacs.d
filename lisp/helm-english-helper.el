@@ -34,19 +34,24 @@
    "Insert Word"
    (lambda (s) (insert (car (split-string s))))))
 
+(defun helm-english-helper-init ()
+  (unless (helm-candidate-buffer)
+    (message "[%s] helm-english-helper-init: Fill candidates..." (current-time-string))
+    (helm-init-candidates-in-buffer 'global
+      (mapcar
+       (lambda (s)
+         (format "%-25s %s" s (get-text-property 0 :initials s)))
+       (seq-filter
+        (lambda (s)
+          ;; Remove a, an, 'a, -al and 'a bad life'
+          (and (> (length s) 2)
+               (string-match "^[a-zA-Z]" s)
+               (not (string-match " " s))))
+        english-helper-completions)))))
+
 (defvar helm-english-helper-source
   (helm-build-in-buffer-source "English words"
-    :data
-    (mapcar
-     (lambda (s)
-       (format "%-25s %s" s (get-text-property 0 :initials s)))
-     (seq-filter
-      (lambda (s)
-        ;; Remove a, an, 'a, -al and 'a bad life'
-        (and (> (length s) 2)
-             (string-match "^[a-zA-Z]" s)
-             (not (string-match " " s))))
-      english-helper-completions))
+    :init #'helm-english-helper-init
     :action 'helm-english-helper-action))
 
 ;;;###autoload
