@@ -1630,6 +1630,10 @@ unlike `markdown-preview'."
   :init (setq deft-extensions '("md"))
   :config (setq deft-markdown-mode-title-level 1))
 
+(use-package dnote
+  :about "Manage Dnote notes in Emacs" https://dnote.io/
+  :commands (dnote-add dnote-find))
+
 
 ;;; PDF
 
