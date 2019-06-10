@@ -10,6 +10,12 @@
 
 ;;; Startup
 
+;; If it's not me, skip loading the rest
+(unless (equal user-login-name "xcy")
+  (warn "Please don't load Xu Chunyang's init file, it won't work for you")
+  (with-current-buffer " *load*"
+    (goto-char (point-max))))
+
 ;; Custom
 (setq custom-file "~/.emacs.d/custom.el")
 
