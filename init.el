@@ -517,6 +517,9 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 (use-package helm
   :ensure t
   :defer t
+  :init
+  ;; Disable Helm's C-x c bindings
+  (setq helm-command-prefix-key nil)
   :config
   (with-eval-after-load 'helm-unicode
     (define-advice helm-unicode-insert-char (:override (_candidate) candidates)
