@@ -3018,6 +3018,12 @@ This should be add to `find-file-hook'."
 (use-package haikunator
   :commands haikunator-insert)
 
+(use-package tinypng
+  :homepage https://github.com/xuchunyang/tinypng.el
+  :about compress .png and .jpg using TinyPNG.com
+  :load-path "~/src/tinypng.el"
+  :commands tinypng)
+
 
 ;;; Documentation
 
