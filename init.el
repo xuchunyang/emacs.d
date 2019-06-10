@@ -3654,6 +3654,14 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :about 百度翻译
   :commands helm-baidu-fanyi-suggest)
 
+(use-package helm-suggest
+  :load-path "~/src/helm-suggest"
+  :homepage https://github.com/xuchunyang/helm-suggest
+  :commands (helm-suggest-baidu-dict
+             helm-suggest-baidu-fanyi
+             helm-suggest-ldoceonline
+             helm-suggest-douban-book))
+
 (use-package wordnut
   :about Interface to WordNet https://wordnet.princeton.edu/
   :notes brew install wordnet
