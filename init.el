@@ -5402,6 +5402,9 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package tldr2
+  :commands tldr2-find-file)
+
 
 ;;; Other Emacs Lisp libraries
 
