@@ -3674,7 +3674,8 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :commands (helm-suggest-baidu-dict
              helm-suggest-baidu-fanyi
              helm-suggest-ldoceonline
-             helm-suggest-douban-book))
+             helm-suggest-douban-book
+             helm-suggest-commandlinefu))
 
 (use-package wordnut
   :about Interface to WordNet https://wordnet.princeton.edu/
