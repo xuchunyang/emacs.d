@@ -18,6 +18,7 @@
 
 ;; Custom
 (setq custom-file "~/.emacs.d/custom.el")
+(setq message-log-max 10000)
 
 ;; Emacs should have them, see Bug#33576
 (defun version> (v1 v2) (version< v2 v1))
