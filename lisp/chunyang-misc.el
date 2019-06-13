@@ -9,6 +9,42 @@
 (require 'cl-lib)
 
 
+(defun chunyang-brush (b e)
+  "给选中区域 🎨，如已有则去色."
+  (interactive "r")
+  (let ((orig-ov (seq-find
+                  (lambda (ov) (overlay-get ov 'brush))
+                  (overlays-at b))))
+    (if orig-ov
+        (delete-overlay orig-ov)
+      (let ((ov (make-overlay b e)))
+        (overlay-put ov 'brush t)
+        (overlay-put ov 'face
+                     ;; IDEA Color picker M-x helm-color
+                     (list :foreground (seq-random-elt (defined-colors)))))))
+  (deactivate-mark))
+
+;; +/- 字号
+(defun chunyang-adjust-font-size (b e)
+  (interactive "r")
+  (let* ((ov (or (seq-find
+                  (lambda (ov) (overlay-get ov 'adjust-font-size))
+                  (overlays-at b))
+                 (make-overlay b e)))
+         (face (overlay-get ov 'face))
+         (height (or (plist-get face :height) 1.0)))
+    (deactivate-mark)
+    (overlay-put ov 'adjust-font-size t)
+    (while (pcase (read-key (format "Type ↑ ↓ to adjust font size %f: " height))
+             ('up (cl-incf height 0.2))
+             ('down (cl-decf height 0.2))
+             ;; Quit
+             (_ nil))
+      ;; IDEA Try keymap
+      (overlay-put ov 'face (plist-put face :height height))
+      (force-window-update))))
+
+
 ;;;###autoload
 (defun chunyang-starify-region (b e)
   "Hide the text in the region."
