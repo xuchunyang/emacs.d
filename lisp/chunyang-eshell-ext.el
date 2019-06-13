@@ -57,10 +57,8 @@
   (unless tldr-commands
     (setq tldr-commands
           (split-string
-           (nth 1 (split-string
-                   (shell-command-to-string "tldr --list")
-                   "\n" t))
-           ", ")))
+           (shell-command-to-string "tldr --list")
+           ", " t)))
   (pcomplete-here* tldr-commands))
 
 (provide 'chunyang-eshell-ext)
