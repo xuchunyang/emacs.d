@@ -2394,6 +2394,9 @@ PACKAGE should not be a built-in package."
          ("b" . help-go-back)
          ("f" . help-go-forward)
          ("i" . help-info-lookup-symbol))
+  :init
+  ;; Disable aggressive auto loading during C-h f/v (Emacs 26.3)
+  (setq help-enable-completion-auto-load nil)
   :config
   (temp-buffer-resize-mode)
   (advice-add 'describe-function-1 :after #'chunyang-advice-remove-button))
