@@ -621,6 +621,8 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              ;; 迅雷
              chunyang-decode-thunder-link
              chunyang-encode-thunder-link
+             ;; https://www.quotes.net
+             chunyang-random-quote
              ;; HTML -> Markdown
              chunyang-yank-html
              ;; Eval

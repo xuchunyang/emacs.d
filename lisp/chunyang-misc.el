@@ -7,6 +7,42 @@
 (require 'seq)
 (require 'rx)
 (require 'cl-lib)
+(require 'json)
+
+
+;; Homepage: https://www.quotes.net
+;; API doc: https://www.stands4.com/api.php
+;; API sample: http://www.stands4.com/services/v2/quotes.php?uid=XXX&tokenid=XXX&searchtype=RANDOM&format=json
+;; API login: https://www.fastmail.com/mail/search:STANDS4/Tc40e9b03463f7182.M55fd42e24d567a90e32ee6f6?u=629140ee
+(defvar chunyang-random-quote--uid
+  (let ((plist (car (auth-source-search :host "stands4.com" :max 1))))
+    (plist-get plist :user)))
+
+(defvar chunyang-random-quote--tokenid
+  (let ((plist (car (auth-source-search :host "stands4.com" :max 1))))
+    (funcall (plist-get plist :secret))))
+
+(defun chunyang-random-quote ()
+  (interactive)
+  (with-current-buffer (url-retrieve-synchronously
+                        (concat
+                         "http://www.stands4.com/services/v2/quotes.php?"
+                         (mapconcat
+                          (pcase-lambda (`(,k . ,v))
+                            (concat k "=" v))
+                          `(("uid" . ,chunyang-random-quote--uid)
+                            ("tokenid" . ,chunyang-random-quote--tokenid)
+                            ("searchtype" . "RANDOM")
+                            ("format" . "json"))
+                          "&"))
+                        t t)
+    (goto-char (point-min))
+    (re-search-forward "^\r?\n")
+    (let-alist (json-read)
+      (if .result.quote
+          (prog1 (message "%s - %s" .result.quote .result.author)
+            (kill-buffer))
+        (error "Failed: %s: %s" (buffer-name) (buffer-string))))))
 
 
 (defun chunyang-brush (b e)
