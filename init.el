@@ -4979,6 +4979,12 @@ provides similiar function."
   :load-path "~/src/e2ansi"
   :defer t)
 
+(use-package adafruit-wisdom
+  :about Get/display adafruit.com quotes (名人名言)
+  :homepage https://github.com/gonewest818/adafruit-wisdom.el
+  :ensure t
+  :defer t)
+
 
 ;;; IM
 
