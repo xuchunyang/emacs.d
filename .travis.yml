@@ -1,20 +1,14 @@
 language: generic
 env:
-  global:
-    - CURL="curl -fsSkL --retry 9 --retry-delay 9"
-  matrix:
-    - EMACS_VERSION=25.1
-    # 25.2 is identical to 25.3 except for a critical security bug in
-    # enriched text mode (see Emacs Bug#28350).
-    - EMACS_VERSION=25.3
-    - EMACS_VERSION=26 # emacs-26 branch, built daily
-    - EMACS_VERSION=master # master branch, built daily
+  - EMACS_VERSION=25.3-travis
+  - EMACS_VERSION=26.2-travis
 
 install:
-  - $CURL -O https://github.com/npostavs/emacs-travis/releases/download/bins/emacs-bin-${EMACS_VERSION}.tar.gz
-  - tar -xaf emacs-bin-${EMACS_VERSION}.tar.gz -C /
-  - export EMACS=/tmp/emacs/bin/emacs
-  - $EMACS --version
+  - curl -fsSkL https://raw.githubusercontent.com/rejeep/evm/master/go | bash
+  - export PATH="$HOME/.evm/bin:$PATH"
+  - evm config path /tmp
+  - evm install emacs-$EMACS_VERSION
+  - export PATH="/tmp/emacs-$EMACS_VERSION/bin:$PATH"
 
 script:
-  - make
+  - make make
