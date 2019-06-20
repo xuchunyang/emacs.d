@@ -11,4 +11,4 @@ install:
   - export PATH="/tmp/emacs-$EMACS_VERSION/bin:$PATH"
 
 script:
-  - make make
+  - make
