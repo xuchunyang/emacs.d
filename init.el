@@ -536,6 +536,7 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 
 (use-package helm-ls-git
   :ensure t
+  :bind ("C-x C-d" . helm-browse-project)
   :defer t)
 
 (use-package helm-fd
