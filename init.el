@@ -892,6 +892,20 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
   :commands dired-async-mode)
 
 (use-package direx                      ; Alternative to Dired
+  :about Simple Directory Explorer
+  :homepage https://github.com/m2ym/direx-el
+  :ensure t
+  :defer t)
+
+(use-package ztree
+  :about Text mode directory tree
+  :homepage https://github.com/fourier/ztree
+  :ensure t
+  :defer t)
+
+(use-package treemacs
+  :about A tree style file explorer package
+  :homepage https://github.com/Alexander-Miller/treemacs
   :ensure t
   :defer t)
 
@@ -2971,11 +2985,6 @@ This should be add to `find-file-hook'."
 (use-package ansible-doc
   :ensure t
   :commands ansible-doc)
-
-(use-package ztree                      ; Diff directories
-  ;; TODO: Learn more about this package
-  :ensure t
-  :defer t)
 
 (use-package helm-lastpass
   :ensure t
