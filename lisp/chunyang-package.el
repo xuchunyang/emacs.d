@@ -103,5 +103,41 @@ Only projects on GitHub are supported."
           (help-insert-xref-button melpa-link 'help-url melpa-link)
           (insert "\n"))))))
 
+
+
+;;; Emacs -Q
+
+(require 'epl)
+(require 'pkg-info)                     ; `pkg-info--read-package'
+(require 'seq)
+
+(defun chunyang-package-reqs (pkg)
+  (let ((reqs (seq-remove
+               #'epl-built-in-p
+               (mapcar #'epl-requirement-name
+                       (epl-package-requirements
+                        (car (epl-find-installed-packages pkg)))))))
+    (dolist (req reqs)
+      (setq reqs (seq-uniq (append reqs (chunyang-package-reqs req)) #'eq)))
+    reqs))
+
+(defun chunyang-package-load-path (pkg)
+  (mapcar
+   (lambda (pkg) (epl-package-directory (car (epl-find-installed-packages pkg))))
+   (cons pkg (chunyang-package-reqs pkg))))
+
+(defun chunyang-package-emacs-Q-command (pkg)
+  (interactive (list (intern (pkg-info--read-package))))
+  (let ((cmd (mapconcat
+              #'shell-quote-argument
+              `(,(concat invocation-directory invocation-name)
+                "-Q" "-nw"
+                ,@(mapcan
+                   (lambda (dir) (list "-L" dir))
+                   (chunyang-package-load-path pkg)))
+              " ")))
+    (message "Copied: %s" cmd)
+    (kill-new cmd)))
+
 (provide 'chunyang-package)
 ;;; chunyang-package.el ends here
