@@ -1,0 +1,37 @@
+* 简单的补全后端
+
+=C-h v company-backends= 查看文档（ =interactive= 在 M-x 调用时使用，显而易见）
+
+输入 =foo= 补全 foobar, foobaz 和 foobarbaz
+
+#+BEGIN_SRC elisp
+(defun company-simple-backend (command &optional arg &rest _)
+  (interactive (list 'interactive))
+  (pcase command
+    ('interactive (company-begin-backend 'company-simple-backend))
+    ('prefix (when (looking-back (rx "foo" eow))
+               "foo"))
+    ('candidates '("foobar" "foobaz" "foobarbaz"))))
+#+END_SRC
+
+#+RESULTS:
+: company-simple-backend
+
+#+BEGIN_SRC elisp
+(company-mode)
+(setq-local company-backends '(company-simple-backend))
+#+END_SRC
+
+#+RESULTS:
+| company-simple-backend |
+
+foobarbaz
+
+* TODO 简单的显示前端
+
+=C-h v company-frontends=
+
+* Resources
+
+- [[https://github.com/company-mode/company-mode/wiki/Writing-backends][Writing backends · company-mode/company-mode Wiki]]
+- [[https://www.emacswiki.org/emacs/CompanyMode][EmacsWiki: Company Mode]]
