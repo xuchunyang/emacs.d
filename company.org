@@ -35,3 +35,34 @@ foobarbaz
 
 - [[https://github.com/company-mode/company-mode/wiki/Writing-backends][Writing backends · company-mode/company-mode Wiki]]
 - [[https://www.emacswiki.org/emacs/CompanyMode][EmacsWiki: Company Mode]]
+
+* company-M-x
+
+#+BEGIN_SRC elisp
+(defun company-M-x (command &optional arg &rest _ignored)
+  (interactive (list 'interactive))
+  (pcase command
+    ('interactive (company-begin-backend 'company-M-x))
+    ('prefix (company-grab-symbol))
+    ('candidates (all-completions arg obarray #'commandp))
+    ('post-completion (command-execute (intern arg) 'record))))
+#+END_SRC
+
+* company-find-file (not working)
+
+#+BEGIN_SRC elisp
+(defun company-find-file (command &optional arg &rest _)
+  (interactive (list 'interactive))
+  (pcase command
+    ('interactive (company-begin-backend 'company-find-file))
+    ('prefix (catch 'nope
+               (when-let ((file
+                           (and (looking-back "[-/_.~0-9a-zA-Z]+" (line-beginning-position) t)
+                                (match-string-no-properties 0))))
+                 (let* ((dir (file-name-directory file))
+                        (base (substring file (length dir))))
+                   (when (and dir (not (file-exists-p dir)))
+                     (throw 'nope nil))))))
+    ('candidates (all-completions arg obarray #'commandp))
+    ('post-completion (command-execute (intern arg) 'record))))
+#+END_SRC
