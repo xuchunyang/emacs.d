@@ -1,0 +1,135 @@
+#+TITLE: 从 Git 安装 Emacs Mac Port
+#+DATE: <2019-06-22 Sat>
+
+获得代码：
+
+#+BEGIN_SRC sh
+git clone https://bitbucket.org/mituharu/emacs-mac.git
+#+END_SRC
+
+阅读 =INSTALL.REPO= ，要求安装
+
+- autoconf
+- git
+- makeinfo
+
+macOS 已经自带了 git 和 makeinfo，只需要安装 autoconf
+
+#+BEGIN_SRC sh
+brew install autoconf
+#+END_SRC
+
+生成 configure：
+
+#+BEGIN_SRC sh
+./autogen.sh
+#+END_SRC
+
+配置：
+#+BEGIN_SRC sh
+./configure --with-modules
+#+END_SRC
+
+报错：
+#+BEGIN_QUOTE
+configure: error: The following required libraries were not found:
+     gnutls
+Maybe some development libraries/packages are missing?
+If you don't want to link with them give
+     --with-gnutls=no
+as options to configure
+#+END_QUOTE
+
+重新配置：
+#+BEGIN_SRC sh
+./configure --with-modules --with-gnutls=no
+#+END_SRC
+
+编译：
+#+BEGIN_SRC sh
+make
+#+END_SRC
+
+测试；
+#+BEGIN_SRC sh
+open -n mac/Emacs.app --args -Q
+#+END_SRC
+
+问题：
+
+#+BEGIN_SRC elisp
+(eww "https://emacs-china.org")
+#+END_SRC
+
+#+BEGIN_QUOTE
+Opening TLS connection to `emacs-china.org'...
+Opening TLS connection with `gnutls-cli --x509cafile /etc/ssl/cert.pem -p 443 emacs-china.org'...failed
+Opening TLS connection with `gnutls-cli --x509cafile /etc/ssl/cert.pem -p 443 emacs-china.org --protocols ssl3'...failed
+Opening TLS connection to `emacs-china.org'...failed
+url-http: Could not create connection to emacs-china.org:443
+#+END_QUOTE
+
+安装 gnutls
+#+BEGIN_SRC sh
+brew install gnutls
+#+END_SRC
+
+重新配置
+#+BEGIN_SRC sh
+./configure --with-modules
+#+END_SRC
+
+依旧包找不到 gnutls
+
+#+BEGIN_QUOTE
+configure: error: The following required libraries were not found:
+     gnutls
+Maybe some development libraries/packages are missing?
+If you don't want to link with them give
+     --with-gnutls=no
+as options to configur
+#+END_QUOTE
+
+安装 pkg-config (Homebrew 的 emacs 需要这个)
+#+BEGIN_SRC sh
+brew install pkg-config
+#+END_SRC
+
+重新配置
+#+BEGIN_SRC sh
+./configure --with-modules
+#+END_SRC
+
+安装
+#+BEGIN_SRC sh
+make
+#+END_SRC
+
+测试 HTTPS，正常
+#+BEGIN_SRC elisp
+(eww "https://emacs-china.org")
+#+END_SRC
+
+#+RESULTS:
+: #<buffer  *http emacs-china.org:443*>
+
+安装的所有包
+#+BEGIN_SRC sh
+brew ls
+#+END_SRC
+
+#+RESULTS:
+| autoconf     |
+| gmp          |
+| gnutls       |
+| libevent     |
+| libffi       |
+| libtasn1     |
+| libunistring |
+| nettle       |
+| openssl      |
+| p11-kit      |
+| pkg-config   |
+| unbound      |
+
+其中 autoconf gnutls pkg-config 是主动安装的，其余的都是依赖
