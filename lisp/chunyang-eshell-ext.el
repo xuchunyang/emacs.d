@@ -41,7 +41,8 @@
       (kill-buffer buffer))
     nil))
 
-(advice-add 'eshell/cat :override #'eshell/cat-with-syntax-highlight)
+;; Don't support pipe (-) and multiple arguments
+;; (advice-add 'eshell/cat :override #'eshell/cat-with-syntax-highlight)
 
 (defun eshell/imgcat (&rest args)
   "Display image files."
