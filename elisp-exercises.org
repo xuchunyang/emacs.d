@@ -1,4 +1,7 @@
 * Write a script that finds the first square number that has at least 5 distinct digits.
+:PROPERTIES:
+:CREATED:  <2019-06-26 Wed>
+:END:
 
 Source: [[http://blogs.perl.org/users/damian_conway/2019/05/why-i-love-perl-6.html][Why I love Perl 6 | Damian Conway {blogs.perl.org}]]
 
