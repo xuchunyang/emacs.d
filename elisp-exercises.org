@@ -1,0 +1,43 @@
+* Write a script that finds the first square number that has at least 5 distinct digits.
+
+Source: [[http://blogs.perl.org/users/damian_conway/2019/05/why-i-love-perl-6.html][Why I love Perl 6 | Damian Conway {blogs.perl.org}]]
+
+stream
+
+#+BEGIN_SRC elisp
+(seq-find
+ (lambda (x)
+   (and (= x (expt (cl-isqrt x) 2))
+        (>= (length (seq-uniq (number-to-string x))) 5)))
+ (stream-range 1))
+#+END_SRC
+
+#+RESULTS:
+: 12769
+
+cl-loop
+
+#+BEGIN_SRC elisp
+(cl-loop for i from 1
+         when (and (= i (expt (cl-isqrt i) 2))
+                   (>= (length (seq-uniq (number-to-string i))) 5))
+         return i)
+#+END_SRC
+
+#+RESULTS:
+: 12769
+
+while
+
+#+BEGIN_SRC elisp
+(let ((i 1))
+  (catch 'good
+    (while t
+      (when (and (= i (expt (cl-isqrt i) 2))
+                 (>= (length (seq-uniq (number-to-string i))) 5))
+        (throw 'good i))
+      (cl-incf i))))
+#+END_SRC
+
+#+RESULTS:
+: 12769
