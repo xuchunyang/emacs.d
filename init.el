@@ -1669,7 +1669,7 @@ unlike `markdown-preview'."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;    恢复页面                                           ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  
+
   ;; 持久化？
   (defvar chunyang-pdf-alist nil
     "List of (FILENAME . PAGE).")
@@ -2244,7 +2244,7 @@ PACKAGE should not be a built-in package."
                     "%" "%%" (prin1-to-string e))
                    " = %S"))
                 exprs ", "))
-      ,@exprs))  
+      ,@exprs))
   :config
   (defhydra hydra-debugger-menu ()
     "Debug"
@@ -2261,8 +2261,8 @@ PACKAGE should not be a built-in package."
 
   (define-advice edebug-eval-expression (:before (_expr) better-interactive-form)
     "Fix the original interactive form."
-    (interactive (list (read--expression "Edebug Eval: "))))  
-  
+    (interactive (list (read--expression "Edebug Eval: "))))
+
   ;; Don't pause after every break (Added in Emacs 26.1)
   (setq edebug-sit-on-break nil)
   ;; Don't restore window configuration
@@ -3149,7 +3149,7 @@ This should be add to `find-file-hook'."
   (setq message-send-mail-function 'message-smtpmail-send-it)
   (setq message-default-headers
         (format "User-Agent: Emacs/%s"
-                emacs-version))  
+                emacs-version))
   ;; don't keep message buffers around
   ;; (setq message-kill-buffer-on-exit t)
   (setq message-directory (locate-user-emacs-file "var/Mail"))
@@ -3206,7 +3206,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :commands chunyang-browse-gnu-message)
 
 (use-package vdirel
-  :about Access Contacts using vdirsyncer via the CardDAV protocol 
+  :about Access Contacts using vdirsyncer via the CardDAV protocol
   :homepage https://github.com/DamienCassou/vdirel
   :ensure t
   :config (setq vdirel-repository "~/.contacts/Default")
