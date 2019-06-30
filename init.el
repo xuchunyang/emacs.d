@@ -476,25 +476,25 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 ;;; Helm
 
 (use-package helm
-  :disabled                             ; old, see next use-package block
   :ensure t
   :defer t
   :init
-  (setq helm-advice-push-mark nil)
-  (bind-key "C-o" #'helm-imenu)
-  (bind-key "M-i" #'helm-occur)
-  (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
-  (bind-key "M-I" #'helm-do-grep-ag)
-  (bind-key "M-l" #'helm-mini)
-  (bind-key "M-x" #'helm-M-x)
-  (bind-key "C-x C-f" #'helm-find-files)
-  (bind-key "C-x C-d" #'helm-browse-project)
-  (bind-key "C-z" #'helm-resume)
-  (bind-key "C-h a" #'helm-apropos)
-  (bind-key "C-c f l" #'helm-locate-library)
-  (bind-key "M-y" #'helm-show-kill-ring)
-
-  (setq helm-display-header-line nil)
+  ;; Disable Helm's C-x c bindings
+  (setq helm-command-prefix-key nil)
+  :bind (("M-l" . helm-mini)
+         ("M-L" . helm-browse-project)
+         ("M-i" . helm-occur)
+         ("M-I" . helm-do-grep-ag)
+         ("C-o" . helm-imenu)
+         ("M-x" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ("M-y" . helm-show-kill-ring)
+         ("C-z" . helm-resume)
+         ("C-h a" . helm-apropos)
+         ("C-c f l" . helm-locate-library))
+  :diminish helm-mode
+  :config
+  (helm-mode)
 
   (define-minor-mode chunyang-helm-window-hack-mode
     "Hack helm window display."
@@ -513,16 +513,9 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 
   (chunyang-helm-window-hack-mode)
 
-  (helm-mode)
-  (diminish 'helm-mode))
+  (setq helm-grep-ag-command
+        "rg --color=always --smart-case --no-heading --line-number %s %s %s")
 
-(use-package helm
-  :ensure t
-  :defer t
-  :init
-  ;; Disable Helm's C-x c bindings
-  (setq helm-command-prefix-key nil)
-  :config
   (with-eval-after-load 'helm-unicode
     (define-advice helm-unicode-insert-char (:override (_candidate) candidates)
       (insert
@@ -537,7 +530,10 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 
 (use-package helm-ls-git
   :ensure t
-  :bind ("C-x C-d" . helm-browse-project)
+  :config
+  (setq helm-ls-git-default-sources
+        '(helm-source-ls-git-buffers
+          helm-source-ls-git))
   :defer t)
 
 (use-package helm-fd
