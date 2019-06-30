@@ -404,7 +404,8 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   ;; This is not a real package so don't load it
   :defer t)
 
-;; NOTE Try this for a while. Disable if not like
+;; Doesn't work for helm commands
+;; (read-string "Year (default 2019): " nil nil "2019")
 (use-package minibuf-eldef ; Only show defaults in prompts when applicable
   :defer 1.2               ; To save 0.136sec
   :init
