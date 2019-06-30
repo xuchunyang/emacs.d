@@ -4640,6 +4640,28 @@ provides similiar function."
   :load-path "~/src/emacs-scribble"
   :mode ("\\.scrbl\\'" . scribble-mode))
 
+;; https://janet-lang.org/
+(use-package janet-mode
+  :ensure t
+  :homepage https://github.com/ALSchwalm/janet-mode
+  :preface
+  (define-derived-mode inferior-janet-mode comint-mode "Inferior Janet"
+    "Major mode for Janet inferior process."
+    ;; FIXME THIS IS INCORRECT AND NOT WORKING
+    ;; janet:0:>
+    ;; janet:10:(>
+    ;; janet:23:((>
+    ;; (setq comint-prompt-regexp (rx bol "janet:" (+ num) ":" (* "(") "> "))
+    (setq-local comint-prompt-read-only t))
+
+  (defun run-janet ()
+    (interactive)
+    (with-current-buffer (make-comint "Janet" "janet" nil "-s")
+      (unless (eq major-mode 'inferior-janet-mode)
+        (inferior-janet-mode))
+      (display-buffer (current-buffer))))
+  :defer t)
+
 
 ;;; Web
 
@@ -4962,12 +4984,6 @@ provides similiar function."
   :after lua-mode
   :config
   (add-to-list 'company-backends 'company-lua))
-
-
-;;; Janet <https://janet-lang.org/>
-
-(use-package janet
-  :commands run-janet)
 
 
 ;;; Misc
