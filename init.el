@@ -3202,6 +3202,10 @@ proxychains4 mbsync --verbose --all && notmuch new&")
 (use-package chunyang-mail
   :commands chunyang-browse-gnu-message)
 
+(use-package chunyang-display-mail-mode
+  :about Display count of unread mail in the mode line
+  :commands chunyang-display-mail-mode)
+
 (use-package vdirel
   :about Access Contacts using vdirsyncer via the CardDAV protocol
   :homepage https://github.com/DamienCassou/vdirel
