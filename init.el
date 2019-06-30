@@ -592,7 +592,8 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
   :bind (("C-x 3" . chunyang-split-window-right)
          ("C-x 2" . chunyang-split-window-below)
          ("C-h t" . chunyang-switch-scratch)
-         ("C-\\"  . chunyang-dispatch-key)
+         ;; C-\ runs `toggle-input-method' by default
+         ;; ("C-\\"  . chunyang-dispatch-key)
          :map lisp-interaction-mode-map
          ("C-c C-l" . chunyang-scratch-clear)
          :map messages-buffer-mode-map
