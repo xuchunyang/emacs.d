@@ -2317,6 +2317,11 @@ PACKAGE should not be a built-in package."
   :ensure t
   :defer t)
 
+(use-package with-emacs
+  :ensure t
+  :homepage https://github.com/twlz0ne/with-emacs.el
+  :defer t)
+
 (use-package cask
   :about Project management for Emacs package development
   :homepage http://github.com/cask/cask
