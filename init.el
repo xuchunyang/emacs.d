@@ -878,7 +878,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
   (add-to-list 'dired-guess-shell-alist-user
                '("\\.el\\'" "emacs -Q --batch -f batch-byte-compile"))
-  (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python")))
+  (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python3")))
 
 (use-package dired-du
   :notes du can be slow
