@@ -2188,6 +2188,7 @@ PACKAGE should not be a built-in package."
 
 (use-package pcache              :ensure t :defer t)
 (use-package persistent-soft     :ensure t :defer t)
+(use-package persist             :ensure t :defer t)
 (use-package log4e               :ensure t :defer t)
 (use-package alert               :ensure t :defer t)
 
