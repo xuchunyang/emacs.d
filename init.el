@@ -4993,6 +4993,12 @@ provides similiar function."
 
 ;;; Misc
 
+(use-package image
+  :defer t
+  :config
+  ;; + is hard to type
+  (define-key image-map "=" 'image-increase-size))
+
 (use-package ascii-art-to-unicode
   :ensure t
   :defer t
