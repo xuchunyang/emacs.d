@@ -3482,7 +3482,15 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :load-path "~/src/web-search.el"
   :bind ("M-s M-s" . web-search))
 
+(use-package helm-chrome
+  :ensure t
+  :defer t
+  :config
+  (setq helm-chrome-file
+        "~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"))
+
 (use-package helm-chrome-history
+  :load-path "~/src/helm-chrome-history"
   :about Search Chrome history with helm
   :commands helm-chrome-history)
 
