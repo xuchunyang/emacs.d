@@ -3051,6 +3051,10 @@ This should be add to `find-file-hook'."
   :load-path "~/src/tinypng.el"
   :commands tinypng)
 
+(use-package alfred
+  :if *is-mac*
+  :commands alfred-search)
+
 
 ;;; Documentation
 
