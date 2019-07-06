@@ -3748,6 +3748,23 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :commands wordnut-search)
 
 
+;;; AppleScript
+
+(use-package applescript-mode
+  :ensure t
+  :defer t
+  :preface
+  (defun chunyang-applescript-mode-setup ()
+    (setq tab-width 4))
+  :config
+  (add-hook 'applescript-mode-hook #'chunyang-applescript-mode-setup))
+
+(use-package ob-applescript
+  :homepage https://github.com/stig/ob-applescript.el
+  :ensure t
+  :after org)
+
+
 ;;; Shell (including shell-command, shell, term and Eshell)
 
 (use-package flycheck-checkbashisms    ; Don't use Bash-only features in /bin/sh
