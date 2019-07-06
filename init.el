@@ -804,6 +804,25 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (use-package dired                      ; Directory Editor
   :defer t
   :preface
+  (defun dired-finder-reveal-marked-files (files)
+    "Reveal marked FILES in Finder.
+FILES are a list of absolute filename.
+FILES are in the same directory."
+    (interactive (list (dired-get-marked-files)))
+    (when files
+      (do-applescript
+       (format
+        (concat "tell application \"Finder\"\n"
+                "  activate\n"
+                "  tell (make new Finder window) to set target to POSIX file \"%s\"\n"
+                "  set selection to {%s}\n"
+                "end tell")
+        (file-name-directory (car files))
+        (mapconcat
+         (lambda (file)
+           (format "POSIX file \"%s\"" file))
+         files
+         ", ")))))
   (defun chunyang-dired-view-file-other-window ()
     (interactive)
     (cl-letf (((symbol-function 'view-file) #'view-file-other-window))
