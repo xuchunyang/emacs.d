@@ -193,6 +193,9 @@
   (require 'server)
   (or (server-running-p) (server-mode)))
 
+(use-package omnifocus
+  :commands omnifocus-capture)
+
 
 ;;; User Interface
 (when (bound-and-true-p tool-bar-mode)
