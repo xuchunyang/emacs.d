@@ -196,6 +196,16 @@
 (use-package omnifocus
   :commands omnifocus-capture)
 
+(use-package helm-osx-app
+  :about "Launch macOS apps"
+  :load-path "~/src/helm-osx-app"
+  :commands helm-osx-app)
+
+(use-package helm-chrome-control
+  :about "Control Chrome tabs"
+  :load-path "~/src/helm-chrome-control"
+  :commands helm-chrome-control)
+
 
 ;;; User Interface
 (when (bound-and-true-p tool-bar-mode)
