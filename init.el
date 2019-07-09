@@ -2378,6 +2378,12 @@ PACKAGE should not be a built-in package."
   :ensure t
   :commands font-lock-studio)
 
+(use-package auto-compile
+  :about No more outdated *.elc
+  :ensure t
+  :commands auto-compile-mode
+  :init (add-hook 'emacs-lisp-mode-hook #'auto-compile-mode))
+
 
 ;;; Help & Info
 
