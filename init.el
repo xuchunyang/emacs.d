@@ -173,6 +173,7 @@
              chunyang-mac-app-running-p
              chunyang-mac-switch-to-app
              chunyang-mac-switch-input-source
+             chunyang-mac-toggle-theme
              chunyang-chrome-switch-tab))
 
 (use-package chrome-cli

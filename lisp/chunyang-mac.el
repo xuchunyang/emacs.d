@@ -23,6 +23,35 @@
 
 ;;; Code:
 
+(defun mac-toggle-dark-mode ()
+  "Toggle dark mode"
+  (interactive)
+  (do-applescript "
+tell application \"System Events\"
+    tell appearance preferences
+        set dark mode to not dark mode
+    end tell
+end tell"))
+
+(defun mac-dark-mode-p ()
+  "Return t if dark mode is on, otherwise return nil."
+  (string=
+   "true"
+   (do-applescript
+    "tell application \"System Events\" to get dark mode of appearance preferences")))
+
+(defun chunyang-mac-toggle-theme ()
+  "打开或关闭黑暗模式，并设置 Emacs 主题."
+  (interactive)
+  (mac-toggle-dark-mode)
+  (mapc 'disable-theme custom-enabled-themes)
+  (load-theme
+   (if (mac-dark-mode-p)
+       'sanityinc-tomorrow-night
+     'sanityinc-tomorrow-day)
+   t))
+
+
 ;;; Input Method
 
 (defun chunyang-mac-switch-input-source ()
