@@ -527,7 +527,7 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
         (let ((standard-value (eval (car (get 'helm-display-function 'standard-value)))))
           (setq helm-display-function standard-value)))))
 
-  (chunyang-helm-window-hack-mode)
+  ;; (chunyang-helm-window-hack-mode)
 
   (setq helm-grep-ag-command
         "rg --color=always --smart-case --no-heading --line-number %s %s %s")
