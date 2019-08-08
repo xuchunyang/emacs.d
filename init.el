@@ -912,7 +912,11 @@ FILES are in the same directory."
                  "open"))))
 
   (add-to-list 'dired-guess-shell-alist-user
-               '("\\.el\\'" "emacs -Q --batch -f batch-byte-compile"))
+               `("\\.el\\'"
+                 "emacs -Q --batch -f batch-byte-compile"
+                 ,(format "%s -Q --batch -f batch-byte-compile"
+                          (shell-quote-argument
+                           (concat invocation-directory invocation-name)))))
   (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python3")))
 
 (use-package dired-du
