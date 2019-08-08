@@ -5299,6 +5299,12 @@ provides similiar function."
   :ensure t
   :defer t)
 
+(use-package ddragon
+  :about "显示 LoL 数据"
+  :load-path "~/src/ddragon.el"
+  :commands (ddragon-champion-image-dired
+             ddragon-champion-show-plain))
+
 (defun chunyang-birthday-p ()
   "Return t if today is my birthday, i.e., 农历九月廿三."
   ;; Adapted from `calendar-chinese-date-string'
