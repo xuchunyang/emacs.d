@@ -1523,9 +1523,11 @@ Intended to be added to `isearch-mode-hook'."
   ;; use `:init' instead of `:config' is because flycheck needs them
   ;; eagerly
   :init
-  (setq checkdoc-force-docstrings-flag nil
-        ;; This is the default since Emacs-26.1
-        checkdoc-arguments-in-order-flag nil))
+  ;; 为了方便提交 Melpa，不修改默认设置
+  '(setq
+    checkdoc-force-docstrings-flag nil
+    ;; This is the default since Emacs-26.1
+    checkdoc-arguments-in-order-flag nil))
 
 (use-package flycheck
   :ensure t
