@@ -148,7 +148,7 @@
 ;; [[https://emacs-china.org/t/topic/5507][Mac 下给 Emacs 设置 PATH 和 exec-path - Emacs-general - Emacs China]]
 ;; NOTE: When PATH is changed, run the following command
 ;; $ sh -c 'printf "%s" "$PATH"' > .path
-(when *is-mac*
+(when (and *is-mac* (not *is-mac-port*))
   (condition-case err
       (let ((path (with-temp-buffer
                     (insert-file-contents-literally "~/.path")
