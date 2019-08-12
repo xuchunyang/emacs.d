@@ -4994,6 +4994,28 @@ provides similiar function."
        (concat "  |  " (propertize doc-one-line 'face 'italic))))))
 
 
+;;; Go
+
+(use-package go-mode
+  :ensure t
+  :homepage https://github.com/dominikh/go-mode.el
+  :defer t)
+
+(use-package go-eldoc
+  :ensure t
+  :about use gocode for eldoc
+  :homepage https://github.com/syohex/emacs-go-eldoc
+  :defer t)
+
+(use-package company-go
+  :ensure t
+  :about use gocode for completion)
+
+(use-package ob-go
+  :ensure t
+  :defer t)
+
+
 ;;; Python
 
 (use-package python
