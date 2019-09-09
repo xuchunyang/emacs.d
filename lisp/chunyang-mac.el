@@ -319,7 +319,7 @@ unlike `browse-url-default-macosx-browser'."
 ;; 1 - 第一个标签
 ;; Google - 标题
 
-(defun chunyang-chrome-switch-tab-1 (window-id tab-id)
+(defun chunyang-chrome-switch-tab-1 (_window-id tab-id)
   ;; FIXME 不知道如何处理多余一个窗口的情况
   (do-applescript
    (concat "tell application \"Google Chrome\"\n"
