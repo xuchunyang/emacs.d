@@ -5000,21 +5000,34 @@ provides similiar function."
 (use-package go-mode
   :ensure t
   :homepage https://github.com/dominikh/go-mode.el
-  :defer t)
+  :defer t
+  :preface
+  (defun chunyang-go-setup ()
+    ;; It's handy for learning Go
+    (setq-local compile-command
+                (format "go run %s"
+                        (shell-quote-argument
+                         (file-name-nondirectory buffer-file-name))))
+    ;; Defaults to 8 which takes too much visual space
+    (setq tab-width 4))
+  :init
+  (add-hook 'go-mode-hook #'chunyang-go-setup))
 
 (use-package go-eldoc
   :ensure t
   :about use gocode for eldoc
   :homepage https://github.com/syohex/emacs-go-eldoc
-  :defer t)
+  :defer t
+  :init (add-hook 'go-mode-hook #'go-eldoc-setup))
 
 (use-package company-go
   :ensure t
   :about use gocode for completion)
 
 (use-package ob-go
+  :homepage https://github.com/pope/ob-go
   :ensure t
-  :defer t)
+  :after org)
 
 
 ;;; Python
