@@ -4330,6 +4330,11 @@ Adapt from `org-babel-remove-result'."
   :ensure t
   :defer t)
 
+(use-package org-noter
+  :ensure t
+  :config
+  (setq org-noter-always-create-frame nil))
+
 
 ;;; C
 
