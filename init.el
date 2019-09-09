@@ -174,6 +174,7 @@
              chunyang-mac-switch-to-app
              chunyang-mac-switch-input-source
              chunyang-mac-toggle-theme
+             chunyang-chrome-screenshot
              chunyang-chrome-switch-tab))
 
 (use-package chrome-cli

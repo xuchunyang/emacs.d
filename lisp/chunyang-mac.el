@@ -394,5 +394,24 @@ unlike `browse-url-default-macosx-browser'."
                #'auto-theme-mode-filter)))
       (and proc (kill-process proc)))))
 
+
+;; https://www.reddit.com/r/emacs/comments/d1d71t/display_web_content_in_emacs_as_is_example/?st=k0brz9dz&sh=14c71c11
+(defun chunyang-chrome-screenshot (url)
+  "Take screenshot of URL using headless Chrome."
+  (interactive "sURL: ")
+  (let ((outfile (make-temp-file "screenshot-" nil ".png")))
+    (with-temp-buffer
+      (if (zerop (call-process "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+                               nil t nil
+                               ;; https://developers.google.com/web/updates/2017/04/headless-chrome
+                               "--headless"
+                               "--window-size=840,720"
+                               "--hide-scrollbars"
+                               (concat "--screenshot=" outfile)
+                               url))
+          (find-file outfile)
+        (delete-file outfile)
+        (error "%s" (buffer-string))))))
+
 (provide 'chunyang-mac)
 ;;; chunyang-mac.el ends here
