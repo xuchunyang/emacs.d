@@ -12,6 +12,7 @@ DocBook
 DuckDuckGo
 EagleFiler
 GitHub
+GnuPG
 GnuTLS
 GoLand
 iMac
