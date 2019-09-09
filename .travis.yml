@@ -1,7 +1,7 @@
 language: generic
 env:
   - EMACS_VERSION=25.3-travis
-  - EMACS_VERSION=26.2-travis
+  # - EMACS_VERSION=26.2-travis
 
 install:
   - curl -fsSkL https://raw.githubusercontent.com/rejeep/evm/master/go | bash
