@@ -34,6 +34,8 @@
 - [[#transient][Transient]]
 - [[#deal-with-interactive-from-in-advice][Deal with Interactive from in Advice]]
 - [[#info-elisp-programmed-completion][(info "(elisp) Programmed Completion")]]
+- [[#测试-face][测试 Face]]
+- [[#pip-进度条][pip 进度条]]
 #+END_QUOTE
 
 * =defsubst=
@@ -659,3 +661,56 @@ Hit ? =minibuffer-completion-help= to list all possible completions
      ('t (process-lines grep-program "-F" string user-init-file))
      ('nil (car (process-lines grep-program "-F" string user-init-file))))))
 #+END_SRC
+
+* 测试 Face
+
+#+BEGIN_SRC elisp
+(defun foo ()
+  (interactive)
+  (message (propertize "hello" 'face '(:foreground "red" :weight bold)))
+  (message (propertize "world" 'face '(:slant oblique)))
+  (message (propertize "world" 'face '(:underline (:color "red" :style wave))))
+  (message (propertize "box" 'face '(:box t)))
+  (message (propertize "inverse video" 'face '(:inverse-video t))))
+
+(defun face-test-slant ()
+  (interactive)
+  (with-current-buffer (get-buffer-create "*Test*")
+    (erase-buffer)
+    (insert
+     (mapconcat
+      (lambda (sym)
+        (propertize (symbol-name sym) 'face (list :slant sym)))
+      '(italic
+        oblique
+        normal
+        reverse-italic
+        reverse-oblique)
+      ", "))
+    (goto-char (point-min))
+    (display-buffer (current-buffer))))
+#+END_SRC
+
+* pip 进度条
+
+#+BEGIN_EXAMPLE
+Collecting curtsies>=0.1.18 (from bpython)
+  Downloading https://files.pythonhosted.org/packages/78/1e/3b69f26d9e496901e80fc90e39e479c85fb6df595c2e2935a4fd781b3c9b/curtsies-0.3.0.tar.gz (47kB)
+     |████████████████████████████████| 51kB 1.1MB/s
+#+END_EXAMPLE
+
+#+BEGIN_SRC elisp
+(defun test ()
+  "Python pip progress bar."
+  (interactive)
+  (dotimes (i 33)
+    (message
+     (concat "|"
+             (make-string i ?█)
+             (make-string (- 32 i) ?\s)
+             "|"))
+    (sit-for .03)))
+#+END_SRC
+
+#+RESULTS:
+: test
