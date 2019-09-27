@@ -13,6 +13,11 @@
 (require 'subr-x)                       ; `if-let' and `when-let'
 (require 'package)
 
+(defun chunyang-package-menu-hack-tabulated-list-format ()
+  "Hack `tabulated-list-format' in the Package Menu."
+  ;; The default is 18
+  (setf (cadr (aref tabulated-list-format 0)) 24))
+
 (defun chunyang-package-homepage (pkg)
   "Return homepage of package PKG (a symbol), or nil if none."
   (when-let ((desc (or

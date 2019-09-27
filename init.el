@@ -2207,10 +2207,13 @@ PACKAGE should not be a built-in package."
         (insert new)))))
 
 (use-package chunyang-package
-  :commands describe-package--add-melpa-link
+  :commands (describe-package--add-melpa-link
+             chunyang-package-menu-hack-tabulated-list-format)
   :init
   (when (>= emacs-major-version 25)
-    (advice-add 'describe-package-1 :after #'describe-package--add-melpa-link)))
+    (advice-add 'describe-package-1 :after #'describe-package--add-melpa-link))
+
+  (add-hook 'package-menu-mode-hook #'chunyang-package-menu-hack-tabulated-list-format t))
 
 (use-package ielm
   :defer t
