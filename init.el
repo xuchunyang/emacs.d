@@ -5019,7 +5019,28 @@ provides similiar function."
     ;; Defaults to 8 which takes too much visual space
     (setq tab-width 4))
   :init
-  (add-hook 'go-mode-hook #'chunyang-go-setup))
+  (add-hook 'go-mode-hook #'chunyang-go-setup)
+  :config
+  ;; goimports fixes both import and format
+  (setq gofmt-command "goimports")
+  ;; gogetdoc > godef
+  (setq godoc-at-point-function #'godoc-gogetdoc)
+  (bind-key "C-h ." #'godoc-at-point go-mode-map))
+
+(use-package go-rename
+  :about use gorename to rename
+  :ensure t
+  :defer t)
+
+(use-package go-guru
+  :about use guru to find definition/callere
+  :ensure t
+  :defer t)
+
+(use-package go-errcheck
+  :about use errcheck to ensure errors are checked
+  :ensure t
+  :defer t)
 
 (use-package go-eldoc
   :ensure t
@@ -5027,6 +5048,27 @@ provides similiar function."
   :homepage https://github.com/syohex/emacs-go-eldoc
   :defer t
   :init (add-hook 'go-mode-hook #'go-eldoc-setup))
+
+(use-package go-impl
+  :ensure t
+  :about impl generates method stubs for implementing an interface
+  :homepage
+  - https://github.com/syohex/emacs-go-impl
+  - https://github.com/josharian/impl
+  :defer t)
+
+(use-package go-keyify
+  :disabled
+  :ensure nil                           ; no available
+  :homepage https://github.com/dominikh/go-tools/tree/master/cmd/keyify)
+
+(use-package go-dlv
+  :about Debug Go
+  :homepage
+  - https://github.com/go-delve/delve
+  - https://github.com/benma/go-dlv.el
+  ;; FIXME: I don't need to debug Go for now, so leave this for another day
+  :disabled)
 
 (use-package company-go
   :ensure t
