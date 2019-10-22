@@ -5025,20 +5025,22 @@ provides similiar function."
   (setq gofmt-command "goimports")
   ;; gogetdoc > godef
   ;; (setq godoc-at-point-function #'godoc-gogetdoc)
-  ;; 不用 `godoc-gogetdoc' 是因为我想要源代码的链接
   (setq godoc-at-point-function #'chunyang-godoc-gogetdoc)
   (bind-key "TAB" #'forward-button godoc-mode-map)
   (defun chunyang-godoc-gogetdoc (point)
+    "Like `godoc-gogetdoc' but also print source code location."
     (when (buffer-modified-p)
       (save-buffer))
     (let ((buffer (generate-new-buffer " *chunyang-godoc-gogetdoc*")))
       (unwind-protect
-          (progn
-            (call-process-region
-             nil nil "gogetdoc" nil buffer nil
-             "-json"
-             "-pos" (format "%s:#%d" buffer-file-name (1- (position-bytes point))))
-          
+          (let ((app "gogetdoc")
+                (args `("-json"
+                        "-pos"
+                        ,(format "%s:#%d" buffer-file-name (1- (position-bytes point))))))
+            (unless (zerop (apply #'call-process-region nil nil app nil buffer nil args))
+              (error (format "'%s' failed:\n%s"
+                             (string-join (cons app args) " ")
+                             (with-current-buffer buffer (buffer-string)))))
             (with-current-buffer (godoc--get-buffer "<at point>")
               (let-alist (with-current-buffer buffer
                            (goto-char (point-min))
