@@ -5108,8 +5108,12 @@ provides similiar function."
   :disabled)
 
 (use-package company-go
+  :after go-mode
   :ensure t
-  :about use gocode for completion)
+  :homepage https://github.com/mdempsky/gocode/tree/master/emacs-company
+  :about use gocode for completion
+  :config
+  (add-to-list 'company-backends 'company-go))
 
 (use-package ob-go
   :homepage https://github.com/pope/ob-go
