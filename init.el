@@ -5024,7 +5024,44 @@ provides similiar function."
   ;; goimports fixes both import and format
   (setq gofmt-command "goimports")
   ;; gogetdoc > godef
-  (setq godoc-at-point-function #'godoc-gogetdoc)
+  ;; (setq godoc-at-point-function #'godoc-gogetdoc)
+  ;; 不用 `godoc-gogetdoc' 是因为我想要源代码的链接
+  (setq godoc-at-point-function #'chunyang-godoc-gogetdoc)
+  (bind-key "TAB" #'forward-button godoc-mode-map)
+  (defun chunyang-godoc-gogetdoc (point)
+    (when (buffer-modified-p)
+      (save-buffer))
+    (let ((buffer (generate-new-buffer " *chunyang-godoc-gogetdoc*")))
+      (unwind-protect
+          (progn
+            (call-process-region
+             nil nil "gogetdoc" nil buffer nil
+             "-json"
+             "-pos" (format "%s:#%d" buffer-file-name (1- (position-bytes point))))
+          
+            (with-current-buffer (godoc--get-buffer "<at point>")
+              (let-alist (with-current-buffer buffer
+                           (goto-char (point-min))
+                           (json-read))
+                (insert (format "package %s // import \"%s\"\n" .pkg .import) ?\n)
+                (insert .decl ?\n ?\n)
+                (insert .doc ?\n)
+                (insert-text-button
+                 .pos
+                 'action
+                 (lambda (_)
+                   (pcase-exhaustive (split-string .pos ":")
+                     (`(,filename ,line ,column)
+                      (set-buffer (find-file-noselect filename))
+                      (server-goto-line-column
+                       (cons (string-to-number line)
+                             (string-to-number column)))
+                      (switch-to-buffer (current-buffer))))))
+                (insert ?\n))
+              (goto-char (point-min))
+              (godoc-mode)
+              (display-buffer (current-buffer) t)))
+        (kill-buffer buffer))))  
   (bind-key "C-h ." #'godoc-at-point go-mode-map))
 
 (use-package go-rename
