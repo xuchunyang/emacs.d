@@ -3109,6 +3109,10 @@ This should be add to `find-file-hook'."
   :if *is-mac*
   :commands alfred-search)
 
+(use-package dash-alfred
+  :load-path "~/src/dash-alfred.el"
+  :homepage https://github.com/xuchunyang/dash-alfred.el
+  :commands dash-alfred-helm)
 
 ;;; Documentation
 
