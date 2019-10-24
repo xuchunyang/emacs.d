@@ -5023,10 +5023,44 @@ provides similiar function."
     ;; Defaults to 8 which takes too much visual space
     (setq tab-width 4))
   :init
+  ;; eglot with gopls complains GOPATH is not set
+  (setenv "GOPATH" (expand-file-name "~/go"))
   (add-hook 'go-mode-hook #'chunyang-go-setup)
+  (add-hook 'go-mode-hook #'eglot-ensure)
   :config
+  (define-advice eglot-imenu (:around (oldfun oldoldfun) disable-for-gopls)
+    "Disable `eglot-imenu' in Go mode.
+
+`eglot-imenu' doesn't work with gopls. 
+See URL `https://github.com/joaotavora/eglot/pull/303'."
+    (if (eq major-mode 'go-mode)
+        (funcall oldoldfun)
+      (funcall oldfun oldoldfun)))
   ;; goimports fixes both import and format
   (setq gofmt-command "goimports")
+  ;; Port vim-go's go#doc#OpenBrowser
+  ;; https://github.com/fatih/vim-go/blob/e3a760fd9f7eaceec49cfe4adc4d3b6602b2ff0a/autoload/go/doc.vim#L15
+  (defun chunyang-godoc-browser ()
+    (interactive)
+    ;; $ gogetdoc -json -pos ~/go/src/golang.org/x/tools/cmd/godoc/main.go:#1371 | jq
+    (let* ((command `("gogetdoc"
+                      "-json"
+                      "-pos"
+                      ,(format "%s:#%d" buffer-file-name (1- (position-bytes (point))))))
+           (output-buffer (generate-new-buffer " *temp*"))
+           (status (apply #'call-process-region
+                          nil nil (car command) nil output-buffer nil
+                          (cdr command)))
+           (output (with-current-buffer output-buffer (buffer-string))))
+      (unwind-protect
+          (if (not (zerop status))
+              (error "'%s' failed: %s" (string-join command " ") output)
+            (let-alist (json-read-from-string output)
+              (browse-url
+               (if (string-prefix-p "package" .decl)
+                   (format "https://godoc.org/%s" .import)
+                 (format "https://godoc.org/%s#%s" .import .name)))))
+        (kill-buffer output-buffer))))  
   ;; gogetdoc > godef
   ;; (setq godoc-at-point-function #'godoc-gogetdoc)
   (setq godoc-at-point-function #'chunyang-godoc-gogetdoc)
