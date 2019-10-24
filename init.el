@@ -1467,6 +1467,29 @@ Intended to be added to `isearch-mode-hook'."
 
 ;;; Spelling and syntax checking
 
+(use-package flymake-diagnostic-at-point
+  :homepage https://github.com/meqif/flymake-diagnostic-at-point
+  :notes
+  Other options
+  - mouse hover
+  - M-x display-local-help
+  - flymake-show-diagnostics-buffer
+  :ensure t
+  :after flymake
+  ;; 跟 eldoc 有冲突
+  ;; :init (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode)
+  :config
+  (setq
+   ;; no prefix
+   flymake-diagnostic-at-point-error-prefix nil
+
+   ;; longer dealy, the same as `flycheck-display-errors-delay'
+   flymake-diagnostic-at-point-timer-delay 0.9
+
+   ;; prefer `message' over popup
+   flymake-diagnostic-at-point-display-diagnostic-function
+   'flymake-diagnostic-at-point-display-minibuffer))
+
 (use-package flyspell
   :init
   ;; (add-hook 'text-mode-hook #'flyspell-mode)
