@@ -5627,6 +5627,28 @@ See URL `https://github.com/joaotavora/eglot/pull/303'."
   :commands eglot
   :defer t
   :config
+
+  ;; IDEA: Use `avy' (like `ace-link'
+  (bind-key "M-n" #'chunyang-eglot-next-highlight eglot-mode-map)
+  (bind-key "M-p" #'chunyang-eglot-previous-highlight eglot-mode-map)
+
+  (defun chunyang-eglot-next-highlight (&optional N)
+    (interactive "p")
+    (or N (setq N 1))
+    (let ((o (car (seq-intersection (overlays-at (point)) eglot--highlights))))
+      (cond ((not o) (user-error "No highlight at point"))
+            ((= (length eglot--highlights) 1))
+            (t (let* ((i (mod (+ N (seq-position eglot--highlights o #'eq))
+                              (length eglot--highlights)))
+                      (no (nth i eglot--highlights))
+                      (offset (- (point) (overlay-start o))))
+                 (goto-char (+ (overlay-start no) offset)))))))
+
+  (defun  chunyang-eglot-previous-highlight (&optional N)
+    (interactive "p")
+    (or N (setq N 1))
+    (chunyang-eglot-next-highlight (- N)))
+
   ;; * Elixir
   ;; https://elixirforum.com/t/emacs-elixir-setup-configuration-wiki/19196
   (add-to-list
