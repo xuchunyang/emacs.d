@@ -1435,7 +1435,9 @@ Intended to be added to `isearch-mode-hook'."
   ;; M-h/c-h/F1 to display doc in help buffer, C-w to show location
   ;; (bind-key "M-h" #'company-show-doc-buffer company-active-map)
   (setq company-tooltip-align-annotations t
-        company-minimum-prefix-length 2))
+        company-minimum-prefix-length 2)
+  ;; remove annoying blinking
+  (setq company-echo-delay 0))
 
 (use-package company-clang
   :defer t
