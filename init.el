@@ -5044,9 +5044,11 @@ provides similiar function."
   (defun chunyang-go-setup ()
     ;; It's handy for learning Go
     (setq-local compile-command
-                (format "go run %s"
-                        (shell-quote-argument
-                         (file-name-nondirectory buffer-file-name))))
+                (if (string-suffix-p "_test.go" buffer-file-name)
+                    "go test -v"
+                  (format "go run %s"
+                          (shell-quote-argument
+                           (file-name-nondirectory buffer-file-name)))))
     ;; Defaults to 8 which takes too much visual space
     (setq tab-width 4))
   :init
