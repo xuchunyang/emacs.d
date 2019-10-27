@@ -5057,17 +5057,11 @@ provides similiar function."
   (add-hook 'go-mode-hook #'chunyang-go-setup)
   (add-hook 'go-mode-hook #'eglot-ensure)
   :config
-  (define-advice eglot-imenu (:around (oldfun oldoldfun) disable-for-gopls)
-    "Disable `eglot-imenu' in Go mode.
-
-`eglot-imenu' doesn't work with gopls. 
-See URL `https://github.com/joaotavora/eglot/pull/303'."
-    (if (eq major-mode 'go-mode)
-        (funcall oldoldfun)
-      (funcall oldfun oldoldfun)))
-  ;; no longer needed, see
-  ;; https://github.com/joaotavora/eglot/commit/6dd5de9b5cb7d51acdc9530b651b9cc1266b7942
-  (advice-remove 'eglot-imenu #'eglot-imenu@disable-for-gopls)
+  (define-advice imenu-add-to-menubar (:override (_name) ignore)
+    "`go-mode' call `imenu-add-to-menubar' but eglot with gopls have trouble with imenu.
+And by the way, the menu bar on macOS is buggy.")  
+  (define-advice eglot-imenu (:override () ignore)
+    (imenu-default-create-index-function))
   ;; goimports fixes both import and format
   (setq gofmt-command "goimports")
   ;; gogetdoc > godef
