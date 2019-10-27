@@ -43,7 +43,7 @@
             (error "'%s' failed: %s" (string-join command " ") output)
           (let-alist (json-read-from-string output)
             (browse-url
-             (chunyang-godoc-browser-url .decl .import .name))))
+             (chunyang-go-doc-url .decl .import .name))))
       (kill-buffer output-buffer))))
 
 (defun chunyang-go-doc-url (.decl .import .name)
@@ -98,7 +98,7 @@
               (insert .doc ?\n)
 
               ;; Godoc reference
-              (let ((url (chunyang-godoc-browser-url .decl .import .name)))
+              (let ((url (chunyang-go-doc-url .decl .import .name)))
                 (insert-button url
                                'face 'link
                                'action (lambda (_button) (browse-url url))
