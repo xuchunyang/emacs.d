@@ -5599,6 +5599,13 @@ And by the way, the menu bar on macOS is buggy.")
   :defer t
   :config
 
+  ;; It is better to put this in .dir-locals.el or use
+  ;; `dir-locals-set-class-variables', see (info "(emacs) Directory Variables")
+  ;; but let's keep it as simple since for now the only use of eglot is with
+  ;; gopls
+  (setq-default eglot-workspace-configuration
+                '((:gopls . ((:usePlaceholders . t)))))
+  
   ;; IDEA: Use `avy' (like `ace-link'
   (bind-key "M-n" #'chunyang-eglot-next-highlight eglot-mode-map)
   (bind-key "M-p" #'chunyang-eglot-previous-highlight eglot-mode-map)
