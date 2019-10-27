@@ -1461,7 +1461,19 @@ Intended to be added to `isearch-mode-hook'."
   (setq yas-alias-to-yas/prefix-p nil)
   (add-hook 'minibuffer-setup-hook 'yas-minor-mode))
 
+(use-package yasnippet
+  ;; install for eglot code completion
+  :ensure t
+  :diminish yas-minor-mode
+  :init 
+  ;; (add-hook 'go-mode-hook 'yas-minor-mode)
+  (add-hook 'prog-mode-hook 'yas-minor-mode)
+  :config
+  ;; (yas-global-mode)
+  )
+
 (use-package yasnippet-snippets
+  :disabled
   :ensure t
   :after yasnippet
   :config (yas-reload-all))
@@ -2024,6 +2036,7 @@ See also `describe-function-or-variable'."
         aggressive-indent-protected-commands))
 
 (use-package el-search
+  :disabled
   :ensure t
   :defer t
   :preface
@@ -2486,6 +2499,9 @@ PACKAGE should not be a built-in package."
                       (revert-buffer nil t))
                    'follow-link t)))))))))
   :bind (("C-h ." . chunyang-describe-symbol-at-point)
+         ;; On vanilla Emacs, C-h . runs `display-local-help', which shows
+         ;; help-echo at point, so it provides an keyboard alternative to muse
+         ;; hover
          ("C-h h" . view-help-buffer)
          :map help-mode-map
          ("b" . help-go-back)
@@ -3974,7 +3990,8 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package $
   :about https://emacs-china.org/t/xiki-shell/9448
   :commands $
-  :bind ("M-RET" . $))
+  ;; :bind ("M-RET" . $)
+  )
 
 (define-advice shell-command (:after (&rest _) exchange-point-and-mark)
   "Move point to the end of the inserted output.
@@ -5089,6 +5106,7 @@ And by the way, the menu bar on macOS is buggy.")
   :defer t)
 
 (use-package go-eldoc
+  :disabled                             ; replaced by gopls
   :ensure t
   :about use gocode for eldoc
   :homepage https://github.com/syohex/emacs-go-eldoc
@@ -5117,6 +5135,7 @@ And by the way, the menu bar on macOS is buggy.")
   :disabled)
 
 (use-package company-go
+  :disabled                             ; replaced by gopls
   :after go-mode
   :ensure t
   :homepage https://github.com/mdempsky/gocode/tree/master/emacs-company
