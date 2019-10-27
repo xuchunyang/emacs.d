@@ -5221,6 +5221,10 @@ See URL `https://github.com/joaotavora/eglot/pull/303'."
 
 ;;; Misc
 
+(use-package view
+  :defer t
+  :config (setq view-inhibit-help-message t))
+
 (use-package image
   :defer t
   :config
