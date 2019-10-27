@@ -5032,6 +5032,10 @@ provides similiar function."
 
 ;;; Go
 
+(use-package chunyang-go
+  :commands (chunyang-go-doc-browse-url
+             chunyang-godoc-gogetdoc))
+
 (use-package go-mode
   :ensure t
   :homepage https://github.com/dominikh/go-mode.el
@@ -5059,72 +5063,16 @@ See URL `https://github.com/joaotavora/eglot/pull/303'."
     (if (eq major-mode 'go-mode)
         (funcall oldoldfun)
       (funcall oldfun oldoldfun)))
+  ;; no longer needed, see
+  ;; https://github.com/joaotavora/eglot/commit/6dd5de9b5cb7d51acdc9530b651b9cc1266b7942
+  (advice-remove 'eglot-imenu #'eglot-imenu@disable-for-gopls)
   ;; goimports fixes both import and format
   (setq gofmt-command "goimports")
-  ;; Port vim-go's go#doc#OpenBrowser
-  ;; https://github.com/fatih/vim-go/blob/e3a760fd9f7eaceec49cfe4adc4d3b6602b2ff0a/autoload/go/doc.vim#L15
-  (defun chunyang-godoc-browser ()
-    (interactive)
-    ;; $ gogetdoc -json -pos ~/go/src/golang.org/x/tools/cmd/godoc/main.go:#1371 | jq
-    (let* ((command `("gogetdoc"
-                      "-json"
-                      "-pos"
-                      ,(format "%s:#%d" buffer-file-name (1- (position-bytes (point))))))
-           (output-buffer (generate-new-buffer " *temp*"))
-           (status (apply #'call-process-region
-                          nil nil (car command) nil output-buffer nil
-                          (cdr command)))
-           (output (with-current-buffer output-buffer (buffer-string))))
-      (unwind-protect
-          (if (not (zerop status))
-              (error "'%s' failed: %s" (string-join command " ") output)
-            (let-alist (json-read-from-string output)
-              (browse-url
-               (if (string-prefix-p "package" .decl)
-                   (format "https://godoc.org/%s" .import)
-                 (format "https://godoc.org/%s#%s" .import .name)))))
-        (kill-buffer output-buffer))))  
   ;; gogetdoc > godef
   ;; (setq godoc-at-point-function #'godoc-gogetdoc)
   (setq godoc-at-point-function #'chunyang-godoc-gogetdoc)
   (bind-key "TAB" #'forward-button godoc-mode-map)
-  (defun chunyang-godoc-gogetdoc (point)
-    "Like `godoc-gogetdoc' but also print source code location."
-    (when (buffer-modified-p)
-      (save-buffer))
-    (let ((buffer (generate-new-buffer " *chunyang-godoc-gogetdoc*")))
-      (unwind-protect
-          (let ((app "gogetdoc")
-                (args `("-json"
-                        "-pos"
-                        ,(format "%s:#%d" buffer-file-name (1- (position-bytes point))))))
-            (unless (zerop (apply #'call-process-region nil nil app nil buffer nil args))
-              (error (format "'%s' failed:\n%s"
-                             (string-join (cons app args) " ")
-                             (with-current-buffer buffer (buffer-string)))))
-            (with-current-buffer (godoc--get-buffer "<at point>")
-              (let-alist (with-current-buffer buffer
-                           (goto-char (point-min))
-                           (json-read))
-                (insert (format "package %s // import \"%s\"\n" .pkg .import) ?\n)
-                (insert .decl ?\n ?\n)
-                (insert .doc ?\n)
-                (insert-text-button
-                 .pos
-                 'action
-                 (lambda (_)
-                   (pcase-exhaustive (split-string .pos ":")
-                     (`(,filename ,line ,column)
-                      (set-buffer (find-file-noselect filename))
-                      (server-goto-line-column
-                       (cons (string-to-number line)
-                             (string-to-number column)))
-                      (switch-to-buffer (current-buffer))))))
-                (insert ?\n))
-              (goto-char (point-min))
-              (godoc-mode)
-              (display-buffer (current-buffer) t)))
-        (kill-buffer buffer))))  
+    
   (bind-key "C-h ." #'godoc-at-point go-mode-map))
 
 (use-package go-rename
