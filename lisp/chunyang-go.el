@@ -24,6 +24,28 @@
 
 ;;; Code:
 
+
+(require 'helm)
+(require 'go-mode)
+
+(defvar chunyang-helm-go-import-source nil)
+
+(defun chunyang-helm-go-packages (arg)
+  "With prefix ARG, reinitialize the cache."
+  (interactive "P")
+  (when (or arg (not chunyang-helm-go-import-source))
+    (message "Building Go Packages cache (it can take a while)...")
+    (setq chunyang-helm-go-import-source
+          (helm-build-in-buffer-source "Go Packages"
+            :data (go-packages)
+            :candidate-number-limit 9999
+            :action (helm-make-actions
+                     "Import"
+                     (lambda (package)
+                       (go-import-add nil package))))))
+  (helm :sources (list chunyang-helm-go-import-source)
+        :buffer "*helm Go Packages*"))
+
 ;; Port vim-go's go#doc#OpenBrowser
 ;; https://github.com/fatih/vim-go/blob/e3a760fd9f7eaceec49cfe4adc4d3b6602b2ff0a/autoload/go/doc.vim#L15
 (defun chunyang-go-doc-browse-url ()

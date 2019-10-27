@@ -5053,7 +5053,8 @@ provides similiar function."
 
 (use-package chunyang-go
   :commands (chunyang-go-doc-browse-url
-             chunyang-godoc-gogetdoc))
+             chunyang-godoc-gogetdoc
+             chunyang-helm-go-packages))
 
 (use-package go-mode
   :ensure t
@@ -5087,7 +5088,8 @@ And by the way, the menu bar on macOS is buggy.")
   ;; (setq godoc-at-point-function #'godoc-gogetdoc)
   (setq godoc-at-point-function #'chunyang-godoc-gogetdoc)
   (bind-key "TAB" #'forward-button godoc-mode-map)
-    
+
+  (bind-key "C-c C-a" #'chunyang-helm-go-packages go-mode-map)
   (bind-key "C-h ." #'godoc-at-point go-mode-map))
 
 (use-package go-rename
