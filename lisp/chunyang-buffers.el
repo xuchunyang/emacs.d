@@ -23,6 +23,13 @@
 
 ;;; Code:
 
+;; Add this to `kill-buffer-query-functions'
+(defun chunyang-kill-buffer-query-function ()
+  (cond ((member (buffer-name) '("*scratch*" "*Messages*"))
+         (message "Won't kill %s because I don't want to" (buffer-name))
+         nil)
+        (t t)))
+
 
 ;;; Library
 

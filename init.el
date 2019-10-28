@@ -648,6 +648,8 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              chunyang-straight-git-version))
 
 (use-package chunyang-buffers
+  :commands chunyang-kill-buffer-query-function
+  :init (add-hook 'kill-buffer-query-functions #'chunyang-kill-buffer-query-function)
   :preface
   (defun chunyang-kill-all-buffers (&optional except-current-buffer)
     (interactive "P")
