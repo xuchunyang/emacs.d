@@ -513,6 +513,8 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   ;; Persist recent used of filtered candidates
   (helm-adaptive-mode)
 
+  (setq helm-window-prefer-horizontal-split 'decide)
+
   (define-minor-mode chunyang-helm-window-hack-mode
     "Hack helm window display."
     :global t
