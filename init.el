@@ -5107,6 +5107,11 @@ And by the way, the menu bar on macOS is buggy.")
   (bind-key "C-c C-a" #'chunyang-helm-go-packages go-mode-map)
   (bind-key "C-h ." #'godoc-at-point go-mode-map))
 
+(use-package gds
+  :about Go doc search
+  :load-path "~/go/src/github.com/xuchunyang/gds"
+  :commands gds)
+
 (use-package go-rename
   :about use gorename to rename
   :ensure t
