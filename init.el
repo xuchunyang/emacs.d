@@ -2845,6 +2845,19 @@ PACKAGE should not be a built-in package."
 
 ;;; Tools and utilities
 
+(use-package prodigy
+  :about Manage external services
+  :homepage https://github.com/rejeep/prodigy.el
+  :ensure t
+  :config
+  (prodigy-define-service
+    :name "Godoc Server"
+    :command "godoc"
+    :args '("-http=:8000")
+    :cwd "~/"
+    :stop-signal 'sigkill
+    :kill-process-buffer-on-stop t))
+
 (use-package hyperbole
   :ensure t
   :homepage https://www.gnu.org/software/hyperbole/
