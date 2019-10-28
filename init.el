@@ -1729,8 +1729,13 @@ unlike `markdown-preview'."
   :about "quickly browse, filter, and edit plain text notes"
   :ensure t
   :commands deft
-  :init (setq deft-extensions '("md"))
-  :config (setq deft-markdown-mode-title-level 1))
+  :init
+  ;; it has to been set before deft.el is loaded otherwise
+  ;; `deft-default-extension' will not use it
+  (setq deft-extensions '("md" "org"))
+  :config
+  (setq deft-directory "~/Notes")
+  (setq deft-markdown-mode-title-level 1))
 
 (use-package dnote
   :about "Manage Dnote notes in Emacs" https://dnote.io/
