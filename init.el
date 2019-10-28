@@ -645,6 +645,8 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              chunyang-yank-html
              ;; Eval
              chunyang-eval-in-other-emacs
+             ;; Insert datetime
+             chunyang-helm-time
              ;; Emacs -Q with straight.el
              chunyang-straight-emacs-Q-command
              chunyang-straight-git-version))

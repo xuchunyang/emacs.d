@@ -607,5 +607,30 @@ For testing / debugging Emacs init file."
            string))
     `(format ,format-string ,@forms)))
 
+
+(defun chunyang-helm-time ()
+  (interactive)
+  (require 'helm)
+  (helm
+   :sources
+   (helm-build-sync-source "Current datetime in various formats"
+     :candidates
+     (lambda ()
+       (mapcar (pcase-lambda (`(,fmt ,val))
+                 (cons (format "%-20s %s" fmt val)
+                       val))
+               `(
+                 ;; 2019-10-28T18:07:16Z
+                 ("RFC3339" ,(format-time-string "%Y-%m-%dT%H:%M:%S%z"))
+                 ;; Mon, 28 Oct 2019 18:07:16 +0000
+                 ("RFC1123" ,(format-time-string "%a, %d %b %Y %H:%M:%S %z"))
+                 ;; Mon Oct 28 18:23:08 GMT 2019
+                 ("date(1)" ,(format-time-string "%a %b %d %H:%M:%S %Z %Y"))
+                 ;; Mon Oct 28 18:07:16 2019
+                 ("ANSIC" ,(format-time-string "%a %b %d %H:%M:%S %Y"))
+                 ("DATE" ,(format-time-string "%Y-%m-%d"))
+                 ("TIME" ,(format-time-string "%H:%M:%S"))))))
+   :buffer "*helm time*"))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
