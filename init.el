@@ -5679,6 +5679,7 @@ And by the way, the menu bar on macOS is buggy.")
     (or N (setq N 1))
     (chunyang-eglot-next-highlight (- N)))
 
+  ;; IDEA: 了解一下 project-level workflow ?
   (defun chunyang-helm-eglot-shutdown ()
     "Shutdown eglot servers.
 
@@ -5701,7 +5702,10 @@ at a time."
       (helm :sources
             (helm-build-sync-source "Eglot Servers"
               :candidates (seq-mapn #'cons (mapcar name servers) servers)
-              :action #'eglot-shutdown))))  
+              :action (helm-make-actions
+                       "Delete server(s)"
+                       (lambda (_candidate)
+                         (mapc #'eglot-shutdown (helm-marked-candidates))))))))
   
   ;; * Elixir
   ;; https://elixirforum.com/t/emacs-elixir-setup-configuration-wiki/19196
