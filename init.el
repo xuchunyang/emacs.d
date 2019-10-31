@@ -5679,6 +5679,30 @@ And by the way, the menu bar on macOS is buggy.")
     (or N (setq N 1))
     (chunyang-eglot-next-highlight (- N)))
 
+  (defun chunyang-helm-eglot-shutdown ()
+    "Shutdown eglot servers.
+
+Unlike `eglot-shutdown', you can shutdown more than one servers
+at a time."
+    (interactive)
+    (let ((servers (cl-loop for servers
+                            being hash-values of eglot--servers-by-project
+                            append servers))
+          (name (lambda (srv)
+                  (format "%-20s %s    %s"
+                          (eglot--project-nickname srv)
+                          (eglot--major-mode srv)
+                          (propertize
+                           (string-join (mapcar #'abbreviate-file-name (project-roots (eglot--project srv))) ", ")
+                           'face 'helm-buffer-process)))))
+      ;; Put (eglot--current-server) at the beginning    
+      (when-let ((current-server (eglot--current-server)))
+        (setq servers (cons current-server (delete current-server servers))))
+      (helm :sources
+            (helm-build-sync-source "Eglot Servers"
+              :candidates (seq-mapn #'cons (mapcar name servers) servers)
+              :action #'eglot-shutdown))))  
+  
   ;; * Elixir
   ;; https://elixirforum.com/t/emacs-elixir-setup-configuration-wiki/19196
   (add-to-list
