@@ -5119,7 +5119,23 @@ And by the way, the menu bar on macOS is buggy.")
 (use-package gds
   :about Go doc search
   :load-path "~/go/src/github.com/xuchunyang/gds"
-  :commands gds)
+  :commands gds
+  :config
+
+  (setq gds-url "http://localhost:8000/pkg/%s/#%s")
+
+  (define-advice gds-browse-url (:around (old-fun &rest r) ensure-godoc-is-running)
+    "Ensure server at `gds-url' is running, if it's not, start it."
+    (condition-case err
+        (let ((url-request-method "HEAD"))
+          (url-retrieve-synchronously (apply #'format gds-url r)))
+      (file-error
+       (message "No server is running at %s, will start  godoc via prodigy" gds-url)
+       (require 'prodigy)
+       (prodigy-start-service (prodigy-find-service "Godoc Server"))
+       (sit-for .5)))
+    (apply old-fun r)
+    (advice-remove 'gds-browse-url #'gds-browse-url@ensure-godoc-is-running)))
 
 (use-package go-rename
   :about use gorename to rename
