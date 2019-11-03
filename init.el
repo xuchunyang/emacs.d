@@ -5721,7 +5721,8 @@ at a time."
               :action (helm-make-actions
                        "Delete server(s)"
                        (lambda (_candidate)
-                         (mapc #'eglot-shutdown (helm-marked-candidates))))))))
+                         (mapc #'eglot-shutdown (helm-marked-candidates)))))
+            :buffer "*helm eglot servers*")))
   
   ;; * Elixir
   ;; https://elixirforum.com/t/emacs-elixir-setup-configuration-wiki/19196
