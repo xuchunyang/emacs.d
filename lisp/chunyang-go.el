@@ -44,6 +44,10 @@
                      (lambda (package)
                        (go-import-add nil package))))))
   (helm :sources (list chunyang-helm-go-import-source)
+        :preselect (and (eq (char-before) ?.)
+                        (save-excursion
+                          (forward-char -1)
+                          (thing-at-point 'symbol)))
         :buffer "*helm Go Packages*"))
 
 ;; Port vim-go's go#doc#OpenBrowser
