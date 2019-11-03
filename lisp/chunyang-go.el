@@ -68,10 +68,17 @@
              (chunyang-go-doc-url .decl .import .name))))
       (kill-buffer output-buffer))))
 
+;; Other options are:
+;; - https://golang.org/pkg
+;; - https://godoc.org
+;;
+;; M-x prodigy to start the godoc server
+(defvar chunyang-go-doc-base-url "http://localhost:3000")
+
 (defun chunyang-go-doc-url (.decl .import .name)
   (if (string-prefix-p "package" .decl)
-      (format "https://godoc.org/%s" .import)
-    (format "https://godoc.org/%s#%s" .import .name)))
+      (format "%s/%s" chunyang-go-doc-base-url .import)
+    (format "%s/%s#%s" chunyang-go-doc-base-url .import .name)))
 
 (defun chunyang-go-code-fontify (code)
   (with-temp-buffer
@@ -79,6 +86,30 @@
     (delay-mode-hooks (go-mode))
     (font-lock-ensure)
     (buffer-string)))
+
+;; /usr/local/Cellar/go/1.13.3/libexec/src/fmt/print.go:273:6 -> fmt/print.go
+;; /Users/xcy/go/src/github.com/PuerkitoBio/goquery/type.go:19:6  -> github.com/PuerkitoBio/goquery/type.go
+(defun chunyang-go--shorten-filepath (filepath)
+  (replace-regexp-in-string
+   (rx ":" (+? nonl) eos)
+   ""
+   (replace-regexp-in-string
+    (rx bos (+? nonl) "/src/")
+    ""
+    filepath)))
+
+;; http://localhost:3000/fmt#Println -> localhost:3000/fmt#Println
+(defun chunyang-go--shorten-url (url)
+  (replace-regexp-in-string (rx bos "http" (opt "s") "://") "" url))
+
+(defun chunyang-go--src (.import .name)
+  (with-temp-buffer
+    ;; go doc -src path/filepath.Base
+    (if (zerop (call-process "go" nil t nil "doc" "-src" (format "%s.%s" .import .name)))
+        (progn
+          (chunyang-go-code-fontify
+           (buffer-substring-no-properties (point-min) (point-max))))
+      (error "go doc failed: %s" (buffer-string)))))
 
 (defun chunyang-godoc-gogetdoc (point)
   "Like `godoc-gogetdoc' but also print source code location."
@@ -98,9 +129,14 @@
             (let-alist (with-current-buffer buffer
                          (goto-char (point-min))
                          (json-read))
-              ;; Source
+
+              ;; Source code
+              (unless (string-prefix-p "package" .decl)
+                (insert (chunyang-go--src .import .name) ?\n))
+              
+              ;; link to local source file
               (insert-text-button
-               .pos
+               (chunyang-go--shorten-filepath .pos)
                'action
                (lambda (_)
                  (pcase-exhaustive (split-string .pos ":")
@@ -110,23 +146,17 @@
                      (cons (string-to-number line)
                            (string-to-number column)))
                     (switch-to-buffer (current-buffer))))))
-              (insert ?\n)
 
-              ;; Documentation
-              (insert (chunyang-go-code-fontify
-                       (format "package %s // import \"%s\"\n" .pkg .import))
-                      ?\n)
-              (insert (chunyang-go-code-fontify .decl) ?\n ?\n)
-              (insert .doc ?\n)
+              (insert " | ")
 
-              ;; Godoc reference
+              ;; link to godoc website
               (let ((url (chunyang-go-doc-url .decl .import .name)))
-                (insert-button url
+                (insert-button (chunyang-go--shorten-url url)
                                'face 'link
                                'action (lambda (_button) (browse-url url))
                                'help-echo "mouse-2, RET: Follow this link"
-                               'follow-link t)
-                (insert ?\n)))
+                               'follow-link t))
+              (insert ?\n))
             (goto-char (point-min))
             (godoc-mode)
             ;; FIXME: Reuse existing window
