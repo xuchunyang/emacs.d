@@ -5169,9 +5169,10 @@ And by the way, the menu bar on macOS is buggy.")
   :defer t)
 
 (use-package go-keyify
-  :disabled
-  :ensure nil                           ; no available
-  :homepage https://github.com/dominikh/go-tools/tree/master/cmd/keyify)
+  :about "T{1, 2, 3} => T{A: 1, B: 2, C: 3}"
+  :homepage https://github.com/dominikh/go-tools/tree/master/cmd/keyify
+  :load-path "~/src/go-tools/cmd/keyify/"
+  :commands go-keyify)
 
 (use-package go-dlv
   :about Debug Go
