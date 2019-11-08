@@ -5552,6 +5552,24 @@ And by the way, the menu bar on macOS is buggy.")
        (animate-birthday-present user-full-name)))))
 
 
+;;; Task
+
+(use-package taskpaper-mode
+  :homepage https://github.com/saf-dmitry/taskpaper-mode
+  :ensure t
+  :config
+  (setq taskpaper-tag-alist
+        '(("today"       . ?t)
+          ("due(%%)"     . ?d)
+          ("due(%%+7d)"  . ?s)
+          ("priority(1)" . ?1)
+          ("priority(2)" . ?2)
+          ("priority(3)" . ?3)))
+  (defun chunyang-taskpaper-mode-setup ()
+    (setq tab-width 4))
+  (add-hook 'taskpaper-mode-hook #'chunyang-taskpaper-mode-setup))
+
+
 ;;; Utilities
 
 (use-package popup
