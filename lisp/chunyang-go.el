@@ -30,6 +30,7 @@
 
 (defvar chunyang-helm-go-import-source nil)
 
+;; FIXME 利用上当前光标下的内容
 (defun chunyang-helm-go-packages (arg)
   "With prefix ARG, reinitialize the cache."
   (interactive "P")
@@ -77,8 +78,11 @@
 ;; - https://godoc.org
 ;;
 ;; M-x prodigy to start the godoc server
-(defvar chunyang-go-doc-base-url "http://localhost:3000")
+(defvar chunyang-go-doc-base-url "http://localhost:8000/pkg")
 
+;; FIXME:
+;; http://localhost:8000/pkg/image/#SetColorIndex
+;; http://localhost:8000/pkg/image/#Paletted.SetColorIndex
 (defun chunyang-go-doc-url (.decl .import .name)
   (if (string-prefix-p "package" .decl)
       (format "%s/%s" chunyang-go-doc-base-url .import)
