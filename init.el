@@ -5078,7 +5078,8 @@ provides similiar function."
 (use-package chunyang-go
   :commands (chunyang-go-doc-browse-url
              chunyang-godoc-gogetdoc
-             chunyang-helm-go-packages))
+             chunyang-helm-go-packages
+             chunyang-go-toggle-if))
 
 (use-package go-mode
   :ensure t

@@ -167,5 +167,50 @@
             (display-buffer (current-buffer) t)))
       (kill-buffer buffer))))
 
+;; https://github.com/arp242/gopher.vim/blob/7581db/autoload/gopher/frob.vim#L119
+(defun chunyang-go-toggle-if ()
+  "调整光标下的 if 语句.
+
+在下面两种写法间相互转换：
+
+    err := f.Close()
+    if err != nil {
+      return err
+    }
+
+    if err := f.Close(); err != nil {
+      return err
+    }
+"
+  (interactive)
+  (cond
+   ;; if ..; err != nil {} => if err != nil {}
+   ((save-excursion
+      (goto-char (line-beginning-position))
+      (re-search-forward (rx (* space) "if " (group (* nonl)) ";")
+                         (line-end-position)
+                         t))
+    (let ((text (match-string 1)))
+      (delete-region (match-beginning 1)
+                     (+ 2 (match-end 1)))
+      (goto-char (line-beginning-position))
+      (insert text ?\n)
+      (forward-line -1)
+      (call-interactively #'indent-for-tab-command)))
+   ;; if err != nil {} => if ..; err != nil {}
+   ((save-excursion
+      (let ((beg (line-beginning-position))
+            (end (progn (forward-line 1) (line-end-position))))
+        (goto-char beg)
+        (re-search-forward (rx (* space) "if ") end t)))
+    (goto-char (match-end 0))
+    (insert
+     (save-excursion
+       (forward-line -1)
+       (string-trim
+        (delete-and-extract-region (line-beginning-position)
+                                   (1+ (line-end-position)))))
+     "; "))))
+
 (provide 'chunyang-go)
 ;;; chunyang-go.el ends here
