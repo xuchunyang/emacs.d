@@ -5174,6 +5174,22 @@ And by the way, the menu bar on macOS is buggy.")
   :load-path "~/src/go-tools/cmd/keyify/"
   :commands go-keyify)
 
+(use-package go-sodoff
+  :about generate a return statement
+  :after go-mode
+  :preface
+  (defun go-sodoff ()
+    (interactive)
+    (when (zerop
+           (call-process-region
+            nil nil
+            "gosodoff" nil t nil
+            "-pos" (number-to-string (1- (position-bytes (point))))))
+      ;; clean up
+      (when (looking-at-p "^$")
+        (delete-char -1))
+      (call-interactively #'indent-for-tab-command))))
+
 (use-package go-dlv
   :about Debug Go
   :homepage
