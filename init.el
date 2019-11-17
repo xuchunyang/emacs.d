@@ -543,6 +543,18 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
         (helm-marked-candidates)
         " ")))))
 
+(use-package helm-ring
+  :defer t
+  :config
+  (defun chunyang-helm-kill-ring-diff (_str)
+    (let ((marked (helm-marked-candidates)))
+      (unless (= (length marked) 2)
+        (user-error "Need exact 2 marked candidates, got %d" (length marked)))
+      (apply #'chunyang-ediff-strings-wordwise marked )))
+  (add-to-list 'helm-kill-ring-actions
+               (cons "Ediff" #'chunyang-helm-kill-ring-diff)
+               t))
+
 (use-package wgrep-helm
   :ensure t
   :defer t)
@@ -2953,9 +2965,27 @@ PACKAGE should not be a built-in package."
       (message "Can't start atomic-chrome server, because port 64292 is already used")
     (atomic-chrome-start-server)))
 
+(use-package diff
+  :defer t
+  :preface
+  ;; http://mbork.pl/2019-11-17_Diffing_buffer_fragments%2c_continued
+  (defun chunyang-diff-last-two-kills ()
+    "Diff last two kills."
+    (interactive)
+    (cl-flet ((nb
+               (name contents)
+               (with-current-buffer (get-buffer-create name)
+                 (insert contents)
+                 (current-buffer))))
+      (let ((new (nb " *diff: this-kill*" (current-kill 0 t)))
+            (old (nb " *diff: last-kill*" (current-kill 1 t))))
+        (diff old new)
+        (kill-buffer new)
+        (kill-buffer old)))))
+
 (use-package ediff
   :defer t
-  :init
+  :preface
   (defun chunyang-dired-ediff (file-a file-b)
     (interactive
      (let ((files (dired-get-marked-files)))
@@ -2966,6 +2996,26 @@ PACKAGE should not be a built-in package."
              (setq file-a (read-file-name "File A to compare: ")))
            (list file-a (read-file-name (format "Diff %s with: " file-a)))))))
     (ediff-files file-a file-b))
+
+  (defun chunyang-ediff-last-two-kills ()
+    "Ediff last two kills."
+    (interactive)
+    (chunyang-ediff-strings-wordwise (current-kill 0 t) (current-kill 1 t)))
+
+  (defun chunyang-ediff-strings-wordwise (s-A s-B)
+    (cl-flet ((nb
+               (name contents)
+               (with-current-buffer (get-buffer-create name)
+                 (erase-buffer)
+                 (insert contents)
+                 (list (current-buffer) (point-min) (point-max)))))
+      (pcase-let ((`(,buffer-A ,beg-A ,end-A) (nb " *ediff: A*" s-A))
+                  (`(,buffer-B ,beg-B ,end-B) (nb " *ediff: B*" s-B)))
+        ;; `ediff-regions-internal' is not autoloaded
+        (require 'ediff)
+        (ediff-regions-internal buffer-A beg-A end-A
+                                buffer-B beg-B end-B
+                                nil 'ediff-regions-wordwise 'word-mode nil))))
   :config
   ;; (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   ;; or --unified, more compact context, see
