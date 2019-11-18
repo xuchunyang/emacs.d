@@ -1471,6 +1471,12 @@ Intended to be added to `isearch-mode-hook'."
   :init
   (add-hook 'prog-mode-hook #'company-mode)
   :config
+  ;; Remove some unused backends
+  (setq-default company-backends
+                '(company-capf
+                  company-files
+                  (company-dabbrev-code company-keywords)
+                  company-dabbrev))
   ;; Use Company for completion C-M-i
   ;; (bind-key [remap completion-at-point] #'company-complete company-mode-map)
   ;; M-h/c-h/F1 to display doc in help buffer, C-w to show location
