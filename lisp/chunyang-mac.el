@@ -99,6 +99,7 @@ end tell"))
 ;;; iTerm.app
 
 (defun chunyang-mac-iTerm-send-string (string)
+  (interactive "sRun command in iTerm: ")
   (do-applescript
    (concat
     "tell application \"iTerm\"\n"
