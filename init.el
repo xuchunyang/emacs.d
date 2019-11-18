@@ -143,7 +143,13 @@
 (use-package mac-win
   :disabled
   :if *is-mac-port*
-  :config (mac-auto-ascii-mode))
+  :config
+  (mac-auto-ascii-mode)
+
+  ;; This is annoying
+  ;; (key-binding (kbd "<C-tab>"))
+  ;; => mac-next-tab-or-toggle-tab-bar
+  (unbind-key "<C-tab>"))
 
 ;; [[https://emacs-china.org/t/topic/5507][Mac 下给 Emacs 设置 PATH 和 exec-path - Emacs-general - Emacs China]]
 ;; NOTE: When PATH is changed, run the following command
