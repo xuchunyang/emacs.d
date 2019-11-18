@@ -1873,7 +1873,10 @@ unlike `markdown-preview'."
   ;;       'chunyang-compilation-save-buffers-predicate)
 
   (setq compilation-always-kill t
-        compilation-scroll-output 'first-error))
+        compilation-scroll-output 'first-error)
+
+  ;; Don't ask for save, just save for me, ti's for convenience though not safe
+  (setq compilation-ask-about-save nil))
 
 (use-package quickrun
   :homepage https://github.com/syohex/emacs-quickrun
