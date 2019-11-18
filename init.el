@@ -3690,7 +3690,10 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package helm-chrome-history
   :load-path "~/src/helm-chrome-history"
   :about Search Chrome history with helm
-  :commands helm-chrome-history)
+  :commands helm-chrome-history
+  :config
+  (setq helm-chrome-history-file
+        "~/Library/Application Support/Google/Chrome/Default/History"))
 
 
 ;;; Music
