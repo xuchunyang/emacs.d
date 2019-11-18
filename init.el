@@ -5804,8 +5804,11 @@ And by the way, the menu bar on macOS is buggy.")
   ;; `dir-locals-set-class-variables', see (info "(emacs) Directory Variables")
   ;; but let's keep it as simple since for now the only use of eglot is with
   ;; gopls
+  ;;
+  ;; use plist not alist, see
+  ;; https://github.com/joaotavora/eglot/issues/332#issuecomment-547866307
   (setq-default eglot-workspace-configuration
-                '((:gopls . ((:usePlaceholders . t)))))
+                '((:gopls . (:usePlaceholders t))))
 
   ;; IDEA: Use `avy' (like `ace-link'
   (bind-key "M-n" #'chunyang-eglot-next-highlight eglot-mode-map)
