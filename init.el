@@ -683,6 +683,8 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
   :init (add-hook 'kill-buffer-query-functions #'chunyang-kill-buffer-query-function)
   :preface
   (defun chunyang-kill-all-buffers (&optional except-current-buffer)
+    "Kill all buffers.
+With prefix argument, don't kill the current buffer."
     (interactive "P")
     (let ((buffers-to-kill
            (seq-filter
@@ -700,10 +702,16 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
     "Kill all buffers whose `default-directory' is under DIR."
     (interactive (list default-directory))
     (setq dir (expand-file-name dir))
-    (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when (string-prefix-p dir (expand-file-name default-directory))
-          (kill-buffer buffer)))))
+    (let ((count 0))
+      (dolist (buffer (buffer-list))
+        (with-current-buffer buffer
+          (and (string-prefix-p dir (expand-file-name default-directory))
+               (kill-buffer buffer)
+               (cl-incf count))))
+      (message "Killed %d buffer%s in %s"
+               count
+               (if (> count 1) "s" "")
+               (abbreviate-file-name dir))))
 
   (defun chunyang-kill-invisible-buffers ()
     "Kill all invisible buffers."
