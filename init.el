@@ -5801,7 +5801,7 @@ And by the way, the menu bar on macOS is buggy.")
   ;; gopls
   (setq-default eglot-workspace-configuration
                 '((:gopls . ((:usePlaceholders . t)))))
-  
+
   ;; IDEA: Use `avy' (like `ace-link'
   (bind-key "M-n" #'chunyang-eglot-next-highlight eglot-mode-map)
   (bind-key "M-p" #'chunyang-eglot-previous-highlight eglot-mode-map)
@@ -5840,7 +5840,7 @@ at a time."
                           (propertize
                            (string-join (mapcar #'abbreviate-file-name (project-roots (eglot--project srv))) ", ")
                            'face 'helm-buffer-process)))))
-      ;; Put (eglot--current-server) at the beginning    
+      ;; Put (eglot--current-server) at the beginning
       (when-let ((current-server (eglot--current-server)))
         (setq servers (cons current-server (delete current-server servers))))
       (helm :sources
@@ -5851,7 +5851,7 @@ at a time."
                        (lambda (_candidate)
                          (mapc #'eglot-shutdown (helm-marked-candidates)))))
             :buffer "*helm eglot servers*")))
-  
+
   ;; * Elixir
   ;; https://elixirforum.com/t/emacs-elixir-setup-configuration-wiki/19196
   (add-to-list
