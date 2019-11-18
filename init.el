@@ -2894,6 +2894,7 @@ PACKAGE should not be a built-in package."
     :name "Godoc Server"
     :command "godoc"
     :args '("-http=:8000")
+    :url "http://localhost:8000"
     :cwd "~/"
     :stop-signal 'sigkill
     :kill-process-buffer-on-stop t))
