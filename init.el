@@ -1230,6 +1230,12 @@ FILES are in the same directory."
       scroll-conservatively 10          ; Smooth Scrolling
       )
 
+;; This option was added in Emacs 25.1. I've not noticed the speed improvement,
+;; but let me try this for a while, refer to (info "(emacs) Scrolling")
+;; and
+;; https://emacs.stackexchange.com/questions/31402/how-to-avoid-scrolling-with-large-files-hanging-for-short-periods-of-time-hold
+(setq fast-but-imprecise-scrolling t)
+
 ;; These settings make trackpad scrolling on OS X much more predictable
 ;; and smooth
 (setq mouse-wheel-progressive-speed nil
