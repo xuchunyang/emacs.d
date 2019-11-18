@@ -3695,6 +3695,12 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   (setq helm-chrome-history-file
         "~/Library/Application Support/Google/Chrome/Default/History"))
 
+(use-package org-web-tools
+  :ensure t
+  :about View, capture, and archive Web pages in Org-mode
+  :homepage https://github.com/alphapapa/org-web-tools
+  :defer t)
+
 
 ;;; Music
 
