@@ -5266,6 +5266,7 @@ And by the way, the menu bar on macOS is buggy.")
 (use-package go-sodoff
   :about generate a return statement
   :after go-mode
+  :defer t                              ; not real go-sodoff.el
   :preface
   (defun go-sodoff ()
     (interactive)
