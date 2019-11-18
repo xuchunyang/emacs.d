@@ -5137,24 +5137,27 @@ provides similiar function."
   :defer t
   :preface
   (defun chunyang-go-setup ()
-    ;; It's handy for learning Go
-    (setq-local compile-command
-                (if (string-suffix-p "_test.go" buffer-file-name)
-                    "go test -v"
-                  (format "go run %s"
-                          (shell-quote-argument
-                           (file-name-nondirectory buffer-file-name)))))
-    ;; Defaults to 8 which takes too much visual space
-    (setq tab-width 4))
+    (when buffer-file-name
+      ;; It's handy for learning Go
+      (setq-local compile-command
+                  (if (string-suffix-p "_test.go" buffer-file-name)
+                      "go test -v"
+                    (format "go run %s"
+                            (shell-quote-argument
+                             (file-name-nondirectory buffer-file-name)))))
+      ;; Defaults to 8 which takes too much visual space
+      (setq tab-width 4)))
   :init
   ;; eglot with gopls complains GOPATH is not set
   (setenv "GOPATH" (expand-file-name "~/go"))
   (add-hook 'go-mode-hook #'chunyang-go-setup)
+  ;; eglot needs yasnippet to complete function arguments
+  (add-hook 'go-mode-hook #'yas-minor-mode)
   (add-hook 'go-mode-hook #'eglot-ensure)
   :config
   (define-advice imenu-add-to-menubar (:override (_name) ignore)
     "`go-mode' call `imenu-add-to-menubar' but eglot with gopls have trouble with imenu.
-And by the way, the menu bar on macOS is buggy.")  
+And by the way, the menu bar on macOS is buggy.")
   (define-advice eglot-imenu (:override () ignore)
     (imenu-default-create-index-function))
   ;; goimports fixes both import and format
@@ -5162,10 +5165,11 @@ And by the way, the menu bar on macOS is buggy.")
   ;; gogetdoc > godef
   ;; (setq godoc-at-point-function #'godoc-gogetdoc)
   (setq godoc-at-point-function #'chunyang-godoc-gogetdoc)
-  (bind-key "TAB" #'forward-button godoc-mode-map)
 
   (bind-key "C-c C-a" #'chunyang-helm-go-packages go-mode-map)
-  (bind-key "C-h ." #'godoc-at-point go-mode-map))
+  (bind-key "C-h C-." #'dash-alfred-helm          go-mode-map)
+  (bind-key "C-h f"   #'gds                       go-mode-map)
+  (bind-key "C-h ."   #'godoc-at-point            go-mode-map))
 
 (use-package gds
   :about Go doc search
