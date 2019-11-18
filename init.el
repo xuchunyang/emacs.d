@@ -2939,6 +2939,7 @@ PACKAGE should not be a built-in package."
 
 ;; XXX: Not working under EXWM
 (use-package atomic-chrome
+  :disabled                             ; not used for a long time
   :ensure t                             ; To install its dependencies
   :defer 7                              ; since the entry of this
                                         ; package is from Chrome
