@@ -286,14 +286,19 @@
 (defun chunyang-font-size-adjust ()
   "Adjust font size."
   (interactive)
-  (cl-flet ((get-size () (let ((s (format "%S" (face-attribute 'default :font))))
-                           (or (and (string-match "-\\([0-9]+\\)-" s)
-                                    (string-to-number (match-string 1 s)))
-                               (user-error "Cannot get font size"))))
+  (cl-flet ((get-size () (font-get (face-attribute 'default :font) :size))
             (set-size (size)
-                      (set-face-attribute 'default nil :font (format "Source Code Pro-%d" size))
+                      (set-face-attribute
+                       'default nil
+                       :font
+                       (format "%s-%d"
+                               (font-get (face-attribute 'default :font) :family)
+                               size))
                       t))
-    (while (pcase (read-key (format "use <up> and <down> to adjust (current %d), C-g to quit" (get-size)))
+    (while (pcase (read-key
+                   (format
+                    "use <up> and <down> to adjust (current %d), C-g to quit"
+                    (get-size)))
              ('up   (set-size (1+ (get-size))))
              ('down (set-size (1- (get-size))))
              (?0    (set-size 13))))))
