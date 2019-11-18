@@ -4484,9 +4484,11 @@ Adapt from `org-babel-remove-result'."
   :defer t)
 
 (use-package org-noter
+  :about Emacs document annotator, using Org-mode
+  :homepage https://github.com/weirdNox/org-noter
   :ensure t
-  :config
-  (setq org-noter-always-create-frame nil))
+  :defer t
+  :config (setq org-noter-always-create-frame nil))
 
 
 ;;; C
