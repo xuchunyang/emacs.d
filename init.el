@@ -4992,6 +4992,7 @@ provides similiar function."
   :commands nodejs-repl-switch-to-repl)
 
 (use-package tern
+  :disabled
   :homepage http://ternjs.net/
   :ensure t
   :defer t
