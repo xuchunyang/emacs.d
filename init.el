@@ -5848,8 +5848,8 @@ at a time."
                           (propertize
                            (string-join (mapcar #'abbreviate-file-name (project-roots (eglot--project srv))) ", ")
                            'face 'helm-buffer-process)))))
-      ;; Put (eglot--current-server) at the beginning
-      (when-let ((current-server (eglot--current-server)))
+      ;; Put (eglot-current-server) at the beginning
+      (when-let ((current-server (eglot-current-server)))
         (setq servers (cons current-server (delete current-server servers))))
       (helm :sources
             (helm-build-sync-source "Eglot Servers"
