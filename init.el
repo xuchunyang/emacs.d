@@ -5031,6 +5031,7 @@ provides similiar function."
   :defer t)
 
 (use-package indium
+  :disabled
   :ensure t
   :homepage https://github.com/NicolasPetton/indium
   :about JavaScript Awesome Development Environment
