@@ -5778,6 +5778,9 @@ And by the way, the menu bar on macOS is buggy.")
   - http://langserver.org/
   :defer t
   :config
+  ;; For debug gopls
+  ;; (setq lsp-gopls-server-args
+  ;;       '("-logfile" "/tmp/lsp-gopls.log" "-rpc.trace"))
   ;; XXX The face `lsp-face-highlight-textual' (background yellow) is ugly
   (setq lsp-highlight-symbol-at-point nil))
 
