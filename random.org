@@ -36,6 +36,9 @@
 - [[#info-elisp-programmed-completion][(info "(elisp) Programmed Completion")]]
 - [[#测试-face][测试 Face]]
 - [[#pip-进度条][pip 进度条]]
+- [[#emacs-server][Emacs Server]]
+  - [[#两种启动方式][两种启动方式]]
+  - [[#emacs-server-的非标准用法][Emacs server 的非标准用法]]
 #+END_QUOTE
 
 * =defsubst=
@@ -714,3 +717,179 @@ Collecting curtsies>=0.1.18 (from bpython)
 
 #+RESULTS:
 : test
+
+* Emacs Server
+
+** 两种启动方式
+
+| 启动方法        | 形式 |
+|-----------------+------|
+| M-x server-mode | 前台 |
+| emacs --daemon  | 后台 |
+
+Emacs daemon 就是在后台运行的程序，和 Emacs server 是两个不相干的概念。=emacs --daemon= 会自动开启 Emacs server（不然这个 daemon 不就用不来吗？）
+
+*** Emacs daemon 和 Emacs server 没关系
+
+为了演示 Emacs daemon 和 Emacs server 的「不相干」，下面把 Emacs daemon 的 Emacs server 关掉
+
+#+BEGIN_EXAMPLE
+~ $ ~/bin/emacs-25.3 -Q --daemon
+Starting Emacs daemon.
+~ $ ~/bin/emacsclient --eval 'emacs-version'
+"25.3.1"
+~ $ ./bin/emacsclient --eval '(server-mode -1)'
+~ $ ./bin/emacsclient --eval 'emacs-version'
+./bin/emacsclient: can't find socket; have you started the server?
+To start the server in Emacs, type "M-x server-start".
+./bin/emacsclient: No socket or alternate editor.  Please use:
+
+	--socket-name
+	--server-file      (or environment variable EMACS_SERVER_FILE)
+	--alternate-editor (or environment variable ALTERNATE_EDITOR)
+~ $ ps aux | grep emacs
+xcy              67329   0.0  3.9  6347984 161692   ??  S     3:07PM   2:48.78 /Users/xcy/src/emacs-mac/mac/Emacs.app/Contents/MacOS/Emacs
+xcy              68173   0.0  0.0  4277256    820 s000  S+    3:58PM   0:00.00 grep --color=auto emacs
+xcy              68132   0.0  0.2  4342228   8936   ??  Ss    3:57PM   0:00.16 bin/emacs-25.3 -Q --daemon
+~ $ kill 68132
+~ $
+#+END_EXAMPLE
+
+#+BEGIN_SRC elisp
+(expand-file-name server-name server-socket-dir)
+#+END_SRC
+
+#+RESULTS:
+: "/var/folders/7f/s191h4q97p90374yw15ssrs00000gn/T/emacs501/server"
+
+** Emacs server 的非标准用法
+
+Emacs server 的官方客户端是 =emacsclient= 。Emacs server 默认用一个 unix domain socket （TCP 是支持的）实现 server-client 交流，这个 socket 文件默认位于
+
+#+BEGIN_SRC elisp
+(expand-file-name server-name server-socket-dir)
+#+END_SRC
+
+#+RESULTS:
+: "/var/folders/7f/s191h4q97p90374yw15ssrs00000gn/T/emacs501/server"
+
+*** 通信格式约定
+
+通过 =C-h f server-process-filter= 了解到；
+
+服务器端接受：
+
+| -auth AUTH-STRING       | (TCP) 认证           |
+| -env NAME=VALUE         | 环境变量             |
+| -dir DIRNAME            | 工作目录             |
+| -nowait                 | 断开链接             |
+| -eval EXPR              | 执行一个 Lisp 表达式 |
+| -position LINE[:COLUMN] | 文件位置             |
+| -file FILENAME          | 文件                 |
+| …                       | …                    |
+
+注意 =-eval EXPR= 指令中的 =EXPR= 需要用 =server-quote-arg= 处理
+
+#+BEGIN_SRC elisp
+(server-quote-arg "(+ 1 2)")
+#+END_SRC
+
+#+RESULTS:
+: "(+&_1&_2)"
+
+
+客户端接受：
+
+| -emacs-pid PID             | Emacs process   |
+| -window-system-unsupported | 不支持图形界面  |
+| -print STRING              | 打印 -eval 结果 |
+| -print-nonl STRING         | 继续 -print     |
+| …                          | …               |
+
+*** 实现客户端
+
+**** Shell (via netcat)
+
+#+BEGIN_SRC sh
+~ $ nc -U /var/folders/7f/s191h4q97p90374yw15ssrs00000gn/T/emacs501/server
+-eval (+&_1&_2)
+-emacs-pid 67329
+-print 3
+#+END_SRC
+
+上面的 =(+&_1&_2)= 表示 =(+ 1 2)=
+
+#+BEGIN_SRC elisp
+(server-unquote-arg "(+&_1&_2)")
+#+END_SRC
+
+#+RESULTS:
+: "(+ 1 2)"
+
+**** Emacs Lisp
+
+使用现成的 =server-eval-at= 
+
+#+BEGIN_SRC elisp
+(server-eval-at server-name '(+ 1 2))
+;; => 3
+#+END_SRC
+
+#+RESULTS:
+: 3
+
+当然也可以用 the hard way。Emacs Lisp 也是 "batteries included" 的？=make-network-process= 支持 TCP, UDP, unix domain socket 协议，可作 Server 和 Client。
+
+#+BEGIN_SRC elisp :results value raw :wrap EXAMPLE
+;; Client of Emacs Server via unix domain socket
+(let ((buffer "*server-client-test*"))
+  (make-network-process
+   :service (expand-file-name server-name server-socket-dir)
+   :family 'local
+   :name "server-client-test"
+   :buffer buffer)
+  (with-current-buffer buffer
+    (process-send-string
+     nil
+     (concat "-eval "
+             (server-quote-arg (format "%S" '(+ 1 2)))
+             "\n"))
+    (accept-process-output)
+    (buffer-string)))
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXAMPLE
+-emacs-pid 67329
+-print 3
+
+Process server-client-test connection broken by remote peer
+#+END_EXAMPLE
+
+=-print 3= 表示结果 3
+
+**** Go
+
+#+BEGIN_SRC go
+package main
+
+import (
+	"fmt"
+	"io"
+	"net"
+	"os"
+)
+
+func main() {
+	conn, err := net.Dial("unix", "/var/folders/7f/s191h4q97p90374yw15ssrs00000gn/T/emacs501/server")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer conn.Close()
+	conn.Write([]byte("-eval (+&_1&_2)\n"))
+	io.Copy(os.Stdout, conn)
+}
+#+END_SRC
+
+/什么情况，go run . 没问题，Org Babel with ob-go 会卡死/
