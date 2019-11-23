@@ -91,3 +91,11 @@ Delve 用 TCP Socket，不是 HTTP。使用 Netcat 测试连接：
 OK。
 
 *** TODO 一个疑问：上面明明需要两个 Emacs subprocess，而 Eglot 貌似只用一个 process，它是怎么做到的？
+
+** 第一次用 JSONRPC
+
++竟然没有文档+ ，其实在 (elisp)JSONRPC ，但是只有 master 版本的才有，估计等 Emacs 27 发布，而我目前用的是最新稳定版 26.3。
+
+*** DONE 生成 JSONRPC 文档
+
+见 [[file:manual.org]]

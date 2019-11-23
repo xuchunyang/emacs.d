@@ -1,0 +1,70 @@
+#+TITLE: 制作 Emacs HTML Manuals
+
+Emacs 自带了
+
+- (info "(emacs) Top")
+- (info "(elisp) Top")
+- (info "(eintr) Top")
+- (info "(org) Top")
+- (info "(url) Top")
+- (info "(eieio) Top")
+- …
+
+* GNU 文档的一个大问题
+
+GNU 还提供了在线版本，但是非常可惜的是指提供了最新稳定版本，没有旧版，也没有新版本。要看其它版本的文档。
+
+- 诸如 https://www.gnu.org/software/emacs/manual/html_node/emacs/Keys.html 的链接不安全，说不定内容就改了，甚至 404 了
+- 没法看其它版本（比如 jsonrpc.el 的文档写在 elisp manual 中，要等到 Emacs 27 才能放出来，但现在我要看，就只能自己制作了 ）
+
+为什么就没人解决这个问题呢？明明如何明显？
+
+** TODO 向 GNU 报告这个问题
+
+** TODO 还可以自己生成各个 Emacs 版本的文档
+
+利用 GitHub Page + Workflow
+
+* 开始制作 HTML 版的 Emacs Manual
+
+#+BEGIN_SRC elisp
+(load "/Users/xcy/src/emacs/admin/admin.el")
+#+END_SRC
+
+然后用 =C-u M-x make-manuals ~/src/emacs elisp-node= ，先选 Emacs 源代码位置，然后选哪个文档以及种类，这里选 elisp 文档，HTML 的一个节点一页的种类。
+
+生成的结果在 manual 文件夹底下
+
+#+BEGIN_SRC sh
+cd ~/src/emacs
+ls manual/html_node/elisp/ | head
+#+END_SRC
+
+#+RESULTS:
+| A-Sample-Function-Description.html |
+| A-Sample-Variable-Description.html |
+| Abbrev-Expansion.html              |
+| Abbrev-Files.html                  |
+| Abbrev-Properties.html             |
+| Abbrev-Table-Properties.html       |
+| Abbrev-Tables.html                 |
+| Abbrevs.html                       |
+| Abstract-Display-Example.html      |
+| Abstract-Display-Functions.html    |
+
+貌似没有 index.html
+
+#+BEGIN_SRC sh :dir ~/src/emacs
+ls manual/html_node/elisp/index.html
+#+END_SRC
+
+#+RESULTS:
+
+不管了，开始看吧
+
+#+BEGIN_SRC elisp
+(eww-open-file "/Users/xcy/src/emacs/manual/html_node/elisp/JSONRPC-Overview.html")
+#+END_SRC
+
+#+RESULTS:
+: #<killed buffer>
