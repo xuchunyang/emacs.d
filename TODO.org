@@ -17,3 +17,7 @@
 * TODO 写一个 Emacs Lisp 代码格式化工具
 
 * TODO 写一个 [[https://msgpack.org/][MessagePack]] 的 Emacs Lisp 实现
+
+* TODO 学习 nullprogram.com 上所有关于 Emacs 的文章
+
+当然指那些我能看懂的。
