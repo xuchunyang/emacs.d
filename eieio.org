@@ -1,0 +1,387 @@
+#+TITLE: 学习使用 EIEIO
+
+* 重要资料
+
+- (info "(eieio) Top")
+- [[https://ericabrahamsen.net/tech/2016/feb/bbdb-eieio-object-oriented-elisp.html][BBDB on EIEIO – An Introduction to Object-Oriented Emacs Lisp]]
+- [[https://www.google.com/search?q=eieio+site%253Ahttps%253A%252F%252Fnullprogram.com%252F&oq=eieio+site%253Ahttps%253A%252F%252Fnullprogram.com%252F&aqs=chrome..69i57.3269j0j4&sourceid=chrome&ie=UTF-8][eieio site:https://nullprogram.com/ - Google Search]]
+
+* 不会 CLOS （甚至连其它语言的 OOP 基础都没有）还能会用 EIEIO 吗？
+
+我就是这样，试试吧。
+
+[[info:eieio#Introduction][info:eieio#Introduction]] 建议先学习 CLOS，但我不想学 Common Lisp，再说也不是一天两天就能学会的。
+
+#+BEGIN_QUOTE
+First off, please note that this manual cannot serve as a complete introduction
+to object oriented programming and generic functions in LISP.  Although EIEIO is
+not a complete implementation of the Common Lisp Object System (CLOS) and also
+differs from it in several aspects, it follows the same basic concepts.
+Therefore, it is highly recommended to learn those from a textbook or tutorial
+first, especially if you only know OOP from languages like C++ or Java.
+#+END_QUOTE
+
+* DONE (info "(eieio) Top")
+
+读书记录。
+
+** 快速入门
+
+*** 定义类（slot）
+
+#+BEGIN_SRC elisp
+(defclass person ()
+  ((name :initarg :name
+         :documentation "The name of a person.")
+   (birthday :initarg :birthday
+             :initform "2001-12-20"
+             :documentation "The person's birtyday")
+   (phone :initarg :phone
+          :documentation "Phone number."))
+  "A class for tracking people I don't know.")
+#+END_SRC
+
+#+RESULTS:
+: person
+
+
+重要的 slot 选项：
+- =:initarg= :: 参数名字
+- =:initform= :: 初始值
+- =:documentation= :: 文档（用 C-h o person 查看文档）
+
+*** 生成对象
+
+#+BEGIN_SRC elisp
+(setq me (person :name user-full-name))
+#+END_SRC
+
+#+RESULTS:
+: #s(person "Xu Chunyang" "2001-12-20" unbound)
+
+用 oref 获得对象的 slot
+
+#+BEGIN_SRC elisp
+(oref me :name)
+#+END_SRC
+
+#+RESULTS:
+: Xu Chunyang
+
+#+BEGIN_SRC elisp
+(oref me :birthday)
+#+END_SRC
+
+#+RESULTS:
+: 2001-12-20
+
+#+BEGIN_SRC elisp
+;; 没设置并且没初值的 slot 不能使用
+;; Unbound slot: person, "#<person person>", :phone, oref
+(oref me :phone)
+#+END_SRC
+
+*** 定义类方法
+
+cl-defmethod 参数中的 (NAME TYPE) 对表示变量名字和类型，只有符合类型是才能调用
+
+#+BEGIN_SRC elisp
+(cl-defmethod call-person ((pers person) &optional scriptname)
+  "Dial the phone for the person PERS.
+Execute the program SCRIPTNAME to dial the phone."
+  (message "Dialing the phone for %s" (oref pers :name))
+  (shell-command (concat (or scriptname "echo") " " (oref pers :phone))))
+#+END_SRC
+
+#+BEGIN_SRC elisp
+(setq me (person :name user-full-name :phone "12345"))
+(call-person me)
+#+END_SRC
+
+#+RESULTS:
+: 0
+
+(NAME TYPE) 并非必须是第一个参数
+
+#+BEGIN_SRC elisp
+(cl-defmethod say (prefix (pers person))
+  "Say hi to TO."
+  (message "%s, %s said" prefix (oref pers :name)))
+#+END_SRC
+
+#+RESULTS:
+: say
+
+#+BEGIN_SRC elisp
+(say "This is the way" (person :name "a Mandalorian"))
+#+END_SRC
+
+#+RESULTS:
+: This is the way, a Mandalorian said
+
+** 定义类
+
+用 defclass 定义一个类，它会自动生成一个类型判断函数 CLASS-NAME-p
+
+#+BEGIN_SRC elisp
+(defclass dog ()
+  ()
+  "A class for dogs.")
+
+(list (dog-p "not a dog") (dog-p (dog)) (type-of (dog)))
+#+END_SRC
+
+#+RESULTS:
+| nil | t | dog |
+
+*** 继承 (inheritance)
+
+定义一个基类
+
+警告：这会把自带的 point 函数覆盖掉！！！
+#+BEGIN_SRC elisp
+(defclass point ()
+  ((x :initarg :x)
+   (y :initarg :y))
+  "A 2D point class.")
+#+END_SRC
+
+#+RESULTS:
+: point
+
+继承这个基类
+
+#+BEGIN_SRC elisp
+(defclass circle (point)
+  ((radius :initarg :radius))
+  "A circle class.")
+#+END_SRC
+
+#+RESULTS:
+: circle
+
+#+BEGIN_SRC elisp
+(setq c (circle :x 1 :y 2 :radius 3))
+#+END_SRC
+
+#+RESULTS:
+: #s(circle 1 2 3)
+
+#+BEGIN_SRC elisp
+(list (oref c :x) (oref c :y) (oref c :radius))
+#+END_SRC
+
+#+RESULTS:
+| 1 | 2 | 3 |
+
+定义一个方法
+
+#+BEGIN_SRC elisp
+(cl-defmethod area ((c circle))
+  "Return the area of the circle C."
+  (* float-pi (expt (oref c :radius) 2)))
+
+(area (circle :radius 10))
+#+END_SRC
+
+#+RESULTS:
+: 314.1592653589793
+
+不止是 slot，方法也会继承
+
+#+BEGIN_SRC elisp
+(defclass color-circle (circle)
+  ((color :initarg :color))
+  "A colorful circle class.")
+
+(area (color-circle :color "green" :radius 1))
+#+END_SRC
+
+#+RESULTS:
+: 3.141592653589793
+** 定义对象
+
+有两种方法：
+
+- CLASS-NAME
+- make-instance
+
+#+BEGIN_SRC elisp
+(defclass rabit ()
+  ((color :initarg :color
+          :initform "white")
+   (age :initarg :age))
+  "A class for rabits.")
+
+(list (rabit :age 1)
+      (make-instance 'rabit :age 2))
+#+END_SRC
+
+#+RESULTS:
+| #s(rabit white 1) | #s(rabit white 2) |
+** 存取 Slot
+
+- oset :: 写入
+- oref :: 读取
+
+#+BEGIN_SRC elisp
+(defclass point ()
+  ((x :initarg :x)
+   (y :initarg :y))
+  "A 2D point class.")
+
+(setq p (point :x 1 :y 2))
+#+END_SRC
+
+#+RESULTS:
+: #s(point 1 2)
+
+#+BEGIN_SRC elisp
+(oref p :x)
+#+END_SRC
+
+#+RESULTS:
+: 1
+
+#+BEGIN_SRC elisp
+(oset p :x 100)
+(oref p :x)
+#+END_SRC
+
+#+RESULTS:
+: 100
+
+** 写方法
+
+*** 范型函数 (Generics)
+
+下面的 cl-defmethod 会自动定一个 area 范型函数，用 C-h f area 查看。
+
+#+BEGIN_SRC elisp
+(defclass circle ()
+  ((radius :initarg :radius))
+  "A circle class.")
+
+(cl-defmethod area ((c circle))
+  "Return area of the circle C."
+  (* float-pi (expt (oref c :radius) 2)))
+
+(defclass color-circle ()
+  ((color :initarg :color))
+  "A colorful circle class.")
+#+END_SRC
+
+#+RESULTS:
+: color-circle
+
+*** TODO (info "(eieio) Methods")
+
+看不懂，跳过。
+
+*** TODO (info "(eieio) Static Methods")
+
+跳过。
+
+** M-x eieio-browse
+
+#+BEGIN_EXAMPLE
+eieio-default-superclass
+  +--eieio-named
+  +--eieio-persistent
+  +--eieio-singleton
+  +--eieio-instance-tracker
+  +--eieio-instance-inheritor
+  +--magit-blame-chunk
+  +--transient-child
+  |    +--transient-group
+  |    |    +--transient-subgroups
+  |    |    +--transient-columns
+  |    |    +--transient-row
+  |    |    +--transient-column
+  |    +--transient-suffix
+  |         +--magit--git-submodule-suffix
+  |         +--transient-infix
+  |              +--transient-files
+  |              +--transient-variable
+  |              |    +--magit--git-variable
+  |              |         +--magit--git-branch:upstream
+  |              |         +--magit--git-variable:urls
+  |              |         +--magit--git-variable:choices
+  |              +--transient-argument
+  |                   +--transient-switches
+  |                   +--transient-option
+  |                   +--transient-switch
+  +--transient-prefix
+  |    +--magit-log-prefix
+  |    |    +--magit-log-refresh-prefix
+  |    +--magit-diff-prefix
+  |         +--magit-diff-refresh-prefix
+  +--magit-section
+  |    +--magit-hunk-section
+  |    +--magit-file-section
+  |         +--magit-module-section
+  +--xref-match-item
+  +--xref-item
+  +--xref-location
+  |    +--xref-etags-location
+  |    +--xref-bogus-location
+  |    +--xref-buffer-location
+  |    +--xref-file-location
+  +--rabbit
+  +--person
+  +--my-class
+  +--color-circle
+  +--circle
+  |    +--color-circle
+  +--helm-source
+  |    +--helm-bookmark-override-inheritor
+  |    |    +--helm-bookmark-find-files-class
+  |    +--helm-type-timers
+  |    |    +--helm-idle-time-timers-class
+  |    |    +--helm-absolute-time-timers-class
+  |    +--helm-type-command
+  |    +--helm-type-function
+  |    +--helm-type-buffer
+  |    |    +--helm-source-buffers
+  |    +--helm-type-bookmark
+  |    |    +--helm-source-filtered-bookmarks
+  |    |    |    +--helm-bookmark-find-files-class
+  |    |    +--helm-source-basic-bookmarks
+  |    +--helm-type-file
+  |    |    +--helm-mac-spotlight-source
+  |    |    +--helm-files-dired-source
+  |    |    +--helm-files-in-current-dir-source
+  |    |    +--helm-recentf-source
+  |    |    +--helm-file-cache
+  |    |    +--helm-browse-project-override-inheritor
+  |    |    |    +--helm-browse-project-source
+  |    |    +--helm-locate-override-inheritor
+  |    |         +--helm-locate-source
+  |    +--helm-source-dummy
+  |    +--helm-source-in-buffer
+  |    |    +--helm-file-cache
+  |    |    +--helm-source-filtered-bookmarks
+  |    |    |    +--helm-bookmark-find-files-class
+  |    |    +--helm-source-basic-bookmarks
+  |    |    +--helm-info-source
+  |    |    +--helm-browse-project-source
+  |    |    +--helm-moccur-class
+  |    |    +--helm-locate-subdirs-source
+  |    |    +--helm-source-in-file
+  |    +--helm-source-async
+  |    |    +--helm-mac-spotlight-source
+  |    |    +--helm-locate-source
+  |    |    +--helm-grep-ag-class
+  |    |    +--helm-grep-class
+  |    +--helm-source-sync
+  |         +--helm-imenu-source
+  |         +--helm-idle-time-timers-class
+  |         +--helm-absolute-time-timers-class
+  |         +--helm-source-session-class
+  |         +--helm-files-dired-source
+  |         +--helm-files-in-current-dir-source
+  |         +--helm-recentf-source
+  |         +--helm-source-ffiles
+  |         +--helm-source-buffers
+  +--auth-source-backend
+#+END_EXAMPLE
