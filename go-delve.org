@@ -68,7 +68,6 @@ Delve 用 TCP Socket，不是 HTTP。使用 Netcat 测试连接：
    :buffer "*dlv server*"
    :connection-type 'pipe
    :coding 'utf-8-emacs-unix
-   :noquery t
    :command (split-string
              "dlv debug --headless --api-version=2 --log --listen=127.0.0.1:8181")))
 #+END_SRC
@@ -92,6 +91,8 @@ OK。
 
 *** TODO 一个疑问：上面明明需要两个 Emacs subprocess，而 Eglot 貌似只用一个 process，它是怎么做到的？
 
+估计是因为 Eglot （或者说 LSP）的 Server 和 Client 之间的通信一个一个的，有很多连接，而不是只有一个。
+
 ** 第一次用 JSONRPC
 
 +竟然没有文档+ ，其实在 (elisp)JSONRPC ，但是只有 master 版本的才有，估计等 Emacs 27 发布，而我目前用的是最新稳定版 26.3。
@@ -99,3 +100,99 @@ OK。
 *** DONE 生成 JSONRPC 文档
 
 见 [[file:manual.org]]
+
+#+BEGIN_SRC elisp
+(eww-open-file "/Users/xcy/src/emacs/manual/html_node/elisp/JSONRPC.html")
+#+END_SRC
+
+#+RESULTS:
+: #<killed buffer>
+
+*** DONE 学习 EIEIO
+
+见 [[file:eieio.org]]
+
+*** 开始 json-rpc
+
+jsonrpc-process-connection 会发送一个 Content-Length ，但 delve 不需要，所以不能直接用 jsonrpc-process-connection。
+
+模仿它重现定一个 Class，就是去掉 Content-Length
+
+#+BEGIN_SRC elisp
+(defclass my-class (jsonrpc-connection)
+  ((process :initarg :process)))
+
+(cl-defmethod jsonrpc-connection-send ((connection my-class) &rest args)
+  (process-send-string
+   (oref connection :process)
+   (concat (json-encode-plist args) "\n")))
+#+END_SRC
+
+Process 最重要的是设置 Filter，Devel 的返回的 JSON 会放在同一行，且以一个 \n 结束：
+
+#+BEGIN_EXAMPLE
+{"id":5,"result":...}
+
+#+END_EXAMPLE
+
+所以如果 Filter 中发现 Point 跑到行首了，就表示 JSON 结束了。不需要 Content-Length 或者自己判断 JSON 有没有结束，如果有需要可参考
+
+- [[https://www.simple-is-better.org/json-rpc/transport_sockets.html][simple is better - JSON-RPC 2.0 Transport: Sockets]] :: 判断 JSONRPC Request/Response 是否结束的几个思路
+
+当 JSON 结束时，调用 jsonrpc-connection-receive 来结束。注意 JSON 解码成 jsonprc.el 要求的 Plist，而不是 json.el 默认的 Alist。
+
+#+BEGIN_SRC elisp
+(defun my-class--filter (proc string)
+  (when (buffer-live-p (process-buffer proc))
+    (with-current-buffer (process-buffer proc)
+      (save-excursion
+        ;; Insert the text, advancing the process marker.
+        ;;
+        (goto-char (process-mark proc))
+        (insert string)
+        (set-marker (process-mark proc) (point))
+
+        (when (bolp)
+          (let ((json-message
+                 (let ((json-object-type 'plist))
+                   (json-read-from-string
+                    (buffer-substring-no-properties
+                     (save-excursion (forward-line -1) (point))
+                     (point))))))
+            (message "=> %s" json-message)
+            (with-temp-buffer
+              (jsonrpc-connection-receive x json-message))))
+        (message "debug: got %s want %s" (bolp) t)))))
+#+END_SRC
+
+上面的 x 表示一个 jsonrpc-connection 对象，即
+
+#+BEGIN_SRC elisp
+;; Server 启动见以上
+
+;; Client
+(make-network-process
+ :name "dlv client"
+ :buffer "*dlv client*"
+ :coding 'utf-8-emacs-unix
+ :filter #'my-class--filter
+ :sentinel #'jsonrpc--process-sentinel
+ :host 'local
+ :service 8181)
+
+(setq x (my-class :process (get-buffer-process "*dlv client*")))
+#+END_SRC
+
+尝试
+
+#+BEGIN_SRC elisp
+(jsonrpc-request x :RPCServer.ListSources [])
+#+END_SRC
+
+OK。
+
+* TODO 下一步？
+
+先放着。
+
+现在没有 Debug 需求，连 Delve 命令行版都没认真用过。以后对 Go 更熟悉了再说。
