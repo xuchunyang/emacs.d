@@ -668,6 +668,7 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              chunyang-timer
              chunyang-random-word
              chunyang-format-as-binary
+             chunyang-toggle-proxy
              ;; Clipboard
              chunyang-insert-image-from-clipboard
              ;; QR Code
