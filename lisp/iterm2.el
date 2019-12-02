@@ -44,7 +44,8 @@
 ;;;###autoload
 (defun iterm2-cd (dir)
   "Change directory to DIR in iTerm2."
-  (interactive (list (expand-file-name default-directory)))
+  (interactive (list default-directory))
+  (setq dir (expand-file-name "."))
   (iterm2-send-region (format "cd '%s'\n" dir) nil))
 
 (provide 'iterm2)
