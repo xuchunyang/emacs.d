@@ -39,6 +39,8 @@
 - [[#emacs-server][Emacs Server]]
   - [[#两种启动方式][两种启动方式]]
   - [[#emacs-server-的非标准用法][Emacs server 的非标准用法]]
+- [[#实时jq-输出][「实时」JQ 输出]]
+  - [[#实现][实现]]
 #+END_QUOTE
 
 * =defsubst=
@@ -893,3 +895,59 @@ func main() {
 #+END_SRC
 
 /什么情况，go run . 没问题，Org Babel with ob-go 会卡死/
+
+* 「实时」JQ 输出
+
+需求：在编辑 JQ Query 同时显示输出
+
+思路：post-command-hook + asynchronous process
+
+** 实现
+
+*** 输入：获得 JSON
+
+以 Region 的内容作为输入
+
+#+BEGIN_SRC elisp
+(buffer-substring-no-properties (region-beginning) (region-end))
+#+END_SRC
+
+不过应该可以直接用 process-send-region
+
+*** 完整
+
+#+BEGIN_SRC elisp :lexical t
+;; 需要开启 lexical-binding
+(defun chunyang-jq-live (json)
+  (interactive (list (buffer-substring-no-properties
+                      (region-beginning)
+                      (region-end))))
+  (let* ((buf (get-buffer-create "*jq output*"))
+         (proc nil)
+         (last "")
+         (fun (lambda ()
+                (let ((query (string-trim (minibuffer-contents-no-properties))))
+                  (when (and (not (string= query ""))
+                             (not (string= query last)))
+                    (when (and proc (process-live-p proc))
+                      (kill-process proc))
+                    (with-current-buffer buf
+                      (erase-buffer))
+                    (setq last query)
+                    (setq proc
+                          (make-process
+                           :name "jq"
+                           :buffer buf
+                           :command (list "jq" query)
+                           :connection-type 'pipe
+                           :sentinel (lambda (proc event)
+                                       (set-window-point
+                                        (get-buffer-window (process-buffer proc))
+                                        (point-min)))))
+                    (process-send-string proc (concat json "\n"))
+                    (process-send-eof proc))))))
+    (display-buffer buf)
+    (minibuffer-with-setup-hook
+        (lambda () (add-hook 'post-command-hook fun t t))
+      (read-from-minibuffer "jq: "))))
+#+END_SRC
