@@ -1,0 +1,228 @@
+#+TITLE: 用 Emacs Lisp 调用 LanguageTool HTTP API
+
++[[https://github.com/mhayashi1120/Emacs-langtool][langtool.el]] 用的是命令行版+ (现在也支持 HTTP API 了) ，我们来试试用 HTTP API。
+
+虽然我并没有用 LanguageTool，甚至连 FlySpell 也很少用，但我觉得应该用。langtool.el 的一个问题只支持纯文本，不支持 Markdown、Org Mode 等标记语言，就连注释、字符串貌似也不行。
+
+* 先试试看
+
+** 启动服务器
+
+按照 [[http://wiki.languagetool.org/http-server][HTTP Server - LanguageTool Wiki]] 指令，下载、解压、运行：
+
+#+BEGIN_SRC sh
+java -cp languagetool-server.jar org.languagetool.server.HTTPServer --port 8081
+#+END_SRC
+
+测试
+
+#+BEGIN_SRC sh :results output :wrap src json
+curl --data "language=en-US&text=a simple test" localhost:8081/v2/check | jq
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_src json
+{
+  "software": {
+    "name": "LanguageTool",
+    "version": "4.7",
+    "buildDate": "2019-09-28 10:09",
+    "apiVersion": 1,
+    "premium": false,
+    "premiumHint": "You might be missing errors only the Premium version can find. Contact us at support<at>languagetoolplus.com.",
+    "status": ""
+  },
+  "warnings": {
+    "incompleteResults": false
+  },
+  "language": {
+    "name": "English (US)",
+    "code": "en-US",
+    "detectedLanguage": {
+      "name": "French",
+      "code": "fr",
+      "confidence": 0.815771
+    }
+  },
+  "matches": [
+    {
+      "message": "This sentence does not start with an uppercase letter",
+      "shortMessage": "",
+      "replacements": [
+        {
+          "value": "A"
+        }
+      ],
+      "offset": 0,
+      "length": 1,
+      "context": {
+        "text": "a simple test",
+        "offset": 0,
+        "length": 1
+      },
+      "sentence": "a simple test",
+      "type": {
+        "typeName": "Other"
+      },
+      "rule": {
+        "id": "UPPERCASE_SENTENCE_START",
+        "description": "Checks that a sentence starts with an uppercase letter",
+        "issueType": "typographical",
+        "category": {
+          "id": "CASING",
+          "name": "Capitalization"
+        }
+      },
+      "ignoreForIncompleteSentence": true,
+      "contextForSureMatch": -1
+    }
+  ]
+}
+#+END_src
+
+** Emacs Lisp 实现
+
+*** text
+
+像上面的 curl 命令一样，使用 text 参数
+
+#+BEGIN_SRC elisp
+(let ((url-request-method "POST")
+      (url-request-extra-headers
+       '(("Content-Type" . "application/x-www-form-urlencoded")))
+      (url-request-data (encode-coding-string
+                         (mapconcat
+                          (lambda (pair)
+                            (format "%s=%s"
+                                    (url-hexify-string (car pair))
+                                    (url-hexify-string (cdr pair))))
+                          '(("language" . "en-US")
+                            ("text" . "a simple test"))
+                          "&")
+                         'utf-8)))
+  (pop-to-buffer (url-retrieve-synchronously "http://localhost:8081/v2/check")))
+#+END_SRC
+
+*** data
+
+和 text 不同，data 的值为 JSON，而且支持 markup，比如
+
+/当然这个 markup 如何获得是个问题，需要编辑器支持或者有专门的 Parse 工具。/
+
+#+BEGIN_SRC json
+{
+  "annotation": [
+    {
+      "text": "A "
+    },
+    {
+      "markup": "<b>"
+    },
+    {
+      "text": "test"
+    },
+    {
+      "markup": "</b>"
+    }
+  ]
+}
+#+END_SRC
+
+先不管 =markup= 简单试下
+
+#+BEGIN_SRC elisp
+(let ((url-request-method "POST")
+      (url-request-extra-headers
+       '(("Content-Type" . "application/x-www-form-urlencoded")))
+      (url-request-data
+       (encode-coding-string
+        (mapconcat
+         (lambda (pair)
+           (format "%s=%s"
+                   (url-hexify-string (car pair))
+                   (url-hexify-string (cdr pair))))
+         `(("language" . "en-US")
+           ("data" . ,(json-encode
+                       '(("annotation" . ((("text" . "I is 23 year old."))))))))
+         "&")
+        'utf-8)))
+  (pop-to-buffer (url-retrieve-synchronously "http://localhost:8081/v2/check")))
+#+END_SRC
+
+*** 后续？
+
+接下来是怎么处理 Markdown、注释、字符串了。
+
+应该需要吧 Emacs is *awesome*. 解析成；
+
+#+BEGIN_SRC elisp
+(json-encode
+ '(("annotation" . (((text . "Emacs is ") (markup . "*") (text . "awesome") (markup . "*") (text . "."))))))
+#+END_SRC
+
+#+RESULTS:
+: {"annotation":[{"text":"Emacs is ","markup":"*","text":"awesome","markup":"*","text":"."}]}
+
+把不需要检查的放到 markup 中。试试 Pandoc ?
+
+#+BEGIN_SRC sh :results output :wrap src json
+echo -n "Emacs is *awesome*." | pandoc -f markdown -t json | jq
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_src json
+{
+  "blocks": [
+    {
+      "t": "Para",
+      "c": [
+        {
+          "t": "Str",
+          "c": "-n"
+        },
+        {
+          "t": "Space"
+        },
+        {
+          "t": "Str",
+          "c": "Emacs"
+        },
+        {
+          "t": "Space"
+        },
+        {
+          "t": "Str",
+          "c": "is"
+        },
+        {
+          "t": "Space"
+        },
+        {
+          "t": "Emph",
+          "c": [
+            {
+              "t": "Str",
+              "c": "awesome"
+            }
+          ]
+        },
+        {
+          "t": "Str",
+          "c": "."
+        }
+      ]
+    }
+  ],
+  "pandoc-api-version": [
+    1,
+    17,
+    5,
+    4
+  ],
+  "meta": {}
+}
+#+END_src
+
+也不容易。
+
+Parsec, tree-sitter?
