@@ -2473,6 +2473,12 @@ PACKAGE should not be a built-in package."
   :ensure t
   :defer t)
 
+(use-package ghelp
+  :disabled
+  :homepage https://github.com/casouri/ghelp
+  :defer t
+  :load-path "~/src/ghelp")
+
 (use-package elisp-demos
   :load-path "~/src/elisp-demos"
   :config
@@ -3313,6 +3319,22 @@ This should be add to `find-file-hook'."
 
 
 ;;; Project
+
+(use-package project
+  :defer t
+  :preface
+  ;; VCS are supported out-of-the-box but it doesn't work for me since I
+  ;; disabled the vc entirely via `vc-handled-backends'.
+  ;;
+  ;; `project-try-vc'
+  (defun chunyang-git-root (dir)
+    (when-let ((root (locate-dominating-file dir ".git")))
+      (cons 'git root)))
+  :config
+  ;; HOLD this, maybe it is better that Gopls works for a package per instance.
+  ;; (add-hook 'project-find-functions #'chunyang-git-root)
+  (cl-defmethod project-roots ((project (head git)))
+    (list (cdr project))))
 
 (use-package projectile
   :ensure t
@@ -5134,6 +5156,13 @@ provides similiar function."
     (browse-url "http://localhost:8888/"))
   :defer t)
 
+;; TODO: try this (by nullprogram's author)
+(use-package simple-httpd
+  :ensure t
+  :homepage )
+
+;; TODO: 自己实现一个 HTTP 服务器（先写个文件服务器）
+
 
 ;;; Elixir
 
@@ -5244,6 +5273,11 @@ And by the way, the menu bar on macOS is buggy.")
   (bind-key "C-h C-." #'dash-alfred-helm          go-mode-map)
   (bind-key "C-h f"   #'gds                       go-mode-map)
   (bind-key "C-h ."   #'godoc-at-point            go-mode-map))
+
+(use-package go-dlv
+  :ensure t
+  :about Debug Go with Delve and GUD
+  :commands dlv)
 
 (use-package gds
   :about Go doc search
