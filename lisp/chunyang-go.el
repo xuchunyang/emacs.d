@@ -43,7 +43,18 @@
             :action (helm-make-actions
                      "Import"
                      (lambda (package)
-                       (go-import-add nil package))))))
+                       (go-import-add nil package))
+                     "Browse code"
+                     (lambda (pkg)
+                       ;; borrowed from gds.el
+                       (with-temp-buffer
+                         (call-process "go" nil t nil "list" "-json" pkg)
+                         (goto-char (point-min))
+                         (let-alist (let ((json-array-type 'list))
+                                      (json-read))
+                           (pcase .GoFiles
+                             (`(,file) (find-file (expand-file-name file .Dir)))
+                             (_ (find-file .Dir))))))))))
   (helm :sources (list chunyang-helm-go-import-source)
         :preselect (and (eq (char-before) ?.)
                         (save-excursion
