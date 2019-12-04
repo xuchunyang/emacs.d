@@ -139,8 +139,24 @@
   :no-require t
   :defer t
   :init
+  ;; 自带键盘
   (setq mac-command-modifier 'meta
-        mac-option-modifier 'control))
+        mac-option-modifier 'control)
+
+  ;; Anne Pro 2
+  (setq mac-command-modifier 'meta
+        mac-option-modifier 'meta)
+
+  :preface
+  (defun chunyang-toggle-keyboard ()
+    (interactive)
+    (pcase mac-option-modifier
+      ('meta
+       (message "anne pro 2 => builtin")
+       (setq mac-option-modifier 'control))
+      ('control
+       (message "builtin => anne pro 2")
+       (setq mac-option-modifier 'meta)))))
 
 (use-package mac-win
   :disabled
