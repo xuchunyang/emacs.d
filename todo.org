@@ -1,0 +1,13 @@
+* --dired
+- 怎么工作的
+- 分别用 Go 和 Emacs Lisp 实现 ls --dired 和 M-x dired
+
+* Windows
+- 阅读 Emacs 和 Emacs Lisp info manual 中相关章节，Emacs 26 的文档有改进
+- window configuration 是怎么回事
+- display-buffer-alist
+- 特殊 window 类型，如 side window
+- 学习各种布局
+- 改进自己的窗口工作流
+
+不要管 Frame，如 child frame。
