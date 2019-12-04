@@ -874,6 +874,10 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 ;; 定期预存，否则停电、系统崩溃等会损失没保存数据
 (setq auto-save-default nil)
 
+;; XXX 自动保存到硬盘，试用一段时间 2019-11-23
+;; XXX 这是哪个版本引入的？看看能不能利用 package-lint 的函数
+(auto-save-visited-mode)
+
 (use-package files
   :bind (("C-c f u" . revert-buffer)
          ("C-c f n" . normal-mode))
