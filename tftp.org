@@ -1,0 +1,92 @@
+#+TITLE: 试试用 Emacs Lisp 实现 TFTP 客户端
+
+TFTP 是一个运行在 UDP 上的文件传输协议。
+
+* 测试 TFTP 服务器
+
+[[http://ww2.unime.it/flr/tftpserver/][TftpServer Home Page]]
+
+先用 tftp(1) 试一下：
+
+#+BEGIN_EXAMPLE
+~ $ echo "hello tftp" > tmp/data.txt
+~ $ tftp localhost
+tftp> status
+status
+Connected to localhost.
+Mode: netascii Verbose: off Tracing: off
+Rexmt-interval: 5 seconds, Max-timeout: 25 seconds
+tftp> get data.txt x
+get data.txt x
+Received 12 bytes in 0.0 seconds
+tftp> quit
+quit
+~ $ cat x
+hello tftp
+~ $ 
+#+END_EXAMPLE
+
+在用 curl 试一下（是的，curl 支持 TFTP）：
+
+#+BEGIN_SRC sh
+curl tftp://localhost/data.txt
+#+END_SRC
+
+#+RESULTS:
+: hello tftp
+
+不确定 netcat 行不行，下面这样不行
+
+#+BEGIN_SRC sh
+~ $ echo -e "\0\1data.txt\0octet\0" | nc -u 127.0.0.1 69
+#+END_SRC
+
+* Emacs Lisp
+
+下载一个文件
+
+#+BEGIN_SRC elisp
+(process-send-string
+ (make-network-process
+  :name "tftp-client"
+  :buffer "*ftp-client*"
+  :type 'datagram
+  :host "127.0.0.1"
+  :service 69
+  :filter
+  (lambda (proc output)
+    (let (
+          ;; 1
+          (RRQ)
+          ;; 2
+          (WRQ)
+          ;; 3
+          (DATA '((opcode u16) (blknum u16) (data str (eval (- (length bindat-raw) bindat-idx)))))
+          ;; 4
+          (ACK '((opcode u16) (blknum u16)))
+          ;; 5
+          (ERROR '((opcode u16) (errnum u16) (errmsg strz (1- (eval (- (length bindat-raw) bindat-idx)))))))
+      (setq v (string-to-vector output))
+      (pcase (bindat-get-field
+              (bindat-unpack '((opcode u16)) v)
+              'opcode)
+        (1)
+        (2)
+        (3 (let ((al (bindat-unpack DATA v)))
+             (let-alist al
+               (message "=> %s" .data)
+               ;; (message "=> %S" (alist-get 'blknum al))
+               (process-send-string
+                proc
+                (concat (bindat-pack ACK `((opcode . 4) (blknum . ,(alist-get 'blknum al))))))
+               (when (< (length .data) 512)
+                 (message "Download completed")
+                 (delete-process proc)))))
+        (4)
+        (5)))))
+ (format "\x00\x01%s\x00octet\x00" "x"))
+#+END_SRC
+
+上传还没实现，应该不难，但要花时间。数据要分成 512 byte 一段一段传送，如果恰好是 512 的整数倍，最后一个应该是空包。另外，要等服务器返回 ACK 才能发送下一个包，否则重复发送当钱包，最多发 5 次。
+
+
