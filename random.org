@@ -1,6 +1,7 @@
 # -*- eval: (toc-org-mode); -*-
 
 #+PROPERTY: header-args:elisp :results pp
+#+PROPERTY: header-args:sh :results output
 
 * Table of Contents                                               :TOC:QUOTE:
 #+BEGIN_QUOTE
@@ -41,6 +42,9 @@
   - [[#emacs-server-的非标准用法][Emacs server 的非标准用法]]
 - [[#实时jq-输出][「实时」JQ 输出]]
   - [[#实现][实现]]
+- [[#http-range--断点续传][HTTP Range | 断点续传]]
+  - [[#curl][curl]]
+  - [[#emacs-lisp][Emacs Lisp]]
 #+END_QUOTE
 
 * =defsubst=
@@ -951,3 +955,55 @@ func main() {
         (lambda () (add-hook 'post-command-hook fun t t))
       (read-from-minibuffer "jq: "))))
 #+END_SRC
+
+* HTTP Range | 断点续传
+
+如果想下载文档一个部分，可以用 HTTP Range Header。有些服务器支持，比如
+
+#+BEGIN_SRC sh
+curl -I example.com | tr -d "\r"
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXAMPLE
+HTTP/1.1 200 OK
+Content-Encoding: gzip
+Accept-Ranges: bytes
+Cache-Control: max-age=604800
+Content-Type: text/html; charset=UTF-8
+Date: Fri, 06 Dec 2019 10:10:45 GMT
+Etag: "3147526947+gzip"
+Expires: Fri, 13 Dec 2019 10:10:45 GMT
+Last-Modified: Thu, 17 Oct 2019 07:18:26 GMT
+Server: ECS (sgt/B385)
+X-Cache: HIT
+Content-Length: 648
+
+#+END_EXAMPLE
+
+返回的 Accept-Ranges: bytes 就表示这个服务器支持 Range。
+
+** curl
+
+下面的 curl 命令会发送 "Range: bytes=-100"
+
+#+BEGIN_SRC sh :results output
+curl -r -100 example.com
+#+END_SRC
+
+#+RESULTS:
+: p><a href="https://www.iana.org/domains/example">More information...</a></p>
+: </div>
+: </body>
+: </html>
+
+** Emacs Lisp
+
+#+BEGIN_SRC elisp
+(let ((url-request-extra-headers '(("Range" . "bytes=-100"))))
+  (display-buffer
+   (url-retrieve-synchronously "http://example.com")))
+#+END_SRC
+
+#+RESULTS:
+: #<window 43 on  *http example.com:80*>
