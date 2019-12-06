@@ -1,0 +1,59 @@
+#+TITLE: 了解 ls --dired
+#+PROPERTY: header-args:sh :results output
+
+GNU Coreutils 的 ls 专门为 GNU Emacs 提供了 --dired 选项。
+
+1. --dired 是干嘛的，为什么要有？
+2. ls --dired 的输出是什么格式？
+3. Dired 是如何解析上面的格式的？
+4. 自己打印 ls --dired 的输出
+5. 自己解析 ls --dired 的输出
+
+* --dired 的作用以及格式
+
+(info "(coreutils) What information is listed") 解释清楚了，就是让 Dired 能准确地找出文件名：
+
+#+BEGIN_SRC sh
+gls --dired -l *.el
+#+END_SRC
+
+#+RESULTS:
+:   -rw-r--r-- 1 xcy staff   2684 Dec  4 16:35 custom.el
+:   -rw-r--r-- 1 xcy staff    244 Feb 27  2019 early-init.el
+:   -rw-r--r-- 1 xcy staff      0 Dec  6 18:55 foo bar.el
+:   -rw-r--r-- 1 xcy staff 196599 Dec  2 15:11 init.el
+:   -rw-r--r-- 1 xcy staff 692642 May  4  2019 package-quickstart.el
+:   -rw-r--r-- 1 xcy staff    710 Nov  3 17:19 xcy.el
+: //DIRED// 45 54 100 113 159 169 215 222 268 289 335 341
+: //DIRED-OPTIONS// --quoting-style=literal
+
+45 54 表示第一个文件 custom.el，依此类推。
+
+* Dired 是如何处理的？
+
+Dired 用到的 =insert-directory= 会处理 --dired
+
+#+BEGIN_SRC elisp
+(with-temp-buffer 
+  (insert-directory "." "-l --dired" nil t)
+  (forward-line -1)
+  (format "%S" (buffer-substring (point) (point-max))))
+#+END_SRC
+
+#+RESULTS:
+: #("  -rw-r--r--   1 xcy staff    710 Nov  3 17:19 xcy.el
+: " 47 53 (dired-filename t))
+
+=insert-directory-clean= 会把  =//DIRED// BEG1 END1 BEG2 END2 ...= 转换成 dired-filename text propertize
+
+#+BEGIN_EXAMPLE
+dired -> dired-insert-directory -> insert-directory -> insert-directory-clean -> insert-directory-adj-pos
+#+END_EXAMPLE
+
+dired-filename 属性是 Dired 的核心。
+
+#+BEGIN_EXAMPLE
+dired -> dired-insert-set-properties -> dired-move-to-filename
+#+END_EXAMPLE
+
+* TODO 实现和解析 ls --dired
