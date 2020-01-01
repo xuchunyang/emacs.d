@@ -4430,7 +4430,9 @@ Adapt from `org-babel-remove-result'."
      (racket     . t)
      (ruby       . t)
      (scheme     . t)
-     (shell      . t)))
+     (shell      . t)
+     (sql        . t)
+     (sqlite     . t)))
 
   ;; Work-around for
   ;; http://lists.gnu.org/archive/html/emacs-orgmode/2018-03/msg00013.html
