@@ -1,0 +1,66 @@
+#+TITLE: JSONRPC
+
+测试 jsonrpc 在 emacs 中的使用，通过 jsonrpc.el。
+
+* 参考资料
+- (info "(elisp) JSONRPC")
+- [[https://en.wikipedia.org/wiki/JSON_streaming][JSON streaming - Wikipedia]]
+- [[https://en.wikipedia.org/wiki/JSON-RPC][JSON-RPC - Wikipedia]]
+
+* 测试一、JSONRPC 服务器 Content-Length
+
+=jsonrpc-process-connection= 用 HTTP 风格的 =Content-Length= 标记 JSON 数据的大小。
+
+** 服务器
+
+#+begin_src elisp
+(require 'jsonrpc)
+
+;; 来自 jsonrpc-tests.el
+(defclass jsonrpc--test-endpoint (jsonrpc-process-connection)
+  ((scp :accessor jsonrpc--shutdown-complete-p)))
+
+(defclass jsonrpc--test-client (jsonrpc--test-endpoint)
+  ((hold-deferred :initform t :accessor jsonrpc--hold-deferred)))
+
+(make-network-process
+ :name "Emacs RPC server" :server t :host "localhost"
+ :service 44444
+ :log (lambda (listen-server client _message)
+        (push
+         (make-instance
+          'jsonrpc--test-endpoint
+          :name (process-name client)
+          :process client
+          :request-dispatcher
+          (lambda (_endpoint method params)
+            (unless (memq method '(+ - * / vconcat append
+                                     sit-for ignore))
+              (signal 'jsonrpc-error
+                      '((jsonrpc-error-message
+                         . "Sorry, this isn't allowed")
+                        (jsonrpc-error-code . -32601))))
+            (apply method (append params nil)))
+          :on-shutdown
+          (lambda (conn)
+            (setf (jsonrpc--shutdown-complete-p conn) t)))
+         (process-get listen-server 'handlers))))
+#+end_src
+
+** 客户端
+
+终端中用 C-v C-m 输入 \r，其中 C-v 表示 literal-next char
+
+#+begin_example
+~ $ nc localhost 44444
+Content-Length: 38^M
+^M
+{"method":"*","params":[3,4,5],"id":1}
+Content-Length: 36
+
+{"jsonrpc":"2.0","id":1,"result":60}
+#+end_example
+
+* TODO 处理 Line-delimited JSON
+
+参考 jsonrpc-process-filter 和 jsonrpc-connection-send 的实现，还有 initialize-instance
