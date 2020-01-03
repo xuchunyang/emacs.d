@@ -821,6 +821,9 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 (use-package winner
   :init (setq winner-dont-bind-my-keys t)
   :config
+  ;; New user option in Emacs 27.1
+  (when (boundp 'winner-boring-buffers-regexp)
+    (setq winner-boring-buffers-regexp "\\*[hH]elm.*"))
   (bind-keys :map winner-mode-map
              ("M-N" . winner-redo)
              ("M-P" . winner-undo))
