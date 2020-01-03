@@ -784,7 +784,14 @@ With prefix argument, don't kill the current buffer."
                 " " (mode 16 16 :left :elide) " " filename-and-process)
           (mark " " (name 16 -1) " " filename)))
 
-  ;; Since I used to M-o
+  ;; Hide uninteresting and Helm buffers, use C-u g to toggle the display of
+  ;; them
+  (setq ibuffer-maybe-show-predicates
+        (list
+         (lambda (buf)
+           (string-match "^ \\|\\*[Hh]elm" (buffer-name buf)))))
+  
+  ;; I used to M-o for other-window
   (unbind-key "M-o" ibuffer-mode-map))
 
 (use-package ace-window
