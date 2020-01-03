@@ -2945,6 +2945,7 @@ PACKAGE should not be a built-in package."
   :about Manage external services
   :homepage https://github.com/rejeep/prodigy.el
   :ensure t
+  :defer t
   :config
   (prodigy-define-service
     :name "Godoc Server"
@@ -3275,6 +3276,7 @@ This should be add to `find-file-hook'."
   :about One-frame-per-action GIF recording for optimal quality/size ratio
   :homepage https://gitlab.com/ambrevar/emacs-gif-screencast
   :ensure t
+  :defer t
   :config
   (when *is-mac*
     (setq gif-screencast-args '("-x"))
@@ -5171,7 +5173,8 @@ provides similiar function."
 ;; TODO: try this (by nullprogram's author)
 (use-package simple-httpd
   :ensure t
-  :homepage )
+  :defer t
+  :homepage https://github.com/skeeto/emacs-http-server)
 
 ;; TODO: 自己实现一个 HTTP 服务器（先写个文件服务器）
 
@@ -5749,6 +5752,7 @@ And by the way, the menu bar on macOS is buggy.")
 (use-package taskpaper-mode
   :homepage https://github.com/saf-dmitry/taskpaper-mode
   :ensure t
+  :defer t
   :config
   (setq taskpaper-tag-alist
         '(("today"       . ?t)
