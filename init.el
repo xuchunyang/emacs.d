@@ -2581,8 +2581,11 @@ PACKAGE should not be a built-in package."
       (with-current-buffer "*Help*"
         (save-excursion
           (goto-char (point-min))
+          ;; Before Emacs 27
           ;; :around advice: ‘shell-command--shell-command-with-editor-mode’
-          (while (re-search-forward "^:[-a-z]+ advice: [‘'`]\\(.+\\)[’'']$" nil t)
+          ;; Since Emacs 27
+          ;; This function has :around advice: `shell-command--shell-command-with-editor-mode'.
+          (while (re-search-forward " advice: [‘'`]\\(.+\\)[’'']" nil t)
             (let ((advice (intern-soft (match-string 1))))
               (when (and advice (fboundp advice))
                 (let ((inhibit-read-only t))
