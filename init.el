@@ -2613,10 +2613,7 @@ PACKAGE should not be a built-in package."
   (setq help-enable-completion-auto-load nil)
   :config
   (temp-buffer-resize-mode)
-  ;; Breaks link to info node in the docstring, such as the function
-  ;; `dired-omit-mode' TODO figure out why
-  ;; (advice-add 'describe-function-1 :after #'chunyang-advice-remove-button)
-  )
+  (advice-add 'describe-function-1 :after #'chunyang-advice-remove-button))
 
 (use-package info-look
   :defer t
