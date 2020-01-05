@@ -47,8 +47,8 @@
 
 (use-package use-package
   :config
-  ;; (setq use-package-verbose 'errors)
-  ;; (setq use-package-expand-minimally t)
+  (setq use-package-verbose 'errors)
+  (setq use-package-expand-minimally t)
 
   (defmacro chunyang-use-package-keywords-add (keyword)
     "Add new keyword as placeholder."
