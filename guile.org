@@ -1,0 +1,921 @@
+#+TITLE: Hacking Guile Scheme
+#+DATE: <2020-01-07 Tue>
+
+* (info "(guile) Top")
+** (info "(guile) Guile and Scheme")
+
+Guile Scheme is:
+- R5RS
+- module system
+- POSIX system calls
+- network
+- threads
+- dynamic linking
+- ffi
+- string processing
+- some support of R6RS
+- SRFI
+
+总而言之，Guile 是一个 R5RS 实现，外加很多扩展。
+
+*** TODO (info "(guile) Supporting Multiple Languages") Emacs Lisp? what? how?
+
+** (info "(guile) Hello Guile!")
+
+#+begin_src scheme
+(+ 1 2 3)
+#+end_src
+
+#+RESULTS:
+: 6
+
+#+begin_src scheme :session *func*
+(define (factorial n)
+  (if (zero? n)
+      1
+      (* n (factorial (- n 1)))))
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
+
+#+begin_src scheme :session *func*
+(factorial 3)
+#+end_src
+
+#+RESULTS:
+: 6
+
+#+begin_src scheme :session *func*
+;; POSIX
+(getpwnam "root")
+#+end_src
+
+#+RESULTS:
+: #("root" "*" 0 0 "System Administrator" "/var/root" "/usr/local/bin/zsh")
+
+#+begin_src scheme :tangle /tmp/helloworld.scm :tangle-mode '#o755
+#!/usr/local/bin/guile -s
+!#
+(display "Hello, World!")
+(newline)
+#+end_src
+
+#+begin_src sh :results output
+/tmp/helloworld.scm
+#+end_src
+
+#+RESULTS:
+: Hello, World!
+
+*** (guile) Linking Guile into Programs
+
+#+begin_src c :tangle /tmp/simple-guile.c
+#include <stdlib.h>
+#include <libguile.h>
+
+static SCM
+my_hostname (void)
+{
+  char *s = getenv ("HOSTNAME");
+  if (s == NULL)
+    return SCM_BOOL_F;
+  else
+    return scm_from_locale_string (s);
+}
+
+static void
+inner_main (void *data, int argc, char **argv)
+{
+  scm_c_define_gsubr ("my-hostname", 0, 0, 0, my_hostname);
+  scm_shell (argc, argv);
+}
+
+int
+main (int argc, char **argv)
+{
+  scm_boot_guile (argc, argv, inner_main, 0);
+  return 0; /* never reached */
+}
+#+end_src
+
+#+begin_src sh :dir /tmp
+cc -o simple-guile simple-guile.c `pkg-config --cflags --libs guile-2.2`
+HOSTNAME=HELLOHOST ./simple-guile -c '(display (my-hostname))'
+#+end_src
+
+#+RESULTS:
+: HELLOHOST
+
+*** (guile) Writing Guile Extensions
+
+#+begin_src c :tangle /tmp/bessel.c
+#include <math.h>
+#include <libguile.h>
+
+SCM
+j0_wrapper (SCM x)
+{
+  return scm_from_double (j0 (scm_to_double (x)));
+}
+
+void
+init_bessel()
+{
+  scm_c_define_gsubr ("j0", 1, 0, 0, j0_wrapper);
+}
+#+end_src
+
+#+begin_src sh :dir /tmp
+cc -shared -o libguile-bessel.so -fPIC bessel.c `pkg-config --cflags --libs guile-2.2`
+#+end_src
+
+#+RESULTS:
+
+what is "object library"?
+what is "shared library"?
+
+#+begin_src scheme :dir /tmp
+(load-extension "libguile-bessel" "init_bessel")
+(j0 2)
+#+end_src
+
+#+RESULTS:
+: 0.22389077914123567
+
+*** (guile) Using the Guile Module System
+
+**** using module
+
+#+begin_src scheme :session *func*
+(use-modules (ice-9 popen))
+(use-modules (ice-9 rdelim))
+(define p (open-input-pipe "ls -l"))
+(read-line p)
+#+end_src
+
+#+RESULTS:
+: total 2320
+
+**** (guile) Writing new Modules
+
+the default load-path
+
+#+begin_src scheme :results list
+%load-path
+#+end_src
+
+#+RESULTS:
+- /Users/xcy/.emacs.d/elpa-28.0.50/geiser-20200103.1329/scheme/guile/
+- /usr/local/Cellar/guile/2.2.6/share/guile/2.2
+- /usr/local/Cellar/guile/2.2.6/share/guile/site/2.2
+- /usr/local/Cellar/guile/2.2.6/share/guile/site
+- /usr/local/Cellar/guile/2.2.6/share/guile
+
+foo is the namespace
+
+#+begin_src scheme :tangle /tmp/guile/foo/bar.scm :mkdirp yes
+(define-module (foo bar)
+  #:export (frob))
+
+(define (frob x) (* 2 x))
+#+end_src
+
+#+begin_src scheme
+(add-to-load-path "/tmp/guile")
+(use-modules (foo bar))
+(frob 12)
+#+end_src
+
+#+RESULTS:
+: 24
+
+** (info "(guile) Hello Scheme!")
+
+*** (guile) About Data
+:PROPERTIES:
+:header-args:scheme: :session *Data*
+:END:
+
+Define variable
+
+#+begin_src scheme
+(define x 1)
+
+(define organization "Free Software Foundation")
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
+
+#+begin_src scheme
+(list x organization)
+#+end_src
+
+#+RESULTS:
+| 1 | Free Software Foundation |
+
+Change variable's value
+
+#+begin_src scheme
+(set! x 42)
+
+x
+#+end_src
+
+#+RESULTS:
+: 42
+
+*** (guile) About Procedures
+:PROPERTIES:
+:header-args:scheme: :session *proc*
+:END:
+
+#+begin_src scheme
+(use-modules (ice-9 rdelim))
+
+(define (cat filename)
+  "Display the contents of FILENAME."
+  (let ((input (open-input-file filename)))
+    (define (print-line)
+      (let ((line (read-line input)))
+        (unless (eof-object? line)
+          (display line)
+          (newline)
+          (print-line))))
+    (print-line)
+    (close-input-port input)))
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
+
+#+begin_src scheme
+(string-append "hello" " world")
+#+end_src
+
+#+RESULTS:
+: hello world
+
+#+begin_src scheme
+(string-length "hello")
+#+end_src
+
+#+RESULTS:
+: 5
+
+#+begin_src scheme
+((lambda (a b) (+ a b)) 1 2)
+#+end_src
+
+#+RESULTS:
+: 3
+
+#+begin_src scheme
+(define foo (lambda (a b) (+ a b)))
+(define (bar a b) (+ a b))
+
+(list (foo 1 2) (bar 1 2))
+#+end_src
+
+#+RESULTS:
+| 3 | 3 |
+
+variable number of arguments
+
+#+begin_src scheme
+((lambda (n . ns) (list n ns)) 1 2 3)
+#+end_src
+
+#+RESULTS:
+| 1 | (2 3) |
+
+#+begin_src scheme
+((lambda args args) 1 2 3)
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 |
+
+*** (guile) About Expressions
+
+"properly tail recursive"
+
+#+begin_example
+guile -c '(define (foo n) (display n) (newline) (foo (1+ n))) (foo)'
+#+end_example
+
+#+begin_src scheme
+(define (my-last lst) 
+  (if (null? (cdr lst))
+      (car lst)
+      (my-last (cdr lst))))
+
+(my-last '(1 2 (3 (4 (5 (6 7))))))
+#+end_src
+
+#+RESULTS:
+| 3 | (4 (5 (6 7))) |
+
+#+begin_src scheme
+(let ((a 1) 
+      (b 2)
+      (c 3))
+  (set! c 100)
+  (list a b c))
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 100 |
+
+#+begin_src scheme
+(let* ((a 1) (b 2) (c (+ a b)))
+  c)
+#+end_src
+
+#+RESULTS:
+: 3
+
+#+begin_src scheme
+(let ((length
+          (lambda (lst)
+            (if (null? lst)
+                0
+                (1+ (length (cdr lst)))))))
+  (length '(a b c d e f)))
+#+end_src
+
+#+RESULTS:
+: 6
+
+#+begin_src scheme
+(letrec ((even? (lambda (n)
+                  (if (zero? n)
+                      #t
+                      (odd? (- n 1)))))
+         (odd? (lambda (n)
+                 (if (zero? n)
+                     #f
+                     (even? (- n 1))))))
+  (even? 88))
+#+end_src
+
+#+RESULTS:
+: #t
+
+#+begin_src scheme
+(begin 1 2 3)
+#+end_src
+
+#+RESULTS:
+: 3
+
+#+begin_src scheme
+(if #f 2 3)
+#+end_src
+
+#+RESULTS:
+: 3
+
+#+begin_src scheme
+(cond (#f 2) (#t 3))
+#+end_src
+
+#+RESULTS:
+: 3
+
+*** (guile) About Closure
+
+#+begin_src scheme
+(define foo (let ((n 0)) (lambda () (set! n (1+ n)) n)))
+(list (foo) (foo) (foo))
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 |
+
+** (guile) Programming in Scheme
+
+*** (guile) Guile Scheme
+
+what is meaning of "POSIX-compliant network programming"?
+
+**** (guile) Command-line Options
+
+#+begin_src scheme :tangle /tmp/cli.scm :tangle-mode '#o755
+(display (command-line))
+#+end_src
+
+#+begin_src sh
+guile /tmp/cli.scm foo bar baz
+#+end_src
+
+#+RESULTS:
+: (/tmp/cli.scm foo bar baz)
+
+#+begin_src sh
+guile -c '(display (command-line))' foo bar baz
+#+end_src
+
+#+RESULTS:
+: (guile foo bar baz)
+
+**** (guile) Guile Scripting
+
+#+begin_src scheme :tangle /tmp/foo.scm :tangle-mode '#o755
+#!/usr/local/bin/guile -s
+!#
+(display "Hello 世界")
+(newline)
+#+end_src
+
+#+begin_src sh
+/tmp/foo.scm
+#+end_src
+
+#+RESULTS:
+: Hello 世界
+
+**** (guile) The Meta Switch
+
+This works on macOS
+
+#+begin_src scheme :tangle /tmp/main.scm :tangle-mode '#o755
+#!/usr/local/bin/guile -e main -s
+!#
+(define (main args)
+  (map (lambda (arg) (display arg) (display " "))
+       (cdr args))
+  (newline))
+#+end_src
+
+#+begin_src sh
+/tmp/main.scm foo bar baz
+#+end_src
+
+This should work everywhere (=\= is called "The meta switch")
+
+#+begin_src scheme :tangle /tmp/main2.scm :tangle-mode '#o755
+#!/usr/local/bin/guile \
+-e main -s
+!#
+(define (main args)
+  (map (lambda (arg) (display arg) (display " "))
+       (cdr args))
+  (newline))
+#+end_src
+
+#+begin_src sh
+/tmp/main2.scm a b c
+#+end_src
+
+#+RESULTS:
+: a b c
+
+#+begin_src sh :results output
+guile -c '(write %load-path)'
+#+end_src
+
+#+RESULTS:
+: ("/usr/local/Cellar/guile/2.2.6/share/guile/2.2" "/usr/local/Cellar/guile/2.2.6/share/guile/site/2.2" "/usr/local/Cellar/guile/2.2.6/share/guile/site" "/usr/local/Cellar/guile/2.2.6/share/guile")
+
+** (guile) API Reference
+:PROPERTIES:
+:header-args:scheme: :session *API*
+:END:
+
+*** (guile) Data Types
+
+**** Booleans
+
+#+begin_src scheme
+(list #t #f #true #false)
+#+end_src
+
+#+RESULTS:
+: '(#t #f #t #f)
+
+#+begin_src scheme
+(list (if #f nil "hello")
+      (if 0 "world"))
+#+end_src
+
+#+RESULTS:
+| hello | world |
+
+**** (r5rs) Numbers
+
+#+begin_example
+number
+  complex
+    real
+      rational
+        integer
+#+end_example
+
+#+begin_src scheme
+(map (lambda (f) (f 3)) (list number? complex? real? rational? integer?))
+#+end_src
+
+#+RESULTS:
+: '(#t #t #t #t #t)
+
+binary, octal, decimal, hexadecimal
+
+#+begin_src scheme
+(list #b10 #o10 #d10 #x10)
+#+end_src
+
+#+RESULTS:
+| 2 | 8 | 10 | 16 |
+
+#+begin_src scheme
+(list (sqrt 9.0)
+      (expt 3.0 2)
+      (random 9))
+#+end_src
+
+#+RESULTS:
+| 3.0 | 9.0 | 1 |
+
+**** (guile) Characters
+
+#+begin_src scheme
+;; 'a' by name, octal number, and hex number
+(list #\a #\141 #\x61)
+#+end_src
+
+#+begin_src scheme
+(char=? #\a #\x61)
+#+end_src
+
+#+RESULTS:
+: #t
+
+**** (guile) Strings
+
+#+begin_src scheme :results output
+;; (display "hello\tworld!\n")
+ 
+(display "\x61\x20")
+;; 你好
+(display "\u4F60\u597D")
+#+end_src
+
+#+RESULTS:
+: a 你好
+
+#+begin_src scheme
+(list (string? "")
+      (string-null? ""))
+#+end_src
+
+#+RESULTS:
+: '(#t #t)
+
+build strings
+
+#+begin_src scheme
+(list (string #\x #\y #\z)
+      (list->string '(#\x #\y #\z)))
+#+end_src
+
+#+RESULTS:
+| xyz | xyz |
+
+#+begin_src scheme
+(make-string 5 #\ )
+#+end_src
+
+#+RESULTS:
+:      
+
+#+begin_src scheme
+(string-join '("hello" "world") " ")
+#+end_src
+
+#+RESULTS:
+: hello world
+
+#+begin_src scheme :results drawer
+(string->list "hello")
+#+end_src
+
+#+RESULTS:
+:results:
+(#\h #\e #\l #\l #\o)
+:end:
+
+#+begin_src scheme
+(string-split "foo bar baz" #\space)
+#+end_src
+
+#+RESULTS:
+| foo | bar | baz |
+
+**** (guile) Symbols
+
+**** (guile) Keywords
+
+#+begin_src scheme :results drawer
+(list #:foo #:bar #:baz)
+#+end_src
+
+#+RESULTS:
+:results:
+(#:foo #:bar #:baz)
+:end:
+
+**** (guile) Vectors
+
+#+begin_src scheme
+#(1 2 3)
+#("hello" foo #xdeadbeef)
+#+end_src
+
+#+RESULTS:
+: #("hello" foo 3735928559)
+
+**** TODO (guile) Prompt Primitives
+
+#+begin_src scheme
+(define cont
+  (call-with-prompt 'foo
+    (lambda ()
+      (+ 34 (abort-to-prompt 'foo)))
+    (lambda (k) k)))
+
+(cont 8)
+#+end_src
+
+#+RESULTS:
+: 42
+
+#+begin_src scheme
+((call-with-prompt 'foo
+   (lambda ()
+     (map
+      (lambda (x)
+        (if (<= x 4)
+            x
+            (1+ (abort-to-prompt 'foo))))
+      '(1 2 3 4 5 6)))
+   (lambda (k) k))
+ 100)
+#+end_src
+
+#+RESULTS:
+
+*** (guile) Input and Output
+
+#+begin_src scheme
+(let ((port (open-output-file "/tmp/foo.txt")))
+  (display "hello, world!\n" port)
+  (close-port port))
+#+end_src
+
+#+RESULTS:
+: #t
+
+#+begin_src sh :results output
+cat /tmp/foo.txt
+#+end_src
+
+#+RESULTS:
+: hello, world!
+
+#+begin_src scheme
+(call-with-output-file "/tmp/foo.txt"
+  (lambda (port)
+    (display "Hello, World!\n" port)))
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
+
+#+begin_src scheme :tangle /tmp/cat.scm :tangle-mode '#o755
+#!/usr/local/bin/guile \
+-e main -s
+!#
+(use-modules (ice-9 textual-ports))
+
+(define (copy from to)
+  (while (not (eof-object? (lookahead-char from)))
+    (put-char to (get-char from))))
+
+(define (main . args)
+  (copy (current-input-port) (current-output-port)))
+#+end_src
+
+#+begin_src scheme
+(call-with-output-string (lambda (port) (display "hello world" port)))
+#+end_src
+
+#+RESULTS:
+: hello world
+
+#+begin_src scheme
+(with-output-to-string (lambda () (display "hello port")))
+#+end_src
+
+#+RESULTS:
+: hello port
+
+*** (guile) Regular Expressions
+
+#+begin_src scheme
+(provided? 'regex)
+#+end_src
+
+#+RESULTS:
+: #t
+
+#+begin_src scheme
+(use-modules (ice-9 regex))
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
+
+#+begin_src scheme
+(string-match "[0-9]{4}" "blah2020")
+#+end_src
+
+#+RESULTS:
+: #("blah2020" (4 . 8))
+
+#+begin_src scheme
+(make-regexp "[0-9][0-9][0-9][0-9]")
+#+end_src
+
+#+RESULTS:
+: #<regexp 10485ad80>
+
+#+begin_src scheme
+(make-regexp "[a-z][a-z]" regexp/icase)
+#+end_src
+
+#+RESULTS:
+: #<regexp 1049be540>
+
+#+begin_src scheme
+(regexp-exec (make-regexp "ll") "hello")
+#+end_src
+
+#+RESULTS:
+: #("hello" (2 . 4))
+
+#+begin_src scheme
+(list-matches "[a-z]+" "abc 42 def 78")
+#+end_src
+
+#+RESULTS:
+: '(#("abc 42 def 78" (0 . 3)) #("abc 42 def 78" (7 . 10)))
+
+#+begin_src scheme
+(use-modules (ice-9 popen)
+             (ice-9 rdelim))
+
+(let* ((port (open-input-pipe "gdate --utc"))
+       (str  (get-string-all port)))
+  (close-pipe port)
+  str)
+#+end_src
+
+#+RESULTS:
+: Wed Jan  8 15:47:45 UTC 2020\n
+
+#+begin_src scheme
+(cond (123 => (lambda (x) (* 2 x))))
+#+end_src
+
+#+RESULTS:
+: 246
+
+* Toys
+** ls
+
+A very simple =ls -a -1=
+
+#+begin_src scheme :results output :dir ./bin/
+(use-modules (ice-9 ftw))
+
+(display (string-join (scandir ".") "\n"))
+#+end_src
+
+#+RESULTS:
+#+BEGIN_EXAMPLE
+.
+..
+cowsay
+cowsay-cli
+csv-to-org-table
+el2sh
+hello
+hello2
+jedi-completions.py
+org-capture
+#+END_EXAMPLE
+
+** wget
+
+wget http://example.com
+
+#+begin_src scheme :results output
+(use-modules (web client))
+
+(call-with-values (lambda () (http-request "http://example.com"))
+  (lambda (resp resp-body)
+    (display resp-body)))
+#+end_src
+
+#+RESULTS:
+#+BEGIN_EXAMPLE
+<!doctype html>
+<html>
+<head>
+    <title>Example Domain</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+    body {
+        background-color: #f0f0f2;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        
+    }
+    div {
+        width: 600px;
+        margin: 5em auto;
+        padding: 2em;
+        background-color: #fdfdff;
+        border-radius: 0.5em;
+        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+    }
+    a:link, a:visited {
+        color: #38488f;
+        text-decoration: none;
+    }
+    @media (max-width: 700px) {
+        div {
+            margin: 0 auto;
+            width: auto;
+        }
+    }
+    </style>    
+</head>
+
+<body>
+<div>
+    <h1>Example Domain</h1>
+    <p>This domain is for use in illustrative examples in documents. You may use this
+    domain in literature without prior coordination or asking for permission.</p>
+    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+</div>
+</body>
+</html>
+#+END_EXAMPLE
+
+** grep
+
+grep example guile.org
+
+#+begin_src scheme :results output
+(use-modules (ice-9 rdelim))
+
+(call-with-input-file "/etc/shells"
+  (lambda (port)
+    (do ((line (read-line port) (read-line port))
+         (rx (make-regexp "/.sh")))
+        ((eof-object? line))
+      (when (regexp-exec rx line)
+        (display line)
+        (newline)))))
+#+end_src
+
+#+RESULTS:
+: /bin/csh
+: /bin/ksh
+: /bin/zsh
+: /usr/local/bin/zsh
+
+** date
+
+#+begin_src sh :results output
+gdate
+gdate --utc
+#+end_src
+
+#+RESULTS:
+: Thu Jan  9 01:23:31 CST 2020
+: Wed Jan  8 17:23:31 UTC 2020
+
+#+begin_src scheme
+(strftime "%c" (localtime (current-time)))
+#+end_src
+
+#+RESULTS:
+: Thu Jan  9 01:23:02 2020
