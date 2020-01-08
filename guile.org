@@ -920,6 +920,15 @@ gdate --utc
 #+RESULTS:
 : Thu Jan  9 01:23:02 2020
 
+#+begin_src scheme
+(use-modules (srfi srfi-19))
+
+(date->string (current-date) "~a ~b ~e ~H:~M:~S ~z ~Y")
+#+end_src
+
+#+RESULTS:
+: Thu Jan  9 02:10:18 +0800 2020
+
 ** wc
 
 #+begin_src sh
