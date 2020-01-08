@@ -919,3 +919,40 @@ gdate --utc
 
 #+RESULTS:
 : Thu Jan  9 01:23:02 2020
+
+** wc
+
+#+begin_src sh
+wc /etc/shells
+#+end_src
+
+#+RESULTS:
+: 12      32     218 /etc/shells
+
+#+begin_src scheme
+(use-modules (ice-9 rdelim)
+             (ice-9 textual-ports))
+
+(call-with-input-file "/etc/shells"
+  (lambda (port)
+    (let ((line-number 0)
+          (char-number 0)
+          (word-number 0)
+          (last-char #f))
+      (while (not (eof-object? (lookahead-char port)))
+        (let ((char (get-char port)))
+          (set! char-number (1+ char-number))
+          (when (char=? char #\newline)
+            (set! line-number (1+ line-number)))
+          (when (and (not (char-set-contains? char-set:whitespace char))
+                     (or (not last-char)
+                         (char-set-contains? char-set:whitespace last-char)))
+            (set! word-number (1+ word-number)))
+          (set! last-char char)))
+      (values line-number word-number char-number))))
+#+end_src
+
+#+RESULTS:
+: 12
+: 32
+: 218
