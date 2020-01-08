@@ -965,3 +965,98 @@ wc /etc/shells
 : 12
 : 32
 : 218
+
+** ydcv
+
+#+begin_src sh :results drawer
+curl 'http://fanyi.youdao.com/openapi.do?keyfrom=YouDaoCV&key=659600698&type=data&doctype=json&version=1.1&q=Hello' | jq
+#+end_src
+
+#+RESULTS:
+:results:
+{
+  "translation": [
+    "你好"
+  ],
+  "basic": {
+    "us-phonetic": "helˈō",
+    "phonetic": "həˈləʊ",
+    "uk-phonetic": "həˈləʊ",
+    "explains": [
+      "n. 表示问候， 惊奇或唤起注意时的用语",
+      "n. (Hello)人名；(法)埃洛",
+      "int. 喂；哈罗"
+    ]
+  },
+  "query": "hello",
+  "errorCode": 0,
+  "web": [
+    {
+      "value": [
+        "你好",
+        "您好",
+        "哈啰"
+      ],
+      "key": "Hello"
+    },
+    {
+      "value": [
+        "凯蒂猫",
+        "昵称",
+        "吉蒂猫"
+      ],
+      "key": "Hello Kitty"
+    },
+    {
+      "value": [
+        "哈乐哈乐",
+        "乐扣乐扣"
+      ],
+      "key": "Hello Bebe"
+    }
+  ]
+}
+:end:
+
+#+begin_src scheme :results output
+(use-modules (json)
+             (web uri)
+             (web client)
+             (rnrs bytevectors)
+             (ice-9 pretty-print))
+
+(define (url query)
+  (string-append
+   "http://fanyi.youdao.com/openapi.do?keyfrom=YouDaoCV&key=659600698&type=data&doctype=json&version=1.1&q="
+   (uri-encode query)))
+
+;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=30076
+(call-with-values (lambda () (http-request (url "hello")
+                                      #:decode-body? #f))
+  (lambda (resp resp-body)
+    (pretty-print
+     (json-string->scm (utf8->string resp-body)))))
+#+end_src
+
+#+RESULTS:
+#+BEGIN_EXAMPLE
+(("web"
+  .
+  #((("key" . "Hello") ("value" . #("你好" "您好" "哈啰")))
+    (("key" . "Hello Kitty")
+     ("value" . #("凯蒂猫" "昵称" "吉蒂猫")))
+    (("key" . "Hello Bebe")
+     ("value" . #("哈乐哈乐" "乐扣乐扣")))))
+ ("errorCode" . 0)
+ ("query" . "hello")
+ ("basic"
+  ("explains"
+   .
+   #("n. 表示问候， 惊奇或唤起注意时的用语"
+     "int. 喂；哈罗，你好，您好"
+     "n. (Hello) 人名；（法）埃洛"))
+  ("uk-phonetic" . "həˈləʊ")
+  ("phonetic" . "həˈləʊ")
+  ("us-phonetic" . "helˈō"))
+ ("translation" . #("你好")))
+#+END_EXAMPLE
