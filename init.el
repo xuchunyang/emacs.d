@@ -4816,7 +4816,6 @@ provides similiar function."
 ;;; Scheme
 
 (use-package geiser                     ; For Scheme
-  :disabled
   :ensure t
   :defer t
   :defines geiser-mode-map
@@ -4865,12 +4864,15 @@ provides similiar function."
   ;;    scheme implementation.
   ;;
   ;; Ok, for now, just use the fallback.
-  (setq geiser-default-implementation 'racket)
+  (setq geiser-default-implementation 'guile)
 
   (add-hook 'geiser-mode-hook #'chunyang-geiser-setup)
 
   ;; Yes, use ParEdit in the REPL too
   (add-hook 'geiser-repl-mode-hook #'paredit-mode)
+
+  ;; not sure why it defaults to "scheme"
+  (setq geiser-chez-binary "chez")
 
   ;; (info "(geiser) Seeing is believing")
   (and *is-mac* (setq geiser-image-viewer "open")))
