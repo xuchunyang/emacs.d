@@ -295,3 +295,57 @@
 
 #+RESULTS:
 : (c b a b)
+
+** 2.5.1
+
+#+begin_src scheme
+(let ([f (lambda (x) x)])
+  (f 'a))
+;; a
+
+(let ([f (lambda x x)])
+  (f 'a))
+;; (a)
+
+(let ([f (lambda (x . y) x)])
+  (f 'a))
+;; a
+
+(let ([f (lambda (x . y) y)])
+  (f 'a))
+;; ()
+#+end_src
+
+** 2.5.2
+
+#+begin_src scheme
+(let ([list (lambda x x)])
+  (list
+   (list)
+   (list (list 1) 2 3 '(4 5))
+   (list 1 2 3)))
+#+end_src
+
+#+RESULTS:
+: (() ((1) 2 3 (4 5)) (1 2 3))
+
+** 2.5.3
+
+#+begin_src scheme
+(lambda (f x) (f x)) ;; none
+
+(lambda (x) (+ x x)) ;; +
+
+(lambda (x y) (f x y)) ;; f
+
+(lambda (x) 
+  (cons x (f x y))) ;; f y
+
+(lambda (x)
+  (let ([z (cons x y)])
+    (x y z))) ;; y
+
+(lambda (x)
+  (let ([y (cons x y)])
+    (x y z))) ;; y z
+#+end_src
