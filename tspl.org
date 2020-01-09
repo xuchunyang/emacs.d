@@ -202,3 +202,96 @@
 2. (cdr (list + - * /)) => (- * /)
 3. (car '(- * /)) => -
 4. (- 17 5) => 12
+
+** 2.4.1
+
+#+begin_src scheme
+(let ([a 1]
+      [b 2])
+  (list
+   #:want
+   (+ (- (* 3 a) b) (+ (* 3 a) b))
+   #:get
+   (let ([x (* 3 a)])
+     (+ (- x b) (+ x b)))))
+#+end_src
+
+#+RESULTS:
+: (#:want 6 #:get 6)
+
+#+begin_src scheme
+(cons (car (list a b c))
+      (cdr (list a b c)))
+
+(let ((lst (list a b c)))
+  (cons (car lst) (cdr lst)))
+#+end_src
+
+** 2.4.2
+
+54
+
+#+begin_src scheme
+(let ([x 9])
+  (* x
+     (let ([x (/ x 3)])
+       (+ x x))))
+#+end_src
+
+#+RESULTS:
+: 54
+
+** 2.4.3
+
+#+begin_src scheme
+(let ([x 'a] [y 'b])
+  (list (let ([x 'c]) (cons x y))
+        (let ([y 'd]) (cons x y))))
+#+end_src
+
+#+RESULTS:
+: ((c . b) (a . d))
+
+#+begin_src scheme
+(let ([x 'a] [y 'b])
+  (list (let ([new-x 'c]) (cons new-x y))
+        (let ([new-y 'd]) (cons x new-y))))
+#+end_src
+
+#+RESULTS:
+: ((c . b) (a . d))
+
+#+begin_src scheme
+(let ([x '((a b) c)])
+  (cons (let ([x (cdr x)])              ; x => (c)
+          (car x))                      ; c
+        (let ([x (car x)])              ; x => (a b)
+          (cons (let ([x (cdr x)])      ; x => (b)
+                  (car x))              ; b
+                (cons (let ([x (car x)]) ; x => a
+                        x)               ; a
+                      (cdr x))))))       ; (b)
+
+;; (cons 'c (cons 'b (cons 'a '(b))))
+;; =>
+;; (c b a b)
+
+#+end_src
+
+#+RESULTS:
+: (c b a b)
+
+#+begin_src scheme
+(let ([x '((a b) c)])
+  (cons (let ([x1 (cdr x)])
+          (car x1))
+        (let ([x2 (car x)])
+          (cons (let ([x3 (cdr x2)])
+                  (car x3))
+                (cons (let ([x4 (car x2)])
+                        x4)
+                      (cdr x2))))))
+#+end_src
+
+#+RESULTS:
+: (c b a b)
