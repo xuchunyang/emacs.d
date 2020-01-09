@@ -1064,3 +1064,80 @@ curl 'http://fanyi.youdao.com/openapi.do?keyfrom=YouDaoCV&key=659600698&type=dat
 ** TODO port let-alist
 
 需要学习 Macro
+
+** seq
+
+#+begin_src scheme :var from=1 to=10
+(define (seq from to)
+  (if (>= to from)
+      (cons from (seq (1+ from) to))
+      '()))
+
+(seq from to)
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+
+#+begin_src scheme :results output
+(define (seq from to)
+  (if (>= to from)
+      (cons from (seq (1+ from) to))
+      '()))
+
+(for-each (lambda (n) (display n) (newline))
+          (seq 1 10))
+#+end_src
+
+#+RESULTS:
+#+BEGIN_EXAMPLE
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+#+END_EXAMPLE
+
+** yes
+
+#+begin_src scheme
+(use-modules (ice-9 match))
+
+(match (list 1 2 3 4 5)
+  ((_ x . r) (list x r)))
+#+end_src
+
+#+RESULTS:
+| 2 | (3 4 5) |
+
+#+begin_src scheme
+(use-modules (ice-9 match))
+
+(match (list 1 2 3 4 5)
+  (_ "default match"))
+#+end_src
+
+#+RESULTS:
+: default match
+
+#+begin_src scheme :tangle /tmp/yes.scm :tangle-mode '#o755
+#!/usr/local/bin/guile -s
+!#
+(use-modules (ice-9 match))
+
+(let ([s (match (command-line)
+           ((_ s . _) s)
+           (_ "yes"))])
+  (display s)
+  (newline))
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
+
+** TODO cut
