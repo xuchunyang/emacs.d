@@ -1,0 +1,204 @@
+#+TITLE: The Scheme Programming Language
+#+DATE: <2020-01-09 Thu>
+
+#+PROPERTY: header-args:scheme :results scalar
+
+* Exercise
+** 2.2.1
+
+#+begin_src scheme :scheme chez
+(+ (* 1.2 (- 2 1/3)) -8.7)
+#+end_src
+
+#+RESULTS:
+: -6.699999999999999
+
+#+begin_src scheme
+(/ (+ (/ 2 3) (/ 4 9)) (- (/ 5 11) (/ 4 3)))
+#+end_src
+
+#+RESULTS:
+: -110/87
+
+#+begin_src scheme
+(+ 1 (/ 1 (+ 2 (/ 1 (+ 1 (/ 1 2))))))
+#+end_src
+
+#+RESULTS:
+: 11/8
+
+#+begin_src scheme
+(* 1 (* -2 (* 3 (* -4 (* 5 (* -6 7))))))
+#+end_src
+
+#+RESULTS:
+: -5040
+
+** 2.2.2
+
+#+begin_src scheme
+(+ 1 2.0)
+#+end_src
+
+#+RESULTS:
+: 3.0
+
+#+begin_src scheme
+(- 1 1.0)
+#+end_src
+
+#+RESULTS:
+: 0.0
+
+#+begin_src scheme
+(+ 1/3 2/3)
+#+end_src
+
+#+RESULTS:
+: 1
+
+#+begin_src scheme
+(* 1.0 0)
+#+end_src
+
+#+RESULTS:
+: 0.0
+
+#+begin_src scheme
+(/ 0 1)
+#+end_src
+
+#+RESULTS:
+: 0
+
+#+begin_src scheme
+(/ 1 3)
+#+end_src
+
+#+RESULTS:
+: 1/3
+
+** 2.2.3
+
+#+NAME: my_answers_2.2.3
+- (car . cdr)
+- (this (is silly))
+- (is this silly?)
+- (+ 2 3)
+- (+ 2 3)
+- +
+- (2 3)
+- procedure cons
+- cons
+- (quote cons)
+- quote
+- 5
+- 5
+- 5
+- 5
+
+#+begin_src scheme :scheme chez
+(list
+ (cons 'car 'cdr)   
+ (list 'this '(is silly))   
+ (cons 'is '(this silly?))   
+ (quote (+ 2 3))   
+ (cons '+ '(2 3))   
+ (car '(+ 2 3))   
+ (cdr '(+ 2 3))   
+ cons   
+ (quote cons)   
+ (quote (quote cons))   
+ (car (quote (quote cons)))   
+ (+ 2 3)   
+ (+ '2 '3)   
+ (+ (car '(2 3)) (car (cdr '(2 3))))   
+ ((car (list + - * /)) 2 3))
+#+end_src
+
+#+RESULTS:
+: ((car . cdr) (this (is silly)) (is this silly?) (+ 2 3)
+:   (+ 2 3) + (2 3) #<procedure cons> cons 'cons quote 5 5 5 5)
+
+** 2.2.4
+
+#+begin_src scheme
+(car (cdr (car '((a b) (c d)))))
+#+end_src
+
+#+RESULTS:
+: b
+
+#+begin_src scheme
+(car (car (cdr '((a b) (c d)))))
+#+end_src
+
+#+RESULTS:
+: c
+
+#+begin_src scheme
+(car (cdr (car (cdr '((a b) (c d))))))
+#+end_src
+
+#+RESULTS:
+: d
+
+** 2.2.5
+
+#+begin_src scheme :results scalar
+(cons (cons 'a 'b) (cons (cons (cons 'c '()) (cons 'd '())) (cons '() '())))
+#+end_src
+
+#+RESULTS:
+: ((a . b) ((c) d) ())
+
+** 2.2.6
+
+#+begin_src scheme :results scalar
+(cons 1 (cons '(2 . ((3) . ())) (cons '(()) (cons 4 5))))
+#+end_src
+
+#+RESULTS:
+: (1 (2 (3)) (()) 4 . 5)
+
+** 2.2.7
+
+#+begin_src scheme
+(let ((l '((a b) (c d))))
+  (list
+   (car l)
+   (car (car l))
+   (cdr (car l))
+   (car (cdr (car l)))
+   (cdr (cdr (car l)))
+
+   #:cdr
+
+   (cdr l)
+   (cdr (cdr l))
+   (car (cdr l))
+   (car (car (cdr l)))
+   (cdr (car (cdr l)))
+   (car (cdr (car (cdr l))))
+   (cdr (cdr (car (cdr l))))
+   ))
+#+end_src
+
+#+RESULTS:
+: ((a b) a (b) b () #:cdr ((c d)) () (c d) c (d) d ())
+
+** 2.2.8
+
+(+ 1 2)
+((car '(+ - * /)) 1 2 (* 3 4))
+
+(e0 e1 e2...)
+
+** 2.3.1
+
+((car (cdr (list + - * /))) 17 5)
+
+1. (list + - * /) => (+ - * /)
+2. (cdr (list + - * /)) => (- * /)
+3. (car '(- * /)) => -
+4. (- 17 5) => 12
