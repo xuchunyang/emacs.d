@@ -1140,4 +1140,55 @@ curl 'http://fanyi.youdao.com/openapi.do?keyfrom=YouDaoCV&key=659600698&type=dat
 #+RESULTS:
 : #<unspecified>
 
-** TODO cut
+** cut
+
+#+begin_src scheme
+;; 1, 1-3, 1-, -3
+((lambda (s sep field)
+   (list-ref (string-split s sep) field))
+ "a b c d"
+ #\space
+ 3)
+#+end_src
+
+#+RESULTS:
+: d
+
+#+begin_src scheme :tangle /tmp/cut.scm :tangle-mode '#o755
+#!/usr/local/bin/guile -e main -s
+!#
+(use-modules (ice-9 rdelim))
+
+(define (get s sep n)
+  (let ([fields (string-split s sep)])
+    ;; (format #t "~a ~a ~a ~a\n" s sep n (length fields))
+    (if (<= n (length fields))
+        (list-ref fields (1- n))
+        #f)))
+
+(define (plist-get plist prop)
+  (if (null? plist)
+      (begin
+        (write (list plist prop))
+        #f)
+      (let ([k (car plist)]
+            [v (car (cdr plist))])
+        (if (equal? k prop)
+            v
+            (plist-get (cdr (cdr plist)) prop)))))
+
+;; cat /etc/passwd | cut -s -d : -f 7
+(define (main args)
+  (let ((port (current-input-port))
+        (sep (string-ref (plist-get (cdr args) "-d") 0))
+        (field (string->number (plist-get (cdr args) "-f"))))
+    (do ((line (read-line port) (read-line port)))
+        ((eof-object? line))
+      (let ([x (get line sep field)])
+        (when x
+          (display x)
+          (newline))))))
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
