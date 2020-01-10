@@ -349,3 +349,145 @@
   (let ([y (cons x y)])
     (x y z))) ;; y z
 #+end_src
+
+** 2.6.1
+
+#+BEGIN_SRC scheme
+(define doubler
+  (lambda (f)
+    (lambda (x) (f x x))))
+
+((doubler +) 1)
+
+;; (define double-any
+;;   (lambda (f x)
+;;     ((doubler f) x)))
+
+;; (double-any + 2)
+
+;; double-any 就是 (lambda (f x) (f x x))
+#+END_SRC
+
+#+RESULTS:
+: 4
+
+#+BEGIN_SRC scheme
+(double-any double-any double-any)
+
+;; =>
+(double-any double-any double-any)
+
+;; =>
+(double-any double-any double-any)
+
+;; 死循环
+#+END_SRC
+
+** 2.6.2
+
+#+BEGIN_SRC scheme :session *compose*
+(define compose
+  (lambda (f g)
+    (lambda (x)
+      (f (g x)))))
+
+(define my-cadr (compose car cdr))
+(define my-cddr (compose cdr cdr))
+
+(list (my-cadr '(a b c))
+      (my-cddr '(a b c)))
+#+END_SRC
+
+#+RESULTS:
+: (b (c))
+
+** 2.6.3
+
+#+BEGIN_SRC scheme :session *compose*
+(let ([caar (compose car car)]
+      [cadr (compose car cdr)]
+      [cdar (compose cdr car)]
+      [cddr (compose cdr cdr)]
+      [l    '((1 2) (3 4))])
+  (list (caar l) 1
+        (cadr l) '(3 4)
+        (cdar l) '(2)
+        (cddr l) '()
+        ))
+#+END_SRC
+
+#+RESULTS:
+: (1 1 (3 4) (3 4) (2) (2) () ())
+
+#+BEGIN_SRC scheme :session *compose*
+(let ([caaar (compose car (compose car car))]
+      [cdaar (compose (compose cdr car) car)]
+      [cadar (compose (compose car cdr) car)]
+      [l    '(((1 2) (3 4)) ((5 6) (7 8)))])
+  (list (caaar l) 1
+        (cdaar l) '(2)
+        (cadar l) '(3 4)))
+#+END_SRC
+
+#+RESULTS:
+: (1 1 (2) (2) (3 4) (3 4))
+
+#+BEGIN_SRC scheme :session *compose*
+(let ([caadar (compose car (compose car (compose cdr car)))])
+  (caddar '((1 2 3))))
+#+END_SRC
+
+#+RESULTS:
+: 3
+
+** 2.7.1
+
+#+begin_src scheme
+(define atom?
+  (lambda (x)
+    (not (pair? x))))
+
+(map atom? '(1 () (2 3) "hello" a 2.3))
+#+end_src
+
+#+RESULTS:
+: (#t #t #f #t #t #t)
+
+** 2.7.2
+
+#+begin_src scheme
+(define shorter 
+  (lambda (lst1 lst2)
+    (if (<= (length lst1)
+            (length lst2))
+        lst1
+        lst2)))
+
+(shorter '(a b) '(c d e))
+#+end_src
+
+#+RESULTS:
+: (a b)
+
+#+begin_src scheme
+(use-modules (rnrs base))               ; error
+
+(define shorter 
+  (lambda (lst1 lst2)
+    (cond
+     [(not (and (list? lst1) (list? lst2)))
+      (assertion-violation
+       'shorter
+       "improper argument"
+       lst1 lst2)]
+     [(<= (length lst1) (length lst2))
+      lst1])))
+
+(shorter '(a b) '(c d e)) 
+(shorter '(a b) '(c d)) 
+(shorter '(a b) '(c))
+;; (shorter 12 '(c))
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
