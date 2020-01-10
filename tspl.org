@@ -491,3 +491,189 @@
 
 #+RESULTS:
 : #<unspecified>
+
+** 2.8.1
+
+#+begin_src scheme
+(define tree-copy
+  (lambda (tr)
+    (if (not (pair? tr))
+        tr
+        (cons (tree-copy (car tr))
+              (tree-copy (cdr tr))))))
+
+(tree-copy '((a . b) . (c . d)))
+#+end_src
+
+#+RESULTS:
+: ((a . b) c . d)
+
+#+begin_src scheme :scheme chez
+(define tree-copy
+  (lambda (tr)
+    (if (not (pair? tr))
+        tr
+        (cons (tree-copy (cdr tr))
+              (tree-copy (car tr))))))
+
+(tree-copy '((a . b) . (c . (d . g))))
+#+end_src
+
+#+RESULTS:
+: (((g . d) . c) b . a)
+
+tree 所有 pair 的 car 和 cdr 都会相互交换
+
+** 2.8.2
+
+#+begin_src scheme
+(append '(a b) '(c d e))
+#+end_src
+
+#+RESULTS:
+: (a b c d e)
+
+#+begin_src scheme
+(define append 
+  (lambda (ls1 ls2)
+    (if (null? ls1)
+        ls2
+        (cons (car ls1) (append (cdr ls1) ls2)))))
+
+(append '(1 2 3) '(4 5))
+#+end_src
+
+#+RESULTS:
+: (1 2 3 4 5)
+
+应该会返回 (3 2 1 4 5)
+
+#+begin_src scheme
+(define append 
+  (lambda (ls1 ls2)
+    (if (null? ls1)
+        ls2
+        (append (cdr ls1) (cons (car ls1) ls2)))))
+
+(append '(1 2 3) '(4 5))
+#+end_src
+
+#+RESULTS:
+: (3 2 1 4 5)
+
+** 2.8.3
+
+#+begin_src scheme
+(define make-list
+  (lambda (n x)
+    (if (= n 0)
+        '()
+        (cons x (make-list (1- n) x)))))
+
+(make-list 7 '())
+#+end_src
+
+#+RESULTS:
+: (() () () () () () ())
+
+** 2.8.4
+
+#+begin_src scheme
+(define list-ref
+  (lambda (ls n)
+    (if (zero? n)
+        (car ls)
+        (list-ref (cdr ls) (1- n)))))
+
+
+(list-ref '(1 2 3 4) 0) 
+;; => 1
+
+;; 1
+
+(list-ref '(a short (nested) list) 2) 
+;; => (nested)
+
+;; (nested)
+#+end_src
+
+#+begin_src scheme
+(define list-tail
+  (lambda (ls n)
+    (if (zero? n)
+        ls
+        (list-tail (cdr ls) (1- n)))))
+
+(list-tail '(1 2 3 4) 0)
+;; => (1 2 3 4)
+
+(list-tail '(a short (nested) list) 2) 
+;; => ((nested) list)
+
+
+#+end_src
+
+** 2.8.5
+
+#+begin_src scheme
+(define shorter?
+  (lambda (ls1 ls2)
+    (cond
+     [(null? ls1) #t]
+     [(null? ls2) #f]
+     [else (shorter? (cdr ls1) (cdr ls2))])))
+
+(define shorter
+  (lambda (ls1 ls2)
+    (if (shorter? ls1 ls2)
+        ls1
+        ls2)))
+
+(shorter '(a b) '(c d e))
+;; (shorter '(a b 1 2) '(c d e))
+#+end_src
+
+#+RESULTS:
+: (c d e)
+
+** 2.8.6
+
+#+begin_src scheme
+(define even?
+  (lambda (n)
+    (if (zero? n)
+        #t
+        (odd? (1- n)))))
+
+(define odd?
+  (lambda (n)
+    (if (zero? n)
+        #f
+        (even? (1- n)))))
+
+(even? 17)
+;; => #f
+ 
+(odd? 17)
+;; => #t
+#+end_src
+
+** 2.8.7
+
+#+begin_src scheme
+(define transpose
+  (lambda (ls)
+    (cons (map car ls)
+          (map cdr ls))))
+;; => #<unspecified>
+
+(map car '((a . 1) (b . 2) (c . 3)))
+;; => (a b c)
+
+(map cdr '((a . 1) (b . 2) (c . 3)))
+;; => (1 2 3)
+
+(transpose '((a . 1) (b . 2) (c . 3)))
+;; => ((a b c) 1 2 3)
+;; ((a b c) . (1 2 3))
+#+end_src
