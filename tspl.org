@@ -677,3 +677,105 @@ tree 所有 pair 的 car 和 cdr 都会相互交换
 ;; => ((a b c) 1 2 3)
 ;; ((a b c) . (1 2 3))
 #+end_src
+
+** 2.9.1
+
+#+begin_src scheme :scheme chez
+(define make-counter
+  (lambda (count step)
+    (lambda ()
+      (let ([v count])
+        (set! count (+ count step))
+        v))))
+
+(let ([c1 (make-counter 0 1)]
+      [c2 (make-counter 100 2)])
+  (list (c1) (c1) (c1)
+        (c2) (c2) (c2)))
+#+end_src
+
+#+RESULTS:
+: (0 1 2 100 102 104)
+
+** 2.9.2
+
+#+begin_src scheme
+(define make-stack
+  (lambda ()
+    (let ([ls '()])
+      (lambda (msg . args)
+        (case msg
+          [(empty? mt?) (null? ls)]
+          [(push!) (set! ls (cons (car args) ls))]
+          [(top) (car ls)]
+          [(pop!) (set! ls (cdr ls))]
+          [else "oops"])))))
+
+(let ([st (make-stack)])
+  (st 'push! 1)
+  (st 'push! 2)
+  (st 'push! 3)
+  (st 'mt?)
+  (st 'pop!)
+  (st 'top))
+#+end_src
+
+#+RESULTS:
+: 2
+
+** 2.9.3
+
+#+begin_src scheme
+(define make-stack
+  (lambda ()
+    (let ([ls '()])
+      (lambda (msg . args)
+        (case msg
+          [(empty? mt?) (null? ls)]
+          [(push!) (set! ls (cons (car args) ls))]
+          [(top) (car ls)]
+          [(pop!) (set! ls (cdr ls))]
+          [(ref) (list-ref ls (car args))]
+          [(set!) (set-car! (list-tail ls (car args)) (cadr args))]
+          [else "oops"])))))
+
+(let ([stack (make-stack)])
+  (stack 'push! 'a)
+  (stack 'push! 'b)
+  (stack 'push! 'c)   
+  (stack 'top))
+#+end_src
+
+#+RESULTS:
+: c
+
+** 2.9.4
+
+#+begin_src scheme
+(define make-stack
+  (lambda (n)
+    (let ([v (make-vector n)]
+          [i 0])
+      (lambda (msg . args)
+        (case msg
+          [(empty?) (zero? i)]
+          [(push!)  (vector-set! v i (car args))
+                    (set! i (1+ i))]
+          [(top)    (vector-ref v (1- i))]
+          [(pop!)   (set! i (1- i))]
+          [(ref)    (vector-ref v (- i 1 (car args)))]
+          [(set!)   (vector-set! v (- i 1 (car args)) (cadr args))]
+          [else     "oops"])))))
+
+(let ([stack (make-stack 10)])
+  (stack 'push! 'a)
+  (stack 'push! 'b)
+  (stack 'push! 'c)
+  (stack 'push! 'd)
+  (stack 'set! 1 'CCC)
+  (stack 'pop!)
+  (stack 'top))
+#+end_src
+
+#+RESULTS:
+: CCC
