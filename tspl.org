@@ -779,3 +779,178 @@ tree 所有 pair 的 car 和 cdr 都会相互交换
 
 #+RESULTS:
 : CCC
+
+** 2.9.5
+
+#+begin_src scheme
+(define emptyq?
+  (lambda (q)
+    (null? (cdr (car q)))))
+
+(use-modules (rnrs base))
+(define getq
+  (lambda (q)
+    (if (emptyq? q)
+        (assertion-violation 'getq "the queue is empty")
+        (car (car q)))))
+
+(define delq!
+  (lambda (q)
+    (if (emptyq? q)
+        (assertion-violation 'delq! "the queue is empty")
+        (set-car! q (cdr (car q))))))
+#+end_src
+
+** 2.9.6
+
+first try
+#+begin_src scheme
+(define make-queue
+  (lambda () (cons 'ignored '())))
+
+(define q (cons 'ignored '()))
+
+(define putq!
+  (lambda (q v)
+    (let ([tail (list-tail q (1- (length q)))])
+      (set-car! tail v)
+      (set-cdr! tail (cons 'ignored '())))))
+
+(define getq car)
+(define delq!
+  (lambda (q)
+    ()))
+
+(cdr q)
+
+'(#:beg #:end)
+
+(define q (make-queue))
+;; => #<unspecified>
+
+q
+;; => (1 2 3 ignored)
+#+end_src
+
+second try
+#+begin_src scheme
+(define make-queue
+  (lambda () (list #:beg #:end)))
+
+(define putq!
+  (lambda (q v)
+    (let ([tail (list-tail q (1- (length q)))])
+      (set-car! tail v)
+      (set-cdr! tail (cons #:end '())))))
+
+(define getq cadr)
+
+(define delq!
+  (lambda (q)
+    (set-cdr! q (cddr q))))
+#+end_src
+
+
+** 2.9.7
+
+#+begin_src scheme :scheme guile
+(let ([ls (cons 'a '())])
+  (set-cdr! ls ls)
+  ls)
+#+end_src
+
+#+RESULTS:
+: (a . #0#)
+
+#+begin_src scheme :scheme chez
+(let ([ls (cons 'a '())])
+  (set-cdr! ls ls)
+  ls)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src scheme
+(define simple-length
+  (lambda (ls)
+    (if (null? ls)
+        0
+        (1+ (simple-length (cdr ls))))))
+
+(simple-length '(a b c))
+
+(let ([ls (cons 'a '())])
+  (set-cdr! ls ls)
+  (simple-length ls))
+#+end_src
+
+#+RESULTS:
+: (a . #0#)
+
+simple-length 死循环，自带 length 会报错。
+
+** TODO 2.9.8
+
+#+begin_src scheme
+(define simple-list?
+  (lambda (ls)
+    (if (null? ls)
+        #t
+        (if (pair? ls)
+            (simple-list? (cdr ls))
+            #f))))
+
+(simple-list? '())
+;; => #t
+
+(simple-list? '(a b c))
+;; => #t
+
+(simple-list? '(a b . c))
+;; => #f
+#+end_src
+
+#+begin_src scheme
+(define cycle?
+  (lambda (hare tortoise)
+    (format #t "hello: ~a, ~a\n" hare tortoise)
+    (if (eq? hare tortoise)
+        #t
+        (if (and (pair? hare)
+                 (pair? (cdr hare))
+                 (pair? tortoise))
+            (cycle? (cddr hare)
+                    (cdr tortoise))
+            #f))))
+
+(define better-list?
+  (lambda (x)
+    (cond
+     [(null? x) #t]
+     [(not (pair? x)) #f]
+     [else
+      (cond [(and (pair? (cdr x))
+                  (cycle? (cddr x) (cdr x)))
+             #f]
+            [else (better-list? (cdr x))])])))
+
+(let ([ls (cons 'a '())])
+  (set-cdr! ls ls)
+  (eq? (cdr ls) (cddr ls))
+  (better-list? ls))
+;; => #f
+
+
+(better-list? '(1 2 3))
+;; => #t
+
+(better-list? '())
+;; => #t
+
+
+(let ([ls (list 'a 'b 'c)])
+  (set-cdr! (cddr ls) ls)
+  (better-list? ls))
+;; => #f
+
+#+end_src
