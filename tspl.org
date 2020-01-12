@@ -1070,3 +1070,150 @@ simple-length 死循环，自带 length 会报错。
 (expand '(unless #t 1 2 3))
 ;; => (if (#2%not #t) (begin 1 2 3) #f)
 #+end_src
+
+** 3.2.1
+
+** 3.2.2
+
+#+begin_src scheme
+(define factor
+  (lambda (n)
+    (let f ([n n] [i 2])
+      (cond
+       [(>= i n) (list n)]
+       [(integer? (/ n i))
+        (cons i (f (/ n i) i))]
+       [else (f n (+ i 1))]))))
+
+(define factor
+  (lambda (n)
+    (letrec ([f (lambda (n i)
+                  (cond
+                   [(>= i n) (list n)]
+                   [(integer? (/ n i))
+                    (cons i (f (/ n i) i))]
+                   [else (f n (+ i 1))]))])
+      (f n 2))))
+
+(define factor
+  (lambda (n)
+    ((letrec ([f (lambda (n i)
+                   (cond
+                    [(>= i n) (list n)]
+                    [(integer? (/ n i))
+                     (cons i (f (/ n i) i))]
+                    [else (f n (+ i 1))]))])
+       f)
+     n 2)))
+#+end_src
+
+** 3.2.3
+
+不行，even? 不知道 odd? 的绑定
+#+begin_src scheme
+(letrec ([even? (lambda (n)
+                  (if (= n 0)
+                      #t
+                      (odd? (- n 1))))]
+         [odd? (lambda (n)
+                 (if (= n 0)
+                     #f
+                     (even? (- n 1))))])
+  (list (even? 12) (odd? 12)))
+#+end_src
+
+** 3.2.4
+
+|    |      v1 | v2 |
+|----+---------+----|
+| 10 |     177 | 10 |
+| 30 | 2692537 | 30 |
+
+#+begin_src scheme
+(define fibonacci-v1-count 0)
+
+(define fibonacci-v1
+  (lambda (n)
+    (let fib ([i n])
+      (set! fibonacci-v1-count (+ fibonacci-v1-count 1))
+      (cond
+       [(= i 0) 0]
+       [(= i 1) 1]
+       (else (+ (fib (- i 1)) (fib (- i 2))))))))
+
+(fibonacci-v1 10)
+;; => 55
+
+fibonacci-v1-count
+;; => 177
+
+(define fibonacci-v2-count 0)
+
+(define fibonacci-v2
+  (lambda (n)
+    (if (= n 0)
+        0
+        (let fib ([i n] [a1 1] [a2 0])
+          (set! fibonacci-v2-count (+ fibonacci-v2-count 1))
+          (if (= i 1)
+              a1
+              (fib (- i 1) (+ a1 a2) a1))))))
+
+(fibonacci-v2 10)
+;; => 55
+
+fibonacci-v2-count
+;; => 10
+#+end_src
+
+** 3.2.5
+
+#+begin_src scheme
+(define-syntax mylet
+  (syntax-rules ()
+    [(_ ((x e) ...) b1 b2 ...)
+     ((lambda (x ...) b1 b2 ...)
+      e ...)]
+    [(_ name ((x e) ...) b1 b2 ...)
+     ((letrec ([name (lambda (x ...) b1 b2 ...)])
+        name)
+      e ...)]))
+#+end_src
+
+** 3.2.6
+
+不把 (or e) 当作基的话，展开会很大，不清楚为何。tail recursive?
+
+#+begin_src scheme
+(trace-define-syntax my-or
+  (syntax-rules ()
+    [(_) #f]
+    [(_ e1 e2 ...)
+     (let ([t e1])
+       (if e1 e1 (my-or e2 ...)))]))
+
+(expand '(my-or (my-or (my-or 1)) 2))
+(let ([#{t a6c8lvvu4iquenqq7kziuzlxh-17} (let ([#{t a6c8lvvu4iquenqq7kziuzlxh-18} 1])
+                                           (if 1 1 #f))])
+  (if (let ([#{t a6c8lvvu4iquenqq7kziuzlxh-19} 1])
+        (if 1 1 #f))
+      (let ([#{t a6c8lvvu4iquenqq7kziuzlxh-20} 1]) (if 1 1 #f))
+      (let ([#{t a6c8lvvu4iquenqq7kziuzlxh-21} 2]) (if 2 2 #f))))
+
+
+(trace-define-syntax my-or2
+                     (syntax-rules ()
+                       [(_) #f]
+                       [(_ e) e]
+                       [(_ e1 e2 e3 ...)
+                        (let ([t e1])
+                          (if e1 e1 (my-or e2 e3 ...)))]))
+
+(expand '(my-or2 (my-or2 (my-or2 1)) 2))
+(let ([#{t a6c8lvvu4iquenqq7kziuzlxh-36} 1])
+  (if 1
+      1
+      (let ([#{t a6c8lvvu4iquenqq7kziuzlxh-37} 2]) (if 2 2 #f))))
+#+end_src
+
+** TODO 3.2.7
