@@ -1404,3 +1404,54 @@ fibonacci-v2-count
     (lambda (expr)
       (do-calc expr))))
 #+end_src
+
+** 3.6.1
+
+#+begin_src scheme
+(define-syntax gpa
+  (syntax-rules ()
+    [(_ g1 g2 ...)
+     (let ([ls (map letter->number
+                    (filter (lambda (x) (not (eq? x 'x)))
+                            '(g1 g2 ...)))])
+       (if (= (length ls) 0)
+           (assertion-violation 'grade "invalid grades, all x")
+           (/ (apply + ls) (length ls))))]))
+#+end_src
+
+** 3.6.2
+
+#+begin_src scheme
+(define-syntax distribution
+  (syntax-rules ()
+    [(_ g1 g2 ...)
+     (let ([a 0]
+           [b 0]
+           [c 0]
+           [d 0]
+           [f 0])
+       (for-each
+        (lambda (x)
+          (case x
+            [(a) (set! a (+ a 1))]
+            [(b) (set! b (+ b 1))]
+            [(c) (set! c (+ c 1))]
+            [(d) (set! d (+ d 1))]
+            [(f) (set! f (+ f 1))]))
+        '(g1 g2 ...))
+       `((,a a) (,b b) (,c c) (,d d) (,f f)))]))
+#+end_src
+
+** 3.6.3
+
+#+begin_src scheme
+(define histogram
+  (lambda (port distribution)
+    (for-each
+     (lambda (x)
+       (display (format "~a: ~a\n"
+                        (cadr x)
+                        (make-string (car x) #\*))
+                port))
+     distribution)))
+#+end_src
