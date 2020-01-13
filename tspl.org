@@ -1288,3 +1288,119 @@ fibonacci-v2-count
                   (lambda (x)
                     (k (cons (/ 1 (car ls)) x))))])))))
 #+end_src
+
+** 3.5.1
+
+#+begin_src scheme
+(define-syntax complain
+  (syntax-rules ()
+    [(_ ek args ...)
+     (ek args ...)]))
+#+end_src
+
+** 3.5.2
+
+#+begin_src scheme
+(define calc #f)
+(let ()
+  (define do-calc
+    (lambda (expr)
+      (cond
+       [(number? expr) expr]
+       [(and (list? expr) (= (length expr) 3))
+        (let ([op (car expr)] [args (cdr expr)])
+          (case op
+            [(add) (apply-op + args)]
+            [(sub) (apply-op - args)]
+            [(mul) (apply-op * args)]
+            [(div) (apply-op / args)]
+            [else (complain "invalid operator" op)]))]
+       [else (complain "invalid expression" expr)])))
+  (define apply-op
+    (lambda (op args)
+      (op (do-calc (car args)) (do-calc (cadr args)))))
+  (define complain
+    (lambda (msg expr)
+      (ek (list msg expr))))
+  (define ek #f)
+  (set! calc
+    (lambda (expr)
+      ;; grab an error continuation ek
+      (call/cc
+       (lambda (k)
+         (set! ek k)
+         (do-calc expr))))))
+#+end_src
+
+** 3.5.3
+
+#+begin_src scheme
+(define calc #f)
+(let ()
+  (define do-calc
+    (lambda (expr)
+      (cond
+       [(number? expr) expr]
+       [(and (list? expr) (= (length expr) 3))
+        (let ([op (car expr)] [args (cdr expr)])
+          (case op
+            [(add) (apply-op + args)]
+            [(sub) (apply-op - args)]
+            [(mul) (apply-op * args)]
+            [(div) (apply-op / args)]
+            [else (complain "invalid operator" op)]))]
+       [else (complain "invalid expression" expr)])))
+  (define apply-op
+    (lambda (op args)
+      (op (do-calc (car args)) (do-calc (cadr args)))))
+  (define complain
+    (lambda (msg expr)
+      (assertion-violation 'calc msg expr)))
+  (set! calc
+    (lambda (expr)
+      (do-calc expr))))
+
+(calc '(add (mul 3 2) -4))
+;; => 2
+
+(calc '(div 1/2 1/6)) 
+;; => 3
+
+(calc '(add (mul 3 2) (div 4)))
+;; Exception in calc: invalid expression with irritant (div 4)
+#+end_src
+
+#+RESULTS:
+: #<unspecified>
+
+** 3.5.4
+
+#+begin_src scheme
+(let ()
+  (define do-calc
+    (lambda (expr)
+      (cond
+       [(number? expr) expr]
+       [(and (list? expr)
+             (= (length expr) 2)
+             (eq? (car expr) 'minus))
+        (- (do-calc (cadr expr)))]
+       [(and (list? expr) (= (length expr) 3))
+        (let ([op (car expr)] [args (cdr expr)])
+          (case op
+            [(add) (apply-op + args)]
+            [(sub) (apply-op - args)]
+            [(mul) (apply-op * args)]
+            [(div) (apply-op / args)]
+            [else (complain "invalid operator" op)]))]
+       [else (complain "invalid expression" expr)])))
+  (define apply-op
+    (lambda (op args)
+      (op (do-calc (car args)) (do-calc (cadr args)))))
+  (define complain
+    (lambda (msg expr)
+      (assertion-violation 'calc msg expr)))
+  (set! calc
+    (lambda (expr)
+      (do-calc expr))))
+#+end_src
