@@ -4889,6 +4889,11 @@ provides similiar function."
   :defer t
   :config (add-hook 'scheme-mode-hook #'paredit-mode))
 
+(use-package sicp
+  :homepage https://www.neilvandyke.org/sicp-texi/
+  :ensure t
+  :defer t)
+
 ;; Dependency of `racket-mode'
 (use-package faceup
   :ensure t
