@@ -1217,3 +1217,74 @@ fibonacci-v2-count
 #+end_src
 
 ** TODO 3.2.7
+
+** TODO 3.3.1
+
+** 3.3.2
+
+#+begin_src scheme
+(define product
+  (lambda (ls)
+    (trace-let f ([ls ls] [acc 1])
+      (cond
+       [(null? ls) acc]
+       [(= (car ls) 0) 0]
+       [else (f (cdr ls) (* (car ls) acc))]))))
+#+end_src
+
+** TODO 3.3.3
+
+** TODO 3.3.4
+
+** TODO 3.3.5
+
+** 3.4.1
+
+#+begin_src scheme
+(define reciprocal
+  (lambda (n success failure)
+    (if (= n 0)
+        (failure "oops")
+        (success (/ 1 n)))))
+
+(reciprocal 10 list list)
+;; => (1/10)
+
+(reciprocal 0 list list)
+;; => ("oops")
+#+end_src
+
+#+RESULTS:
+
+** 3.4.2
+
+#+begin_src scheme
+(define factorial
+  (lambda (x k)
+    (if (= x 0)
+        (k 1)
+        (* x (factorial (- x 1) k)))))
+
+(factorial 4 (lambda (x) x))
+;; => 24
+
+(factorial 4 (lambda (x) 3))
+;; => 72
+#+end_src
+
+** 3.4.3
+
+模仿 product
+
+#+begin_src scheme
+(define reciprocals
+  (lambda (ls k)
+    (let ([break k])
+      (let f ([ls ls] [k k])
+        (cond
+         [(null? ls) (k '())]
+         [(= (car ls) 0) (break "zero found")]
+         [else (f (cdr ls)
+                  (lambda (x)
+                    (k (cons (/ 1 (car ls)) x))))])))))
+#+end_src
