@@ -1,0 +1,184 @@
+#+TITLE: How to Design Programs
+#+DATE: <2020-01-15 Wed>
+
+* Exercise
+** Part 1. Fixed-Size Data
+:PROPERTIES:
+:header-args:racket: :lang htdp/bsl
+:END:
+*** 1
+
+#+begin_src racket
+(define x 5)
+(define y 12)
+
+(sqrt (+ (* x x) (* y y)))
+#+end_src
+
+#+RESULTS:
+: 13
+
+*** 2
+
+#+begin_src racket
+(define prefix "hello")
+(define suffix "world")
+(string-append prefix "_" suffix)
+#+end_src
+
+#+RESULTS:
+: hello_world
+
+*** 3
+
+#+begin_src racket
+(define str "helloworld")
+(define i 5)
+
+(string-append (substring str 0 i)
+               "_"
+               (substring str i))
+#+end_src
+
+#+RESULTS:
+: hello_world
+
+*** 4
+
+#+begin_src racket
+(define str "helloworld")
+(define ind "0123456789")
+(define i 5)
+
+(string-append (substring str 0 i)
+               (substring str (+ i 1)))
+#+end_src
+
+#+RESULTS:
+: helloorld
+
+[0, 9]
+
+*** 5
+
+#+begin_src racket
+#lang htdp/bsl
+
+(require 2htdp/image)
+
+(define COLOR "aquamarine")
+(define HEIGHT 60)
+(define WIDTH 300)
+
+(define h HEIGHT)
+(define w (/ WIDTH 3))
+
+(beside
+ (triangle/sas h 90 w "solid" COLOR)
+ (rectangle    w h "solid" COLOR)
+ (triangle/ass 90 h w "solid" COLOR))
+#+end_src
+
+*** 6
+
+#+begin_src racket
+(require 2htdp/image)
+
+(define cat (bitmap/url "https://htdp.org/2019-02-24/cat1.png"))
+
+(* (image-width cat) (image-height cat))
+#+end_src
+
+#+RESULTS:
+: 8775
+
+*** 7
+
+#+begin_src racket
+(define sunny #true)
+(define friday #false)
+
+(or (not sunny) friday)
+#+end_src
+
+#+RESULTS:
+: #false
+
+4
+
+*** 8
+
+#+begin_src racket
+(require 2htdp/image)
+
+(define cat (bitmap/url "https://htdp.org/2019-02-24/cat1.png"))
+
+(if (>= (image-height cat) (image-width cat))
+    "tall"
+    "wide")
+#+end_src
+
+#+RESULTS:
+: tall
+
+#+begin_src racket
+(require 2htdp/image)
+
+;;                     宽 高
+(define pic (rectangle 100 50 "solid" "orange"))
+
+(if (>= (image-height pic) (image-width pic))
+    "tall"
+    "wide")
+#+end_src
+
+#+RESULTS:
+: wide
+
+#+begin_src racket
+(require 2htdp/image)
+
+;; (define image (circle 100 "solid" "green"))
+;; (define image (rectangle 100 50 "solid" "green"))
+(define image (rectangle 50 100 "solid" "green"))
+
+(define width  (image-width image))
+(define height (image-height image))
+
+(if (> width height)
+    "wide"
+    (if (< width height)
+        "tall"
+        "square"))
+#+end_src
+
+#+RESULTS:
+: tall
+
+*** 9
+
+#+begin_src racket
+(require 2htdp/image)
+
+;; (define in "hello")
+;; (define in (circle 5 "solid" "red"))
+;; (define in 0)
+(define in #false)
+
+(if (string? in)
+    (string-length in)
+    (if (image? in)
+        (* (image-width in) (image-height in))
+        (if (number? in)
+            (if (<= in 0)
+                in
+                (- in 1))
+            (if in
+                10
+                20))))
+#+end_src
+
+#+RESULTS:
+: 20
+
+*** 10
