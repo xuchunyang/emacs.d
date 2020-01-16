@@ -403,3 +403,110 @@
 *** 32
 声音、摄像头、键盘、鼠标、触摸板、温度、亮度、手势、触摸屏、蓝牙、wifi
 
+*** 33
+
+*** 34
+
+#+begin_src racket
+;; String -> String
+;; extracts the first character from a non-empty string
+;; given: "hello", expect: "h"
+(define (string-first s)
+  (substring s 0 1))
+
+(string-first "hello")
+(string-first "world")
+#+end_src
+
+#+RESULTS:
+: "h"
+: "w"
+
+*** 35
+
+#+begin_src racket
+;; String -> String
+;; extracts the last character from a non-empty string
+;; given: "hello", expect "o"
+(define (string-last s)
+  (substring s (sub1 (string-length s))))
+
+(string-last "hello")
+(string-last "world")
+#+end_src
+
+#+RESULTS:
+: "o"
+: "d"
+
+*** 36
+
+#+begin_src racket
+;; Image -> Number
+;; Counts the number of pixels of img
+;; given: (square 10 "solid" "red"), expect 100
+;; given: (rectangle 5 10 "solid" "red"), expect 50
+(define (image-area img)
+  (* (image-width img) (image-height img)))
+
+(require 2htdp/image)
+
+(image-area (square 10 "solid" "red"))
+(image-area (rectangle 5 10 "solid" "red"))
+#+end_src
+
+#+RESULTS:
+: 100
+: 50
+
+*** 37
+
+#+begin_src racket
+;; String -> String
+;; return a string like s with the first char removed
+;; given: "hello", expect "ello"
+(define (string-rest s)
+  (substring s 1))
+
+(string-rest "hello")
+(string-rest "world")
+#+end_src
+
+#+RESULTS:
+: "ello"
+: "orld"
+
+*** 38
+
+#+begin_src racket
+;; String -> String
+;; return a string like s with the last char removed
+;; given: "hello", expect "hell"
+(define (string-remove-last s)
+  (substring s 0 (sub1 (string-length s))))
+
+(string-remove-last "hello")
+(string-remove-last "world")
+
+(check-duplicates)
+#+end_src
+
+#+RESULTS:
+: "hell"
+: "worl"
+
+*** 39
+
+*** 40
+
+*** 41
+
+*** 42
+
+*** 43
+
+时间 t，速度 sin(t)，距离是多少？
+
+x*sin(x) 的积分？
+
+*** 44
