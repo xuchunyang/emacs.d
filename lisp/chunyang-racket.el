@@ -26,10 +26,16 @@
 
 (require 'helm)
 
+(defvar racket-search-manual.rkt
+  (expand-file-name
+   "racket-search-manual.rkt"
+   (file-name-directory
+    (or load-file-name buffer-file-name))))
+
 (defvar chunyang-racket-search-manual-buffer
   (with-current-buffer (get-buffer-create " *chunyang-racket-search-manual-buffer*")
     (erase-buffer)
-    (call-process "racket" nil t nil "racket-search-manual.rkt")
+    (call-process "racket" nil t nil racket-search-manual.rkt)
     (current-buffer)))
 
 (defvar chunyang-racket-search-manual-helm-source
