@@ -3329,6 +3329,10 @@ This should be add to `find-file-hook'."
   :ensure t
   :defer t)
 
+(use-package chunyang-helm-SDL-api
+  :about helm interface for https://wiki.libsdl.org/CategoryAPI
+  :commands chunyang-helm-SDL-api)
+
 
 ;;; Project
 
