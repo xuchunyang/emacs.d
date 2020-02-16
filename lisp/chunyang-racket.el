@@ -32,33 +32,45 @@
    (file-name-directory
     (or load-file-name buffer-file-name))))
 
-(defvar chunyang-racket-search-manual-buffer
-  (with-current-buffer (get-buffer-create " *chunyang-racket-search-manual-buffer*")
-    (erase-buffer)
-    (call-process "racket" nil t nil racket-search-manual.rkt)
-    (current-buffer)))
+(defvar racket-search-manual-cache-file
+  (make-temp-file "racket-search-manual-cache-file-"))
 
-(defvar chunyang-racket-search-manual-helm-source
-  (helm-build-in-buffer-source "Search Racket Manuals"
-    :data chunyang-racket-search-manual-buffer
-    :action (helm-make-actions
-             "Help"
-             (lambda (candidate)
-               (pcase-let* ((`(,id ,from-libs)
-                             (split-string
-                              candidate
-                              " provided from "))
-                            (`(,lib . ,_)
-                             (split-string
-                              from-libs
-                              ", ")))
-                 ;; racket -e '(help first #:from lazy)'
-                 (call-process
-                  "racket" nil nil nil "--eval" (format "(help %s #:from %s)" id lib)))))))
+(defun racket-search-manual-cache-file-write ()
+  (with-temp-buffer
+    (unless (zerop (call-process "racket" nil t nil racket-search-manual.rkt))
+      (error "%s" (buffer-string)))
+    (write-region nil nil racket-search-manual-cache-file)))
 
-(defun chunyang-racket-search-manual ()
-  (interactive)
-  (helm :sources chunyang-racket-search-manual-helm-source
+(defvar chunyang-racket-search-manual-actions
+  (helm-make-actions
+   "Open Help in Browser"
+   (lambda (candidate)
+     (pcase-let* ((`(,id ,from-libs)
+                   (split-string
+                    candidate
+                    " provided from "))
+                  (`(,lib . ,_)
+                   (split-string
+                    from-libs
+                    ", ")))
+       ;; racket -e '(help first #:from lazy)'
+       (call-process
+        "racket" nil nil nil "--eval" (format "(help %s #:from %s)" id lib))))))
+
+(defvar chunyang-racket-search-manual-source nil)
+
+(defun chunyang-racket-search-manual (update)
+  "Search Racket Manual, with prefix arg, update the cache."
+  (interactive "P")
+  (when (or update (not (file-exists-p racket-search-manual-cache-file)))
+    (message "[chunyang-racket-search-manual] Creating cache...")
+    (racket-search-manual-cache-file-write))
+  (unless chunyang-racket-search-manual-source
+    (setq chunyang-racket-search-manual-source
+          (helm-build-in-file-source
+              "Search Racket Manuals" racket-search-manual-cache-file
+            :action chunyang-racket-search-manual-actions)))
+  (helm :sources chunyang-racket-search-manual-source
         :buffer "*helm racket search manual*"))
 
 (provide 'chunyang-racket)
