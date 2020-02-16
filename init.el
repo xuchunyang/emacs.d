@@ -4960,9 +4960,15 @@ provides similiar function."
 
   (bind-key "C-j" #'chunyang-racket-eval-print-last-sexp racket-mode-map)
 
-  (bind-key "C-h ." #'racket-describe racket-mode-map)
-  ;; This is annoying!
-  (advice-add 'racket--repl-show-and-move-to-end :override #'ignore))
+  (defun chunyang-racket-macro-expand ()
+    "Expand the macro form following point."
+    (interactive)
+    (save-excursion
+      (forward-sexp)
+      (racket-expand-last-sexp)))
+  (bind-key "C-c e" #'chunyang-racket-macro-expand racket-mode-map)
+
+  (bind-key "C-h ." #'racket-describe racket-mode-map))
 
 (use-package scribble-mode
   :about https://docs.racket-lang.org/scribble/index.html
