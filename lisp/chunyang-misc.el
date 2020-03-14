@@ -643,5 +643,36 @@ For testing / debugging Emacs init file."
                  ("TIME" ,(format-time-string "%H:%M:%S"))))))
    :buffer "*helm time*"))
 
+
+
+(defun chunyang-indent-align-cycle ()
+  "手动对齐参数位置."
+  (interactive)
+  (let ((beg (condition-case nil
+                 (scan-lists (point) -1 1)
+               (scan-error nil))))
+    (when beg
+      (let (columns cur-col target-col offset)
+        (save-excursion
+          (forward-line -1)
+          (goto-char (line-end-position))
+          (let ((lb (line-beginning-position)))
+            (while (let ((pt (ignore-errors (scan-sexps (point) -1))))
+                     (and pt (> pt lb) (goto-char pt)))
+              (push (- (point) lb) columns))))
+        (when columns
+          (back-to-indentation)
+          (setq cur-col (- (point) (line-beginning-position)))
+          (or (catch 'done
+                (dolist (c columns)
+                  (when (> c cur-col)
+                    (setq target-col c)
+                    (throw 'done t))))
+              (setq target-col (car columns)))
+          (setq offset (- target-col cur-col))
+          (cond
+           ((> offset 0) (insert (make-string offset ?\s)))
+           ((< offset 0) (delete-char offset))))))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
