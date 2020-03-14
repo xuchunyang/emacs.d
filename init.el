@@ -5861,6 +5861,12 @@ And by the way, the menu bar on macOS is buggy.")
   :ensure t
   :defer t)
 
+(use-package verb
+  :about Organize and send HTTP requests
+  :homepage https://github.com/federicotdn/verb
+  :ensure t
+  :defer t)
+
 (use-package hexl
   :about (info "(emacs) Editing Binary Files")
   :notes
