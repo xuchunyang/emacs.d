@@ -3588,6 +3588,9 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   ;; Turn on cache, see https://emacs-china.org/t/url-el-cache/9411
   (setq url-automatic-caching t
         url-cache-expire-time (* 6 3600)))
+(use-package curl-to-elisp
+  :load-path "~/src/curl-to-elisp"
+  :commands curl-to-elisp)
 
 (use-package eww
   :defer t
