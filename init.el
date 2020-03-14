@@ -145,13 +145,13 @@
   :no-require t
   :defer t
   :init
-  ;; 自带键盘
-  (setq mac-command-modifier 'meta
-        mac-option-modifier 'control)
-
   ;; Anne Pro 2
   (setq mac-command-modifier 'meta
         mac-option-modifier 'meta)
+
+  ;; 自带键盘
+  (setq mac-command-modifier 'meta
+        mac-option-modifier 'control)
 
   :preface
   (defun chunyang-toggle-keyboard ()
