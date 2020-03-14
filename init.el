@@ -6064,6 +6064,14 @@ at a time."
 (use-package tldr2
   :commands tldr2-find-file)
 
+(use-package sexp-diff
+  :load-path "~/src/sexp-diff.el"
+  :defer t)
+
+(use-package geoip
+  :load-path "~/src/geoip.el"
+  :defer t)
+
 
 ;;; Other Emacs Lisp libraries
 
@@ -6133,6 +6141,10 @@ at a time."
   :ensure t
   :about skeeto/emacs-aio: async/await for Emacs Lisp
   :homepage https://github.com/skeeto/emacs-aio
+  :defer t)
+
+(use-package msgpack
+  :load-path "~/src/msgpack.el"
   :defer t)
 
 
