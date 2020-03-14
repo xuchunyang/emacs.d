@@ -95,12 +95,14 @@
 ;; Use `fundamental-mode' to reduce startup time
 (setq initial-major-mode 'lisp-interaction-mode)
 
-(add-hook 'emacs-startup-hook
-          (defun chunyang-enable-lexical-binding ()
-            (let ((buffer (get-buffer "*scratch*")))
-              (when buffer
-                (with-current-buffer buffer
-                  (setq lexical-binding t))))))
+;; `lexical-binding' is on in *scratch* since 27.1
+(when (version< emacs-version "27.1")
+  (add-hook 'emacs-startup-hook
+            (defun chunyang-enable-lexical-binding ()
+              (let ((buffer (get-buffer "*scratch*")))
+                (when buffer
+                  (with-current-buffer buffer
+                    (setq lexical-binding t)))))))
 
 (use-package chunyang-scratch
   :preface
