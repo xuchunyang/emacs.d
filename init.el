@@ -1788,6 +1788,22 @@ unlike `markdown-preview'."
         (add-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :append :local)
       (remove-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :local))))
 
+(use-package mdcx
+  :load-path "~/src/mdcx.el"
+  :about "Run Markdown Code block"
+  :after markdown-mode
+  :config
+  (bind-key "C-c C-c" #'mdcx markdown-mode-map)
+
+  (defun mdcx-run-racket (src)
+    ;; TODO: support image, check sandbox
+    ;; https://github.com/Bogdanp/try-racket/blob/755d18aa3052d0a3658f74131d06b4d9356b3a6e/try-racket/components/playground.rkt
+    ;; https://en.wikipedia.org/wiki/Racket_features#Resource_Management_and_Sandboxing
+    ;;
+    ;; (mdcx-markdown-code-block-lang-info)
+    (shell-command-to-string
+     (concat "racket " (make-temp-file nil nil ".rkt" src)))))
+
 (use-package edit-indirect
   :about "Edit Markdown code block like Org"
   :ensure t
@@ -5542,6 +5558,10 @@ And by the way, the menu bar on macOS is buggy.")
   :ensure t
   :defer t)
 
+(use-package graphviz-dot-mode
+  :ensure t
+  :defer t)
+
 
 ;;; IM
 
@@ -6072,6 +6092,12 @@ at a time."
   :load-path "~/src/geoip.el"
   :defer t)
 
+;; http://jodies.de/ipcalc
+;; https://www.deepspace6.net/projects/ipv6calc.html
+(use-package ipcalc
+  :ensure t
+  :commands ipcalc)
+
 
 ;;; Other Emacs Lisp libraries
 
@@ -6141,6 +6167,12 @@ at a time."
   :ensure t
   :about skeeto/emacs-aio: async/await for Emacs Lisp
   :homepage https://github.com/skeeto/emacs-aio
+  :defer t)
+
+(use-package commander
+  :about Emacs command line parser
+  :homepage http://github.com/rejeep/commander.el
+  :ensure t
   :defer t)
 
 (use-package msgpack
