@@ -3310,6 +3310,11 @@ This should be add to `find-file-hook'."
   :load-path "~/src/dash-alfred.el"
   :homepage https://github.com/xuchunyang/dash-alfred.el
   :commands dash-alfred-helm)
+
+(use-package tongbu
+  :load-path "~/src/tongbu.el"
+  :commands tongbu)
+
 
 ;;; Documentation
 
