@@ -39,14 +39,19 @@
       (delete-dups
        (mapcar #'cdr auto-mode-alist))))))
   (let* ((regexp (car (rassq mode auto-mode-alist)))
-         (guess-extension (cadr (xr regexp)))
+         (guess-extension (pcase mode
+                            ('mhtml-mode ".html")
+                            ('text-mode  ".txt")
+                            ('sh-mode    ".sh")
+                            ('c-mode     ".c")
+                            ('json-mode  ".json")
+                            (_ (cadr (xr regexp)))))
          (filename (format "%s%s"
                            (format-time-string "%Y-%m-%dT%H%M")
                            guess-extension)))
     (unless (string-match-p regexp filename)
       (error "Filename %S doesn't pattern %S" filename regexp))
     (find-file (expand-file-name filename chunyang-temp-buffer-dir))))
-
 
 (provide 'chunyang-temp-buffer)
 ;;; chunyang-temp-buffer.el ends here
