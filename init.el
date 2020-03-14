@@ -521,6 +521,7 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
 
 (use-package prescient
+  :disabled
   :ensure t
   :homepage https://github.com/raxod502/prescient.el
   :about Simple but effective sorting and filtering
@@ -892,7 +893,7 @@ One C-u, swap window, two C-u, `chunyang-window-click-swap'."
 
 ;; XXX 自动保存到硬盘，试用一段时间 2019-11-23
 ;; XXX 这是哪个版本引入的？看看能不能利用 package-lint 的函数
-(auto-save-visited-mode)
+;; (auto-save-visited-mode)
 
 (use-package files
   :bind (("C-c f u" . revert-buffer)
@@ -1212,6 +1213,7 @@ FILES are in the same directory."
   (global-undo-tree-mode))
 
 (use-package canonicalize
+  :disabled
   :about "Change github into GitHub"
   :bind ("M-c" . canonicalize-dwim))
 
@@ -1850,6 +1852,7 @@ unlike `markdown-preview'."
 ;;; PDF
 
 (use-package pdf-tools
+  :disabled
   :homepage https://github.com/politza/pdf-tools
   :ensure t
   ;; FIXME I do not know how to setup pdf-tools
@@ -2322,6 +2325,7 @@ PACKAGE should not be a built-in package."
              lispy-oneline))
 
 (use-package emr
+  :disabled
   :about "Emacs Refactor (EMR) is a framework for providing
   language-specific refactoring in Emacs. It includes refactoring
   commands for a variety of languages, including elisp itself!"
