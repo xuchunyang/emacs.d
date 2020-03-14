@@ -1821,6 +1821,9 @@ unlike `markdown-preview'."
   :about "Manage Dnote notes in Emacs" https://dnote.io/
   :commands (dnote-add dnote-find))
 
+(use-package chunyang-temp-buffer
+  :commands chunyang-temp-buffer)
+
 
 ;;; PDF
 
