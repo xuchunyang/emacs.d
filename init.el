@@ -130,6 +130,10 @@
 (use-package no-littering
   :ensure t)
 
+;; See also `bidi-paragraph-direction'; setting that non-nil might
+;; speed up redisplay.
+(setq bidi-paragraph-direction 'left-to-right)
+
 
 ;;; macOS
 
