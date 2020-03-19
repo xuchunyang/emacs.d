@@ -3358,6 +3358,12 @@ This should be add to `find-file-hook'."
   :load-path "~/src/tongbu.el"
   :commands tongbu)
 
+(use-package separedit
+  :about Edit comment/string/docstring/code block in separate buffer
+  :homepage https://github.com/twlz0ne/separedit.el
+  :ensure t
+  :commands separedit)
+
 
 ;;; Documentation
 
