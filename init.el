@@ -3023,6 +3023,23 @@ PACKAGE should not be a built-in package."
   ;; Disable auto scroll on RET (like Eshell)
   (setq comint-scroll-show-maximum-output nil))
 
+(use-package edit-chrome-textarea
+  :load-path "~/src/edit-chrome-textarea.el"
+  :commands edit-chrome-textarea
+  :config
+  (defun chunyang-edit-chrome-textarea-guess-mode (url title content)
+    (pcase url
+      ((rx (or "emacs-china.org"
+               "github.com"
+               "stackexchange.com"
+               "stackoverflow.com"))
+       (gfm-mode))
+      (_
+       (text-mode))))
+
+  (setq edit-chrome-textarea-guess-mode-function
+        #'chunyang-edit-chrome-textarea-guess-mode))
+
 ;; XXX: Not working under EXWM
 (use-package atomic-chrome
   :disabled                             ; not used for a long time
