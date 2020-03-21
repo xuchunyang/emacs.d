@@ -3842,6 +3842,11 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 ;;; Music
 
+(use-package vlc
+  :about VLC control
+  :load-path "~/src/vlc.el"
+  :commands vlc-play)
+
 (use-package emms
   :disabled t
   :ensure t
