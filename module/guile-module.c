@@ -4,18 +4,12 @@ int plugin_is_GPL_compatible;
 
 #include <libguile.h>
 
-struct box
-{
-  void *x;
-  void *y;
-};
-
 static void *
 guile_float_to_bytes_1 (void *data)
 {
-  struct box *b = (struct box *) data;
-  double f = *((double *) b->x);
-  uint8_t *p = (uint8_t *) b->y;
+  void **array = data;
+  double f = *(double *)array[0];
+  uint8_t *p = array[1];
   SCM bv = scm_c_make_bytevector (4);
   scm_bytevector_ieee_single_set_x (bv,
                                     scm_from_int (0),
@@ -30,9 +24,8 @@ guile_float_to_bytes_1 (void *data)
 static void
 guile_float_to_bytes (double f, uint8_t *bytes)
 {
-  /* XXX try two element array */
-  struct box b = { &f, bytes };
-  scm_with_guile (guile_float_to_bytes_1, &b);
+  void *array[2] = { &f, bytes };
+  scm_with_guile (guile_float_to_bytes_1, array);
 }
 
 static emacs_value
