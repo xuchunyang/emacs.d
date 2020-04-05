@@ -27,7 +27,7 @@ Ftest (emacs_env *env, ptrdiff_t nargs, emacs_value *args, void *data)
 {
   pthread_t thread;
   int result_code;
-  
+
   result_code = pthread_create (&thread, NULL, perform_work, NULL);
   if (result_code)
     error (env, "pthread_create failed");
