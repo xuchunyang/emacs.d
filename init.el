@@ -315,6 +315,11 @@
   (set-fontset-font t 'han      (font-spec :family "STkaiti"))
   (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti")))
 
+(use-package unicode-fonts
+  :disabled
+  :ensure t
+  :config (unicode-fonts-setup))
+
 (defun chunyang-font-size-adjust ()
   "Adjust font size."
   (interactive)
