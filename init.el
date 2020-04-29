@@ -2996,6 +2996,7 @@ PACKAGE should not be a built-in package."
     :kill-process-buffer-on-stop t))
 
 (use-package hyperbole
+  :disabled
   :ensure t
   :homepage https://www.gnu.org/software/hyperbole/
   :notes
