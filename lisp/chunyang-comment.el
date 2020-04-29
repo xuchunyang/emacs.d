@@ -40,7 +40,8 @@
 ;;;###autoload
 (defun chunyang-comment-section (start end)
   (interactive "*r")
-  (cond ((memq major-mode '(emacs-lisp-mode lisp-interaction-mode))
+  (cond ((memq major-mode '(emacs-lisp-mode lisp-interaction-mode
+                                            racket-mode))
          (let* ((c
                  (substring comment-start 0 1))
                 (template
