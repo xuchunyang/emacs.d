@@ -674,5 +674,14 @@ For testing / debugging Emacs init file."
            ((> offset 0) (insert (make-string offset ?\s)))
            ((< offset 0) (delete-char offset))))))))
 
+
+;; https://emacs.stackexchange.com/questions/33976/how-do-you-reload-a-dynamic-module
+(defun chunyang-fake-module-reload (module)
+  (interactive "fReload Module file: ")
+  (let ((tmpfile (make-temp-file
+                  (file-name-nondirectory module) nil module-file-suffix)))
+    (copy-file module tmpfile t)
+    (module-load tmpfile)))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
