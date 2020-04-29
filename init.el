@@ -3574,7 +3574,8 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :commands elfeed
   :config
   (setq elfeed-curl-extra-arguments '("--proxy" "socks5://127.0.0.1:1080"
-                                      "--retry" "3"))
+                                      "--retry" "3"
+                                      "--insecure"))
   (setq elfeed-curl-timeout 60)
   ;; TODO 用 Org Mode 管理 Feeds
   ;; - Elfeed
