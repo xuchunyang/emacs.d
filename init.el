@@ -3639,6 +3639,12 @@ proxychains4 mbsync --verbose --all && notmuch new&")
 
 (use-package url
   :defer t
+  :init
+  ;; Do NOT save cookie to disk. It is annoying.
+  ;;
+  ;; Saving file /Users/xcy/.emacs.d/var/url/configuration/cookies...
+  ;; (setq url-cookie-save-interval (* 7 24 3600))
+  (setq url-cookie-save-interval nil)
   :config
   ;; XXX Don't ever save cookie to disk, since I don't know what's purpose of
   ;; cookie, and more importantly, keep loogging the following per hour is
@@ -3648,8 +3654,10 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   ;; (advice-add 'url-cookie-setup-save-timer :override #'ignore)
 
   ;; Turn on cache, see https://emacs-china.org/t/url-el-cache/9411
-  (setq url-automatic-caching t
-        url-cache-expire-time (* 6 3600)))
+  ;; (setq url-automatic-caching t
+  ;;       url-cache-expire-time (* 6 3600))
+  )
+
 (use-package curl-to-elisp
   :load-path "~/src/curl-to-elisp"
   :commands curl-to-elisp)
