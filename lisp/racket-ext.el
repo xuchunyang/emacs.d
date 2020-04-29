@@ -39,7 +39,8 @@ detecting a prompt at the end of the buffer."
 (defun racket-shell-send-string-no-output (string)
   "Send STRING to PROCESS and inhibit output.
 Return the output."
-  (let ((process (or (racket--get-repl-buffer-process)
+  (let ((process (or (with-racket-repl-buffer
+                       (get-buffer-process (current-buffer)))
                      (error "No racket process")))
         (comint-preoutput-filter-functions
          '(racket-shell-output-filter))
