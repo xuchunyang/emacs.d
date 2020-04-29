@@ -30,6 +30,8 @@
 (when (version<= emacs-version "27")
   (require 'package)
   (setq package-user-dir (concat "~/.emacs.d/elpa-" emacs-version))
+  (setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
+                           ("melpa" . "https://melpa.org/packages/")))
   (setq package-archives '(("gnu"   . "https://elpa.emacs-china.org/gnu/")
                            ("melpa" . "https://elpa.emacs-china.org/melpa/")))
   (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
