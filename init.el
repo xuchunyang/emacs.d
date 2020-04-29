@@ -1270,7 +1270,8 @@ FILES are in the same directory."
 
 (setq scroll-error-top-bottom t         ; Move to beg/end of buffer before
                                         ; signalling an error
-      scroll-conservatively 10          ; Smooth Scrolling
+      ;; scroll-conservatively 10          ; Smooth Scrolling
+      scroll-conservatively 0           ; NOTE Forzen Emacs during I-Search
       )
 
 ;; This option was added in Emacs 25.1. I've not noticed the speed improvement,
