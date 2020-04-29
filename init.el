@@ -5803,11 +5803,10 @@ And by the way, the menu bar on macOS is buggy.")
   :ensure t
   :defer t)
 
-(use-package ddragon
+(use-package lol-data-dragon
   :about "显示 LoL 数据"
-  :load-path "~/src/ddragon.el"
-  :commands (ddragon-champion-image-dired
-             ddragon-champion-show-plain))
+  :load-path "~/src/lol-data-dragon.el"
+  :commands (lol-data-dragon-champion-image-dired))
 
 (defun chunyang-birthday-p ()
   "Return t if today is my birthday, i.e., 农历九月廿三."
