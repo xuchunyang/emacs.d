@@ -436,6 +436,10 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 (use-package saveplace                  ; Save point position in files
   :config (save-place-mode))
 
+(use-package desktop
+  :disabled
+  :config (desktop-save-mode))
+
 
 ;;; Minibuffer
 
@@ -544,6 +548,21 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   :ensure t
   :after company
   :config (company-prescient-mode))
+
+
+;;; selectrum
+
+(use-package selectrum
+  :disabled
+  :homepage https://github.com/raxod502/selectrum
+  :load-path "~/src/selectrum"
+  :config (selectrum-mode))
+
+(use-package selectrum-prescient
+  :after selectrum
+  :homepage https://github.com/raxod502/prescient.el
+  :load-path "~/src/prescient.el"
+  :config (selectrum-prescient-mode))
 
 
 ;;; Helm
@@ -1018,6 +1037,11 @@ FILES are in the same directory."
                           (shell-quote-argument
                            (concat invocation-directory invocation-name)))))
   (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python3")))
+
+(use-package image-dired
+  :defer t
+  :config
+  (and *is-mac* (setq image-dired-external-viewer "open")))
 
 (use-package dired-du
   :notes du can be slow
