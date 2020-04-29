@@ -1790,6 +1790,8 @@ unlike `markdown-preview'."
           (chunyang-chrome-refresh)
         (browse-url output))))
 
+  (unbind-key "M-RET" markdown-mode-map)
+
   (define-minor-mode chunyang-markdown-preview-in-chrome-mode
     "Run `chunyang-markdown-preview-in-chrome' on save."
     :lighter " MD-Preview-in-Chrome"
