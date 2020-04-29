@@ -3595,7 +3595,6 @@ proxychains4 mbsync --verbose --all && notmuch new&")
           ("https://emacs-china.org/latest.rss" emacs)
           ("http://ubuntupodcast.org/feed/" ubuntu)
           "https://sspai.com/feed"
-          "https://sirsharpest.github.io/rss.xml"
           "http://feeds2.feedburner.com/stevelosh"
           "http://feed.williamlong.info/"
           "http://matt.might.net/articles/feed.rss"
