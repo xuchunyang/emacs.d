@@ -30,28 +30,14 @@
 (defvar chunyang-temp-buffer-dir "~/Temp")
 
 ;;;###autoload
-(defun chunyang-temp-buffer (mode)
+(defun chunyang-temp-buffer (filename)
   (interactive
    (list
-    (intern-soft         ; or `intern'? I don't really understand the difference
-     (completing-read
-      "Major Mode: "
-      (delete-dups
-       (mapcar #'cdr auto-mode-alist))))))
-  (let* ((regexp (car (rassq mode auto-mode-alist)))
-         (guess-extension (pcase mode
-                            ('mhtml-mode ".html")
-                            ('text-mode  ".txt")
-                            ('sh-mode    ".sh")
-                            ('c-mode     ".c")
-                            ('json-mode  ".json")
-                            (_ (cadr (xr regexp)))))
-         (filename (format "%s%s"
-                           (format-time-string "%Y-%m-%dT%H%M")
-                           guess-extension)))
-    (unless (string-match-p regexp filename)
-      (error "Filename %S doesn't pattern %S" filename regexp))
-    (find-file (expand-file-name filename chunyang-temp-buffer-dir))))
+    (read-string
+     "Filename: "
+     (expand-file-name (format-time-string "%Y-%m-%dT%H%M.")
+                       chunyang-temp-buffer-dir))))
+  (find-file filename))
 
 (provide 'chunyang-temp-buffer)
 ;;; chunyang-temp-buffer.el ends here
