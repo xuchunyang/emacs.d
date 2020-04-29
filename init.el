@@ -6186,6 +6186,11 @@ at a time."
   :defer t
   :defer t)
 
+(use-package plplot
+  :homepage https://github.com/xuchunyang/plplot.el
+  :load-path "~/src/plplot.el"
+  :commands plplot)
+
 (use-package bui
   :homepage https://github.com/alezost/bui.el
   :ensure t
