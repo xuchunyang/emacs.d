@@ -49,6 +49,8 @@ Ffloat_to_bytes
   }
 }
 
+/* TODO: Add eval to supporting run arbitrary Guile code */
+
 /* Lisp utilities for easier readability (simple wrappers).  */
 
 /* Provide FEATURE to Emacs.  */
