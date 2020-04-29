@@ -5308,11 +5308,13 @@ provides similiar function."
 ;;; Clojure
 
 (use-package clojure-mode
+  :disabled
   :ensure t
   :defer t
   :config (add-hook 'clojure-mode-hook #'paredit-mode))
 
 (use-package cider
+  :disabled
   :homepage
   https://github.com/clojure-emacs/cider
   https://cider.readthedocs.io/en/latest
