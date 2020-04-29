@@ -3179,6 +3179,7 @@ PACKAGE should not be a built-in package."
   :defer t)
 
 (use-package gitignore-templates
+  :load-path "~/src/gitignore-templates.el"
   :ensure t
   :defer t)
 
