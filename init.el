@@ -6269,6 +6269,10 @@ _r_: return
   (setq realgud-safe-mode nil)
   (setq realgud:pdb-command-name "python -m pdb"))
 
+(use-package realgud-lldb
+  :ensure t
+  :defer t)
+
 
 ;;; Custom
 
