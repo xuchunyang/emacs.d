@@ -84,10 +84,10 @@
 (defun ace-link-notmuch-show ()
   "Open a visible link in `notmuch-show' buffer."
   (interactive)
-  (let ((pt (avy-with ace-link-notmuch-show
-              (avy--process
-               (ace-link--notmuch-show-collect)
-               #'avy--overlay-pre))))
+  (when-let ((pt (avy-with ace-link-notmuch-show
+                   (avy--process
+                    (ace-link--notmuch-show-collect)
+                    #'avy--overlay-pre))))
     (ace-link--notmuch-show-action pt)))
 
 ;;;###autoload
