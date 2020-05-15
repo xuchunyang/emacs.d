@@ -3915,10 +3915,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 (use-package helm-chrome
   :ensure t
-  :defer t
-  :config
-  (setq helm-chrome-file
-        "~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"))
+  :defer t)
 
 (use-package helm-chrome-history
   :load-path "~/src/helm-chrome-history"
