@@ -33,7 +33,8 @@
     (or load-file-name buffer-file-name))))
 
 (defvar racket-search-manual-cache-file
-  (make-temp-file "racket-search-manual-cache-file-"))
+  (expand-file-name "racket-search-manual-cache.txt"
+                    (locate-user-emacs-file "var/")))
 
 (defun racket-search-manual-cache-file-write ()
   (with-temp-buffer
@@ -55,7 +56,29 @@
                     ", ")))
        ;; racket -e '(help first #:from lazy)'
        (call-process
-        "racket" nil nil nil "--eval" (format "(help %s #:from %s)" id lib))))))
+        "racket" nil nil nil "--eval" (format "(help %s #:from %s)" id lib))))
+   "Import"
+   (lambda (candidate)
+     (pcase-let* ((`(,_id ,from-libs)
+                   (split-string
+                    candidate
+                    " provided from "))
+                  (`(,lib . ,_)
+                   (split-string
+                    from-libs
+                    ", ")))
+       (save-excursion
+         (goto-char (point-min))
+         (cond
+          ((re-search-forward (rx bol "(" symbol-start "require") nil t)
+           (backward-up-list)
+           (forward-sexp)
+           (backward-char)
+           (call-interactively #'newline)
+           (insert lib))
+          (t
+           (forward-line)
+           (insert (format "(require %s)\n" lib)))))))))
 
 (defvar chunyang-racket-search-manual-source nil)
 
@@ -64,7 +87,8 @@
   (interactive "P")
   (when (or update (not (file-exists-p racket-search-manual-cache-file)))
     (message "[chunyang-racket-search-manual] Creating cache...")
-    (racket-search-manual-cache-file-write))
+    (racket-search-manual-cache-file-write)
+    (setq chunyang-racket-search-manual-source nil))
   (unless chunyang-racket-search-manual-source
     (setq chunyang-racket-search-manual-source
           (helm-build-in-file-source
@@ -72,6 +96,28 @@
             :action chunyang-racket-search-manual-actions)))
   (helm :sources chunyang-racket-search-manual-source
         :buffer "*helm racket search manual*"))
+
+(defconst chunyang-racket-version
+  (with-temp-buffer
+    (cl-assert (zerop (call-process "racket" nil t nil "--version")))
+    (goto-char (point-min))
+    (and (re-search-forward (rx "v" (group (+ num) "." (+ num))))
+         (match-string 1))))
+
+(defun chunyang-racket-search-at-point ()
+  (interactive)
+  (when-let ((sym (symbol-at-point))
+             (url (format
+                   "file:///Users/xcy/Library/Racket/%s/doc/search/index.html?q=%s"
+                   chunyang-racket-version
+                   (url-hexify-string
+                    (symbol-name sym)))))
+    (message "Opening %s" url)
+    ;; https://apple.stackexchange.com/questions/337134/macos-how-to-open-a-local-html-file-with-url-parameters
+    (do-applescript
+     (format "tell application \"Google Chrome\" to open location \"%s\"" url))))
+
+(bind-key "C-h C-." #'chunyang-racket-search-at-point racket-mode-map)
 
 (provide 'chunyang-racket)
 ;;; chunyang-racket.el ends here
