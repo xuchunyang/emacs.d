@@ -3086,6 +3086,13 @@ PACKAGE should not be a built-in package."
   :ensure t
   :defer t)
 
+(use-package man
+  :defer t
+  :config
+  (unless (getenv "MANPATH")
+    (setenv "MANPATH"
+            (string-trim (shell-command-to-string "manpath")))))
+
 (use-package woman
   :defer t
   :config (setq woman-fill-frame t))
