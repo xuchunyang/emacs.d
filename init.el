@@ -969,7 +969,8 @@ FILES are in the same directory."
   (and *is-mac*
        (executable-find "gls")
        (setq insert-directory-program "gls"))
-  (setq dired-listing-switches "-Alh")
+  ;; -v Version sort
+  (setq dired-listing-switches "-Alhv")
 
   ;; `dired-listing-switches' can't contain whitespace before
   ;; the commit c71b718be86bdda7b51c8ea0da30aa896a7833fe
@@ -1036,6 +1037,7 @@ FILES are in the same directory."
                  ,(format "%s -Q --batch -f batch-byte-compile"
                           (shell-quote-argument
                            (concat invocation-directory invocation-name)))))
+  (add-to-list 'dired-guess-shell-alist-user '("\\.rkt\\'" "racket"))
   (add-to-list 'dired-guess-shell-alist-user '("\\.py\\'" "python3")))
 
 (use-package image-dired
