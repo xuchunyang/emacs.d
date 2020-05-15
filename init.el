@@ -2053,12 +2053,16 @@ unlike `markdown-preview'."
   (add-hook 'lisp-mode-hook #'paredit-mode)
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   :config
-  (unbind-key "M-r" paredit-mode-map) (bind-key "M-R" #'paredit-raise-sexp  paredit-mode-map)
-  (unbind-key "M-s" paredit-mode-map) (bind-key "M-S" #'paredit-splice-sexp paredit-mode-map)
+  ;; (unbind-key "M-r" paredit-mode-map) (bind-key "M-R" #'paredit-raise-sexp  paredit-mode-map)
+  ;; (unbind-key "M-s" paredit-mode-map) (bind-key "M-S" #'paredit-splice-sexp paredit-mode-map)
   (unbind-key "C-j" paredit-mode-map)
-  (unbind-key "M-q" paredit-mode-map)
+  ;; (unbind-key "M-q" paredit-mode-map)
   (unbind-key "M-?" paredit-mode-map)
   (unbind-key "M-;" paredit-mode-map)
+
+  ;; Scheme & Racket sometimes use []
+  (bind-key "M-{" #'paredit-wrap-square paredit-mode-map)
+  (bind-key "M-[" #'paredit-wrap-square paredit-mode-map)
 
   (use-package paredit-menu
     :ensure t
