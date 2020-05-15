@@ -2519,6 +2519,8 @@ PACKAGE should not be a built-in package."
                 exprs ", "))
       ,@exprs))
   :config
+  (setq debugger-stack-frame-as-list t)
+
   (defhydra hydra-debugger-menu ()
     "Debug"
     ("c" debugger-continue "Continue")
