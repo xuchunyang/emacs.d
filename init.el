@@ -4776,6 +4776,7 @@ Adapt from `org-babel-remove-result'."
 ;;
 ;; Note that it's not easy to use GDB on macOS (blame Apple).
 
+;; TODO: change style (indent by 4)
 (use-package cc-mode
   ;; Tips:
   ;; - C-M-a/e and M-a/e understands functions and statements, it's cool
