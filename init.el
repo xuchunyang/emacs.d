@@ -1911,7 +1911,6 @@ unlike `markdown-preview'."
 ;;; PDF
 
 (use-package pdf-tools
-  :disabled
   :homepage https://github.com/politza/pdf-tools
   :ensure t
   ;; FIXME I do not know how to setup pdf-tools
