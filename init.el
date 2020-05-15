@@ -2740,7 +2740,9 @@ PACKAGE should not be a built-in package."
                ("(gnus) Index"                     nil "['`‘]" "['’]"))))
 
 (use-package info
-  :defer t
+  :defer
+  :init
+  (add-to-list 'auto-mode-alist '("\\.info\\(\\.gz\\)?\\'" . Info-on-current-buffer))
   :config
   ;; Install libc info manual on macOS
   ;;
