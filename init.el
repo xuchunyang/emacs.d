@@ -4414,6 +4414,9 @@ Because I usualy want to delete the final trailing newline."
 
 ;;; Org mode
 
+;; (add-to-list 'load-path "~/src/org-mode/lisp")
+;; (add-to-list 'load-path "~/src/org-mode/contrib/lisp")
+;; what's about org's info manual?
 (use-package org
   :preface
   (defun chunyang-org-eval-defun ()
@@ -4519,26 +4522,61 @@ Adapt from `org-babel-remove-result'."
   ;; Fix TAB when point is on src block
   (setq org-src-tab-acts-natively t)
 
-  (setq org-log-done 'time)
+  (setq org-src-window-setup 'split-window-below)
+
+  ;; (setq org-log-done 'time)
 
   (setq org-directory "~/Notes"
         org-agenda-files '("~/Notes"))
   (setq org-capture-templates
-        '(("t" "Todo" entry (file "todo.org")
+        '(
+          ("t" "Todo" entry (file "todo.org")
            "* TODO %i%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
            :empty-lines 1)
-          ;; ("n" "Note" entry (file "notes.org")
-          ;;  "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
-          ;;  :empty-lines 1)
-          ;; ("j" "Journal" plain (file+datetree "journal.org")
-          ;;  "%?"
-          ;;  :time-prompt t
-          ;;  :empty-lines 1)
-          ;; ("b" "Bookmark" entry (file "bookmarks.org")
-          ;;  "* %?%(grab-mac-link 'chrome 'org)\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
-          ;;  :empty-lines 1
-          ;;  :immediate-finish t)
-          ))
+          ("n" "Note" entry (file "notes.org")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+           :empty-lines 1)
+          ("j" "Journal" plain (file+datetree "journal.org")
+           "%?"
+           :time-prompt t
+           :empty-lines 1)
+          ("b" "Bookmark" entry (file "bookmarks.org")
+           "* %?%(grab-mac-link 'chrome 'org)\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+           :empty-lines 1
+           :immediate-finish t)))
+
+  ;; IDEA 把 Org 文件保存到 SQLite，双向同步
+  (require 'org-id)                     ; for `org-id-new'
+  (setq org-capture-templates
+        '(("n" "Note - 过目不忘" entry (file "notes.org")
+           "\
+* %a
+:PROPERTIES:
+:ID:       %(org-id-new)
+:CREATED:  %<%FT%T%z>
+:END:
+
+%?
+"
+           :empty-lines 1)
+          ("i" "Idea - 灵机一动" entry (file "ideas.org")
+           "\
+* %?
+:PROPERTIES:
+:ID:       %(org-id-new)
+:CREATED:  %<%FT%T%z>
+:URL:      %a
+:END:"
+           :empty-lines 1)
+          ("t" "todo - 代办事项" entry (file "todos.org")
+           "\
+* TODO %?
+:PROPERTIES:
+:ID:       %(org-id-new)
+:CREATED:  %<%FT%T%z>
+:URL:      %a
+:END:"
+           :empty-lines 1)))
 
   (setq org-agenda-restore-windows-after-quit t)
 
@@ -4558,7 +4596,7 @@ Adapt from `org-babel-remove-result'."
 
   ;; Support link to Manpage, EWW and Notmuch
   (require 'org-man nil 'noerror)
-  (require 'org-eww)
+  ;; (require 'org-eww)
   (require 'org-notmuch nil 'noerror)
 
   (use-package ob-lisp                  ; Common Lisp
@@ -4580,8 +4618,9 @@ Adapt from `org-babel-remove-result'."
   (use-package ob-racket
     :homepage https://github.com/DEADB17/ob-racket
     :load-path "~/src/ob-racket"
-    :config
-    (add-to-list 'org-src-lang-modes (cons "racket" 'scheme)))
+    ;; :config
+    ;; (add-to-list 'org-src-lang-modes (cons "racket" 'racket))
+    )
 
   (add-to-list 'org-src-lang-modes '("js" . js2))
 
