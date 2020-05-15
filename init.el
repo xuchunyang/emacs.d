@@ -1181,7 +1181,6 @@ FILES are in the same directory."
               (visual-fill-column-mode (or visual-line-mode -1)))))
 
 (use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
-  :disabled t
   :ensure t
   :bind (("C-c t c" . whitespace-cleanup-mode)
          ("C-c x w" . whitespace-cleanup))
