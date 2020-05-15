@@ -754,8 +754,10 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              chunyang-yank-html
              ;; Eval
              chunyang-eval-in-other-emacs
+             chunyang-fake-module-reload
              ;; Insert datetime
              chunyang-helm-time
+             chunyang-indent-align-cycle
              ;; Emacs -Q with straight.el
              chunyang-straight-emacs-Q-command
              chunyang-straight-git-version))
