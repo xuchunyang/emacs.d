@@ -5817,9 +5817,12 @@ And by the way, the menu bar on macOS is buggy.")
 ;;; Emacs
 
 ;; FIXME brew install emacs-mac
-(unless (and source-directory
-             (file-exists-p source-directory))
-  (setq source-directory "~/src/emacs"))
+;; (unless (and source-directory
+;;              (file-exists-p source-directory))
+;;   (setq source-directory "~/src/emacs"))
+
+;; (setq source-directory "/path/to/emacs-repo")
+;; (setq find-function-C-source-directory "~/Projects/emacs-25.1/src/")
 
 (use-package elisp-bytecode
   :homepage "https://github.com/rocky/elisp-bytecode"
