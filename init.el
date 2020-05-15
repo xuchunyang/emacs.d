@@ -3105,7 +3105,8 @@ PACKAGE should not be a built-in package."
     (interactive (list (read-shell-command "Run program: "))))
   :config
   ;; Disable auto scroll on RET (like Eshell)
-  (setq comint-scroll-show-maximum-output nil))
+  ;; (setq comint-scroll-show-maximum-output nil)
+  )
 
 (use-package edit-chrome-textarea
   :load-path "~/src/edit-chrome-textarea.el"
