@@ -567,25 +567,44 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 
 ;;; Helm
 
+;; Emacs 27
+;; (setq completion-styles '(flex))
+;; (fido-mode)
+
 (use-package helm
   :ensure t
   :defer t
   :init
   ;; Disable Helm's C-x c bindings
   (setq helm-command-prefix-key nil)
+  :preface
+  (defun chunyang-helm-project-search (directory)
+    (interactive (list (if current-prefix-arg
+                           default-directory
+                         (or (locate-dominating-file "." ".git")
+                             default-directory))))
+    (let ((default-directory directory))
+      (helm-grep-ag (expand-file-name default-directory) nil)))
   :bind (("M-l" . helm-mini)
-         ("M-L" . helm-browse-project)
          ("M-i" . helm-occur)
-         ("M-I" . helm-do-grep-ag)
+         ("M-I" . chunyang-helm-project-search)
          ("C-o" . helm-imenu)
          ("M-x" . helm-M-x)
          ("C-x C-f" . helm-find-files)
+         ("C-x C-d" . helm-browse-project)
          ("M-y" . helm-show-kill-ring)
          ("C-z" . helm-resume)
          ("C-h a" . helm-apropos)
          ("C-c f l" . helm-locate-library))
   :diminish helm-mode
   :config
+  ;; Check `helm-completion-style'
+  ;; (setq completion-styles
+  ;;       '(basic
+  ;;         partial-completion
+  ;;         emacs22
+  ;;         helm-flex))
+  (setq helm-completion-style 'flex)
   (helm-mode)
   ;; Persist recent used of filtered candidates
   (helm-adaptive-mode)
