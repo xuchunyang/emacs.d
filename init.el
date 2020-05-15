@@ -2907,7 +2907,8 @@ PACKAGE should not be a built-in package."
   :bind (("C-x g"   . magit-status))
   :config
   (setq-default magit-diff-refine-hunk t)
-  (setq magit-save-repository-buffers 'dontask)
+  ;; (setq magit-save-repository-buffers 'dontask)
+  (setq magit-save-repository-buffers nil)
   ;; M-x `magit-list-repositories'
   (setq magit-repository-directories
         '(("~/.emacs.d"                . 0)
