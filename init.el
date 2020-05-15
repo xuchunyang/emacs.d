@@ -5031,8 +5031,8 @@ provides similiar function."
           (insert
            ";; "
            ;; Handle Multiple Values
-           (replace-regexp-in-string "\n=>" "\n;; =>" res)
-           "\n")
+           (replace-regexp-in-string "\n=>" "\n;; =>" res))
+          (unless (bolp) (insert "\n"))
           (message nil)))))
 
   (defun chunyang-geiser-expand-sexp-at-point (&optional all)
