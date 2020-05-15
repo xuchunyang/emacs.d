@@ -3848,7 +3848,8 @@ Note that this will OVERRIDE the existing EWW bookmarks."
     (let ((bookmark-file
            (cl-find-if
             #'file-exists-p
-            `("~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"
+            `("~/Library/Application Support/Google/Chrome/Default/Bookmarks"
+              "~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"
               "~/.config/chromium/Default/Bookmarks"))))
       (require 'json)
       (chunyang-eww-import-bookmarks-from-chrome-1
