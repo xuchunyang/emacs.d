@@ -1957,13 +1957,22 @@ unlike `markdown-preview'."
 
   (defun chunyang-compile-command ()
     "Guess a `compile-command' for the current buffer."
-    (when-let ((file (and buffer-file-name (file-name-nondirectory buffer-file-name)))
-               (command (pcase major-mode
-                          ('c-mode "cc")
-                          ('elixir-mode "elixir")
-                          ((guard (derived-mode-p 'emacs-lisp-mode))
-                           "emacs -Q --batch -f batch-byte-compile"))))
-      (format "%s %s" command (shell-quote-argument file))))
+    (when-let ((file (and buffer-file-name
+                          (file-name-nondirectory buffer-file-name))))
+      (pcase major-mode
+        ((and 'c-mode (let base (file-name-base file)))
+         ;; XXX Use .dir-locals.el (or other solution instead)
+         ;; https://clang.llvm.org/docs/DiagnosticsReference.html#wall (大部分检查)
+         ;; https://clang.llvm.org/docs/DiagnosticsReference.html#wpedantic (pedantic, 学究式的，对照 ISO C 标准)
+         (format "clang -std=c11 -Wall -Wextra -Wpedantic %s -o %s -lm && ./%s"
+                 (shell-quote-argument file)
+                 (shell-quote-argument base)
+                 (shell-quote-argument base)))
+        ('elixir-mode (format "elixir %s"
+                              (shell-quote-argument file)))
+        ((guard (derived-mode-p 'emacs-lisp-mode))
+         (format "emacs -Q --batch -f batch-byte-compile %s"
+                 (shell-quote-argument file))))))
 
   (defun chunyang-compile-command-set ()
     (pcase (chunyang-compile-command)
