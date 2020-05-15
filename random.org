@@ -45,6 +45,8 @@
 - [[#http-range--断点续传][HTTP Range | 断点续传]]
   - [[#curl][curl]]
   - [[#emacs-lisp][Emacs Lisp]]
+- [[#http-proxy-via-http-connect][HTTP proxy via HTTP CONNECT]]
+- [[#dns-lookup][dns lookup]]
 #+END_QUOTE
 
 * =defsubst=
@@ -1007,3 +1009,182 @@ curl -r -100 example.com
 
 #+RESULTS:
 : #<window 43 on  *http example.com:80*>
+
+
+* HTTP proxy via HTTP CONNECT
+
+#+BEGIN_SRC elisp
+127.0.0.1:1087
+
+> CONNECT example.com:443 HTTP/1.1
+> Host: example.com:443
+> User-Agent: curl/7.54.0
+> Proxy-Connection: Keep-Alive
+
+(setq
+ proc
+ (make-network-process
+  :name "https over http connect"
+  :buffer "*https proxy*"
+  :host "127.0.0.1"
+  :service 1087))
+;; => #<process https over http connect>
+
+(process-send-string
+ proc
+ "GET http://example.com/ HTTP/1.1\r\nHost: example.com\r\n\r\n")
+;; => nil
+
+(process-send-string
+ proc
+ "CONNECT example.com:443 HTTP/1.1\r\nHost: example.com\r\nProxy-Connection: Keep-Alive\r\n\r\n")
+;; => nil
+
+(gnutls-negotiate
+ :process proc
+ :hostname "example.com"
+ :verify-error nil)
+;; => #<process https over http connect>
+
+(nsm-verify-connection
+ proc
+ "example.com"
+ 443)
+;; => #<process https over http connect>
+
+(process-send-string
+ proc
+ "GET / HTTP/1.1\r\nHost: example.com\r\nConnection: Close\r\n\r\n")
+;; => nil
+#+END_SRC
+
+* dns lookup
+
+#+BEGIN_SRC elisp
+(make-network-process
+ :name "dns-lookup"
+ :buffer "*dns-lookup*"
+ :host "114.114.114.114"
+ :service 53
+ :type 'datagram
+ :coding 'binary)
+;; => #<process dns-lookup>
+
+(setq dns-header-spec
+      '((id u16)
+        (flag bits 2)
+        (n1 u16)
+        (n2 u16)
+        (n3 u16)
+        (n4 u16)))
+;; => ((id u16) (flag bits 2) (n1 u16) (n2 u16) (n3 u16) (n4 u16))
+
+(vconcat
+ (bindat-pack dns-header-spec
+              '((id . 1)
+                (flag . (8))
+                (n1 . 1)
+                (n1 . 0)
+                (n1 . 0)
+                (n1 . 0))))
+;; => [0 1 1 0 0 1 0 0 0 0 0 0]
+
+[7 ?e ?x ?a ?m ?p ?l ?e 3 ?c ?o ?m 0]
+
+
+(process-send-string
+ (get-process "dns-lookup")
+ (f-read-bytes "example-dns.bin"))
+;; => nil
+
+(with-current-buffer (get-buffer "*dns-lookup*")
+  (set-buffer-multibyte nil)
+  (setq buffer-file-coding-system 'binary)
+  (f-write-bytes
+   (buffer-substring-no-properties (point-min) (point-max))
+   "out"))
+
+(bindat-unpack
+ '((ip ip))
+ [#x5d #xb8 #xd8 #x22])
+93.184.216.34
+;; => ((ip . [93 184 216 34]))
+
+
+
+(require 'bindat)
+;; => bindat
+
+(bindat-unpack '((x bits 2))
+               [#x28 #x12]) 
+;; => ((x 1 4 11 13))
+
+(vconcat
+ (bindat-pack '((x bits 2))
+              '((x 1 4 11 13))))
+;; => [40 18]
+
+(setq x
+      '((_ u8 1)
+        (id vec (eval last))))
+;; => ((_ u8 1) (id vec (eval last)))
+
+(bindat-unpack
+ '((k repeat
+      (eval
+       (let ((i bindat-idx)
+             (count 0)
+             step)
+         (while (not (zerop (setq step (aref bindat-raw i))))
+           (message "=> %S" step)
+           (cl-incf count)
+           (cl-incf i (1+ step)))
+         count))
+      (struct x)))
+ [3 ?a ?b ?c 2 ?d ?f 0])
+;; => ((k ((id . [97 98 99]) (_ . 3)) ((id . [100 102]) (_ . 2))))
+
+
+?3
+;; => 51
+
+
+
+((k
+  ((id . [97 98 99]) (_ . 3))
+  ((id . [100 102]) (_ . 2))))
+
+bindat-raw
+bindat-idx
+
+(let ((i bindat-idx)
+      (count 0)
+      step)
+  (while (not (zerop (setq step (aref bindat-raw i))))
+    (cl-incf count)
+    (cl-incf i step))
+  count)
+
+
+;; => ((k (id . [97 98 99]) (_ . 3)))
+
+
+
+;; => ((id . [97 98 99]) (_ . 3))
+
+;; => ((id . [97]))
+
+;; => ((id . [97 98 99]))
+
+;; => ((id . [97 98 99]))
+
+
+(bindat-unpack
+ '((VER u8)
+   (CMD u8)
+   (DSTPORT u16)
+   (DSTIP ip)
+   (ID strz (eval (- (length bindat-raw) bindat-idx))))
+ [#x04 #x01 #x00 #x50 #x5d #xb8 #xd8 #x22 #x46 #x72 #x65 #x64 #x00])
+;; => ((ID . "Fred") (DSTIP . [93 184 216 34]) (DSTPORT . 80) (CMD . 1) (VER . 4))
+#+END_SRC
