@@ -5100,10 +5100,18 @@ provides similiar function."
   :ensure t
   :defer t)
 
+;; 2020-01-19: Tried https://github.com/jeapostrophe/racket-langserver
+;;             not useful
+;;
+;; (require 'eglot)
+;; (add-to-list
+;;  'eglot-server-programs
+;;  '(racket-mode . ("racket" "--lib" "racket-langserver")))
+
 (use-package racket-mode
   :homepage https://github.com/greghendershott/racket-mode
   :ensure t
-  ;; :load-path "~/src/racket-mode"
+  :load-path "~/src/racket-mode"
   :defer t
   :mode "\\.rkt\\'"
   :init
@@ -5112,8 +5120,18 @@ provides similiar function."
   (defun chunyang-racket-mode-setup ()
     ;; `racket-mode' enable this mode, not sure why
     (and (bound-and-true-p hs-minor-mode)
-         (hs-minor-mode -1)))
+         (hs-minor-mode -1))
+
+    ;; (setq-local eldoc-documentation-function #'racket-blueboxes-eldoc-function)
+    (setq-local eldoc-documentation-function #'racket-repl-eldoc-function))
   (add-hook 'racket-mode-hook #'chunyang-racket-mode-setup)
+
+  (add-hook 'racket-mode-hook #'racket-xp-mode)
+  (defun chunyang-racket-xp-mode-setup ()
+    (setq racket-xp-after-change-refresh-delay 2)
+    (cursor-sensor-mode -1))
+  (add-hook 'racket-xp-mode-hook #'chunyang-racket-xp-mode-setup)
+
   (defun chunyang-racket-describe-mode-setup ()
     (run-at-time
      0
@@ -5121,16 +5139,40 @@ provides similiar function."
      (lambda ()
        "Remove the last line."
        (when-let ((buffer (get-buffer "*Racket Describe*")))
-         (with-current-buffer buffer
-           (save-excursion
-             (goto-char (point-max))
-             (goto-char (line-beginning-position))
-             (when (looking-at-p "^Definition")
-               (let ((inhibit-read-only t))
-                 (delete-region (line-beginning-position)
-                                (line-end-position))))))))))
-  (add-hook 'racket-describe-mode-hook #'chunyang-racket-describe-mode-setup)
+         (let ((inhibit-read-only t))
+           (delete-trailing-whitespace (point-min) (point-max))))
+       ;; (when-let ((buffer (get-buffer "*Racket Describe*")))
+       ;;   (with-current-buffer buffer
+       ;;     (save-excursion
+       ;;       (goto-char (point-max))
+       ;;       (goto-char (line-beginning-position))
+       ;;       (when (looking-at-p "^Definition")
+       ;;         (let ((inhibit-read-only t))
+       ;;           (delete-region (line-beginning-position)
+       ;;                          (line-end-position)))))))
+       )))
+  ;; (add-hook 'racket-describe-mode-hook #'chunyang-racket-describe-mode-setup)
   :config
+  (setq racket-images-system-viewer "open")
+  ;; check-syntax branch, XXX review this
+  (setq racket-show-functions '(racket-show-pos-tip))
+
+  (defun chunyang-racket-describe (str)
+    "Like `racket-describe' but with completion."
+    (interactive
+     (let* ((default (pcase (symbol-at-point)
+                       ('nil nil)       ; Emacs 25
+                       (sym (symbol-name sym))))
+            (prompt (if default
+                        (format "Racket Describe (default %s): " default)
+                      "Racket Describe: ")))
+       (list
+        (completing-read
+         prompt
+         ;; cache? mapcan?
+         (apply #'append (racket--completion-candidates))
+         nil t nil nil default))))
+    (racket--do-describe str t))
   (define-advice racket-describe (:around (old-fun &rest args) silence)
     "Silence `message', which is annoying."
     (let ((message-log-max nil))
@@ -5138,6 +5180,9 @@ provides similiar function."
       (message nil)))
   ;; For `racket-shell-send-string-no-output'
   (require 'racket-ext)
+  (require 'chunyang-racket)
+  ;; FIXME move this to racket-external
+  ;; FIXME fix issuees for define and <void> results
   (defun chunyang-racket-eval-print-last-sexp ()
     (interactive)
     (let* ((end (point))
@@ -5169,7 +5214,13 @@ provides similiar function."
       (racket-expand-last-sexp)))
   (bind-key "C-c e" #'chunyang-racket-macro-expand racket-mode-map)
 
-  (bind-key "C-h ." #'racket-describe racket-mode-map))
+  (bind-key "<S-tab>" #'chunyang-indent-align-cycle racket-mode-map)
+
+  (bind-key "C-h ."
+            #'racket-xp-describe
+            ;; racket-repl-describe
+            ;; racket-describe
+            racket-mode-map))
 
 (use-package scribble-mode
   :about https://docs.racket-lang.org/scribble/index.html
