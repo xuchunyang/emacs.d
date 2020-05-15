@@ -6015,6 +6015,15 @@ And by the way, the menu bar on macOS is buggy.")
   :defer t
   :config
 
+
+  ;; (add-hook 'eglot-managed-mode-hook
+  ;;           (defun foo ()
+  ;;             (message "=> %s %s" (current-buffer) (eglot-managed-p))))
+  (add-hook 'eglot-managed-mode-hook #'yas-minor-mode)
+
+  (add-to-list 'eglot-server-programs
+               '((c++-mode c-mode) "/usr/local/opt/llvm/bin/clangd"))
+
   ;; It is better to put this in .dir-locals.el or use
   ;; `dir-locals-set-class-variables', see (info "(emacs) Directory Variables")
   ;; but let's keep it as simple since for now the only use of eglot is with
@@ -6024,6 +6033,11 @@ And by the way, the menu bar on macOS is buggy.")
   ;; https://github.com/joaotavora/eglot/issues/332#issuecomment-547866307
   (setq-default eglot-workspace-configuration
                 '((:gopls . (:usePlaceholders t))))
+
+  ;; (setq eglot-ignored-server-capabilites '(:documentHighlightProvider :hoverProvider))
+  (setq eglot-ignored-server-capabilites '(:documentHighlightProvider))
+  (add-hook 'eglot--managed-mode-hook (lambda () (flymake-mode -1)))
+
 
   ;; IDEA: Use `avy' (like `ace-link'
   (bind-key "M-n" #'chunyang-eglot-next-highlight eglot-mode-map)
