@@ -5403,6 +5403,7 @@ provides similiar function."
 
 ;; TODO Try this package (examples, documentation)
 (use-package web-server
+  ;; :load-path "~/src/emacs-web-server/"
   :homepage https://github.com/eschulte/emacs-web-server
   :ensure t
   :preface
