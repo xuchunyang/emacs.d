@@ -3038,7 +3038,12 @@ PACKAGE should not be a built-in package."
               (helm-make-actions
                "Insert" (funcall new-action #'insert)
                "Copy" (funcall new-action #'kill-new))))
-          :buffer "*helm-gitignore-templates*")))
+          :buffer "*helm-gitignore-templates*"))
+  :config
+  (defun chunyang-gitignore-mode-setup ()
+    ;; `prog-mode' 默认设置了这个，但是 `gitignore-mode' 继承自 `conf-mode'
+    (setq-local require-final-newline t))
+  (add-hook 'gitignore-mode-hook #'chunyang-gitignore-mode-setup))
 
 (use-package chunyang-git
   :commands chunyang-git-tree)
