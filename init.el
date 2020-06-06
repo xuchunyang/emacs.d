@@ -5406,7 +5406,6 @@ provides similiar function."
   ;; 4 is already the default
   (setq css-indent-offset 4))
 
-;; TODO Try this package (examples, documentation)
 (use-package web-server
   ;; :load-path "~/src/emacs-web-server/"
   :homepage https://github.com/eschulte/emacs-web-server
@@ -5441,13 +5440,14 @@ provides similiar function."
     (browse-url "http://localhost:8888/"))
   :defer t)
 
-;; TODO: try this (by nullprogram's author)
 (use-package simple-httpd
   :ensure t
   :defer t
-  :homepage https://github.com/skeeto/emacs-http-server)
-
-;; TODO: 自己实现一个 HTTP 服务器（先写个文件服务器）
+  :homepage https://github.com/skeeto/emacs-http-server
+  :config
+  ;; M-x httpd-start
+  (setq httpd-root "~/public_html"
+        httpd-port 8888))
 
 
 ;;; Elixir
