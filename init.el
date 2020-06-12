@@ -1184,8 +1184,9 @@ FILES are in the same directory."
   :ensure t
   :bind (("C-c t c" . whitespace-cleanup-mode)
          ("C-c x w" . whitespace-cleanup))
-  :init (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-          (add-hook hook #'whitespace-cleanup-mode))
+  :init
+  ;; (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  ;;   (add-hook hook #'whitespace-cleanup-mode))
   ;; :diminish whitespace-cleanup-mode
   )
 
