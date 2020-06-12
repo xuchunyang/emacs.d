@@ -6199,7 +6199,9 @@ And by the way, the menu bar on macOS is buggy.")
   ;; (add-hook 'eglot-managed-mode-hook
   ;;           (defun foo ()
   ;;             (message "=> %s %s" (current-buffer) (eglot-managed-p))))
-  (add-hook 'eglot-managed-mode-hook #'yas-minor-mode)
+
+  ;; not work correctly, yas-minor-mode needs to be on BEFORE
+  ;; (add-hook 'eglot-managed-mode-hook #'yas-minor-mode)
 
   (add-to-list 'eglot-server-programs
                '((c++-mode c-mode) "/usr/local/opt/llvm/bin/clangd"))
