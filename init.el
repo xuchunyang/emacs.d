@@ -247,6 +247,9 @@
 (when (bound-and-true-p scroll-bar-mode)
   (scroll-bar-mode -1))
 
+(unless (memq window-system '(ns mac))
+  (menu-bar-mode -1))
+
 (setq inhibit-startup-screen t)
 
 (setq ring-bell-function #'ignore)
