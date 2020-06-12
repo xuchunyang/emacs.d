@@ -1765,6 +1765,7 @@ Intended to be added to `isearch-mode-hook'."
   )
 
 (use-package elsa
+  :disabled
   :about Emacs Lisp Static Analyzer
   :homepage https://github.com/emacs-elsa/Elsa
   ;; :load-path "~/src/Elsa"
@@ -1786,6 +1787,7 @@ Intended to be added to `isearch-mode-hook'."
       (kill-new cmd))))
 
 (use-package flycheck-elsa-without-cask
+  :disabled
   :after flycheck)
 
 (use-package flycheck-elsa
@@ -4621,6 +4623,7 @@ Adapt from `org-babel-remove-result'."
     :defer t)
 
   (use-package ob-racket
+    :disabled
     :homepage https://github.com/DEADB17/ob-racket
     :load-path "~/src/ob-racket"
     ;; :config
@@ -4644,7 +4647,7 @@ Adapt from `org-babel-remove-result'."
      (perl       . t)
      (python     . t)
      (R          . t)
-     (racket     . t)
+     ;; (racket     . t)
      (ruby       . t)
      (scheme     . t)
      (shell      . t)
@@ -5366,6 +5369,7 @@ provides similiar function."
   :hook (js2-mode . tern-mode))
 
 (use-package company-tern
+  :disabled
   :ensure t
   :after (company tern)
   :homepage https://github.com/proofit404/company-tern
@@ -5373,6 +5377,7 @@ provides similiar function."
   :defer t)
 
 (use-package js2-refactor
+  :disabled
   :ensure t
   :defer t)
 
