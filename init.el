@@ -1608,6 +1608,13 @@ Intended to be added to `isearch-mode-hook'."
         (concat " " ann)
       ann)))
 
+(use-package clang-format
+  :ensure t
+  :config
+  (setq clang-format-executable
+        ;; brew install llvm
+        "/usr/local/opt/llvm/bin/clang-format"))
+
 (use-package yasnippet
   :homepage http://joaotavora.github.io/yasnippet/
   :ensure t
@@ -1988,10 +1995,10 @@ unlike `markdown-preview'."
          ;; XXX Use .dir-locals.el (or other solution instead)
          ;; https://clang.llvm.org/docs/DiagnosticsReference.html#wall (大部分检查)
          ;; https://clang.llvm.org/docs/DiagnosticsReference.html#wpedantic (pedantic, 学究式的，对照 ISO C 标准)
-         (format "clang -std=c11 -Wall -Wextra -Wpedantic %s -o %s -lm && ./%s"
-                 (shell-quote-argument file)
-                 (shell-quote-argument base)
-                 (shell-quote-argument base)))
+         (let ((input (shell-quote-argument file))
+               (output (shell-quote-argument (concat base ".out"))))
+           (format "clang -std=c11 -Wall -Wextra -Wpedantic %s -o %s -lm && ./%s"
+                   input output output)))
         ('elixir-mode (format "elixir %s"
                               (shell-quote-argument file)))
         ((guard (derived-mode-p 'emacs-lisp-mode))
@@ -4800,6 +4807,8 @@ Adapt from `org-babel-remove-result'."
     (abbrev-mode -1))
 
   (add-hook 'c-mode-common-hook #'chunyang-c-mode-common-setup)
+  ;; I don't use yasnippet, but eglot requires it
+  (add-hook 'c-mode-common-hook #'yas-minor-mode)
 
   (defun chunyang-cpp-lookup ()
     "Lookup C function/macro/etc prototype via Preprocessing."
@@ -4819,6 +4828,12 @@ Adapt from `org-babel-remove-result'."
   ;; C/*lah => C
   (advice-add 'c-update-modeline :around #'ignore)
 
+  (setq c-default-style
+        '((c-mode    . "user")
+          (java-mode . "java")
+          (awk-mode  . "awk")
+          (other     . "gnu")))
+  
   ;; Add imenu support for section comment like this
   ;; /*** includes ***/
   (add-to-list
