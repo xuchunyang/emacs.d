@@ -3103,9 +3103,21 @@ PACKAGE should not be a built-in package."
 (use-package man
   :defer t
   :config
-  (unless (getenv "MANPATH")
-    (setenv "MANPATH"
-            (string-trim (shell-command-to-string "manpath")))))
+  (setq Man-notify-method 'pushy)
+  (setq Man-width-max nil)
+
+  (when *is-mac*
+    (setq Man-header-file-path
+          (list "/usr/include"
+                "/usr/local/include"
+                ;; FIXME clang -v, 自动化?
+                "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.3/include"
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"))
+    (unless (getenv "MANPATH")
+      (setenv "MANPATH"
+              (string-trim (shell-command-to-string "manpath")))))
+
+  (bind-key "m" #'helm-man-woman Man-mode-map))
 
 (use-package woman
   :defer t
