@@ -430,7 +430,8 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
                           "\\.elc\\'"
                           "/TAGS\\'"))
   (recentf-mode)
-  (add-hook 'kill-emacs-hook #'chunyang-recentf-save-list-for-alfred 'append))
+  ;; (add-hook 'kill-emacs-hook #'chunyang-recentf-save-list-for-alfred 'append)
+  )
 
 (use-package bookmark
   :defer t
