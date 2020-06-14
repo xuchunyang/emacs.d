@@ -358,8 +358,6 @@
   :ensure color-theme-sanityinc-tomorrow
   :defer t)
 
-(load-theme (if *is-mac* 'sanityinc-tomorrow-eighties 'wheatgrass) 'no-comfirm)
-
 (use-package tangotango-theme
   :ensure t
   :no-require t
