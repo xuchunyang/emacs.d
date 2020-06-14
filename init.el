@@ -318,8 +318,8 @@
   (set-fontset-font t 'han      (font-spec :family "STkaiti"))
   (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti")))
 
-(when (eq window-system 'x)
-  (set-face-attribute 'default nil :font "Source Code Pro-11"))
+;; (when (eq window-system 'x)
+;;   (set-face-attribute 'default nil :font "Source Code Pro-11"))
 
 (use-package unicode-fonts
   :disabled
