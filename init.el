@@ -319,7 +319,7 @@
   (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti")))
 
 (when (eq window-system 'x)
-  (set-face-attribute 'default nil :font "Source Code Pro-13"))
+  (set-face-attribute 'default nil :font "Source Code Pro-11"))
 
 (use-package unicode-fonts
   :disabled
@@ -356,8 +356,9 @@
 
 (use-package tomorrow-theme
   :ensure color-theme-sanityinc-tomorrow
-  :defer t
-  :init (load-theme 'sanityinc-tomorrow-eighties 'no-comfirm))
+  :defer t)
+
+(load-theme (if *is-mac* 'sanityinc-tomorrow-eighties 'wheatgrass) 'no-comfirm)
 
 (use-package tangotango-theme
   :ensure t
@@ -2608,6 +2609,7 @@ PACKAGE should not be a built-in package."
   :load-path "~/src/ghelp")
 
 (use-package elisp-demos
+  :ensure t
   :load-path "~/src/elisp-demos"
   :config
   (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
@@ -3878,12 +3880,12 @@ your Emacs doesn't have libxml2 support"))
     "Import bookmarks from Google Chrome's Bookmarks JSON file.
 Note that this will OVERRIDE the existing EWW bookmarks."
     (interactive)
-    (let ((bookmark-file
-           (cl-find-if
-            #'file-exists-p
-            `("~/Library/Application Support/Google/Chrome/Default/Bookmarks"
-              "~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"
-              "~/.config/chromium/Default/Bookmarks"))))
+    (when-let ((bookmark-file
+                (cl-find-if
+                 #'file-exists-p
+                 `("~/Library/Application Support/Google/Chrome/Default/Bookmarks"
+                   "~/Library/Application Support/Google/Chrome/Profile 1/Bookmarks"
+                   "~/.config/chromium/Default/Bookmarks"))))
       (require 'json)
       (chunyang-eww-import-bookmarks-from-chrome-1
        (json-read-file bookmark-file)))
