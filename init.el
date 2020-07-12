@@ -5312,6 +5312,9 @@ provides similiar function."
     (add-to-list 'sgml-empty-tags "source"))
   :hook (html-mode . chunyang-html-mode-setup))
 
+(use-package chunyang-html
+  :commands chunyang-html-empty-template)
+
 (use-package web-mode
   :disabled t
   :homepage http://web-mode.org
