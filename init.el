@@ -5356,15 +5356,17 @@ provides similiar function."
           (find-file filename)
         (user-error "Don't know how to open %s" filename))))
   :config
-  (setq js-indent-level 2)
-  (setq js-switch-indent-offset 2)
-  (defun chunyang-js-mode-setup ()
-    (setq electric-layout-rules
-          (seq-remove (lambda (elt) (= (car elt) ?\;))
-                      electric-layout-rules)))
-  (add-hook 'js-mode-hook #'chunyang-js-mode-setup))
+  ;; (setq js-indent-level 2)
+  ;; (setq js-switch-indent-offset 2)
+  ;; (defun chunyang-js-mode-setup ()
+  ;;   (setq electric-layout-rules
+  ;;         (seq-remove (lambda (elt) (= (car elt) ?\;))
+  ;;                     electric-layout-rules)))
+  ;; (add-hook 'js-mode-hook #'chunyang-js-mode-setup)
+  )
 
 (use-package js2-mode
+  :disabled
   :homepage https://github.com/mooz/js2-mode/
   :ensure t
   :hook ((js2-mode . js2-imenu-extras-mode)
