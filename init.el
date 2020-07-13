@@ -5451,7 +5451,23 @@ provides similiar function."
   :defer t
   :config
   ;; 4 is already the default
-  (setq css-indent-offset 4))
+  (setq css-indent-offset 4)
+
+  (defun chunyang-helm-css-colors ()
+    "My helm interface for CSS Named colors."
+    (interactive)
+    (helm :sources
+          (helm-build-sync-source "CSS Named Colors"
+            :candidates
+            (mapcar (pcase-lambda (`(,name . ,rgb))
+                      (propertize name 'face `(:foreground ,rgb)))
+                    css--color-map)
+            :action
+            (helm-make-actions
+             "Insert name" #'insert
+             "Insert RGB" (lambda (name)
+                            (insert (assoc-default name css--color-map)))))
+          :buffer "*helm CSS Named Colors*")))
 
 (use-package web-server
   ;; :load-path "~/src/emacs-web-server/"
