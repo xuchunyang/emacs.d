@@ -5312,7 +5312,8 @@ provides similiar function."
     (add-to-list 'sgml-empty-tags "source"))
   :hook (html-mode . chunyang-html-mode-setup)
   :config
-  (setq sgml-basic-offset 4))
+  ;; 2 is already the default
+  (setq sgml-basic-offset 2))
 
 (use-package chunyang-html
   :commands chunyang-html-empty-template)
@@ -5450,8 +5451,9 @@ provides similiar function."
 (use-package css-mode
   :defer t
   :config
-  ;; 4 is already the default
-  (setq css-indent-offset 4)
+  ;; Following https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax
+  ;; 4 is the default
+  (setq css-indent-offset 2)
 
   (defun chunyang-helm-css-colors ()
     "My helm interface for CSS Named colors."
