@@ -744,7 +744,6 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              chunyang-timer
              chunyang-random-word
              chunyang-format-as-binary
-             chunyang-toggle-proxy
              ;; Clipboard
              chunyang-insert-image-from-clipboard
              ;; QR Code
@@ -3763,7 +3762,24 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   ;; Turn on cache, see https://emacs-china.org/t/url-el-cache/9411
   ;; (setq url-automatic-caching t
   ;;       url-cache-expire-time (* 6 3600))
-  )
+
+  ;; XXX How to test a port is open?
+  ;; curl -v -x http://localhost:1087 example.com
+  ;; curl -v -x socks5://localhost:1080 example.com
+  (setq socks-server '("Default server" "localhost" 1080 5))
+  (defun chunyang-toggle-url-proxy ()
+    "Toggle proxy for the url.el library."
+    (interactive)
+    (cond
+     (url-proxy-services
+      (message "Turn off URL proxy")
+      (setq url-proxy-services nil))
+     (t
+      (message "Turn on URL proxy")
+      (setq url-proxy-services
+            '(("http" . "localhost:1087")
+              ("https" . "localhost:1087")
+              ("no_proxy" . "0.0.0.0")))))))
 
 (use-package curl-to-elisp
   :load-path "~/src/curl-to-elisp"

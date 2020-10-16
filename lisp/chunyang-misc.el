@@ -9,17 +9,6 @@
 (require 'cl-lib)
 (require 'json)
 
-(defun chunyang-toggle-proxy ()
-  "Toggle HTTP proxy."
-  (interactive)
-  (if (getenv "HTTP_PROXY")
-      (progn (setenv "HTTP_PROXY")
-             (setenv "HTTPS_PROXY")
-             (message "Proxy is off"))
-    (progn (setenv "HTTP_PROXY" "http://localhost:1087")
-           (setenv "HTTPS_PROXY" "http://localhost:1087")
-           (message "Proxy is on"))))
-
 
 ;; Homepage: https://www.quotes.net
 ;; API doc: https://www.stands4.com/api.php
