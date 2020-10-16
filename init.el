@@ -3483,6 +3483,11 @@ This should be add to `find-file-hook'."
   :ensure t
   :commands separedit)
 
+(use-package reformatter
+  :ensure t
+  :homepage https://github.com/purcell/reformatter.el
+  :defer t)
+
 
 ;;; Documentation
 
