@@ -5535,6 +5535,12 @@ provides similiar function."
   (setq httpd-root "~/public_html"
         httpd-port 8888))
 
+;; https://github.com/ahyatt/emacs-websocket/blob/master/websocket-functional-test.el
+;; wss://echo.websocket.org/
+(use-package websocket
+  :ensure t
+  :defer t)
+
 
 ;;; Elixir
 
