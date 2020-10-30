@@ -1926,6 +1926,7 @@ unlike `markdown-preview'."
 ;;; PDF
 
 (use-package pdf-tools
+  :disabled
   :homepage https://github.com/politza/pdf-tools
   :ensure t
   ;; FIXME I do not know how to setup pdf-tools
@@ -2628,6 +2629,7 @@ PACKAGE should not be a built-in package."
   :disabled t)
 
 (use-package cask-mode
+  :disabled
   :about Major mode for editing Cask files
   :ensure t
   :defer t)
@@ -4222,6 +4224,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 ;;; AppleScript
 
 (use-package applescript-mode
+  :disabled
   :ensure t
   :defer t
   :preface
@@ -4231,6 +4234,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   (add-hook 'applescript-mode-hook #'chunyang-applescript-mode-setup))
 
 (use-package ob-applescript
+  :disabled
   :homepage https://github.com/stig/ob-applescript.el
   :ensure t
   :after org)
@@ -4275,6 +4279,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   (bind-key "C-c C-j" #'term-char-mode term-mode-map))
 
 (use-package vterm
+  :disabled
   :if module-file-suffix
   :homepage https://github.com/akermu/emacs-libvterm
   :ensure t
