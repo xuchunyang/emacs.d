@@ -356,7 +356,9 @@
 
 (use-package tomorrow-theme
   :ensure color-theme-sanityinc-tomorrow
-  :defer t)
+  :defer t
+  :init
+  (load-theme 'sanityinc-tomorrow-eighties t))
 
 (use-package tangotango-theme
   :ensure t
