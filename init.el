@@ -5393,6 +5393,9 @@ provides similiar function."
       (if (file-exists-p filename)
           (find-file filename)
         (user-error "Don't know how to open %s" filename))))
+  :init
+  (add-to-list 'auto-mode-alist
+               (cons (rx ".mjs" eos) #'js-mode))
   :config
   ;; (setq js-indent-level 2)
   ;; (setq js-switch-indent-offset 2)
