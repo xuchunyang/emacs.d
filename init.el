@@ -3993,6 +3993,13 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 ;;; Music
 
+(use-package mingus
+  :about "MPD client"
+  :notes "type 'mpd' in terminal to start the server"
+  :homepage https://github.com/pft/mingus
+  :defer t
+  :ensure t)
+
 (use-package vlc
   :about VLC control
   :load-path "~/src/vlc.el"
