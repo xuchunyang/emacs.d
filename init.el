@@ -3684,6 +3684,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
   :ensure t :defer t)
 
 (use-package twittering-mode
+  :disabled
   :ensure t
   :defer t
   :config
