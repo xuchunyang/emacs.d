@@ -5864,6 +5864,11 @@ And by the way, the menu bar on macOS is buggy.")
 
 ;;; Misc
 
+(use-package so-long
+  :notes "built-in since 27.1"
+  ;; :ensure t
+  :config (global-so-long-mode))
+
 (use-package view
   :defer t
   :config (setq view-inhibit-help-message t))
