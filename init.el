@@ -5398,8 +5398,8 @@ provides similiar function."
   (add-to-list 'auto-mode-alist
                (cons (rx ".mjs" eos) #'js-mode))
   :config
-  ;; (setq js-indent-level 2)
-  ;; (setq js-switch-indent-offset 2)
+  (setq js-indent-level 2)
+  (setq js-switch-indent-offset 2)
   ;; (defun chunyang-js-mode-setup ()
   ;;   (setq electric-layout-rules
   ;;         (seq-remove (lambda (elt) (= (car elt) ?\;))
