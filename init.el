@@ -6478,6 +6478,7 @@ at a time."
   :defer t)
 
 (use-package etable
+  :disabled
   :about "Library for creating tables."
   :homepage https://github.com/Fuco1/ETable
   :ensure t
