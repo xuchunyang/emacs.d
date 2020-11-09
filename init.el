@@ -3536,7 +3536,7 @@ This should be add to `find-file-hook'."
   :config
   ;; HOLD this, maybe it is better that Gopls works for a package per instance.
   ;; (add-hook 'project-find-functions #'chunyang-git-root)
-  (cl-defmethod project-roots ((project (head git)))
+  (cl-defmethod project-root ((project (head git)))
     (list (cdr project))))
 
 (use-package projectile
@@ -6342,7 +6342,7 @@ at a time."
                           (eglot--project-nickname srv)
                           (eglot--major-mode srv)
                           (propertize
-                           (string-join (mapcar #'abbreviate-file-name (project-roots (eglot--project srv))) ", ")
+                           (string-join (mapcar #'abbreviate-file-name (project-root (eglot--project srv))) ", ")
                            'face 'helm-buffer-process)))))
       ;; Put (eglot-current-server) at the beginning
       (when-let ((current-server (eglot-current-server)))
@@ -6371,7 +6371,7 @@ at a time."
 
   (add-hook 'project-find-functions #'chunyang-elixir-current-project)
 
-  (cl-defmethod project-roots ((project (head elixir)))
+  (cl-defmethod project-root ((project (head elixir)))
     (list (cdr project))))
 
 (use-package cquery
