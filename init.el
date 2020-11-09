@@ -4103,7 +4103,8 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package ldoce5
   :about Longman Dictionary of Contemporary English 5
   :load-path "~/src/ldoce5.el"
-  :commands (ldoce5-lookup ldoce5-helm))
+  :commands (longman ldoce5-lookup ldoce5-helm)
+  :config (defalias 'longman (symbol-function 'ldoce5-helm)))
 
 (use-package youdao-dictionary
   :load-path "~/src/youdao-dictionary.el"
