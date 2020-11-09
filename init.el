@@ -3967,8 +3967,8 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :init (google-this-mode))
 
 (use-package devdocs
-  :ensure t
-  :commands devdocs-search)
+  :load-path "~/src/DevDocs.el"
+  :commands (devdocs devdocs-search))
 
 (use-package web-search
   :ensure t
