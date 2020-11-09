@@ -1981,7 +1981,9 @@ unlike `markdown-preview'."
     (force-mode-line-update))
 
   ;; (setq eldoc-message-function #'chunyang-eldoc-header-line-message)
-  )
+
+  ;; `eldoc-display-functions' was added in 28.1
+  (remove-hook 'eldoc-display-functions #'eldoc-display-in-buffer))
 
 (declare-function projectile-project-root "projectile")
 (defun chunyang-project-root ()
