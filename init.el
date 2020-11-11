@@ -606,6 +606,9 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
          ("C-c f l" . helm-locate-library))
   :diminish helm-mode
   :config
+  ;; https://emacs-china.org/t/helm-mode-eshell-tab/15006
+  (setq helm-mode-handle-completion-in-region nil)
+
   ;; Check `helm-completion-style'
   ;; (setq completion-styles
   ;;       '(basic
