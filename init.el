@@ -2092,6 +2092,11 @@ unlike `markdown-preview'."
   :ensure t
   :defer t)
 
+(use-package dockerfile-mode
+  :about Major mode for Dockerfile
+  :ensure t
+  :defer t)
+
 
 ;;; Generic Lisp
 
