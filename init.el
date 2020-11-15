@@ -2077,7 +2077,7 @@ unlike `markdown-preview'."
   (keyfreq-autosave-mode))
 
 
-;; Languages
+;; Configuration file formats
 
 (use-package json-mode
   :about Prefer json-mode to js-mode
@@ -2096,6 +2096,14 @@ unlike `markdown-preview'."
   :about Major mode for Dockerfile
   :ensure t
   :defer t)
+
+(use-package nginx-mode
+  :ensure t
+  :homepage https://github.com/ajc/nginx-mode
+  :defer t
+  :config
+  ;; 不要劫持 C-j
+  (define-key nginx-mode-map (kbd "C-j") nil))
 
 
 ;;; Generic Lisp
