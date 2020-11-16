@@ -2087,6 +2087,8 @@ unlike `markdown-preview'."
 
 (use-package yaml-mode :ensure t :defer t)
 
+(use-package ini-mode :ensure t :defer t)
+
 (use-package dotenv-mode
   :about Major mode for the js package dotenv's .env file
   :ensure t
