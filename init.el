@@ -2105,6 +2105,11 @@ unlike `markdown-preview'."
   ;; 不要劫持 C-j
   (define-key nginx-mode-map (kbd "C-j") nil))
 
+(use-package pug-mode
+  :about major mode for the js template language
+  :ensure t
+  :defer t)
+
 
 ;;; Generic Lisp
 
