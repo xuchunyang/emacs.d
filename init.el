@@ -2112,6 +2112,11 @@ unlike `markdown-preview'."
   :ensure t
   :defer t)
 
+(use-package caddyfile-mode
+  :about Major mode for Caddy configuration files
+  :ensure t
+  :defer t)
+
 
 ;;; Generic Lisp
 
