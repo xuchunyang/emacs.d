@@ -4565,29 +4565,33 @@ Adapt from `org-babel-remove-result'."
              (1+ (match-end 0))
              (progn (forward-line 1) (org-babel-result-end))))))))
 
-  (defun chunyang-org-babel-copy-previous-src-block ()
-    ;; TODO 包括内容
-    "复制上一个代码块（不包括内容）."
-    (interactive)
-    (let (result)
-      (save-excursion
-        (org-babel-previous-src-block)
-        (let ((element (org-element-at-point)))
-          (when (eq (car element) 'src-block)
-            (let* ((pl (cadr element))
-                   (lang (plist-get pl :language))
-                   (switches (plist-get pl :switches))
-                   (parms (plist-get pl :parameters)))
-              (setq result
-                    (format
-                     (concat "#+begin_src %s\n"
-                             "\n"
-                             "#+end_src\n")
-                     (mapconcat #'identity
-                                (delq nil (list lang switches parms))
-                                " ")))))))
-      (and result (insert result))
-      (previous-line 2)))
+  ;; TODO 移动到单独文件，方便 edebug
+  (defun chunyang-org-babel-copy-previous-src-block (&optional without-body)
+    "复制上一个代码块, WITHOUT-BODY 为 non-nil 表示不加内容."
+    (interactive "P")
+    (let ((result
+           (save-excursion
+             (org-babel-previous-src-block)
+             (let* ((element (org-element-at-point))
+                    (pl (cadr element)))
+               (when (eq (car element) 'src-block)
+                 (if without-body
+                     ;; 只需要 header 要麻烦点
+                     (let* ((lang (plist-get pl :language))
+                            (switches (plist-get pl :switches))
+                            (parms (plist-get pl :parameters)))
+                       (format
+                        (concat "#+begin_src %s\n"
+                                "\n"
+                                "#+end_src\n")
+                        (mapconcat #'identity
+                                   (delq nil (list lang switches parms))
+                                   " ")))
+                   (buffer-substring (plist-get pl :begin)
+                                     (plist-get pl :end))))))))
+      (when result
+        (save-excursion
+          (insert result)))))
 
   (defun chunyang-org-babel-execute-python-in-iTerm ()
     (interactive)
