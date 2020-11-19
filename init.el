@@ -2117,6 +2117,15 @@ unlike `markdown-preview'."
   :ensure t
   :defer t)
 
+(use-package make-mode
+  :about Major mode for Makefile
+  :defer t
+  :init
+  ;; Makefile 默认 `makefile-bsdmake-mode'，mac 自带的 GNU Make
+  (push
+   '("[Mm]akefile\\'" . makefile-gmake-mode) 
+   auto-mode-alist))
+
 
 ;;; Generic Lisp
 
