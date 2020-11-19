@@ -2124,7 +2124,9 @@ unlike `markdown-preview'."
   :init
   ;; Makefile 默认 `makefile-bsdmake-mode'，mac 自带的 GNU Make
   (push
-   '("[Mm]akefile\\'" . makefile-gmake-mode) 
+   ;; Makefile 和 .makefile
+   (cons (rx bos (opt ".") (in "mM") "akefile" eos)
+         makefile-gmake-mode)
    auto-mode-alist))
 
 
