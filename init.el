@@ -2126,7 +2126,7 @@ unlike `markdown-preview'."
   (push
    ;; Makefile 和 .makefile
    (cons (rx bos (opt ".") (in "mM") "akefile" eos)
-         makefile-gmake-mode)
+         'makefile-gmake-mode)
    auto-mode-alist))
 
 
