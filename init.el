@@ -49,6 +49,8 @@
 
 (use-package use-package
   :config
+  (setq use-package-enable-imenu-support t)
+
   (setq use-package-verbose 'errors)
   (setq use-package-expand-minimally t)
 
