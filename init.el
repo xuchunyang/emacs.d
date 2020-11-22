@@ -3742,6 +3742,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
         twittering-proxy-port 1087))
 
 (use-package elfeed
+  :disabled
   :ensure t
   :commands elfeed
   :config
