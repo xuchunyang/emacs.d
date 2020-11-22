@@ -4650,8 +4650,10 @@ Adapt from `org-babel-remove-result'."
 
   ;; (setq org-log-done 'time)
 
-  (setq org-directory "~/Notes"
-        org-agenda-files '("~/Notes"))
+  (setq org-directory "~/org"
+        org-default-notes-file "~/org/todo.org"
+        org-agenda-files (list org-directory))
+  
   (setq org-capture-templates
         '(
           ("t" "Todo" entry (file "todo.org")
@@ -4672,7 +4674,7 @@ Adapt from `org-babel-remove-result'."
   ;; IDEA 把 Org 文件保存到 SQLite，双向同步
   (require 'org-id)                     ; for `org-id-new'
   (setq org-capture-templates
-        '(("n" "Note - 过目不忘" entry (file "notes.org")
+        '(("n" "Note - 过目不忘" entry (file "todo.org")
            "\
 * %a
 :PROPERTIES:
@@ -4683,7 +4685,7 @@ Adapt from `org-babel-remove-result'."
 %?
 "
            :empty-lines 1)
-          ("i" "Idea - 灵机一动" entry (file "ideas.org")
+          ("i" "Idea - 灵机一动" entry (file "todo.org")
            "\
 * %?
 :PROPERTIES:
@@ -4692,7 +4694,7 @@ Adapt from `org-babel-remove-result'."
 :URL:      %a
 :END:"
            :empty-lines 1)
-          ("t" "todo - 代办事项" entry (file "todos.org")
+          ("t" "todo - 代办事项" entry (file "todo.org")
            "\
 * TODO %?
 :PROPERTIES:
