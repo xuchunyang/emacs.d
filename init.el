@@ -4386,7 +4386,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
                    (split-string
                     (substring-no-properties (eshell-get-history 0)))))))
         (and last-arg (insert last-arg)))))
-  :bind ("C-x M" . eshell)              ; 'C-x m' runs `compose-mail' by default
+  :bind ("C-x m" . eshell)              ; 'C-x m' runs `compose-mail' by default
   :init
   (setq eshell-banner-message
         '(concat (mapconcat #'identity (mingju) " -- ")
