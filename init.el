@@ -6254,13 +6254,23 @@ And by the way, the menu bar on macOS is buggy.")
   :defer t)
 
 (use-package restclient
-  :about "Test HTTP API"
+  :about "Test HTTP API (url.el)"
+  :ensure t
+  :defer t)
+
+(use-package restclient-test
   :ensure t
   :defer t)
 
 (use-package verb
-  :about Organize and send HTTP requests
+  :about Organize and send HTTP requests (url.el + org-mode)
   :homepage https://github.com/federicotdn/verb
+  :ensure t
+  :after org
+  :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+
+(use-package walkman
+  :about Write HTTP requests in Org mode and replay them at will using cURL
   :ensure t
   :defer t)
 
