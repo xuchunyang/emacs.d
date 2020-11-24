@@ -6271,6 +6271,7 @@ And by the way, the menu bar on macOS is buggy.")
 
 (use-package walkman
   :about Write HTTP requests in Org mode and replay them at will using cURL
+  :homepage https://github.com/abrochard/walkman
   :ensure t
   :defer t)
 
