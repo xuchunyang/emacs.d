@@ -1,0 +1,76 @@
+#+TITLE: 测试 verb
+
+* Simple requests                                                      :verb:
+
+** Example request
+get http://example.com
+
+** 名句
+get https://mingju.vercel.app/api/get?id=1888
+
+** ip location
+get https://ip-location-lookup.vercel.app/api/ip
+
+** hn
+get https://hn.xuchunyang.me/db
+
+** 词典
+get https://dict-zeta.vercel.app/api/word?dict=%E6%B1%89%E8%AF%AD%E6%88%90%E8%AF%AD%E8%AF%8D%E5%85%B8&word=%E5%87%A4%E6%AF%9B%E6%B5%8E%E7%BE%8E
+
+** 自动 urlencode?
+get https://dict-zeta.vercel.app/api/word?dict=汉语成语词典&word=凤毛济美
+
+** 变量
+get https://dict-zeta.vercel.app/api/word?dict=汉语成语词典&word={{(verb-var word)}}
+
+** multiple requests?
+
+一次只能发送一个请求
+
+*** Example request
+get http://example.com
+
+*** 名句
+get https://mingju.vercel.app/api/get?id=1888
+
+* httpbin                                                              :verb:
+template https://httpbin.org
+
+** header
+get https://httpbin.org/get
+Accept: application/json
+Content-Language: de-DE
+
+** body
+post https://httpbin.org/post
+Content-Type: application/json; charset=utf-8
+
+{
+    "name": "John",
+    "age": 42
+}
+
+** body via org code block
+post https://httpbin.org/post
+Content-Type: application/json; charset=utf-8
+
+#+begin_src json
+{
+    "name": "John",
+    "age": 42
+}
+#+end_src
+
+** cert-expiry-date                                                    :verb:
+get https://cert-expiry-date.vercel.app/api/cert-expiry-date?url=https://example.com/
+Authority: cert-expiry-date.vercel.app
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://cert-expiry-date.vercel.app/?url=https%3A%2F%2Fexample.com%2F
+Accept-Language: en-US,en;q=0.9,zh-CN;q=0.8,zh-TW;q=0.7,zh;q=0.6
+
+** cadr.xyz                                                            :verb:
+get http://cadr.xyz
