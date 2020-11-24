@@ -680,6 +680,13 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   :about find files using fd <https://github.com/sharkdp/fd> with helm
   :commands helm-fd)
 
+(use-package helm-descbinds
+  :ensure t
+  ;; XXX how to lazy loading?
+  :config
+  (setq helm-descbinds-window-style 'split-window)
+  (helm-descbinds-mode))
+
 
 ;;; Buffers, Windows and Frames
 
