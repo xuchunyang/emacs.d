@@ -3463,6 +3463,16 @@ This should be add to `find-file-hook'."
   :ensure t
   :commands ansible-doc)
 
+(use-package auth-source
+  :defer t
+  :preface
+  (autoload 'auth-source-search "auth-source")
+  (defun chunyang-auth-source-get-secret (host)
+    (let ((plist (car (auth-source-search :host host :max 1))))
+      (unless plist
+        (user-error "Can't find host: %s" host))
+      (funcall (plist-get plist :secret)))))
+
 (use-package helm-lastpass
   :ensure t
   :load-path "~/src/helm-lastpass"
