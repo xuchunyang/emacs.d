@@ -1,0 +1,116 @@
+#+TITLE: 通过 Emacs Lisp 了解 WebSocket
+
+* 用 =web-server.el= 写 WebSocket 服务器
+
+#+begin_src elisp :lexical t :results silent
+(require 'web-server)
+
+(ws-start
+ (lambda (request)
+   (cond
+    ;; 发现 websocket 请求，处理它
+    ((ws-web-socket-connect
+      request
+      (lambda (proc string)
+        (process-send-string
+         proc
+         (ws-web-socket-frame (upcase string)))))
+     ;; 保持连接
+     :keep-alive)
+    ;; 普通的 HTTP 请求
+    (t
+     (let ((proc (oref request process)))
+       (ws-response-header proc 200)
+       (ws-send proc "Please connect to ws://localhost:8080.")))))
+ 8080
+ nil
+ :host "0.0.0.0")
+#+end_src
+
+用命令行工具 =websocat= 测试：
+
+#+begin_example
+~ $ echo hello | websocat -1 ws://127.0.0.1:8080/
+HELLO
+#+end_example
+
+在浏览器里测试：
+
+#+begin_src javascript
+const ws = new WebSocket("ws://0.0.0.0:8080/");
+
+ws.onopen    = () => console.log("建立连接");
+ws.onmessage = (msg) => console.log("收到数据：", msg.data);
+ws.onclose   = () => console.log("关闭连接");
+
+ws.send("Hello, WebSocket Server!");
+#+end_src
+
+* 用 =websocket.el= 写 WebSocket 客户端
+
+#+begin_src elisp
+(require 'websocket)
+
+(setq
+ my-ws
+ (websocket-open
+  "ws://127.0.0.1:3000"
+  :on-open
+  (lambda (ws)
+    ;; (message "on-open: %s" ws)
+    (websocket-send-text ws "Hello"))
+  :on-message
+  (lambda (ws frame)
+    ;; (message "on-message: %s, %s" ws frame)
+    ;; (message "Received: %S"
+    ;;          (websocket-frame-text frame))
+    (websocket-send-text
+     ws
+     (upcase (websocket-frame-text frame)))
+    )
+  :on-close
+  (lambda (ws)
+    (message "on-close"))))
+
+;; (websocket-send-text my-ws "Hello, World!!!!")
+;; (websocket-close my-ws)
+#+end_src
+
+#+RESULTS:
+: #s(websocket connecting nil (lambda (ws) (websocket-send-text ws "Hello")) (lambda (ws frame) (websocket-send-text ws (upcase (websocket-frame-text frame)))) (lambda (ws)) websocket-default-error-handler nil nil nil "ws://127.0.0.1:3000" nil nil #<process websocket to ws://127.0.0.1:3000> nil "cYNL6svFoGNaxx1jjoqFKv80mNk=" nil)
+
+* 用 =websocket.el= 写 WebSocket 服务器
+
+#+begin_src elisp
+(setq
+ my-ws-server
+ (websocket-server
+  3000
+  :on-open
+  (lambda (ws)
+    (websocket-send-text ws "Welcome!"))
+  :on-message
+  (lambda (ws frame)
+    (websocket-send-text ws (upcase (websocket-frame-text frame))))
+  :on-close
+  (lambda (ws)
+    (message "on-close"))))
+
+;; (websocket-server-close my-ws-server)
+#+end_src
+
+#+RESULTS:
+: #<process websocket server on port 3000>
+
+测试
+
+#+begin_example
+~ $ websocat ws://127.0.0.1:3000
+Welcome!
+hello
+HELLO
+cool
+COOL
+#+end_example
+* TODO 手写 WebSocket，需要了解具体协议
+
