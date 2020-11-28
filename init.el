@@ -2608,6 +2608,8 @@ PACKAGE should not be a built-in package."
   :defer t
   :config
 
+  (setq edebug-print-length 100)
+
   (define-advice edebug-eval-expression (:before (_expr) better-interactive-form)
     "Fix the original interactive form."
     (interactive (list (read--expression "Edebug Eval: "))))
