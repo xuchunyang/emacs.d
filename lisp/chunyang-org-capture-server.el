@@ -1,8 +1,13 @@
+(add-to-list
+ 'org-capture-templates
+ '("l" "Link" entry (file "links.org")
+   "* %a"))
+
 (require 'web-server)
 
 (defun chunyang-org-capture-server (request)
   (pcase-let (((eieio process headers) request))
-    (message "%S" headers)
+    ;; (message "%S" headers)
     (let ((path (assoc-default :GET headers)))
       ;; 只处理 GET /
       (if (not (and path (string= path "/")))
@@ -18,7 +23,9 @@
 			        :annotation (org-link-make-string href title))
           (let ((org-capture-link-is-already-stored t))
             (org-capture nil "l"))
-          (let ((body "Successfully sent to Org Capture"))
+          (let ((body "
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<h3>Successfully sent to Org Capture</h3>"))
             (ws-response-header
              process 200
              (cons "Content-Type" "text/html")
