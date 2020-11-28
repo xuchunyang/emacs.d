@@ -4673,48 +4673,21 @@ Adapt from `org-babel-remove-result'."
   (setq org-directory "~/org"
         org-default-notes-file "~/org/todo.org"
         org-agenda-files (list org-directory))
-  
-  (setq org-capture-templates
-        '(
-          ("t" "Todo" entry (file "todo.org")
-           "* TODO %i%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
-           :empty-lines 1)
-          ("n" "Note" entry (file "notes.org")
-           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
-           :empty-lines 1)
-          ("j" "Journal" plain (file+datetree "journal.org")
-           "%?"
-           :time-prompt t
-           :empty-lines 1)
-          ("b" "Bookmark" entry (file "bookmarks.org")
-           "* %?%(grab-mac-link 'chrome 'org)\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
-           :empty-lines 1
-           :immediate-finish t)))
 
   ;; IDEA 把 Org 文件保存到 SQLite，双向同步
   (require 'org-id)                     ; for `org-id-new'
   (setq org-capture-templates
-        '(("n" "Note - 过目不忘" entry (file "todo.org")
+        '(("n" "Note - 笔记" entry (file "todo.org")
            "\
-* %a
-:PROPERTIES:
-:ID:       %(org-id-new)
-:CREATED:  %<%FT%T%z>
-:END:
-
-%?
-"
-           :empty-lines 1)
-          ("i" "Idea - 灵机一动" entry (file "todo.org")
-           "\
-* %?
+* %a%?
 :PROPERTIES:
 :ID:       %(org-id-new)
 :CREATED:  %<%FT%T%z>
 :URL:      %a
-:END:"
+:END:
+"
            :empty-lines 1)
-          ("t" "todo - 代办事项" entry (file "todo.org")
+          ("t" "Todo - 待办" entry (file "todo.org")
            "\
 * TODO %?
 :PROPERTIES:
@@ -4730,7 +4703,7 @@ Adapt from `org-babel-remove-result'."
     (interactive)
     (let* ((input
             (completing-read
-             "org capture template:"
+             "org capture template: "
              (mapcar
               (lambda (template)
                 (format "%s %s" (car template) (cadr template)))
