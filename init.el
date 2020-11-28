@@ -6277,7 +6277,21 @@ And by the way, the menu bar on macOS is buggy.")
   :homepage https://github.com/federicotdn/verb
   :ensure t
   :after org
-  :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+  :config
+  ;; Inherit `Verb-Map-Request'
+  (setq org-use-property-inheritance t)
+
+  (defun chunyang-verb-cos5-insert-authorization (request-spec)
+    (require 'cos5)
+    (pcase-let (((eieio method url headers) request-spec))
+      (cl-assert (not (assoc "Authorization" headers)))
+      (pcase-let ((`(,path . ,query) (url-path-and-query url)))
+        (cl-callf2 cons
+            (cons "Authorization" (cos5--sign method path query headers))
+            (oref request-spec headers))
+        request-spec)))
+  
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 (use-package walkman
   :about Write HTTP requests in Org mode and replay them at will using cURL
