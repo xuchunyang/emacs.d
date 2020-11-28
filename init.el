@@ -138,6 +138,9 @@
 ;; speed up redisplay.
 (setq bidi-paragraph-direction 'left-to-right)
 
+;; (set-language-environment "English")
+;; (setenv "LANG" "en_US.UTF-8")
+
 
 ;;; macOS
 
