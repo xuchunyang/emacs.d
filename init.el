@@ -1505,6 +1505,7 @@ Intended to be added to `isearch-mode-hook'."
   :config (show-paren-mode))
 
 (use-package rainbow-delimiters         ; Highlight delimiters by depth
+  :disabled
   :ensure t
   :defer t
   :init (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
