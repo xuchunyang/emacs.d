@@ -319,7 +319,7 @@
 (when (memq window-system '(mac ns))
   (set-face-attribute 'default nil :font "Source Code Pro-14")
 
-  (setq face-font-rescale-alist `(("STkaiti" . ,(/ 16.0 13))))
+  (setq face-font-rescale-alist `(("STkaiti" . ,(/ 16.0 14))))
   (set-fontset-font t 'han      (font-spec :family "STkaiti"))
   (set-fontset-font t 'cjk-misc (font-spec :family "STkaiti")))
 
