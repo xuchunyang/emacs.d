@@ -4683,7 +4683,7 @@ Adapt from `org-babel-remove-result'."
   (setq org-capture-templates
         '(("n" "Note - 笔记" entry (file "todo.org")
            "\
-* %a%?
+* %?
 :PROPERTIES:
 :ID:       %(org-id-new)
 :CREATED:  %<%FT%T%z>
