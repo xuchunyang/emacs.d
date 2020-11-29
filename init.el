@@ -3140,6 +3140,10 @@ PACKAGE should not be a built-in package."
   :defer t
   :config
   (prodigy-define-service
+    :name "frpc"
+    :cwd "~/"
+    :command "frpc")
+  (prodigy-define-service
     :name "Godoc Server"
     :command "godoc"
     :args '("-http=:8000")
