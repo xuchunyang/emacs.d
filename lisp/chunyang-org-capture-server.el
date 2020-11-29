@@ -1,7 +1,8 @@
 (add-to-list
  'org-capture-templates
  '("l" "Link" entry (file "links.org")
-   "* %a"))
+   "* %a"
+   :immediate-finish t))
 
 (require 'web-server)
 
