@@ -74,3 +74,31 @@ Accept-Language: en-US,en;q=0.9,zh-CN;q=0.8,zh-TW;q=0.7,zh;q=0.6
 
 ** cadr.xyz                                                            :verb:
 get http://cadr.xyz
+
+* 使用变量                                                             :verb:
+POST http://httpbin.org/post
+Content-Type: application/json; charset=utf-8
+
+#+begin_src json
+{
+  "name": {{ (verb-var name user-full-name) }}
+}
+#+end_src
+
+verb-var 设置变量，可以提供默认值。
+
+M-x verb-show-vars
+M-x verb-set-var
+M-x verb-unset-vars
+
+* 使用 Last Response                                                   :verb:
+get http://example.com/
+
+** use last response
+
+#+begin_src elisp
+(verb-headers-get (oref verb-last headers) "Content-Type")
+#+end_src
+
+#+RESULTS:
+: text/html; charset=UTF-8
