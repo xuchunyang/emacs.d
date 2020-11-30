@@ -4706,6 +4706,15 @@ Adapt from `org-babel-remove-result'."
 :CREATED:  %<%FT%T%z>
 :URL:      %a
 :END:"
+           :empty-lines 1)
+          ("w" "Word - 单词" entry (file "word.org")
+           "\
+* %?%i
+:PROPERTIES:
+:ID:       %(org-id-new)
+:CREATED:  %<%FT%T%z>
+:URL:      %a
+:END:"
            :empty-lines 1)))
 
   (setq org-agenda-restore-windows-after-quit t)
@@ -4758,6 +4767,7 @@ Adapt from `org-babel-remove-result'."
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((awk        . t)
+     (calc       . t)
      (clojure    . t)
      (C          . t)
      (ditaa      . t)
