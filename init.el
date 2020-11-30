@@ -4179,7 +4179,10 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :about Longman Dictionary of Contemporary English 5
   :load-path "~/src/ldoce5.el"
   :commands (longman ldoce5-lookup ldoce5-helm)
-  :config (defalias 'longman (symbol-function 'ldoce5-helm)))
+  :config
+  ;; Avoid homebrew's python, I've installed some packages with system python3
+  (setq ldoce5-python-interpreter "/usr/bin/python3")
+  (defalias 'longman (symbol-function 'ldoce5-helm)))
 
 (use-package youdao-dictionary
   :load-path "~/src/youdao-dictionary.el"
