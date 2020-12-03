@@ -34,10 +34,10 @@
                            ("melpa" . "https://melpa.org/packages/")))
   (setq package-archives '(("gnu"   . "https://elpa.emacs-china.org/gnu/")
                            ("melpa" . "https://elpa.emacs-china.org/melpa/")))
-  (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                           ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
   (setq package-archives '(("gnu"   . "https://mirrors.cloud.tencent.com/elpa/gnu/")
                            ("melpa" . "https://mirrors.cloud.tencent.com/elpa/melpa/")))
+  (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                           ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
   (package-initialize))
 
 
