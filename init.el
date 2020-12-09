@@ -5951,6 +5951,7 @@ And by the way, the menu bar on macOS is buggy.")
   :defer t)
 
 (use-package company-lua
+  :disabled t
   :ensure t
   :after lua-mode
   :config
