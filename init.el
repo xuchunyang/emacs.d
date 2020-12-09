@@ -5495,7 +5495,12 @@ provides similiar function."
   ;;         (seq-remove (lambda (elt) (= (car elt) ?\;))
   ;;                     electric-layout-rules)))
   ;; (add-hook 'js-mode-hook #'chunyang-js-mode-setup)
+  ;; (add-hook 'js-mode-hook #'flycheck-mode)
   )
+
+(use-package prettier
+  :ensure t
+  :hook (js-mode . prettier-mode))
 
 (use-package js2-mode
   :disabled
