@@ -6580,6 +6580,10 @@ at a time."
   :ensure t
   :commands ipcalc)
 
+(use-package chunyang-snippets
+  :load-path "~/src/snippets"
+  :commands chunyang-snippets-new)
+
 
 ;;; Other Emacs Lisp libraries
 
