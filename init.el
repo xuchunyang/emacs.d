@@ -4715,7 +4715,18 @@ Adapt from `org-babel-remove-result'."
 :CREATED:  %<%FT%T%z>
 :URL:      %a
 :END:"
-           :empty-lines 1)))
+           :empty-lines 1)
+          ("s" "Snippet - 代码片段" entry (file "snippet.org")
+           "\
+* %T
+:PROPERTIES:
+:ID:       %(org-id-new)
+:CREATED:  %<%FT%T%z>
+:URL:      %a
+:END:
+
+#+BEGIN_SRC %?
+#+END_SRC")))
 
   (setq org-agenda-restore-windows-after-quit t)
 
@@ -4762,8 +4773,6 @@ Adapt from `org-babel-remove-result'."
     ;; (add-to-list 'org-src-lang-modes (cons "racket" 'racket))
     )
 
-  (add-to-list 'org-src-lang-modes '("js" . js2))
-
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((awk        . t)
@@ -4773,6 +4782,7 @@ Adapt from `org-babel-remove-result'."
      (ditaa      . t)
      (emacs-lisp . t)
      (eshell     . t)
+     (js         . t)
      (latex      . t)
      (lisp       . t)
      (lua        . t)
@@ -4786,6 +4796,16 @@ Adapt from `org-babel-remove-result'."
      (shell      . t)
      (sql        . t)
      (sqlite     . t)))
+
+  (use-package ob-js
+    :defer t
+    :config
+    ;; PATCH the builtin org-mode
+    ;; 
+    ;; 47b653450 ob-js.el: Fix obsolete requirement
+    (setq
+     org-babel-js-function-wrapper
+     "require('process').stdout.write(require('util').inspect(function(){%s}()));"))  
 
   ;; Work-around for
   ;; http://lists.gnu.org/archive/html/emacs-orgmode/2018-03/msg00013.html
