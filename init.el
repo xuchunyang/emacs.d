@@ -780,6 +780,8 @@ Idea from URL `https://www.reddit.com/r/emacs/comments/as83e2/weekly_tipstricket
              ;; Insert datetime
              chunyang-helm-time
              chunyang-indent-align-cycle
+             ;; Randome project name
+             chunyang-glitch-name
              ;; Emacs -Q with straight.el
              chunyang-straight-emacs-Q-command
              chunyang-straight-git-version))

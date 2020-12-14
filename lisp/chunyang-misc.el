@@ -672,5 +672,37 @@ For testing / debugging Emacs init file."
     (copy-file module tmpfile t)
     (module-load tmpfile)))
 
+
+;; 生成 https://glitch.com/ 风格的随机项目名称
+(defun chunyang-glitch-name ()
+  "Get a Glitch-style project name.
+
+Some examples:
+ curly-boggy-aries
+ busy-brief-bucket
+ bolder-glistening-vanadium
+ melted-lemon-jet
+
+predicates predicates objects
+predicates objects objects"
+  (interactive)
+  (let ((file (expand-file-name "~/.emacs.d/misc/glitch-firendly-words.json")))
+    (unless (file-exists-p file)
+      (url-copy-file
+       "https://raw.githubusercontent.com/glitchdotcom/friendly-words/master/generated/words.json"
+       file))
+    (let-alist (with-temp-buffer
+                 (insert-file-contents-literally file)
+                 (goto-char (point-min))
+                 (let ((json-array-type 'list))
+                   (json-read)))
+      (let ((name (concat
+                   (seq-random-elt .predicates) "-"
+                   (seq-random-elt .predicates) "-"
+                   (seq-random-elt .objects))))
+        (kill-new name)
+        (message "Saved to kill-ring: %s" name)
+        name))))
+
 (provide 'chunyang-misc)
 ;;; chunyang-misc.el ends here
