@@ -10,4 +10,4 @@
 - 学习各种布局
 - 改进自己的窗口工作流
 
-不要管 Frame，如 child frame。
+* 适配 New iMac
