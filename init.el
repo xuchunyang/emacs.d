@@ -27,7 +27,6 @@
 
 ;;; Package Manager
 
-(when (version<= emacs-version "27")
   (require 'package)
   (setq package-user-dir (concat "~/.emacs.d/elpa-" emacs-version))
   (setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
@@ -38,7 +37,7 @@
                            ("melpa" . "https://mirrors.cloud.tencent.com/elpa/melpa/")))
   (setq package-archives '(("gnu"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                            ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-  (package-initialize))
+  (package-initialize)
 
 
 ;;; `use-package'
