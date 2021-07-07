@@ -1056,24 +1056,26 @@ FILES are in the same directory."
   :init (eval-after-load 'dired '(require 'dired-x))
   :config
 
+  (setq dired-guess-shell-alist-user
+        (list (list (rx "." "php" string-end) "php")))
+
   ;; On macOS, use open(1) as guess shell command for some files
   (when *is-mac*
-    (setq dired-guess-shell-alist-user
-          (list
-           (list (rx "."
-                     (or
-                      ;; Videos
-                      "mp4" "avi" "mkv" "rmvb"
-                      ;; Torrent
-                      "torrent"
-                      ;; PDF
-                      "pdf"
-                      ;; HTML
-                      "html"
-                      ;; Image
-                      "gif" "png" "jpg" "jpeg")
-                     string-end)
-                 "open"))))
+    (push (list (rx "."
+                    (or
+                     ;; Videos
+                     "mp4" "avi" "mkv" "rmvb"
+                     ;; Torrent
+                     "torrent"
+                     ;; PDF
+                     "pdf"
+                     ;; HTML
+                     "html"
+                     ;; Image
+                     "gif" "png" "jpg" "jpeg")
+                    string-end)
+                "open")
+          dired-guess-shell-alist-user))
 
   (add-to-list 'dired-guess-shell-alist-user
                `("\\.el\\'"
