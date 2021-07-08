@@ -5873,6 +5873,20 @@ And by the way, the menu bar on macOS is buggy.")
   :after org)
 
 
+;;; PHP
+(use-package php-mode
+  :ensure t
+  :defer t
+  :config
+  (bind-key "C-h ." #'php-quickhelp-at-point php-mode-map))
+
+(use-package company-php
+  :homepage https://github.com/xcwen/ac-php
+  :ensure t
+  :after company php-mode
+  :config (add-to-list 'company-backends 'company-ac-php-backend))
+
+
 ;;; Python
 
 (use-package python
