@@ -1623,6 +1623,10 @@ Intended to be added to `isearch-mode-hook'."
   ;; (bind-key "M-h" #'company-show-doc-buffer company-active-map)
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 2)
+
+  ;; FIXME What for?
+  (advice-add 'company--warn-changed-binding :around #'ignore)
+
   ;; remove annoying blinking
   (setq company-echo-delay 0))
 
