@@ -4196,6 +4196,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 (use-package osx-dictionary
   :if *is-mac*
   :ensure t
+  :load-path "~/src/osx-dictionary.el"
   :bind ("C-c d" . osx-dictionary-search-pointer))
 
 (use-package bing-dict
