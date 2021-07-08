@@ -1285,10 +1285,10 @@ FILES are in the same directory."
          ("C-c o C-s"   . mc/mark-all-in-region)))
 
 (use-package undo-tree                  ; Branching undo
-  ;; :ensure t XXX 老卡死我的 Emacs，手动下了旧版本试一试
+  :ensure
   :diminish undo-tree-mode
-  :commands global-visual-line-mode
-  :config
+  :commands global-undo-tree-mode
+  :init
   (setq undo-tree-visualizer-timestamps t)
   (global-undo-tree-mode))
 
