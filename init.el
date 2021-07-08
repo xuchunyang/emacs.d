@@ -1893,6 +1893,7 @@ unlike `markdown-preview'."
       (remove-hook 'after-save-hook #'chunyang-markdown-preview-in-chrome :local))))
 
 (use-package mdcx
+  :disabled
   :load-path "~/src/mdcx.el"
   :about "Run Markdown Code block"
   :after markdown-mode
