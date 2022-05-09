@@ -48,3 +48,4 @@ lisp/chunyang-fun.el
 
 # Emacs 27 packages autoloads
 /package-quickstart.el
+/php-quickhelp-manual/

@@ -1057,7 +1057,8 @@ FILES are in the same directory."
   :config
 
   (setq dired-guess-shell-alist-user
-        (list (list (rx "." "php" string-end) "php")))
+        (list (list (rx "." "php" string-end) "php")
+              (list (rx "." (or "js" "mjs") string-end) "node")))
 
   ;; On macOS, use open(1) as guess shell command for some files
   (when *is-mac*
@@ -1071,6 +1072,8 @@ FILES are in the same directory."
                      "pdf"
                      ;; HTML
                      "html"
+                     ;; Adobe illustrator
+                     "ai"
                      ;; Image
                      "gif" "png" "jpg" "jpeg")
                     string-end)
@@ -3097,11 +3100,12 @@ PACKAGE should not be a built-in package."
   :ensure t
   :bind ("C-x v t" . git-timemachine))
 
-(use-package gitconfig-mode             ; Edit .gitconfig files
+(use-package gitconfig                  ; Edit .gitconfig files
   :ensure t
   :defer t)
 
 (use-package gitignore-mode             ; Edit .gitignore files
+  :disabled t
   :ensure t
   :defer t
   :preface
@@ -4691,7 +4695,7 @@ Adapt from `org-babel-remove-result'."
   ;; (setq org-log-done 'time)
 
   (setq org-directory "~/org"
-        org-default-notes-file "~/org/todo.org"
+        org-default-notes-file "~/org/notes.org"
         org-agenda-files (list org-directory))
 
   ;; IDEA 把 Org 文件保存到 SQLite，双向同步
@@ -4736,6 +4740,8 @@ Adapt from `org-babel-remove-result'."
 
 #+BEGIN_SRC %?
 #+END_SRC")))
+
+  (setq org-capture-templates '(("n" "Note" entry (file "") "* %?\n")))
 
   (setq org-agenda-restore-windows-after-quit t)
 
@@ -5188,6 +5194,7 @@ provides similiar function."
   :init (add-hook 'sml-mode-hook #'sml-eldoc-turn-on))
 
 (use-package ob-sml
+  :disabled t
   :ensure t
   :after org)
 
@@ -5447,14 +5454,13 @@ provides similiar function."
     (add-to-list 'sgml-empty-tags "source"))
   :hook (html-mode . chunyang-html-mode-setup)
   :config
-  ;; 2 is already the default
-  (setq sgml-basic-offset 2))
+  ;; 2 is the default
+  (setq sgml-basic-offset 4))
 
 (use-package chunyang-html
   :commands chunyang-html-empty-template)
 
 (use-package web-mode
-  :disabled t
   :homepage http://web-mode.org
   :ensure t
   :defer t
@@ -6760,6 +6766,6 @@ _r_: return
 
 ;; Local Variables:
 ;; bug-reference-url-format: "https://debbugs.gnu.org/cgi/bugreport.cgi?bug=%s"
-;; bug-reference-bug-regexp: "bug#\\(?2:[0-9]+\\)"
+;; bug-reference-bug-regexp: "\\(?1:bug#\\(?2:[0-9]+\\)\\)"
 ;; eval: (bug-reference-prog-mode)
 ;; End:
