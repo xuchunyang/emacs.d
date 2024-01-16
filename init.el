@@ -3876,8 +3876,8 @@ proxychains4 mbsync --verbose --all && notmuch new&")
      (t
       (message "Turn on URL proxy")
       (setq url-proxy-services
-            '(("http" . "localhost:1087")
-              ("https" . "localhost:1087")
+            '(("http" . "localhost:7890")
+              ("https" . "localhost:7890")
               ("no_proxy" . "0.0.0.0")))))))
 
 (use-package curl-to-elisp
