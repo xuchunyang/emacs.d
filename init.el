@@ -24,6 +24,7 @@
 
 (require 'package)
 (setq package-user-dir (concat "~/.emacs.d/elpa-" emacs-version))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
 
