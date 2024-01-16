@@ -1,6 +1,6 @@
 ;;; init.el --- Xu Chunyang's Emacs Configuration  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015-2021  Xu Chunyang
+;; Copyright (C) 2015-2021, 2024  Xu Chunyang
 
 ;; Author: Xu Chunyang
 ;; URL: https://github.com/xuchunyang/emacs.d
@@ -10,14 +10,9 @@
 
 ;;; Startup
 
-;; If it's not me, skip loading the rest
-(unless (equal user-login-name "xcy")
-  (warn "Please don't load Xu Chunyang's init file, it won't work for you")
-  (with-current-buffer " *load*"
-    (goto-char (point-max))))
-
 ;; Custom
 (setq custom-file "~/.emacs.d/custom.el")
+
 (setq message-log-max 10000)
 
 ;; Emacs should have them, see Bug#33576
@@ -27,17 +22,9 @@
 
 ;;; Package Manager
 
-  (require 'package)
-  (setq package-user-dir (concat "~/.emacs.d/elpa-" emacs-version))
-  (setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/")))
-  (setq package-archives '(("gnu"   . "https://elpa.emacs-china.org/gnu/")
-                           ("melpa" . "https://elpa.emacs-china.org/melpa/")))
-  (setq package-archives '(("gnu"   . "https://mirrors.cloud.tencent.com/elpa/gnu/")
-                           ("melpa" . "https://mirrors.cloud.tencent.com/elpa/melpa/")))
-  (setq package-archives '(("gnu"   . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                           ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-  (package-initialize)
+(require 'package)
+(setq package-user-dir (concat "~/.emacs.d/elpa-" emacs-version))
+(package-initialize)
 
 
 ;;; `use-package'
@@ -97,15 +84,6 @@
 
 ;; Use `fundamental-mode' to reduce startup time
 (setq initial-major-mode 'lisp-interaction-mode)
-
-;; `lexical-binding' is on in *scratch* since 27.1
-(when (version< emacs-version "27.1")
-  (add-hook 'emacs-startup-hook
-            (defun chunyang-enable-lexical-binding ()
-              (let ((buffer (get-buffer "*scratch*")))
-                (when buffer
-                  (with-current-buffer buffer
-                    (setq lexical-binding t)))))))
 
 (use-package chunyang-scratch
   :preface
@@ -1371,7 +1349,6 @@ FILES are in the same directory."
 ;; Use `C-M-l' instead of twice `C-l' for a better view
 
 (use-package page-break-lines           ; Turn page breaks into lines
-  :disabled
   :ensure t
   :diminish page-break-lines-mode
   :defer t
@@ -1721,6 +1698,7 @@ Intended to be added to `isearch-mode-hook'."
   (unbind-key "C-M-i" flyspell-mode-map)
   (unbind-key "C-;"   flyspell-mode-map)
   (use-package flyspell-popup
+    :disabled
     :ensure t
     :config
     (bind-key "C-." #'flyspell-popup-correct flyspell-mode-map)
@@ -2526,6 +2504,7 @@ PACKAGE should not be a built-in package."
         (insert new)))))
 
 (use-package chunyang-package
+  :disabled
   :commands (describe-package--add-melpa-link
              chunyang-package-menu-hack-tabulated-list-format)
   :init
@@ -4193,12 +4172,12 @@ Note that this will OVERRIDE the existing EWW bookmarks."
   :commands (longman ldoce5-lookup ldoce5-helm)
   :config
   ;; Avoid homebrew's python, I've installed some packages with system python3
-  (setq ldoce5-python-interpreter "/usr/bin/python3")
+  (setq ldoce5-python-interpreter "/opt/homebrew/bin/python3")
+  (setq ldoce5-python-interpreter "/Users/xcy/src/ldoce5.el/myenv/bin/python")
   (defalias 'longman (symbol-function 'ldoce5-helm)))
 
 (use-package youdao-dictionary
   :load-path "~/src/youdao-dictionary.el"
-  :ensure t
   :bind (("C-c y" . youdao-dictionary-search)
          ("C-c Y" . youdao-dictionary-search-at-point+)))
 
@@ -4461,7 +4440,8 @@ Note that this will OVERRIDE the existing EWW bookmarks."
 
 
   (use-package eshell-git-prompt
-    :ensure t
+    :load-path "~/src/eshell-git-prompt"
+    ;; :ensure t
     :defer t
     ;; :init
     ;; Needed at least for `eshell-git-prompt'?
@@ -4470,11 +4450,11 @@ Note that this will OVERRIDE the existing EWW bookmarks."
     )
 
   (use-package eshell-prompt-extras
-    :disabled t
+    :load-path "~/src/eshell-prompt-extras"
     :ensure t
     :config
     (setq eshell-highlight-prompt nil
-          eshell-prompt-function 'epe-theme-lambda))
+          eshell-prompt-function 'epe-theme-multiline-with-status))
 
   (use-package chunyang-eshell-ext))
 
@@ -5446,179 +5426,6 @@ provides similiar function."
 
 
 ;;; Web
-
-(use-package sgml-mode
-  :preface
-  (defun chunyang-html-mode-setup ()
-    ;; Add HTML Empty Elements.  XHTML requires /> but HTML doesn't
-    (add-to-list 'sgml-empty-tags "source"))
-  :hook (html-mode . chunyang-html-mode-setup)
-  :config
-  ;; 2 is the default
-  (setq sgml-basic-offset 4))
-
-(use-package chunyang-html
-  :commands chunyang-html-empty-template)
-
-(use-package web-mode
-  :homepage http://web-mode.org
-  :ensure t
-  :defer t
-  :config
-  (setq web-mode-markup-indent-offset 2
-        web-mode-css-indent-offset    2
-        web-mode-code-indent-offset   2))
-
-(use-package emmet-mode
-  :disabled t
-  :homepage https://github.com/smihica/emmet-mode
-  :about Unfold CSS-selector-like expressions to markup
-  :ensure t
-  :defer t)
-
-(use-package expand-emmet
-  :load-path "~/.emacs.d/lisp/expand-emmet"
-  :commands expand-emmet-line)
-
-(use-package js
-  :defer t
-  :preface
-  (defun chunyang-nodejs-find-module (module)
-    (interactive
-     (list (read-string "Module: "
-                        ;; Use `syntax-ppss' or text props?
-                        (thing-at-point 'symbol))))
-    (let (filename)
-      (with-temp-buffer
-        (let ((exit (call-process "node" nil t nil "-pe" (format "require.resolve('%s')" module))))
-          (when (eq (char-before) ?\n)
-            (delete-char -1))
-          (if (zerop exit)
-              (setq filename (buffer-string))
-            (user-error "Can't find location of %s" module))))
-      (if (file-exists-p filename)
-          (find-file filename)
-        (user-error "Don't know how to open %s" filename))))
-  :init
-  (add-to-list 'auto-mode-alist
-               (cons (rx ".mjs" eos) #'js-mode))
-  :config
-  (setq js-indent-level 2)
-  (setq js-switch-indent-offset 2)
-  ;; (defun chunyang-js-mode-setup ()
-  ;;   (setq electric-layout-rules
-  ;;         (seq-remove (lambda (elt) (= (car elt) ?\;))
-  ;;                     electric-layout-rules)))
-  ;; (add-hook 'js-mode-hook #'chunyang-js-mode-setup)
-  ;; (add-hook 'js-mode-hook #'flycheck-mode)
-  )
-
-(use-package prettier
-  :ensure t
-  :hook (js-mode . prettier-mode))
-
-(use-package js2-mode
-  :disabled
-  :homepage https://github.com/mooz/js2-mode/
-  :ensure t
-  :hook ((js2-mode . js2-imenu-extras-mode)
-         (js2-mode . js2-mode-hide-warnings-and-errors))
-  :init
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-  (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
-  :config (setq js2-skip-preprocessor-directives t))
-
-(use-package nodejs-repl
-  :ensure t
-  :commands nodejs-repl-switch-to-repl)
-
-(use-package tern
-  :disabled
-  :homepage http://ternjs.net/
-  :ensure t
-  :defer t
-  :config
-  ;; https://discuss.ternjs.net/t/emacs-get-the-full-function-docs-comments-with-c-c-c-d/50/3
-  (defun tern-describe ()
-    (interactive)
-    (tern-run-query
-     (lambda (data)
-       ;; url, doc, type, origin
-       (let-alist data
-         (with-current-buffer (get-buffer-create "*Tern Describe*")
-           (let ((inhibit-read-only t))
-             (erase-buffer)
-             (when .doc
-               (insert .doc)
-               (fill-region (point-min) (point-max)))
-             (when .url
-               (and .doc (insert "\n\n"))
-               (insert .url))
-             (goto-char (point-min))
-             (display-buffer (current-buffer))))))
-     '((type . "documentation") (docFormat . "full"))
-     (point)))
-  :hook (js2-mode . tern-mode))
-
-(use-package company-tern
-  :disabled
-  :ensure t
-  :after (company tern)
-  :homepage https://github.com/proofit404/company-tern
-  :init (add-to-list 'company-backends 'company-tern)
-  :defer t)
-
-(use-package js2-refactor
-  :disabled
-  :ensure t
-  :defer t)
-
-(use-package indium
-  :disabled
-  :ensure t
-  :homepage https://github.com/NicolasPetton/indium
-  :about JavaScript Awesome Development Environment
-  :info (info "(Indium) Top")
-  :hook (js2-mode . indium-interaction-mode))
-
-(use-package tide
-  :disabled t
-  :homepage https://github.com/ananthakumaran/tide
-  :hook (js2-mode . tide-setup))
-
-(use-package skewer-mode
-  :about live browser JavaScript, CSS, and HTML interaction
-  :homepage https://github.com/skeeto/skewer-mode
-  :disabled t
-  :ensure t
-  :defer t
-  :init
-  (add-hook 'js2-mode-hook #'skewer-mode)
-  (add-hook 'css-mode-hook #'skewer-css-mode)
-  (add-hook 'html-mode-hook #'skewer-html-mode))
-
-(use-package css-mode
-  :defer t
-  :config
-  ;; Following https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax
-  ;; 4 is the default
-  (setq css-indent-offset 2)
-
-  (defun chunyang-helm-css-colors ()
-    "My helm interface for CSS Named colors."
-    (interactive)
-    (helm :sources
-          (helm-build-sync-source "CSS Named Colors"
-            :candidates
-            (mapcar (pcase-lambda (`(,name . ,rgb))
-                      (propertize name 'face `(:foreground ,rgb)))
-                    css--color-map)
-            :action
-            (helm-make-actions
-             "Insert name" #'insert
-             "Insert RGB" (lambda (name)
-                            (insert (assoc-default name css--color-map)))))
-          :buffer "*helm CSS Named Colors*")))
 
 (use-package web-server
   ;; :load-path "~/src/emacs-web-server/"
@@ -6668,94 +6475,8 @@ at a time."
   :load-path "~/src/plplot.el"
   :commands plplot)
 
-(use-package bui
-  :homepage https://github.com/alezost/bui.el
-  :ensure t
-  :defer t)
-
-(use-package trie
-  :info https://en.wikipedia.org/wiki/Trie
-  :ensure t
-  :defer t)
-
-(use-package strie
-  :homepage https://github.com/jcatw/strie.el
-  :ensure t
-  :defer t)
-
-(use-package request
-  :ensure t
-  :homepage https://github.com/tkf/emacs-request
-  :defer t)
-
-(use-package aio
-  :ensure t
-  :about skeeto/emacs-aio: async/await for Emacs Lisp
-  :homepage https://github.com/skeeto/emacs-aio
-  :defer t)
-
-(use-package commander
-  :about Emacs command line parser
-  :homepage http://github.com/rejeep/commander.el
-  :ensure t
-  :defer t)
-
-(use-package msgpack
-  :load-path "~/src/msgpack.el"
-  :defer t)
-
 
-;;; Debugger
 
-(use-package gud
-  :info (info "(emacs) Debuggers")
-  :defer
-  :config
-  (setq gud-pdb-command-name "python -m pdb")
-  ;; `pdb'
-  (define-advice pdb (:after (&rest _) fix-gud-statement)
-    (gud-def gud-statement "!%e"      "\C-e" "Execute Python statement at point."))
-
-  (defhydra hydra-pdb (:hint nil :foreign-keys run)
-    "
-^Running^         ^Breakpoints^   ^Data^          ^Frame
-^^^^^^^^-----------------------------------------------------
-_n_: next         _b_: set        _p_: print exp  _u_: up
-_s_: step         _r_: remove     ^ ^             _d_: down
-_c_: continue
-_r_: return
-"
-    ;; Running
-    ("n" gud-next)
-    ("s" gud-step)
-    ("c" gud-cont)
-    ("r" gud-finish)
-    ;; Breakpoints
-    ("b" gud-break)
-    ("r" gud-remove)
-    ;; Data
-    ("p" gud-print)
-    ("e" gud-statement)
-    ;; Frame
-    ("u" gud-up)
-    ("d" gud-down)
-    ;; Quit hydra
-    ("q" nil "quit" :color blue)))
-
-(use-package realgud
-  :disabled t                           ; Lots of byte compiling warnings
-  :homepage https://github.com/realgud/realgud
-  :ensure t
-  :defer t
-  :config
-  (setq realgud-safe-mode nil)
-  (setq realgud:pdb-command-name "python -m pdb"))
-
-(use-package realgud-lldb
-  :ensure t
-  :defer t)
-
-
 ;;; Custom
 
 ;; All right, enough is enough, ALL themes are safe to me.
