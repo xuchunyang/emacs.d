@@ -346,14 +346,14 @@ KEYWORD-ARGS is same as `make-hash-table'."
 ;;; Binary format in C-x C-e
 (declare-function chunyang-format-as-binary "chunyang-misc")
 
-(define-advice eval-expression-print-format (:around (old-fun value) binary)
-  "Show (Binary, Octal, Hex, Char) for numbers."
-  (let ((rtv (funcall old-fun value)))
-    (if rtv
-        (replace-regexp-in-string
-         "(#o"
-         (format "(%s, #o" (chunyang-format-as-binary value))
-         rtv))))
+;; (define-advice eval-expression-print-format (:around (old-fun value) binary)
+;;   "Show (Binary, Octal, Hex, Char) for numbers."
+;;   (let ((rtv (funcall old-fun value)))
+;;     (if rtv
+;;         (replace-regexp-in-string
+;;          "(#o"
+;;          (format "(%s, #o" (chunyang-format-as-binary value))
+;;          rtv))))
 
 
 ;;; Group & split setq
