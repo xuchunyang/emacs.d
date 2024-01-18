@@ -3861,6 +3861,7 @@ proxychains4 mbsync --verbose --all && notmuch new&")
               ("no_proxy" . "0.0.0.0")))))))
 
 (use-package curl-to-elisp
+  :ensure t
   :load-path "~/src/curl-to-elisp"
   :commands curl-to-elisp)
 
