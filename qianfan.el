@@ -24,19 +24,36 @@
 
 ;;; Code:
 
-(defvar-local qianfan-last-response 0)
+(defvar qianfan-token nil)
 
+(defun qianfan-token ()
+  (unless qianfan-token
+    (setq qianfan-token
+          (when-let ((plist (car (auth-source-search :host "api.baidubce.com" :max 1)))
+                     (user (plist-get plist :user))
+                     (pass (funcall (plist-get plist :secret))))
+            (with-current-buffer
+                (url-retrieve-synchronously
+                 (format "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s"
+                         user
+                         pass))
+              (set-buffer-multibyte t)
+              (goto-char (1+ url-http-end-of-headers))
+              (or (let-alist (json-parse-buffer :object-type 'alist)
+                    .access_token)
+                  (error "无法获得 qianfan-token %s" (buffer-string)))))))
+  qianfan-token)
+
+(defvar-local qianfan-last-response 0)
+(defvar-local qianfan-handle-response nil)
+
+;; NOTE 发现有重复的结果
 (defun qianfan-handle-new-content (_ _ old-len)
   (when (= old-len 0)
     (save-excursion
       (save-match-data
-        ;; Skip the headers
-        (if (bound-and-true-p url-http-end-of-headers)
-            (goto-char (1+ url-http-end-of-headers))
-          (goto-char (point-min))
-          (re-search-forward "\n\n" nil t))
-        
-        (when-let ((end (re-search-forward "\n\n" nil t qianfan-last-response))
+        (goto-char (point-min))
+        (when-let ((end (re-search-forward "\n\n" nil t (1+ qianfan-last-response)))
                    (start
                     (progn (forward-line -2)
                            (+ (point) (length "data: "))))
@@ -45,27 +62,37 @@
                           :object-type 'alist)))
           (cl-incf qianfan-last-response)
           (message "%S" json)
+          (when qianfan-handle-response
+            (funcall qianfan-handle-response json))
           (with-current-buffer "*scratch*"
             (let-alist json
               (insert .result))))))))
 
-(let
-    ((url-request-method "POST")
-     (url-request-extra-headers
-      '(("Content-Type" . "application/json")))
-     ;; https://github.com/ahyatt/llm/blob/97933359cb4f1bf4b03ded5ae43ea3360b818e77/llm-request.el#L129C9-L129C46
-     (url-mime-encoding-string "identity")
-     (url-request-data (encode-coding-string
-                        "{\"stream\": true, \"messages\":[{\"role\":\"user\",\"content\":\"请以保护环境为主题，写一篇作文\"}]}"
-                        'utf-8)))
-  (with-current-buffer
-      (url-retrieve
-       "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant?access_token=24.f4b93675c21a394307adb62a97ef8ff9.2592000.1708174840.282335-47373095"
-       (lambda (_)
-         (remove-hook 'after-change-functions #'qianfan-handle-new-content t)))
-    (set-buffer-multibyte t)
-    (add-hook 'after-change-functions #'qianfan-handle-new-content nil t)
-    (pop-to-buffer-same-window (current-buffer))))
+(defun qianfan (question)
+  (interactive "s文心一言: ")
+  (let ((user-buffer (current-buffer)))
+    (let ((url-request-method "POST")
+          (url-request-extra-headers '(("Content-Type" . "application/json")))
+          (url-mime-encoding-string "identity")
+          (url-request-data (encode-coding-string
+                             (json-serialize
+                              `((stream . t)
+                                (messages . [((role . "user")
+                                              (content . ,question))])))
+                             'utf-8)))
+      (with-current-buffer
+          (url-retrieve
+           (concat "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions_pro?access_token="
+                   (qianfan-token))
+           (lambda (_)
+             (remove-hook 'after-change-functions #'qianfan-handle-new-content t)))
+        (set-buffer-multibyte t)
+        (add-hook 'after-change-functions #'qianfan-handle-new-content nil t)
+        (setq qianfan-handle-response
+              (lambda (json)
+                (with-current-buffer user-buffer
+                  (let-alist json
+                    (insert .result)))))))))
 
 (provide 'qianfan)
 ;;; qianfan.el ends here
