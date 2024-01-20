@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(defvar url-http-end-of-headers)
+
 (defvar qianfan-token nil)
 
 (defun qianfan-token ()
@@ -53,27 +55,36 @@
     (save-excursion
       (save-match-data
         (goto-char (point-min))
-        (when-let ((end (re-search-forward "\n\n" nil t (1+ qianfan-last-response)))
-                   (start
-                    (progn (forward-line -2)
-                           (+ (point) (length "data: "))))
-                   (json (json-parse-string
-                          (buffer-substring-no-properties start end)
-                          :object-type 'alist)))
-          (cl-incf qianfan-last-response)
-          (message "%S" json)
-          (when qianfan-handle-response
-            (funcall qianfan-handle-response json))
-          (with-current-buffer "*scratch*"
-            (let-alist json
-              (insert .result))))))))
+        (re-search-forward "\n\n" nil t (1+ qianfan-last-response))
+
+        (while (re-search-forward "\n\n" nil t)
+
+          (when-let* ((str (save-excursion
+                             (forward-line -2)
+
+                             (buffer-substring-no-properties
+                              (point)
+                              (line-end-position))))
+                      (data (progn
+                              ;; (message "%S" str)
+                              (when (string-prefix-p "data: " str)
+                                (ignore-errors
+                                  (json-parse-string
+                                   (substring str (length "data: "))
+                                   :object-type 'alist))))))
+            (message "%s" data)
+            (cl-incf qianfan-last-response)
+            ;; (message "%S" data)
+            ;; (when qianfan-handle-response
+            ;;   (funcall qianfan-handle-response data))
+            ))))))
 
 (defun qianfan (question)
   (interactive "s文心一言: ")
   (let ((user-buffer (current-buffer)))
     (let ((url-request-method "POST")
           (url-request-extra-headers '(("Content-Type" . "application/json")))
-          (url-mime-encoding-string "identity")
+          ;; (url-mime-encoding-string "identity")
           (url-request-data (encode-coding-string
                              (json-serialize
                               `((stream . t)
@@ -82,17 +93,18 @@
                              'utf-8)))
       (with-current-buffer
           (url-retrieve
-           (concat "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions_pro?access_token="
+           (concat "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant?access_token="
                    (qianfan-token))
            (lambda (_)
              (remove-hook 'after-change-functions #'qianfan-handle-new-content t)))
-        (set-buffer-multibyte t)
+        ;; (set-buffer-multibyte t)
         (add-hook 'after-change-functions #'qianfan-handle-new-content nil t)
         (setq qianfan-handle-response
               (lambda (json)
                 (with-current-buffer user-buffer
                   (let-alist json
-                    (insert .result)))))))))
+                    (insert .result)))))
+        (pop-to-buffer-same-window (current-buffer))))))
 
 (provide 'qianfan)
 ;;; qianfan.el ends here
