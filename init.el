@@ -1605,6 +1605,9 @@ Intended to be added to `isearch-mode-hook'."
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 2)
 
+  ;; Disable the icon
+  (setq company-format-margin-function nil)
+
   ;; FIXME What for?
   (advice-add 'company--warn-changed-binding :around #'ignore)
 
