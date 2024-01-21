@@ -49,42 +49,19 @@
 (defvar-local qianfan-last-response 0)
 (defvar-local qianfan-handle-response nil)
 
-;; NOTE 发现有重复的结果
 (defun qianfan-handle-new-content (_ _ old-len)
   (when (= old-len 0)
-    (save-excursion
-      (save-match-data
-        (goto-char (point-min))
-        (re-search-forward "\n\n" nil t (1+ qianfan-last-response))
-
-        (while (re-search-forward "\n\n" nil t)
-
-          (when-let* ((str (save-excursion
-                             (forward-line -2)
-
-                             (buffer-substring-no-properties
-                              (point)
-                              (line-end-position))))
-                      (data (progn
-                              ;; (message "%S" str)
-                              (when (string-prefix-p "data: " str)
-                                (ignore-errors
-                                  (json-parse-string
-                                   (substring str (length "data: "))
-                                   :object-type 'alist))))))
-            (message "%s" data)
-            (cl-incf qianfan-last-response)
-            ;; (message "%S" data)
-            ;; (when qianfan-handle-response
-            ;;   (funcall qianfan-handle-response data))
-            ))))))
+    (when (bound-and-true-p url-http-end-of-headers)
+      (message "%S"
+               (decode-coding-string
+                (buffer-substring-no-properties (point-min) (point-max))
+                'utf-8)))))
 
 (defun qianfan (question)
-  (interactive "s文心一言: ")
+  (interactive "s千帆大模型: ")
   (let ((user-buffer (current-buffer)))
     (let ((url-request-method "POST")
           (url-request-extra-headers '(("Content-Type" . "application/json")))
-          ;; (url-mime-encoding-string "identity")
           (url-request-data (encode-coding-string
                              (json-serialize
                               `((stream . t)
@@ -94,10 +71,10 @@
       (with-current-buffer
           (url-retrieve
            (concat "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant?access_token="
-                   (qianfan-token))
+                   "24.b2ecc710a1d00bc3b6bba3f8b90a2a7b.2592000.1708426726.282335-47373095")
            (lambda (_)
-             (remove-hook 'after-change-functions #'qianfan-handle-new-content t)))
-        ;; (set-buffer-multibyte t)
+             (remove-hook 'after-change-functions #'qianfan-handle-new-content t))
+           nil t t)
         (add-hook 'after-change-functions #'qianfan-handle-new-content nil t)
         (setq qianfan-handle-response
               (lambda (json)
