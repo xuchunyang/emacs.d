@@ -6481,6 +6481,14 @@ at a time."
   :commands plplot)
 
 
+;;; AI
+
+(use-package llm
+  :homepage https://github.com/ahyatt/llm
+  :ensure t
+  :init (setq llm-warn-on-nonfree nil))
+
+
 
 ;;; Custom
 
