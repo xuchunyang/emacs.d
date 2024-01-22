@@ -51,37 +51,50 @@
 
 (defun qianfan-handle-new-content (_ _ old-len)
   (when (= old-len 0)
-    (when (bound-and-true-p url-http-end-of-headers)
-      (message "%S"
-               (decode-coding-string
-                (buffer-substring-no-properties (point-min) (point-max))
-                'utf-8)))))
+    (save-excursion
+      (save-match-data
+        (goto-char (point-min))
+        (re-search-forward "\n\n" nil t (1+ qianfan-last-response))
+        (while (re-search-forward "\n\n" nil t)
+          (let* ((str (save-excursion
+                        (forward-line -2)
+                        (decode-coding-string
+                         (buffer-substring-no-properties
+                          (+ (line-beginning-position) (length "data: "))
+                          (line-end-position))
+                         'utf-8)))
+                 (json (json-parse-string str :object-type 'alist)))
+            (funcall qianfan-handle-response json)
+            (cl-incf qianfan-last-response)))))))
+
+(setq url-http-version "1.0")
 
 (defun qianfan (question)
   (interactive "s千帆大模型: ")
-  (let ((user-buffer (current-buffer)))
-    (let ((url-request-method "POST")
-          (url-request-extra-headers '(("Content-Type" . "application/json")))
-          (url-request-data (encode-coding-string
-                             (json-serialize
-                              `((stream . t)
-                                (messages . [((role . "user")
-                                              (content . ,question))])))
-                             'utf-8)))
-      (with-current-buffer
-          (url-retrieve
-           (concat "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant?access_token="
-                   "24.b2ecc710a1d00bc3b6bba3f8b90a2a7b.2592000.1708426726.282335-47373095")
-           (lambda (_)
-             (remove-hook 'after-change-functions #'qianfan-handle-new-content t))
-           nil t t)
-        (add-hook 'after-change-functions #'qianfan-handle-new-content nil t)
-        (setq qianfan-handle-response
-              (lambda (json)
-                (with-current-buffer user-buffer
-                  (let-alist json
-                    (insert .result)))))
-        (pop-to-buffer-same-window (current-buffer))))))
+  (let ((user-buffer (current-buffer))
+        (url-request-method "POST")
+        (url-request-extra-headers '(("Content-Type" . "application/json")))
+        (url-request-data (encode-coding-string
+                           (json-serialize
+                            `((stream . t)
+                              (messages . [((role . "user")
+                                            (content . ,question))])))
+                           'utf-8)))
+    (with-current-buffer
+        (url-retrieve
+         (format
+          "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/%s?access_token=%s"
+          "eb-instant"
+          "24.b2ecc710a1d00bc3b6bba3f8b90a2a7b.2592000.1708426726.282335-47373095")
+         (lambda (_)
+           (remove-hook 'after-change-functions #'qianfan-handle-new-content t))
+         nil t t)
+      (add-hook 'after-change-functions #'qianfan-handle-new-content nil t)
+      (setq qianfan-handle-response
+            (lambda (json)
+              (with-current-buffer user-buffer
+                (let-alist json
+                  (insert .result))))))))
 
 (provide 'qianfan)
 ;;; qianfan.el ends here
