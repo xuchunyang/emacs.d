@@ -1,0 +1,45 @@
+#+TITLE: Learn GitHub API 2024
+
+* 先测试下 Verb 的使用方法                                             :verb:
+get https://ipinfo.io/
+
+* 再试下 GitHub                                                        :verb:
+get https://api.github.com/
+User-Agent: {{(format "Emacs %s" emacs-version)}}
+
+* 再用 Token 试一下，获得登录用户                                      :verb:
+get https://api.github.com/user
+User-Agent: {{(format "Emacs %s" emacs-version)}}
+Authorization: Bearer {{(funcall (plist-get (car (auth-source-search :host "api.github.com" :max 1)) :secret))}}
+
+* 测试下 Verb 的模版                                                   :verb:
+# 公用一个模版
+template https://api.github.com
+User-Agent: {{(url-http-user-agent-string)}}
+Authorization: Bearer {{(funcall (plist-get (car (auth-source-search :host "api.github.com" :max 1)) :secret))}}
+
+** 获得登录用户                                                        :verb:
+
+get /user
+
+** 获得 Repo 中的 Issue 列表
+
+get /repos/xuchunyang/elisp-demos/issues
+
+** 获得 Repo 中的 Issue 列表
+
+get /repos/xuchunyang/elisp-demos/issues
+
+
+** 获得特定的一个 Repo
+
+get /repos/xuchunyang/elisp-demos
+
+** 获得特定的一个不存在的 Repo
+# 404 Not Found
+# {
+#   "Message": "Not Found",
+#   "documentation_url": "https://docs.github.com/rest/repos/repos#get-a-repository"
+# }
+
+get /repos/xuchunyang/unknown
