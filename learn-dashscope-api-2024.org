@@ -7,3 +7,212 @@ https://help.aliyun.com/zh/dashscope/developer-reference/api-details
 post https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
 Content-Type: application/json
 Authorization: Bearer {{(funcall (plist-get (car (auth-source-search :host "dashscope.aliyuncs.com" :max 1)) :secret))}}
+
+{
+    "model": "qwen-turbo",
+    "input":{
+        "messages":[      
+            {
+                "role": "system",
+                "content": "You are a helpful assistant."
+            },
+            {
+                "role": "user",
+                "content": "介绍下 Emacs 的历史"
+            }
+        ]
+    },
+    "parameters": {
+    }
+}
+
+* Token 计算                                                           :verb:
+
+POST https://dashscope.aliyuncs.com/api/v1/tokenizer
+Content-Type: application/json
+Authorization: Bearer {{(funcall (plist-get (car (auth-source-search :host "dashscope.aliyuncs.com" :max 1)) :secret))}}
+
+{
+    "model": "qwen-plus",
+    "input":{
+        "messages":[
+            {
+                "role": "user",
+                "content": "北京有哪些好玩地方？"
+            },
+            {
+                "role": "assistant",
+                "content": "故宫、颐和园、天坛等都是可以去游玩的景点哦。"
+            },
+            {
+                "role": "user",
+                "content": "帮我安排一些行程"
+            }
+        ]
+    },
+    "parameters": {
+    }
+}
+
+* 开始测试通义千问吧                                                   :verb:
+
+template https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
+Content-Type: application/json
+Authorization: Bearer {{(funcall (plist-get (car (auth-source-search :host "dashscope.aliyuncs.com" :max 1)) :secret))}}
+
+** qwen-turbo                                                          :verb:
+# 通义千问超大规模语言模型，支持中文、英文等不同语言输入。
+
+POST /
+
+{
+    "model": "qwen-turbo",
+    "input":{
+        "messages":[      
+            {
+                "role": "user",
+                "content": "介绍下你自己"
+            }
+        ]
+    },
+    "parameters": {
+    }
+}
+
+** qwen-plus                                                           :verb:
+# 通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。
+# 比 turbo 慢很多
+
+POST /
+
+{
+    "model": "qwen-plus",
+    "input":{
+        "messages":[      
+            {
+                "role": "user",
+                "content": "介绍下你自己"
+            }
+        ]
+    },
+    "parameters": {
+    }
+}
+
+** qwen-max                                                            :verb:
+# 千亿级别超大规模
+
+POST /
+
+{
+    "model": "qwen-max",
+    "input":{
+        "messages":[      
+            {
+                "role": "user",
+                "content": "介绍下你自己"
+            }
+        ]
+    },
+    "parameters": {
+    }
+}
+
+** parameters.seed 参数                                                :verb:
+
+# 生成时使用的随机数种子
+
+POST /
+
+{
+    "model": "qwen-turbo",
+    "input":{
+        "messages":[      
+            {
+                "role": "user",
+                "content": "请介绍下 Lua 的历史"
+            }
+        ]
+    },
+    "parameters": {
+        "seed": 111205
+    }
+}
+
+* 通义千问VL                                                           :verb:
+
+# 多模型，支持图片（Vision）
+
+template https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation
+Content-Type: application/json
+Authorization: Bearer {{(funcall (plist-get (car (auth-source-search :host "dashscope.aliyuncs.com" :max 1)) :secret))}}
+
+** qwen-vl-plus 图片大模型, woman                                      :verb:
+
+# 通义千问大规模视觉语言模型增强版
+
+post /
+
+{
+    "model": "qwen-vl-plus",
+    "input": {
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    { "image": "http://xuchunyang-oss.domain-4-testing.com/hua-ling-VV62v9KELCo-unsplash.jpg" },
+                    { "text": "介绍下这张图片" }
+                ]
+            }
+        ]
+    },
+    "parameters": {
+    }    
+}
+
+** qwen-vl-plus 图片大模型, lion                                       :verb:
+
+# 通义千问大规模视觉语言模型增强版
+
+post /
+
+{
+    "model": "qwen-vl-plus",
+    "input": {
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    { "image": "http://xuchunyang-oss.domain-4-testing.com/ansie-potgieter-GV2LxPJArgQ-unsplash.jpg" },
+                    { "text": "介绍下这张图片" }
+                ]
+            }
+        ]
+    },
+    "parameters": {
+    }    
+}
+
+** 试一下能否 hotlink 图片                                             :verb:
+
+# jiemian 的不行
+# thepaper 的可以
+
+post /
+
+{
+    "model": "qwen-vl-plus",
+    "input": {
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    { "image": "https://imagecloud.thepaper.cn/thepaper/image/288/63/268.jpg?x-oss-process=image/resize,w_332" },
+                    { "text": "介绍下这张图片" }
+                ]
+            }
+        ]
+    },
+    "parameters": {
+    }    
+}
