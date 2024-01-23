@@ -1,0 +1,9 @@
+#+TITLE: Learn DashScope API 2024
+
+https://help.aliyun.com/zh/dashscope/developer-reference/api-details
+
+* 最简单的尝试                                                         :verb:
+
+post https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
+Content-Type: application/json
+Authorization: Bearer {{(funcall (plist-get (car (auth-source-search :host "dashscope.aliyuncs.com" :max 1)) :secret))}}
