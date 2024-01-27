@@ -1,0 +1,9 @@
+#+TITLE: Learn Aliyun API 2024
+
+* 对象存储 OSS                                                         :verb:
+
+# 生成签名实在是太麻烦了，每一个请求都需要动态计算
+
+** ListBuckets（GetService）                                           :verb:
+
+get https://oss-cn-shanghai.aliyuncs.com
