@@ -5823,9 +5823,15 @@ And by the way, the menu bar on macOS is buggy.")
   ;; `aa2u' is hard to recall
   (defalias 'ascii-art-to-unicode 'aa2u))
 
-(use-package restart-emacs :ensure t :defer t)
+(use-package restart-emacs
+  :disabled t
+  :ensure t
+  :defer t)
 
-(use-package package-utils :ensure t :defer t)
+(use-package package-utils
+  :disabled t
+  :ensure t
+  :defer t)
 
 (use-package e2ansi                     ; Provide Syntax Highlight for shell by
                                         ; Emacs.  This is very cool.
