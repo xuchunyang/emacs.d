@@ -556,6 +556,43 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
   :config (selectrum-prescient-mode))
 
 
+;;; Vertico
+(use-package vertico
+  :init
+  (vertico-mode)
+
+  ;; Different scroll margin
+  ;; (setq vertico-scroll-margin 0)
+
+  ;; Show more candidates
+  ;; (setq vertico-count 12)
+
+  ;; Grow and shrink the Vertico minibuffer
+  ;; (setq vertico-resize t)
+
+  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+  ;; (setq vertico-cycle t)
+  :bind
+  (("M-l" . switch-to-buffer)
+   ("C-o" . imenu)
+   ("C-x f" . recentf)))
+
+(use-package emacs
+  :init
+  (setq read-extended-command-predicate
+        #'command-completion-default-include-p))
+
+(use-package orderless
+  :ensure t
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+
+
 ;;; Helm
 
 ;; Emacs 27
@@ -563,6 +600,7 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 ;; (fido-mode)
 
 (use-package helm
+  :disabled
   :ensure t
   :defer t
   :init
@@ -2791,7 +2829,8 @@ PACKAGE should not be a built-in package."
   (setq help-enable-completion-auto-load nil)
   :config
   (temp-buffer-resize-mode)
-  (advice-add 'describe-function-1 :after #'chunyang-advice-remove-button))
+  ;; (advice-add 'describe-function-1 :after #'chunyang-advice-remove-button)
+  )
 
 (use-package info-look
   :defer t
