@@ -5924,7 +5924,7 @@ And by the way, the menu bar on macOS is buggy.")
 ;;   (setq source-directory "~/src/emacs"))
 
 ;; (setq source-directory "/path/to/emacs-repo")
-;; (setq find-function-C-source-directory "~/Projects/emacs-25.1/src/")
+(setq find-function-C-source-directory "~/src/emacs/src/")
 
 (use-package elisp-bytecode
   :homepage "https://github.com/rocky/elisp-bytecode"
