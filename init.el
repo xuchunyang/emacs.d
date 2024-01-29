@@ -558,6 +558,7 @@ See URL `https://www.alfredapp.com/help/workflows/inputs/script-filter/json/'."
 
 ;;; Vertico
 (use-package vertico
+  :ensure t
   :init
   (vertico-mode)
 
