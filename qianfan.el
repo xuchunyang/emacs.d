@@ -24,6 +24,12 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'cl-lib))
+(eval-when-compile (require 'let-alist))
+(require 'seq)
+(require 'stream)
+(require 'spinner)
+
 (defvar url-http-end-of-headers)
 
 (defvar qianfan-token nil)
@@ -50,51 +56,58 @@
 (defvar-local qianfan-handle-response nil)
 
 (defun qianfan-handle-new-content (_ _ old-len)
-  (when (= old-len 0)
+  (when (zerop old-len)
     (save-excursion
       (save-match-data
         (goto-char (point-min))
-        (re-search-forward "\n\n" nil t (1+ qianfan-last-response))
-        (while (re-search-forward "\n\n" nil t)
-          (let* ((str (save-excursion
-                        (forward-line -2)
-                        (decode-coding-string
-                         (buffer-substring-no-properties
-                          (+ (line-beginning-position) (length "data: "))
-                          (line-end-position))
-                         'utf-8)))
-                 (json (json-parse-string str :object-type 'alist)))
-            (funcall qianfan-handle-response json)
-            (cl-incf qianfan-last-response)))))))
-
-(setq url-http-version "1.0")
+        (forward-line (* 2 foo-last-response))
+        (seq-do
+         (lambda (line)
+           (when (and (string-prefix-p "data: {" line)
+                      (string-suffix-p "}\n" line))
+             (cl-incf foo-last-response)
+             (when qianfan-handle-response
+               (funcall qianfan-handle-response
+                        (json-parse-string (substring line 6) :object-type 'alist)))))
+         (stream (current-buffer) (point) 'line))))))
 
 (defun qianfan (question)
-  (interactive "s千帆大模型: ")
+  (interactive (list (if (use-region-p)
+                         (prog1 (string-trim
+                                 (buffer-substring (region-beginning) (region-end)))
+                           (deactivate-mark))
+                       (read-string "Ask Qianfan: "))))
   (let ((user-buffer (current-buffer))
-        (url-request-method "POST")
-        (url-request-extra-headers '(("Content-Type" . "application/json")))
-        (url-request-data (encode-coding-string
-                           (json-serialize
-                            `((stream . t)
-                              (messages . [((role . "user")
-                                            (content . ,question))])))
-                           'utf-8)))
-    (with-current-buffer
-        (url-retrieve
-         (format
-          "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/%s?access_token=%s"
-          "eb-instant"
-          "24.b2ecc710a1d00bc3b6bba3f8b90a2a7b.2592000.1708426726.282335-47373095")
-         (lambda (_)
-           (remove-hook 'after-change-functions #'qianfan-handle-new-content t))
-         nil t t)
+        (proc (make-process
+               :name "curl"
+               :buffer (generate-new-buffer "*curl*")
+               :command (list "curl" "--silent" "--json"
+                              (json-serialize `((stream . t)
+                                                (messages . [((role . "user")
+                                                              (content . ,question))])))
+                              (format "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/%s?access_token=%s"
+                                      "completions_pro"
+                                      "24.f4b93675c21a394307adb62a97ef8ff9.2592000.1708174840.282335-47373095"))
+               :coding 'utf-8
+               :connection-type 'pty)))
+    (spinner-start)
+    (with-current-buffer (process-buffer proc)
       (add-hook 'after-change-functions #'qianfan-handle-new-content nil t)
       (setq qianfan-handle-response
             (lambda (json)
               (with-current-buffer user-buffer
                 (let-alist json
-                  (insert .result))))))))
+                  (insert .result))))))
+    (set-process-sentinel
+     proc
+     (lambda (process event)
+       (when (string= event "finished\n")
+         (with-current-buffer (process-buffer process)
+           (remove-hook 'after-change-functions #'qianfan-handle-new-content t)
+           (kill-buffer))
+         (with-current-buffer user-buffer
+           (spinner-stop))
+         (message "【qianfan】✅"))))))
 
 (provide 'qianfan)
 ;;; qianfan.el ends here
