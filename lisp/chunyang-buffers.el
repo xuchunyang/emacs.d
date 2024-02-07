@@ -29,46 +29,6 @@
   (not (member (buffer-name) '("*scratch*" "*Messages*"))))
 
 
-;;; Library
-
-(defun buffer-lines (buffer-or-name &optional no-properties)
-  "Return lines as a list in BUFFER-OR-NAME.
-
-When the optional argument NO-PROPERTIES is non-nil,
-strip text properties from the line."
-  (split-string
-   (with-current-buffer buffer-or-name
-     (if no-properties
-         (substring-no-properties (buffer-string))
-       (buffer-string)))
-   "\n"))
-
-(defun buffer-longest-line (buffer-or-name &optional no-properties)
-  "Return the (first) longest line in BUFFER-OR-NAME."
-  (let (longest)
-    (dolist (line (buffer-lines buffer-or-name no-properties) longest)
-      (unless longest
-        (setq longest line) )
-      (when (< (length longest)
-               (length line))
-        (setq longest line)))))
-
-(defun buffer-longest-linum (buffer-or-name)
-  "Return the (first) longest line's line number in BUFFER-OR-NAME."
-  (let (longest
-        longest-linum
-        (linum 0))
-    (dolist (line (buffer-lines buffer-or-name) longest-linum)
-      (setq linum (1+ linum))
-      (unless longest
-        (setq longest line
-              longest-linum linum))
-      (when (< (length longest)
-               (length line))
-        (setq longest line
-              longest-linum linum)))))
-
-
 ;;; Commands
 
 ;; My answer to
