@@ -4655,6 +4655,7 @@ Note that this will OVERRIDE the existing EWW bookmarks."
     )
 
   (use-package eshell-prompt-extras
+    :disabled
     :load-path "~/src/eshell-prompt-extras"
     :ensure t
     :config
